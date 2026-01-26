@@ -29,6 +29,7 @@ error_log
 
 !/wp-content/themes/
 
+
 # --- 5. [關鍵] 保留你的開發項目 ---
 !/wp-content/themes/dgw/
 !/wp-content/themes/dgw/**
