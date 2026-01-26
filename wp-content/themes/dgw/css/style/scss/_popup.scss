@@ -1,0 +1,116 @@
+.dgw-popup {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    position: fixed;
+    z-index: 10000000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-space {
+        position: relative;
+        max-height: 90%;
+        max-width: 80%;
+        @include Respond(dm) {
+            width: 70%;
+        }
+        @include Respond(sm) {
+            width: 90%;
+        }
+
+        background-color: #fff;
+        border-radius: 2px;
+        padding: 0.1rem;
+        box-shadow: 0px 0px 30px #fff;
+        cursor: pointer;
+        .popup-link {
+            .img-computer {
+                border-radius: 2px;
+                max-width: 100%;
+                width: 100%;
+                
+                @include Respond(md) {
+                    display: none;
+                }
+                @include Respond(xl) {
+                    display: block;
+                }
+            }
+            .img-mobile {
+                border-radius: 2px;
+                max-width: 100%;
+                @include Respond(md) {
+                    display: block;
+                }
+                @include Respond(xl) {
+                    display: none;
+                }
+            }
+        }
+        .dgw-popup-close {
+            color: rgb(253, 253, 253);
+            opacity: 0.3;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            svg{
+                width: 25px;
+                fill:#fff;
+            }
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+// .popup{
+//     width: 100vw;
+//     height: 100vh;
+//     background-color: rgba(0, 0, 0, 0.8);
+//     position:fixed;
+//     overflow-y: hidden;
+//     top: 0;
+//     left: 0;
+//     z-index: 1000000;
+//     display: none;
+//     justify-content: center;
+//     &-space{
+//         position: absolute;
+//         display: flex;
+//         top: 25%;
+//         left: 35%;
+//         width: 500px;
+//         height: 300px;
+//         align-items: center;
+//         justify-content: center;
+//         background-color: #fff;
+//         border-radius: 5px;
+//         box-shadow:0px 0px 30px #fff;
+
+//     }
+
+//     &-content{
+//         color: #666;
+//         line-break: 1.5rem;
+//         font-size: 2.5rem;
+
+//     }
+
+//     &-close{
+//         color: red;
+//         opacity: .3;
+//         position: absolute;
+//         top: 1rem;
+//         right: 1.5rem;
+//         font-size: 3rem;
+//         cursor: pointer;
+//         &:hover{
+//             opacity: 1
+//         }
+
+//     }
+// }

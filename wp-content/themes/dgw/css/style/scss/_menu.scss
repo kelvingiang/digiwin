@@ -1,0 +1,288 @@
+$MenuTextColor: rgb(52, 114, 133);
+// $MenuTextHoverColor: #0665ad;
+$bgHoverColor: rgba(231, 231, 231, 0.9);
+@mixin MenuBG {
+    @include MenuBGHoverColor;
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 12;
+    transition: all 1.5s;
+    opacity: 0;
+}
+
+@mixin BGMouseOn {
+    left: 0;
+    width: 100%;
+    opacity: 1;
+}
+
+@mixin MenuBGSub {
+    height: 100%;
+    width: 1px;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 12;
+    transition: all 1.5s;
+    opacity: 0;
+}
+
+@mixin BGMouseOnSub {
+    width: 95%;
+    opacity: 1;
+}
+
+@mixin MenuLink($position, $font-size, $padding-1, $padding-2) {
+    position: $position;
+    padding: $padding-1 $padding-2;
+    cursor: pointer;
+    // color: $MenuTextColor;
+    color: $Color_main_menu_link;
+    font-size: $font-size;
+    font-weight: bold;
+    z-index: 20;
+    transition: all 1s;
+}
+
+@mixin HasSub($rotate, $left) {
+    content: "\276F";
+    margin-left: $left;
+    display: inline-block;
+    -webkit-transform: rotate($rotate);
+    -moz-transform: rotate($rotate);
+    -o-transform: rotate($rotate);
+    -ms-transform: rotate($rotate);
+    transform: rotate($rotate);
+}
+
+@mixin MenuBGColor {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,73b1e7+24,0a77d5+50,539fe1+79,87bcea+100;Blue+Pipe+%231 */
+    background: rgb(208, 228, 247);
+    /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0)";
+    // filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0);
+    /* IE6-9 */
+}
+
+@mixin MenuBGHoverColor {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,c3d6e5+24,ffffff+50,c3d3e0+79,c9dae8+100 */
+    background: rgb(208, 228, 247);
+    /* Old browsers */
+    background: -moz-linear-gradient(top, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0)";
+    // filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#d0e4f7', endColorstr='#c9dae8', GradientType=0);
+    /* IE6-9 */
+}
+
+.menu-main {
+    position: relative;
+    z-index: 1000000000;
+    margin: 0rem 0rem;
+    padding-top: 0rem;
+    display: flex;
+    justify-content: right;
+    @include Respond(md) {
+        display: none;
+    }
+    &-item {
+        position: relative;
+        float: left;
+        // @include MenuBGColor;
+        padding: 0.7rem 1rem;
+        z-index: 100003;
+        // border: 0.1rem solid #fff;
+        label {
+            padding: 0rem;
+        }
+        @include Respond(lg) {
+            padding: 0.5rem 0.6rem;
+        }
+        &-link {
+            @include MenuLink(relative, 1rem, 1rem, 0.5rem);
+            font-size: 1.3rem;
+            // @include Respond(lg) {
+            //     @include MenuLink(relative, 0.7rem, 0rem, 0rem);
+            //     font-size: 0.7rem;
+            // }
+        }
+        &-bg {
+            @include MenuBG;
+        }
+        // .has-sub {
+        //     &:after {
+        //             @include HasSub(90deg, -2px);
+        //     }
+        // }
+        &:last-child {
+            border-radius: 0 0.4rem 0.4rem 0;
+            overflow: hidden;
+        }
+        &:first-child {
+            border-radius: 0.4rem 0 0 0.4rem;
+            overflow: hidden;
+        }
+        .has-sub {
+            &:after {
+                @include HasSub(90deg, 3px);
+            }
+        }
+        &:hover {
+            .menu-main-item-bg {
+                @include BGMouseOn();
+            }
+            .menu-main-item-link {
+                color: $Color_main_menu_link_hover;
+                // color: $Color_main_menu_link_ho;
+            }
+            .menu-main-sub-1 {
+                pointer-events: auto;
+                opacity: 1;
+                margin-top: 0.6rem;
+            }
+        }
+    }
+    .active {
+        > a, > label {
+            color: #00384e !important;
+        }
+    }
+    //===== SUB =======================================================
+    .menu-main-sub-1 {
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+        margin-top: -30px;
+        margin-left: -18px;
+        transition: all 1s;
+        padding: 2px;
+        white-space: nowrap;
+        z-index: 100001;
+        &-item {
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            background-color: $bgHoverColor;
+            border-bottom: 1px solid #fff;
+            cursor: pointer;
+            &-link {
+                @include MenuLink(relative, 1.3rem, 0rem, 1.5rem);
+            }
+            &-bg {
+                @include MenuBGSub;
+            }
+            .has-sub {
+                display: inline-flex;
+                color: #00384e !important;
+                font-size: 3rem !important;
+                svg {
+                    width: 14px; /* 設定 SVG 的寬度 */
+                    height: auto; /* 保持比例 */
+                    fill: #333; /* 設定顏色 */
+                    transition: fill 0.3s; /* (選填) 增加顏色變換的過渡動畫 */
+                }
+                // &:after {
+                //     @include HasSub(0deg, 20px);
+                // }
+            }
+            &:hover {
+                .menu-main-sub-1-item-bg {
+                    @include BGMouseOnSub();
+                }
+                .menu-main-sub-1-item-link {
+                    color: $Color_main_menu_link_hover;
+                }
+                .menu-main-sub-2 {
+                    opacity: 1;
+                    pointer-events: auto;
+                    left: 100%;
+                }
+            }
+        }
+    }
+    //===SUB SUB==================================================================
+    .menu-main-sub-2 {
+        pointer-events: none;
+        opacity: 0;
+        position: relative;
+        left: 0%;
+        top: -51px;
+        height: 50px;
+        transition: all 1s;
+        &-item {
+            position: relative;
+            background-color: $bgHoverColor;
+            border-bottom: 1px solid #fff;
+            &-link {
+                @include MenuLink(relative, 1rem, 0rem, 2rem);
+            }
+            &-bg {
+                @include MenuBGSub;
+            }
+            &:hover {
+                .menu-main-sub-2-item-bg {
+                    @include BGMouseOnSub();
+                }
+                .menu-main-sub-2-item-link {
+                    color: $Color_main_menu_link_hover;
+                }
+                .menu-main-sub-3 {
+                    opacity: 1;
+                    pointer-events: auto;
+                    left: 100%;
+                }
+            }
+        }
+    }
+    //===SUB SUB  SUB==================================================================
+    .menu-main-sub-3 {
+        pointer-events: none;
+        opacity: 0;
+        position: absolute;
+        width: 100%;
+        top: 0px;
+        left: 0%;
+        transition: all 1s;
+        &-item {
+            position: relative;
+            background-color: rgba(98, 199, 239, 0.9);
+            border-bottom: 1px solid #fff;
+            &-link {
+                @include MenuLink(relative, 1rem, 0rem, 2.5rem);
+            }
+            &-bg {
+                @include MenuBGSub;
+            }
+            &:hover {
+                .menu-main-sub-3-item-bg {
+                    @include BGMouseOnSub();
+                }
+                .menu-main-sub-3-item-link {
+                    color: $Color_main_menu_link_hover;
+                }
+            }
+        }
+    }
+}
+
+html[lang="zh-TW"] .has-sub::after {
+    @include HasSub(90deg, -3px);
+}
+
+html[lang="en-US"] .has-sub::after {
+    @include HasSub(90deg, 1px);
+}

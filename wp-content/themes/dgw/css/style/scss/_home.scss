@@ -1,0 +1,402 @@
+.h2-home-title {
+    background-color: transparent !important;
+    font-size: 1.7rem;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    margin-top: 4.5rem;
+    @include Respond(lg) {
+        //color: yellow;
+        font-size: 1.5rem;
+    }
+    @include Respond(md) {
+        // color: red;
+        font-size: 1.3rem;
+    }
+    @include Respond(sm) {
+        //color: yellow;
+        font-size: 1rem;
+    }
+}
+
+#business-home {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 0.5rem;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr 1fr;
+    }
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+    }
+    .item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin: 0.1rem;
+        padding-bottom: 8px;
+        border-radius: 0.3rem;
+        overflow: hidden;
+        border: 1px solid #fff;
+        transition: transform 0.3s ease-in-out;
+        font-size: 1.2rem;
+        border: 1px solid rgba(231, 231, 231, 0.788);
+        cursor: pointer;
+
+        .item-img {
+            img {
+                aspect-ratio: 4/3 !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+        }
+        .item-content {
+            font-weight: bold;
+            margin-top: 1rem;
+            color: $color_blue_link;
+            text-align: center;
+        }
+        &:hover {
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* h-shadow, v-shadow, blur, color with transparency */
+            transform: scale(1.02); /* Scales the div to 110% of its original size */
+            .item-content {
+                color: $color_blue_link_hover;
+            }
+        }
+    }
+}
+
+#industry-home {
+    // display: grid;
+    // grid-template-columns: 1fr 1fr 1fr;
+    // gap: 2px;
+    background-color: rgba(224, 222, 222, 0.8);
+    padding: 0.5rem 0rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    align-items: stretch; // ⭐ 讓 grid 自動撐到最高 item 的高度
+
+    @include Respond(md) {
+        grid-template-columns: 1fr 1fr;
+        padding: 1rem 0rem;
+        > :nth-child(3) {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: 50%;
+        }
+    }
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+    }
+    .item {
+        text-align: center;
+        transition: all 1s linear;
+        font-size: 1.2rem;
+
+        cursor: pointer;
+
+        @include Respond(md) {
+            font-size: 1.1rem;
+        }
+        @include Respond(sm) {
+            font-size: 1.2rem;
+            width: 100%;
+            margin: 1rem 0rem;
+        }
+        .item-img {
+            overflow: hidden;
+            // height: 400px;
+            clip-path: circle(38%);
+            align-items: center;
+            justify-content: center;
+            img {
+                transition: all 1s;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover;
+            }
+        }
+        .item-content {
+            font-weight: bold;
+            color: $color_blue_link;
+        }
+        &:hover {
+            img {
+                transform: scale(1.2);
+            }
+            .item-content {
+                color: $color_blue_link_hover;
+            }
+        }
+    }
+}
+
+#active-home {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    .active-item {
+        margin: 1rem;
+        width: 20%;
+        text-align: center;
+        position: relative;
+        .active-item-img {
+            background-color: aqua;
+            clip-path: circle(40% at center);
+            transition: all 0.5s ease-in-out 0s;
+            height: 100%;
+            width: 100%;
+            box-shadow: 10px 10px 1px #290101;
+            img {
+                width: 100%;
+            }
+        }
+        .active-item-content {
+            background: -webkit-radial-gradient(top left, rgb(250, 249, 249), rgb(0, 110, 255), rgb(8, 8, 8));
+            //background-image: radial-gradient (closest-side at 60% 55%, bisque, crimson, indigo);
+            // background-image: radial-gradient(rgb(4, 131, 250), rgb(182, 182, 182), rgb(250, 250, 250));
+            position: absolute;
+            top: 0rem;
+            left: 0rem;
+            height: 100%;
+            width: 100%;
+            clip-path: circle(40% at center);
+            transition: all 0.5s ease-in-out 0s;
+            transform: rotateY(90deg);
+            -webkit-transform: rotateY(90deg);
+            -moz-transform: rotateY(90deg);
+            -ms-transform: rotateY(90deg);
+            -o-transform: rotateY(90deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            a {
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #fff;
+                @include Respond(tab-land) {
+                    //color: yellow;
+                    font-size: 0.7rem;
+                }
+                @include Respond(tab-port) {
+                    // color: red;
+                    font-size: 0.65rem;
+                }
+                @include Respond(phone) {
+                    //color: yellow;
+                    font-size: 0.5rem;
+                    margin-top: 0rem;
+                }
+            }
+        }
+    }
+}
+
+#service-home {
+    background-color: #fc9106;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: flex-start;
+    padding-left: 5%;
+    .service-item {
+        position: relative;
+        width: 30%;
+        margin: 1rem;
+        text-align: center;
+        margin: 2rem 0rem;
+        transition: all 0.5s ease-in-out 0s;
+        &-img {
+            overflow: hidden;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            clip-path: inset(10px 0px 0px 10px round 7px);
+            img {
+                width: 100%;
+            }
+            .service-item-content {
+                position: absolute;
+                bottom: -80%;
+                background-color: rgba(68, 67, 67, 0.85);
+                width: 100%;
+                height: 100%;
+                transition: all 0.5s ease-in-out 0.1s;
+                .service-item-content-lable {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    margin-bottom: 0.5rem;
+                    margin-top: 0.5rem;
+                    color: #fff;
+                    @include Respond(tab-land) {
+                        //color: yellow;
+                        font-size: 0.7rem;
+                    }
+                    @include Respond(tab-port) {
+                        // color: red;
+                        font-size: 0.65rem;
+                    }
+                    @include Respond(phone) {
+                        //color: yellow;
+                        font-size: 0.5rem;
+                        margin-top: 0rem;
+                    }
+                }
+                .service-item-content-text {
+                    text-align: left;
+                    width: 90%;
+                    padding-left: 2rem;
+                    @include Respond(tab-land) {
+                        //color: yellow;
+                        font-size: 0.7rem;
+                    }
+                    @include Respond(tab-port) {
+                        // color: red;
+                        font-size: 0.65rem;
+                    }
+                    @include Respond(phone) {
+                        //color: yellow;
+                        font-size: 0.5rem;
+                        margin-top: 0rem;
+                    }
+                }
+                .service-item-link {
+                    color: #fff;
+                }
+            }
+        }
+        &:hover {
+            .service-item-content {
+                bottom: -20px;
+            }
+        }
+    }
+}
+
+#news-home {
+    .news-home-title {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 20%;
+            cursor: pointer;
+            padding: 1rem 0.3rem;
+            color: rgb(119, 117, 117);
+            //  border-bottom: 2px solid #000;
+            border-radius: 5px 5px 0 0;
+            h3 {
+                font-size: 1.3rem;
+                @include Respond(lg) {
+                    font-size: 1rem;
+                }
+                @include Respond(md) {
+                    font-size: 0.9rem;
+                }
+                @include Respond(sm) {
+                    font-size: 0.7rem;
+                }
+            }
+            &:hover {
+                h3 {
+                    color: $color_blue_link;
+                    font-weight: bold;
+                }
+            }
+        }
+        .title-select {
+            color: $color_blue_link;
+            background-color: rgb(238, 238, 238);
+            h3 {
+                font-weight: bold;
+            }
+        }
+    }
+    .news-home-content {
+        > div {
+            display: none;
+        }
+        .content-select {
+            padding: 1rem 2rem 3rem 1rem;
+            background-color: rgb(238, 238, 238);
+            display: block;
+            position: relative;
+            .content-list {
+                .item {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding: 0.5rem 2rem;
+                    border-bottom: 1px dotted #7c7c7c;
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    cursor: pointer;
+                    color: #05526e;
+
+                    div:last-child {
+                        color: #2e2e2e !important;
+                        font-size: 0.8rem;
+                        font-weight: 500;
+                        margin-top: 0.5rem;
+                    }
+
+                    &:hover {
+                        div:first-child {
+                            color: #333;
+                        }
+                        background-color: rgb(241, 241, 241);
+                    }
+                }
+            }
+            .content-more {
+                position: absolute;
+                right: 3.5rem;
+                bottom: 0.8rem;
+                font-size: 1rem;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.case-logo {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    &-item {
+        width: 12.5%;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem;
+        @include Respond(lg) {
+            width: 20%;
+        }
+        @include Respond(md) {
+            width: 25%;
+        }
+        @include Respond(sm) {
+            width: 33.33%;
+        }
+        &:hover {
+            img {
+                transform: scale(1.05);
+            }
+        }
+        img {
+            transition: all 0.3s;
+            width: 100% !important;
+            height: auto !important;
+        }
+    }
+}

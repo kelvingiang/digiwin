@@ -1,0 +1,56 @@
+.et_pb_row {
+    max-width: 90% !important;
+    text-align: center;
+  
+}
+
+.divi-table {
+    thead {
+        tr {
+            height: 50px;
+            th {
+                border: 1px solid #ccc;
+                align-items: center;
+                color: #0372b3;
+                font-weight: bold;
+                text-align: center;
+                line-height: 2;
+                font-size: 1.5rem;
+                background-color: #d1e2ec;
+            }
+        }
+    }
+    tbody {
+        tr {
+            td {
+                border: 1px solid #ccc;
+                padding: 1rem;
+                &:nth-child(1){font-weight:bold};
+            }
+            &:nth-child(even){
+                background-color: #fafafa;
+            }
+        }
+    }
+}
+
+.divi-img-full-screen{
+    // position: absolute;
+    // top :0;
+    // right: 0;
+    // left: 0;
+    // bottom: 0;
+
+    // width: 100% !important;
+    // background-color: red !important;
+    // span{
+    //     img{
+    //         width: 50% !important;
+    //     }
+    // }
+}
+
+.et_pb_section{
+    // padding: 0rem !important;
+    // margin-top: -5.5rem !important;
+}

@@ -1,0 +1,26 @@
+#article-side-list {
+    width: 100%;
+    .item {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 3px;
+        cursor: pointer;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        &:hover {
+            img {
+                transform: scale(1.1);
+            }
+        }
+        img {
+            transition: all 2s;
+            border-radius: 3px;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block; // 防止多餘空白
+            object-fit: cover; // 如需裁切才加（可選）
+        }
+    }
+}

@@ -1,0 +1,118 @@
+<?php
+$args = array(
+    'post_type' => 'slider',
+    'posts_per_page' => -1,
+    'orderby' => 'meta_value',
+    'order' => 'DESC',
+    'meta_key' => '_metabox_order',
+    'meta_query' => array(
+        array(
+            'key' => '_metabox_langguage',
+            'value' => dgw_get_lang(),
+            'compare' => '='
+        )
+    )
+);
+$wp_query = new WP_Query($args);
+
+// --- 優化點 1: 確保 Preload 在最前面執行 ---
+if ($wp_query->have_posts()) {
+    $first_post = $wp_query->posts[0];
+    $first_thumb_id = get_post_thumbnail_id($first_post->ID);
+    $first_img_data = wp_get_attachment_image_src($first_thumb_id, 'medium');
+    if ($first_img_data) {
+        // 建議將此標籤放在 wp_head() 附近，若不行，放在這裡也能幫助瀏覽器提早發現
+        echo '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url($first_img_data[0]) . '">';
+    }
+}
+?>
+
+<style>
+    /* --- 優化點 2: 防止渲染延遲 (Render Delay) --- */
+    #slider {
+        border-bottom: 2px solid rgba(208, 228, 247, 0.5);
+        min-height: 300px; /* 給予基本高度，防止頁面跳動 */
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* 在 JS 載入前，強制顯示第一張圖，隱藏其他的，這能大幅降低渲染延遲感 */
+    .owl-carousel:not(.owl-loaded) .item {
+        display: none;
+    }
+    .owl-carousel:not(.owl-loaded) .item:first-child {
+        display: block;
+    }
+    
+    #slider .item img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+</style>
+
+<div id="slider">
+    <div class="owl-carousel owl-theme">
+        <?php 
+        if ($wp_query->have_posts()) :
+            $count = 0;
+            while ($wp_query->have_posts()) : $wp_query->the_post();
+                $count++;
+                $link = get_post_meta($post->ID, '_metabox_link', true);
+                $thumb_id = get_post_thumbnail_id($post->ID);
+                $url = wp_get_attachment_image_src($thumb_id, 'large');
+                $srcset = wp_get_attachment_image_srcset($thumb_id, 'large');
+        ?>
+                <div class="item" <?php if (!empty($link)) : ?>data-link="<?php echo esc_url($link); ?>"<?php endif; ?>>
+                    <img
+                        alt="<?php echo get_the_title(); ?>"
+                        src="<?php echo esc_url($url[0]); ?>"
+                        srcset="<?php echo esc_attr($srcset); ?>"
+                        sizes="100vw"
+                        
+                        decoding="<?php echo ($count === 1) ? 'sync' : 'async'; ?>"
+                        loading="<?php echo ($count === 1) ? 'eager' : 'lazy'; ?>"
+                        fetchpriority="<?php echo ($count === 1) ? 'high' : 'low'; ?>"
+                        width="<?php echo $url[1]; ?>"
+                        height="<?php echo $url[2]; ?>">
+                    
+                    <div class="owl-slider-content">
+                        <?php the_content(); ?>
+                    </div>
+                </div>
+        <?php
+            endwhile;
+        endif;
+        wp_reset_postdata();
+        ?>
+    </div>
+</div>
+
+<script>
+    // 這裡保持你原本的 Owl Carousel 初始化代碼即可
+    jQuery(document).ready(function() {
+        jQuery('#slider .owl-carousel').owlCarousel({
+            loop: true,
+            margin: 10,
+            nav: false,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            autoplaySpeed: 500,
+            dots: true,
+            autoplayHoverPause: true,
+            items: 1,
+            onInitialized: function(event) {
+                jQuery(event.target).find('.owl-dot').each(function(index) {
+                    jQuery(this).attr('aria-label', 'digiwin solution ' + (index + 1) + ' page');
+                });
+            }
+        });
+
+        jQuery('#slider').on('click', '.item', function() {
+            const link = jQuery(this).data('link'); // 建議用 jQuery(this)
+            if (link) {
+                window.location.href = link;
+            }
+        });
+    });
+</script>

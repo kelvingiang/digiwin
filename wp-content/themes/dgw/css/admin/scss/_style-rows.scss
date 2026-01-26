@@ -1,0 +1,57 @@
+.row-one-column {
+   display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    .col{
+    margin: 1rem 0rem;
+}
+}
+
+.row-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.row-three-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.row-four-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+.row-five-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 10px;
+}
+
+
+
+.cell-title {
+    width: 100%;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.cell-text {
+    .my-input {
+        height: 1.5rem;
+        width: 90%;
+        border-radius: 0.3rem;
+    }
+}
+
+.btn-add-space {
+    clear: both;
+    height: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.2rem;
+    margin-left: 10px;
+}

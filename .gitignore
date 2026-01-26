@@ -1,0 +1,39 @@
+# --- 1. 排除 WordPress 核心文件 ---
+/wp-admin/
+/wp-includes/
+/index.php
+/license.txt
+/readme.html
+/wp-*.php
+/xmlrpc.php
+/sitemaps/
+
+# --- 2. 排除敏感設定與環境文件 ---
+wp-config.php
+wp-config-hosting.php
+error_log
+.htaccess
+
+# --- 3. 排除 wp-content 中的非開發內容 ---
+#/wp-content/languages/
+/wp-content/upgrade/
+/wp-content/cache/
+/wp-content/et-cache/
+/wp-content/backups/
+/wp-content/uploads/
+
+# --- 4. 插件與主題管理 ---
+# 這裡改為忽略目錄下的內容，但允許 Git 進入目錄掃描
+/wp-content/plugins/*
+/wp-content/themes/*
+
+!/wp-content/themes/
+
+# --- 5. [關鍵] 保留你的開發項目 ---
+!/wp-content/themes/dgw/
+!/wp-content/themes/dgw/**
+
+# --- 6. 開發工具與系統快取 ---
+/css/
+/et-cache/
+/data/*

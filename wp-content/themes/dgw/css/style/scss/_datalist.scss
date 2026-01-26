@@ -1,0 +1,143 @@
+@keyframes example {
+    from {
+        scale: 0.8;
+        opacity: 0.1;
+    }
+    to {
+        scale: 1;
+        opacity: 1;
+    }
+}
+
+.data-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    @include Respond(md) {
+        grid-template-columns: 1fr 1fr;
+    }
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+    }
+    .item {
+        transition-duration: 0.8s;
+        animation-name: example;
+        animation-duration: 1s;
+        border: rgba(172, 172, 172, 0.196) solid 0.1rem;
+        border-radius: 0.4rem;
+        padding: 0.2rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        cursor: pointer;
+
+        &-img {
+            width: 100%;
+            height: auto;
+            border-radius: 0.2rem;
+        }
+
+        &-title {
+            padding: 0.5rem 0.1rem;
+            color: $color_text_title;
+            font-weight: bold;
+            font-size: 1.1rem;
+            // background-color: #fff; // 確保有底色
+            border-radius: 0 0 0.4rem 0.4rem;
+        }
+        &:hover {
+            transform: scale(1.02, 1.02);
+            box-shadow: rgba(0, 0, 0, 0.56) 0px 2px 30px 1px;
+            .item-title {
+                color: $color_blue_link_hover;
+            }
+        }
+
+        .view_comment_area {
+            margin-top: 5px;
+            margin-right: 5px;
+            .view_comment_content {
+                text-align: end;
+                color: #bbbbbb;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                & > div {
+                    display: flex;
+                    flex-direction: row;
+                    margin-left: 0.5rem;
+                    div {
+                        margin: 0rem 0.2rem;
+                    }
+                }
+            }
+        }
+
+        a {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: $color_text_title;
+            display: block;
+            @include Respond(lg) {
+                font-size: 0.9rem;
+            }
+            @include Respond(md) {
+                font-size: 0.8rem;
+            }
+            @include Respond(sm) {
+                font-size: 0.7rem;
+            }
+            &:hover {
+                color: $color_blue_link_hover;
+            }
+        }
+    }
+}
+
+.icon-comment {
+    width: 20px;
+    fill: #bbbbbb;
+}
+
+.group-list {
+    .item {
+        background-color: rgba(149, 186, 200, 0.3);
+        display: flex;
+        flex-direction: row;
+        transition-duration: 1s;
+        padding: 1rem;
+        .group-list-item-title {
+            margin: 0rem 0 1rem;
+        }
+        a {
+            color: rgb(199, 99, 63);
+            &:hover {
+                color: rgba(255, 127, 80, 1);
+            }
+        }
+        img {
+            width: 90%;
+            border-radius: 0.3rem;
+        }
+        h3 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            @include Respond(lg) {
+                font-size: 1.3rem;
+            }
+            @include Respond(md) {
+                font-size: 1.2rem;
+            }
+            @include Respond(sm) {
+                font-size: 1.1rem;
+            }
+        }
+    }
+    .item:nth-child(odd) {
+        background-color: rgba(149, 186, 200, 0.5);
+    }
+    .item:hover {
+        background-color: rgba(149, 186, 200, 0.7);
+    }
+}

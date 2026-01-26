@@ -1,0 +1,185 @@
+.vote-link {
+    cursor: pointer;
+    padding-right: 0.5rem;
+    font-weight: bold;
+    color: rgba(9, 52, 117, 0.685);
+    &:hover {
+        color: rgb(9, 53, 117);
+    }
+}
+
+.error-style {
+    color: red;
+    font-size: 0.8rem;
+}
+
+.close-chang-pass-box {
+    cursor: pointer;
+    color: red;
+    opacity: 0.8;
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.vote-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding-top: 2rem;
+    background-color: #f5f5f5;
+    &-title{
+        margin-bottom: 1rem;
+        text-align: center;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+    }
+    &-box {
+        background-color: #fff;
+        border-radius: 3px;
+        width: 30%;
+        padding: 20px;
+        box-shadow: 1px 7px 23px 0px rgba(0,0,0,0.59);
+        div{
+            margin: 1rem 1.5rem;
+            color: #666;
+        }
+        .btn-space{
+            margin-top: 2rem;
+            text-align: center;
+        }
+    }
+
+    .error-login {
+        font-size: 0.9rem;
+        font-weight: bold;
+    }
+}
+
+.vote-content {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    &-header {
+        padding: 1rem 0 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        background-color: #f5f5f5;
+        min-height: 300px;
+        div:nth-child(1) {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: rgb(3, 51, 139);
+        }
+        div:nth-child(2) {
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            padding-top: 2rem;
+            width: 80%;
+        }
+    }
+
+    &-box {
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        align-items: center;
+        div {
+            label {
+                width: 200px;
+            }
+            margin-bottom: 0.5rem;
+        }
+        button {
+            margin-top: 2rem;
+        }
+    }
+
+    .voted {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #66666659;
+    }
+    .vote-person {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        padding-right: 2rem;
+        div {
+            margin-top: 0.3rem;
+            h4{
+                color: rgb(3, 51, 139);
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+#vote-success-popup {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(88, 88, 88, 0.9);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    label {
+        color: white;
+        font-weight: bold;
+        letter-spacing: 0.5rem;
+        font-size: 1.5rem;
+    }
+}
+
+#chang-password-popup {
+    visibility: hidden;
+    position: absolute;
+    background-color: rgba(88, 88, 88, 0.9);
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .chang-password-box {
+        background-color: white;
+        width: 500px;
+        height: 400px;
+        border-radius: 5px;
+        overflow: hidden;
+        div {
+            padding: 0.3rem 1rem;
+        }
+        div:nth-child(1) {
+            background-color: #f5f5f5;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            color: rgb(39, 79, 189);
+            font-weight: bold;
+        }
+        div:nth-child(6) {
+            text-align: center;
+            padding-top: 1rem;
+        }
+    }
+}

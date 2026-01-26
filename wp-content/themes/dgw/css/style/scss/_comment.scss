@@ -1,0 +1,290 @@
+.comment_area {
+    background-color: rgb(235, 234, 234);
+    padding: 1rem;
+
+    .comment_from {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem;
+        .comment_input {
+            margin: auto 0;
+            width: 80%;
+            height: 200px;
+        }
+        .btn_submit {
+            padding: 0.5rem 1.8rem;
+            margin: 2rem;
+            background-color: rgb(4, 76, 136);
+            color: #ccc;
+            font-size: 1rem;
+            font-weight: bold;
+            &:hover {
+                background-color: rgb(3, 54, 95);
+                color: #fff;
+            }
+        }
+    }
+}
+
+$color_label: rgb(8, 51, 116);
+$color_btn: #005177;
+$color_btn_hover: #747474;
+$color_btn_color: #fff;
+
+#comments {
+    background-color: #e9e9e9;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #999;
+    margin: 1rem;
+    overflow: hidden;
+    #comments-list {
+        // padding-top: 1rem !important;
+        .comments-title {
+            padding-left: 1rem !important;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #005177;
+            height: 50px;
+            padding-top: 18px;
+        }
+        & > ul {
+            padding-left: 0rem !important;
+            li {
+                list-style: none;
+                border-bottom: 1px dotted #333;
+                .comment-body {
+                    display: grid;
+                    grid-template-columns: 4fr 1fr;
+                    .comment-author {
+                        padding-left: 1rem;
+                        min-height: 50px;
+                        // background-color: #c06d6d;
+                        padding-top: 8px;
+                        font-size: 1.1rem;
+                        font-weight: 500;
+                        color: #3b6174e7;
+                    }
+                    .comment-date {
+                        text-align: end;
+                        min-height: 50px;
+                        padding-right: 1rem;
+                        padding-top: 0.5rem;
+                        color: #929292;
+                        font-size: 0.8rem;
+                    }
+                    .comment-text {
+                        padding-left: 2.5rem;
+                    }
+                    .comment-reply {
+                        padding-right: 1rem;
+                        text-align: end;
+                        font-size: 0.8rem;
+                        font-weight: bold;
+                        a {
+                            color: #054c7ca9;
+                            &:hover {
+                                color: #abacac;
+                            }
+                        }
+                    }
+                }
+                &:last-child {
+                    border-bottom: 0px;
+                }
+            }
+            ul.children {
+                border-bottom: 1px dotted #333;
+                background-color: #f7f7f7;
+                position: relative;
+                padding-left: 3rem;
+                li {
+                    list-style: none;
+                }
+                &::before {
+                    content: "";
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+                    background: url("./image/arrow-turn-down-right.svg") no-repeat center center;
+                    background-size: contain;
+                    margin-right: 0.5rem;
+                    vertical-align: middle;
+                    position: absolute;
+                    top: 50%;
+                    left: 10px;
+                }
+            }
+        }
+    }
+
+    .comment-respond {
+        background-color: #ffffff;
+        border-top: 3px solid #005177;
+        padding: 1rem;
+
+        h3#reply-title {
+            font-size: 1rem;
+            position: relative;
+            width: 100%;
+            color: $color_label;
+
+            small {
+                position: absolute;
+                right: 0;
+                top: 5px;
+                a {
+                    background-color: $color_btn;
+                    color: $color_btn_color;
+                    border: none;
+                    padding: 0.6rem 1.2rem;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.5s;
+                    margin-right: 0.8rem;
+                    &:hover {
+                        background-color: $color_btn_hover;
+                    }
+                }
+            }
+        }
+        .comment-form {
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            .form-row {
+                margin-bottom: 1rem;
+                width: 50%;
+                padding: 0 0.5rem;
+                min-height: 50px;
+
+                label {
+                    display: block;
+                    font-weight: 300;
+                    margin-bottom: 0.3rem;
+                    color: $color_label;
+                }
+                input {
+                    width: 100%;
+                    padding: 0.5rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    box-sizing: border-box;
+                }
+                &:first-child {
+                    margin-right: 2rem; // ✅ 這樣寫才正確
+                }
+            }
+            .comment-form-cookies-consent {
+                display: none;
+            }
+            .form-row-comment {
+                margin-bottom: 1rem;
+                padding: 0 0.5rem;
+                clear: both;
+                width: 100%;
+                label {
+                    display: block;
+                    font-weight: 300;
+                    margin-bottom: 0.3rem;
+                    color: $color_label;
+                }
+                textarea {
+                    width: 100%;
+                    padding: 0.5rem;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    box-sizing: border-box;
+                }
+            }
+
+            .form-row-math {
+                display: flex;
+                flex-direction: row;
+                margin-left: 0.8rem;
+                label {
+                    display: block;
+                    font-weight: 300;
+                    margin-bottom: 0.5rem;
+                    color: $color_label;
+                    padding-top: 5px;
+                    strong {
+                        font-weight: bold;
+                        color: #013c57;
+                    }
+                }
+                #math_answer {
+                    margin: 0rem 0.5rem;
+                    width: 40px;
+                    height: 30px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    box-sizing: border-box;
+                    text-align: center;
+                }
+
+                /* math_check_msg 容器 */
+                #math-check-msg {
+                    margin-left: 10px;
+                    font-size: 1rem;
+                    vertical-align: middle;
+                    display: inline-flex; /* 讓 icon 與文字垂直置中 */
+                    align-items: center;
+                    gap: 0.25rem; /* icon 與文字間距 */
+
+                    /* Font Awesome icon */
+                    i {
+                        font-size: 1.5rem !important; /* 調整 icon 大小 */
+                        font-weight: bold !important;
+                        vertical-align: middle !important;
+                    }
+                }
+                /* 正確狀態 */
+                .correct {
+                    color: green !important;
+                }
+
+                /* 錯誤狀態 */
+                .wrong {
+                    color: red !important;
+                }
+            }
+
+            .form-submit {
+                display: flex;
+                justify-content: flex-end; /* ✅ 靠左 */
+                align-items: center; /* ✅ 垂直置中（可選） */
+                padding: 0 1rem;
+                width: 100%;
+                input[type="submit"] {
+                    background-color: $color_btn;
+                    color: $color_btn_color;
+                    border: none;
+                    padding: 0.6rem 1.2rem;
+                    border-radius: 4px;
+                    font-size: 1rem;
+                    cursor: pointer;
+                    transition: all 0.5s;
+                    @include Respond(sm) {
+                        margin-top: 1.5rem;
+                    }
+                    &:hover {
+                        background-color: $color_btn_hover;
+                    }
+                }
+            }
+            .comment-notes {
+                font-size: 0.9rem;
+                color: #666;
+                margin-bottom: 1rem;
+                display: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,320 @@
+a {
+    text-decoration: none;
+}
+
+/* Reset toàn bộ website để không bị khoảng trống lạ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html[lang="zh-TW"] body {
+    font-family:
+        "DFKai",
+        Microsoft YaHei,
+        Arial,
+        sans-serif;
+}
+
+html[lang="vi-VN"] body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    padding: 0; /* Đã reset ở trên nhưng viết lại cho chắc */
+    margin: 0;
+    min-height: 100vh; /* Đảm bảo body luôn phủ kín màn hình */
+    background-color: white; /* Đổi màu này nếu bạn muốn nền trắng thay vì đỏ */
+}
+
+body:focus-within {
+    scroll-behavior: smooth;
+}
+
+.my-content {
+    min-height: 450px;
+}
+
+.page-col {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.company-name {
+    font-size: 1.3rem;
+    color: rgb(48, 47, 47);
+    font-weight: bold;
+    margin-top: 1rem;
+    @include Respond(lg) {
+        font-size: 1rem;
+    }
+    @include Respond(md) {
+        font-size: 0.9rem;
+    }
+    @include Respond(sm) {
+        font-size: 0.7rem;
+    }
+}
+
+.mobile-space {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .company-language {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+#wrapper {
+    margin-top: 0rem;
+    .entry-title {
+        color: transparent;
+    }
+}
+
+.page-img {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.style-error {
+    font-size: 2rem;
+    color: red;
+    font-weight: bold;
+    letter-spacing: 0.2rem;
+    padding-left: 1rem;
+    margin-top: 0.8rem;
+}
+
+.style-hr {
+    background-color: #f8f8f8;
+    height: 5px;
+    margin-top: 20px;
+}
+
+#page-404 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // height: 500px;
+}
+
+.my-link {
+    cursor: pointer;
+    color: $color_blue_link;
+    &:hover {
+        color: $color_blue_link_hover;
+    }
+}
+
+.mark-link {
+    display: flex;
+    div {
+        margin: 1rem;
+        a {
+            padding: 2rem;
+        }
+    }
+}
+
+.link-style {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.page-title {
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.3) 50%, rgba(156, 156, 156, 0.568) 95%);
+    border-radius: 0.3rem;
+    h1 {
+        font-size: 1.5rem;
+        letter-spacing: 0.5rem;
+        font-weight: bold;
+        //  margin: 2rem 0rem;
+        padding: 1rem 1.5rem;
+        color: $color_text_title;
+        text-shadow: 2px 2px 5px rgb(121, 120, 120);
+    }
+    @include Respond(lg) {
+        font-size: 3rem;
+    }
+    @include Respond(md) {
+        font-size: 2.5rem;
+    }
+    @include Respond(sm) {
+        font-size: 2.3rem;
+    }
+}
+
+h3.article-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: $color_text_title;
+}
+
+.my-btn {
+    padding: 1.5rem 2.5rem;
+    margin: 1rem 2.5rem;
+    font-size: 2rem;
+    background-color: rgba(22, 83, 163, 1);
+    color: #fff;
+    letter-spacing: 0.3rem;
+    text-align: center !important;
+    border: 0px #999 solid;
+    border-radius: 6px;
+    &:hover {
+        background-color: rgba(22, 83, 163, 0.8);
+        color: #ccc;
+    }
+    &:disabled {
+        background-color: rgba(22, 83, 163, 0.1);
+        color: #fff;
+    }
+}
+
+h3.group-title {
+    color: #517eb9;
+    font-size: 1.2em;
+    font-family: "Times New Roman", Times, serif;
+}
+
+#load-more {
+    margin-top: 2rem;
+    cursor: pointer;
+    opacity: 0.6;
+    text-align: center;
+    .load-more-icon {
+        width: 35px;
+        fill: #666;
+        display: inline-block; // 讓它受 text-align: center 影響
+        vertical-align: middle; // 修正微小的垂直偏移
+    }
+    &:hover {
+        opacity: 1;
+    }
+}
+
+hr.style-two {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+#footer {
+    margin-top: 2rem;
+    background-color: rgb(37, 59, 80);
+    padding-top: 1rem;
+    .footer-space {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        color: #fffffff5;
+        @include Respond(md) {
+            grid-template-columns: 1fr;
+        }
+        h3 {
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        ul li {
+            list-style: none;
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+            a {
+                color: #d8bf4d;
+                font-weight: bold;
+                &:hover {
+                    color: #5892dd;
+                }
+            }
+        }
+    }
+    .copy-right {
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 2rem;
+        p {
+            color: rgba(196, 196, 196, 0.836);
+        }
+    }
+}
+
+.margin-top {
+    padding-top: 1rem;
+}
+
+.sidebar-space {
+    margin-top: 2rem;
+    @include Respond(md) {
+        margin-top: 3rem;
+    }
+}
+
+/**** back to top****************************************************/
+
+#back-top-wrapper {
+    width: 100%;
+    z-index: 10000;
+    position: absolute;
+    overflow: hidden;
+    display: block;
+    @include Respond(md) {
+        display: none;
+    }
+    #back-top {
+        position: fixed;
+        bottom: 135px;
+        right: 1px;
+        margin-left: 580px;
+        display: block;
+        font-size: 2rem;
+        cursor: pointer;
+        opacity: 0.4;
+        &:hover {
+            opacity: 1;
+        }
+        svg {
+            fill: #666;
+            width: 30px;
+            height: 40px;
+        }
+    }
+}
+
+//==== img in post article================
+.alignnone {
+    width: 100%;
+    height: auto;
+}
+
+.alignleft {
+    float: left;
+}
+
+.index-space {
+    > div {
+        margin-bottom: 2rem;
+    }
+}
+
+.multi-slider-icon {
+    width: 40px;
+    fill: #5892dd;
+    opacity: 0.6;
+    &:hover {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,141 @@
+$table_header_bg: #d6d6d6;
+$table_header_text: #555555;
+
+.wp-list-table > thead > tr {
+    background-color: $table_header_bg;
+
+    > .manage-column {
+        text-align: center;
+        font-weight: bold;
+        border-bottom: 0px solid transparent;
+        color: $table_header_text;
+    }
+}
+
+.wp-list-table > tfoot > tr {
+    background-color: $table_header_bg;
+
+    > .manage-column {
+        text-align: center;
+        font-weight: bold;
+        border-top: 0px solid transparent;
+        color: $table_header_text;
+    }
+}
+
+.wp-list-table > thead > tr > .column-order,
+.wp-list-table > tfoot > tr > .column-order {
+    text-align: center;
+    a {
+        margin-left: 30%;
+    }
+}
+
+.column-cb {
+    width: 2% !important;
+}
+
+.column-title,
+.column-primary {
+    width: 40%;
+}
+
+.column-author {
+    width: 150px !important;
+    text-align: center;
+}
+
+.column-language,
+.column-home {
+    width: 50px;
+    text-align: center;
+}
+.column-order {
+    width: 100px !important;
+    a {
+        margin: auto;
+    }
+}
+
+.column-category,
+.column-categories {
+    width: 150px !important;
+    text-align: center;
+}
+
+.column-img {
+    width: 100px;
+    text-align: center;
+    img {
+        width: 50px !important;
+        margin: auto;
+    }
+}
+
+.column-link {
+    width: 35%;
+}
+
+.column-status {
+    width: 70px;
+}
+.column-create-date,
+.column-date {
+    width: 100px !important;
+    float: right;
+    text-align: center;
+}
+
+// cac column trong taxonomy=============================
+
+.column-slug {
+    width: 100px !important;
+}
+
+.column-order,
+.column-posts {
+    width: 60px;
+    text-align: center;
+}
+.column-name {
+    width: 23%;
+}
+
+///===========================================================================
+.without-img {
+    width: 300px;
+    background-color: #e7e3e3;
+    padding: 2rem 0rem;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #8b8b8bc0;
+}
+
+.img-thumb {
+    width: 300px;
+}
+
+//================================================================================
+.show-home {
+    background-color: #195700;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    margin: auto;
+}
+
+.un-show-home {
+    background-color: #b6b5b5;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+.activeStyle {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #ce3d04;
+    margin-top: 10px;
+}

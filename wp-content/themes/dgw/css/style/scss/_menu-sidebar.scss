@@ -1,0 +1,97 @@
+.side-menu {
+    background-color: $color_bg;
+    div {
+        // min-height: 50px;
+        border-bottom: 1px solid #ccc;
+        &:hover {
+            background-color: $color_bg_hover;
+        }
+        a {
+            display: block;
+            padding: 1rem;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    }
+}
+
+.side-tab {
+    display: flex;
+    flex-direction: row;
+    div {
+        flex: 1;
+        cursor: pointer;
+        h3 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            color: rgb(184, 186, 187);
+        }
+    }
+    .tab-select {
+        background-color: rgb(228, 229, 230);
+        border-radius: 3px 3px 0 0;
+        h3 {
+            color: $color_text_title;
+        }
+    }
+}
+
+.side-tab-content {
+    > div {
+        display: none;
+    }
+    .content-select {
+        display: block;
+    }
+}
+
+.side-list {
+    border-radius: 0.3rem;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin-bottom: 2rem;
+    &-title {
+        border-radius: 0.3rem 0.3rem 0 0;
+        border-bottom: 2px rgb(228, 226, 226) solid;
+        // margin-bottom: 0.5rem;
+        background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.226) 50%, rgba(156, 156, 156, 0.568) 95%);
+        h2 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: $color_text_title;
+            padding: 1rem 1rem 0.5rem;
+        }
+    }
+    .item {
+        padding-bottom: 1rem;
+        border-bottom: dotted 1px #999;
+        padding: 0.5rem 1rem;
+        transition-duration: 1s;
+        // font-weight: 600;
+        font-size: 1.1rem;
+        color: $color_blue_link;
+        cursor: pointer;
+        @include Respond(md) {
+            font-size: 1.2rem;
+        }
+        &:hover {
+            color: $color_blue_link_hover;
+            background-color: #ebebeb;
+        }
+    }
+    // &-img {
+    //     margin: 1rem;
+    //     opacity: 0.8;
+    //     img {
+    //         width: 85%;
+    //     }
+    // }
+    // &:hover {
+    //     background-color: rgb(229, 231, 231);
+    //     .side-list-item-img {
+    //         opacity: 1;
+    //     }
+    // }
+}
