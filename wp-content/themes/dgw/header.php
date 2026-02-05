@@ -14,11 +14,33 @@
     <!-- phan theo doi va quang cao cua zalo  -->
     <script async="" src="https://s.zzcdn.me/ztr/ztracker.js?id=7056180858377605120"></script>
     <link rel="preload" as="image" href="https://www.digiwin.com.vn/wp-content/uploads/2022/12/About-us-Top-banner-rev-2025.webp" fetchpriority="high">
+
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PC6FVTMZ');
+    </script>
+    <!-- End Google Tag Manager -->
 </head>
 
 <body <?php body_class(); ?>>
 
-
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PC6FVTMZ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <?php
     // cho phép hiển thi menu chính ====================
     $paged = get_query_var('pagename', 1);

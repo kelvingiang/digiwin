@@ -53,6 +53,18 @@ add_action('add_meta_boxes', function () {
     }
 });
 
+// loại bỏ tất cá các bài có liên quan đến author cả chính lẫn phụ
+add_action('template_redirect', function () {
+    if (is_author()) {
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        include(get_query_template('404'));
+        exit;
+    }
+});
+
 /* ==============================================================
   CHECK THE ARRAY IS NULL
   =============================================================== */
@@ -305,3 +317,25 @@ function uploadFileDownLoad($File, $name)
         }
     }
 }
+
+// Mục đích của đoạn code:
+// Kiểm tra nếu người dùng đã đăng nhập vào WordPress.
+// Đẩy biến is_internal: 'yes' lên DataLayer.
+// Dựa vào biến này, mình sẽ cấu hình trên Google Tag Manager để chặn không kích hoạt thẻ GA4, giúp dữ liệu báo cáo sạch hơn.
+
+add_action('wp_head', function() {
+    if (is_user_logged_in()) {
+        $user = wp_get_current_user();
+        $role = (array) $user->roles;
+        ?>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'user_status',
+                'user_role': '<?php echo $role[0]; ?>',
+                'is_internal': 'yes'
+            });
+        </script>
+        <?php
+    }
+});
