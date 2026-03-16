@@ -34,7 +34,7 @@ function uploadImg($name, $File)
         }
 
         // MIME 檢查
-        $allowed_types = ['image/jpeg', 'image/png', 'image/bmp'];
+        $allowed_types = ['image/jpeg', 'image/png', 'image/bmp', 'image/webp', 'image/avif'];
         if (!in_array(mime_content_type($file_tmp), $allowed_types)) {
             $errors[] = "檔案類型不正確!";
         }

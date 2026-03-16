@@ -17,19 +17,39 @@ if (!empty($data)) :
                 data-id="<?php echo $data['id_' . $lang] ?>"
                 data-link="<?php echo $data['link_' . $lang] ?>"
                 data-post="<?php echo $data['id_' . $lang] ?>"
-                data-target= "<?php echo $data['target'] ?>"
-                >
+                data-target="<?php echo $data['target'] ?>">
 
-                <img class="img-computer"
-                    fetchpriority="high"
-                    alt="digiwin software"
-                    src=" <?php echo PART_IMAGES . 'pop-up/' . $data['img_' . $lang] ?>" />
+                <?php
+                // 取得電腦版圖片路徑與尺寸
+                $img_url_pc = PART_IMAGES . 'pop-up/' . $data['img_' . $lang];
+                $img_path_pc = $_SERVER['DOCUMENT_ROOT'] . parse_url($img_url_pc, PHP_URL_PATH);
+                $size_pc = @getimagesize($img_path_pc);
 
-                <img class="img-mobile"
-                    fetchpriority="high"
-                    alt="digiwin software"
-                    src=" <?php echo PART_IMAGES . 'pop-up/' . $data['img_mobile_' . $lang] ?>" />
+                // 取得手機版圖片路徑與尺寸
+                $img_url_mb = PART_IMAGES . 'pop-up/' . $data['img_mobile_' . $lang];
+                $img_path_mb = $_SERVER['DOCUMENT_ROOT'] . parse_url($img_url_mb, PHP_URL_PATH);
+                $size_mb = @getimagesize($img_path_mb);
+                ?>
+
+                <picture>
+                    <?php if ($size_pc): ?>
+                        <source media="(min-width: 768px)"
+                            srcset="<?php echo $img_url_pc; ?>"
+                            width="<?php echo $size_pc[0]; ?>"
+                            height="<?php echo $size_pc[1]; ?>">
+                    <?php endif; ?>
+
+                    <img class="img-mobile"
+                        fetchpriority="high"
+                        alt="digiwin software"
+                        src="<?php echo $img_url_mb; ?>"
+                        <?php // 移除原本 srcset 混用電腦圖的邏輯，避免比例變形 
+                        ?>
+                        <?php echo $size_mb ? "width='{$size_mb[0]}' height='{$size_mb[1]}'" : ""; ?>
+                        style="width: 100%; height: auto; display: block;">
+                </picture>
             </div>
+            
         </div>
     </div>
     <script>

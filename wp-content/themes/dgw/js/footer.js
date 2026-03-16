@@ -12,7 +12,7 @@ if (cateIndex !== -1 && path[cateIndex + 1]) {
 if (cateId) {
   const $item = jQuery(`.menu-sub-item[data-id="${cateId}"] a`);
   const text = $item.text();
-  const $label = jQuery("<label>").text(text);
+  const $label = jQuery("<h2>").text(text);
   $item.replaceWith($label);
   jQuery(`.menu-sub-item[data-id="${cateId}"]`).addClass("no-link");
 }

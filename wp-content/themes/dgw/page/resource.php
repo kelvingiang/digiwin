@@ -4,7 +4,9 @@
 <div>
     <?php pageImg($post->ID); ?>
 </div>
-
+<div class="page-title-h1">
+    <h1><?php echo __('resource') ?></h1> 
+</div>
 <div class="menu-sub">
     <?php
     $menu_category = 'resources_category';

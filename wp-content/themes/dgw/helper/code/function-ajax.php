@@ -90,7 +90,7 @@ function ajax_load_more_posts()
             $html .= $comment_html;
             $html .= "</div>";
 
-            $html .= "<div class='item-title'>" . esc_html(get_the_title()) . "</div>";
+            $html .= "<div class='item-title'><h3>" . esc_html(get_the_title()) . "</h3></div>";
             $html .= "</div>";
 
             $stt++;

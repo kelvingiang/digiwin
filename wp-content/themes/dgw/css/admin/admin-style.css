@@ -283,7 +283,6 @@ ul#detail_list li div {
 }
 .cate-space .cate-view .cate-list {
   margin-right: 10px;
-  background-color: #e9e9e9;
 }
 .cate-space .cate-view .cate-list .cate-title {
   background-color: #1e81a2;
@@ -292,6 +291,9 @@ ul#detail_list li div {
 .cate-space .cate-view .cate-list .cate-title div {
   border-right: 1px #ccc solid;
   text-align: center;
+}
+.cate-space .cate-view .cate-list {
+  background-color: #e9e9e9;
 }
 .cate-space .cate-view .cate-list .cate-row {
   border-bottom: 0.1rem #ccc solid;

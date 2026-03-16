@@ -1,116 +1,38 @@
 <div id="article-side-list">
     <?php
-    $wp_query = getCustomPostShowSidebar('resources');
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()) :
-            $wp_query->the_post();
-    ?>
-            <div class="item" data-id="<?php echo get_the_ID(); ?>"
-                data-link="<?php echo get_the_permalink(); ?>"
-                data-post="<?php echo get_the_ID(); ?>">
-                <?php if (has_post_thumbnail()) { ?>
-                    <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
-                <?php } else {  ?>
-                    <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
-                <?php } ?>
-            </div>
-    <?php
-        endwhile;
-    endif;
-    wp_reset_postdata();
-    wp_reset_query();
-    ?>
+    // Danh sách các loại sidebar bạn muốn hiển thị
+    $sidebar_types = ['resources', 'active', 'casestudies', 'joinus', 'solutions'];
 
+    foreach ($sidebar_types as $type) :
+        $wp_query = getCustomPostShowSidebar($type);
+        
+        if ($wp_query->have_posts()) :
+            while ($wp_query->have_posts()) : $wp_query->the_post(); 
+                // Lấy Alt Text
+                $thumb_id = get_post_thumbnail_id();
+                $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);
+                if (empty($alt)) {
+                    $alt = get_the_title();
+                }
+                
+                // Xác định ảnh hiển thị
+                $img_url = has_post_thumbnail() ? get_the_post_thumbnail_url() : PART_IMAGES . 'no-image.jpg';
+                // Nếu là ảnh mặc định, đổi alt text theo ý bạn
+                if (!has_post_thumbnail()) $alt = "digiwin software";
+                ?>
+                
+                <div class="item" data-id="<?php the_ID(); ?>" 
+                     data-link="<?php the_permalink(); ?>" 
+                     data-post="<?php the_ID(); ?>">
+                    <img src="<?php echo $img_url; ?>" 
+                         srcset="<?php echo $img_url; ?>" 
+                         alt="<?php echo esc_attr($alt); ?>" />
+                </div>
 
-    <?php
-    $wp_query = getCustomPostShowSidebar('active');
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()) :
-            $wp_query->the_post();
-    ?>
-            <div class="item" data-id="<?php echo get_the_ID(); ?>"
-                data-link="<?php echo get_the_permalink(); ?>"
-                data-post="<?php echo get_the_ID(); ?>">
-                <?php if (has_post_thumbnail()) { ?>
-                    <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
-                <?php } else {  ?>
-                    <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
-                <?php } ?>
-            </div>
-    <?php
-        endwhile;
-    endif;
-    wp_reset_postdata();
-    wp_reset_query();
-    ?>
-
-
-    <?php
-    $wp_query = getCustomPostShowSidebar('casestudies');
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()):
-            $wp_query->the_post();
-    ?>
-            <div class="item" data-id="<?php echo get_the_ID(); ?>"
-                data-link="<?php echo get_the_permalink(); ?>"
-                data-post="<?php echo get_the_ID(); ?>">
-                <?php if (has_post_thumbnail()) { ?>
-                    <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
-                <?php } else {  ?>
-                    <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
-                <?php } ?>
-            </div>
-    <?php
-        endwhile;
-    endif;
-    wp_reset_postdata();
-    wp_reset_query();
-    ?>
-
-
-    <?php
-    $wp_query = getCustomPostShowSidebar('joinus');
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()) :
-            $wp_query->the_post();
-    ?>
-            <div class="item" data-id="<?php echo get_the_ID(); ?>"
-                data-link="<?php echo get_the_permalink(); ?>"
-                data-post="<?php echo get_the_ID(); ?>">
-                <?php if (has_post_thumbnail()) { ?>
-                    <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
-                <?php } else {  ?>
-                    <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
-                <?php } ?>
-            </div>
-    <?php
-        endwhile;
-    endif;
-    wp_reset_postdata();
-    wp_reset_query();
-    ?>
-
-
-
-    <?php
-    $wp_query = getCustomPostShowSidebar('solutions');
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()) :
-            $wp_query->the_post();
-    ?>
-            <div class="item" data-id="<?php echo get_the_ID(); ?>"
-                data-link="<?php echo get_the_permalink(); ?>"
-                data-post="<?php echo get_the_ID(); ?>">
-                <?php if (has_post_thumbnail()) { ?>
-                    <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
-                <?php } else {  ?>
-                    <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
-                <?php } ?>
-            </div>
-    <?php
-        endwhile;
-    endif;
-    wp_reset_postdata();
-    wp_reset_query();
+            <?php 
+            endwhile;
+            wp_reset_postdata();
+        endif;
+    endforeach; 
     ?>
 </div>

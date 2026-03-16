@@ -1,8 +1,5 @@
 $menu_mobile_color: rgba(194, 18, 18, 0.76);
 .menu-mobile {
-    @include Respond(md) {
-        display: block;
-    }
     display: none;
     background-color: aqua;
     width: 100%;
@@ -10,6 +7,9 @@ $menu_mobile_color: rgba(194, 18, 18, 0.76);
     top: 27px;
     right: 2px;
     z-index: 100000000002;
+      @include Respond(md) {
+        display: block;
+    }
     .menu-mobile-icon {
         position: absolute;
         right: 3px;

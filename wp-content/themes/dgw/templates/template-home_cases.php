@@ -8,27 +8,42 @@
             while ($wp_query->have_posts()) :
                 $wp_query->the_post();
                 $thumb_id = get_post_thumbnail_id($post->ID);
-                $url = wp_get_attachment_image_src($thumb_id, 'medium');
-                $srcset = wp_get_attachment_image_srcset($thumb_id, 'medium');
+
+                // Lấy URL theo từng size
+                $url_desktop = wp_get_attachment_image_src($thumb_id, 'medium');   // Desktop
+                $url_mobile  = wp_get_attachment_image_src($thumb_id, 'thumbnail');  // Mobile
         ?>
                 <div class="item" data-id="<?php echo $stt ?>"
                     data-link="<?php echo get_the_permalink(); ?>"
                     data-post="<?php echo get_the_ID(); ?>">
                     <div class="item-img">
                         <?php if (has_post_thumbnail()) { ?>
-                            <img alt="<?php the_title_attribute(); ?>"
-                                src="<?php echo esc_url($url[0]); ?>"
-                                srcset="<?php echo esc_attr($srcset); ?>"
-                                sizes="(max-width: 400px) 100vw, 300px"
-                                fetchpriority="high"
-                                width="<?php echo $url[1]; ?>"
-                                height="<?php echo $url[2]; ?>" />
+                            <picture>
+                                <!-- Mobile <= 768px: dùng thumbnail -->
+                                <source
+                                    media="(max-width: 768px)"
+                                    srcset="<?php echo esc_url($url_mobile[0]); ?>">
+
+                                <!-- Desktop > 768px: dùng medium -->
+                                <source
+                                    media="(min-width: 769px)"
+                                    srcset="<?php echo esc_url($url_desktop[0]); ?>">
+
+                                <!-- Fallback: width/height lấy từ ảnh desktop thực tế -->
+                                <img
+                                    alt="<?php the_title_attribute(); ?>"
+                                    src="<?php echo esc_url($url_desktop[0]); ?>"
+                                    fetchpriority="high"
+                                    width="<?php echo $url_desktop[1]; ?>"
+                                    height="<?php echo $url_desktop[2]; ?>" />
+                            </picture>
+
                         <?php } else { ?>
                             <img alt="<?php echo get_the_title(); ?>"
                                 src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
                                 fetchpriority="high"
-                                  width="410" 
-                                height="270"  />
+                                width="410"
+                                height="270" />
                         <?php } ?>
                     </div>
                     <div class="item-title">
@@ -37,7 +52,7 @@
                 </div>
         <?php
             endwhile;
-        endif;
+        endif; 
         wp_reset_postdata();
         wp_reset_query();
         ?>

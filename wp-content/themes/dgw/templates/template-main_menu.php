@@ -1,10 +1,19 @@
 <div id="header-space">
-    <a href="<?php echo home_url(); ?>">
-        <img class="company-logo"  src="<?php echo PART_IMAGES . 'logo.png' ?>" 
-        alt="digiwin viet nam" 
-        width="150"
-        height="42"
-        />
+    <a class="logo-desktop" href="<?php echo home_url(); ?>">
+        <img class="company-logo"
+            alt="digiwin company"
+            src="<?php echo PART_IMAGES . 'logo.webp' ?>"
+            alt="digiwin viet nam"
+            width="150"
+            height="42" />
+    </a>
+    <a class="logo-mobile" href="<?php echo home_url(); ?>">
+        <img class="company-logo"
+            alt="digiwin company"
+            src="<?php echo PART_IMAGES . 'logo-mobile.webp' ?>"
+            srcset="<?php echo PART_IMAGES . 'logo-mobile.webp'; ?> 1x, <?php echo PART_IMAGES . 'logo.webp'; ?> 2x"
+            width="100"
+            height="28" />
     </a>
     <nav class="menu-main">
         <!-- MAIN MENU  -->
@@ -46,10 +55,22 @@
 </div>
 <!-- //======================================================================= -->
 <div id="header-scroll">
-    <a href="<?php echo home_url(); ?>">
-        <img class="company-logo" src="<?php echo PART_IMAGES . 'logo.png' ?>" />
+    <a class="logo-desktop" href="<?php echo home_url(); ?>">
+        <img class="company-logo"
+            alt="digiwin company" 
+            src="<?php echo PART_IMAGES . 'logo.webp' ?>"
+            width="150"
+            height="42" />
     </a>
-    
+    <a class="logo-mobile" href="<?php echo home_url(); ?>">
+        <img class="company-logo"
+            alt="digiwin company"
+            src="<?php echo PART_IMAGES . 'logo-mobile.webp' ?>"
+            srcset="<?php echo PART_IMAGES . 'logo-mobile.webp'; ?> 1x, <?php echo PART_IMAGES . 'logo.webp'; ?> 2x"
+            width="100"
+            height="28" />
+    </a>
+
     <nav class="menu-main">
         <!-- MAIN MENU  -->
         <?php foreach (menu_main_list() as $key_main => $val_main) {

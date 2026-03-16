@@ -53,7 +53,7 @@ function getCustomsPost($postType, $postCount)
                 </div>
 
                 <div class="item-title">
-                    <?php the_title() ?>
+                    <h3><?php the_title() ?></h3>
                 </div>
             </div>
         <?php
@@ -129,7 +129,7 @@ function getCustomsPostByCate($postType, $cate, $postCount, $taxonomy)
                 </div>
 
                 <div class="item-title">
-                    <?php the_title() ?>
+                    <h3><?php the_title() ?></h3>
                 </div>
             </div>
     <?php

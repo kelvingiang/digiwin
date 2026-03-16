@@ -31,9 +31,17 @@ $wp_query = new WP_Query($args);
             <?php if ($wp_query->have_posts()) : ?>
                 <?php $stt = 1 ?>
                 <?php while ($wp_query->have_posts()) : $wp_query->the_post(); ?>
-                    <?php $url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full'); ?>
+                    <?php $url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large'); ?>
                     <div class="carousel-item <?php echo $stt == 1 ? 'active' : '' ?>" data-interval="10000">
-                        <img class=" d-block w-100" src="<?php echo $url[0] ?>" alt="<?php echo the_title(); ?>" >
+                        <?php if (has_post_thumbnail()) {
+                            the_post_thumbnail('large', array(
+                                'class' => 'd-block w-100',
+                                'alt'   => get_the_title(),
+                                // 如果是 Carousel 的第一張圖，可以加入 fetchpriority="high" 提升 LCP
+                                'fetchpriority' => ($stt == 1 ? 'high' : 'auto'),
+                            ));
+                        } ?>
+                        <!-- <img class=" d-block w-100" src="<?php echo $url[0] ?>" alt="<?php echo the_title(); ?>" > -->
                         <div class="carousel-caption d-none d-sm-block slider-text">
                             <a href='#'>
                                 <div class="slider-title">

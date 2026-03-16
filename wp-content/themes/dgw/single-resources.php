@@ -2,6 +2,9 @@
 $cate =  wp_get_post_terms($post->ID, 'resources_category');
 $cate_ID = $cate[0]->term_id;
 ?>
+<div class="page-title-h1">
+    <h1><?php echo __('resource') ?></h1> 
+</div>
 <div class="menu-sub"></div>
 <div id="single-row">
     <div class="single-content">

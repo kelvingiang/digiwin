@@ -31,7 +31,8 @@ if ($wp_query->have_posts()) {
     /* --- 優化點 2: 防止渲染延遲 (Render Delay) --- */
     #slider {
         border-bottom: 2px solid rgba(208, 228, 247, 0.5);
-        min-height: 300px; /* 給予基本高度，防止頁面跳動 */
+        min-height: 300px;
+        /* 給予基本高度，防止頁面跳動 */
         position: relative;
         overflow: hidden;
     }
@@ -40,10 +41,11 @@ if ($wp_query->have_posts()) {
     .owl-carousel:not(.owl-loaded) .item {
         display: none;
     }
+
     .owl-carousel:not(.owl-loaded) .item:first-child {
         display: block;
     }
-    
+
     #slider .item img {
         width: 100%;
         height: auto;
@@ -53,29 +55,39 @@ if ($wp_query->have_posts()) {
 
 <div id="slider">
     <div class="owl-carousel owl-theme">
-        <?php 
+        <?php
         if ($wp_query->have_posts()) :
             $count = 0;
             while ($wp_query->have_posts()) : $wp_query->the_post();
                 $count++;
                 $link = get_post_meta($post->ID, '_metabox_link', true);
                 $thumb_id = get_post_thumbnail_id($post->ID);
-                $url = wp_get_attachment_image_src($thumb_id, 'large');
-                $srcset = wp_get_attachment_image_srcset($thumb_id, 'large');
+                $url_desktop = wp_get_attachment_image_src($thumb_id, 'large');        // Desktop
+                $url_mobile  = wp_get_attachment_image_src($thumb_id, 'medium_large'); // Mobile (768px)
         ?>
-                <div class="item" <?php if (!empty($link)) : ?>data-link="<?php echo esc_url($link); ?>"<?php endif; ?>>
-                    <img
-                        alt="<?php echo get_the_title(); ?>"
-                        src="<?php echo esc_url($url[0]); ?>"
-                        srcset="<?php echo esc_attr($srcset); ?>"
-                        sizes="100vw"
-                        
-                        decoding="<?php echo ($count === 1) ? 'sync' : 'async'; ?>"
-                        loading="<?php echo ($count === 1) ? 'eager' : 'lazy'; ?>"
-                        fetchpriority="<?php echo ($count === 1) ? 'high' : 'low'; ?>"
-                        width="<?php echo $url[1]; ?>"
-                        height="<?php echo $url[2]; ?>">
-                    
+                <div class="item" <?php if (!empty($link)) : ?>data-link="<?php echo esc_url($link); ?>" <?php endif; ?>>
+                    <picture>
+                        <!-- Mobile <= 768px -->
+                        <source
+                            media="(max-width: 768px)"
+                            srcset="<?php echo esc_url($url_mobile[0]); ?>">
+
+                        <!-- Desktop > 768px -->
+                        <source
+                            media="(min-width: 769px)"
+                            srcset="<?php echo esc_url($url_desktop[0]); ?>">
+
+                        <!-- Fallback -->
+                        <img
+                            alt="<?php the_title_attribute(); ?>"
+                            src="<?php echo esc_url($url_desktop[0]); ?>"
+                            decoding="<?php echo ($count === 1) ? 'sync' : 'async'; ?>"
+                            loading="<?php echo ($count === 1) ? 'eager' : 'lazy'; ?>"
+                            fetchpriority="<?php echo ($count === 1) ? 'high' : 'low'; ?>"
+                            width="<?php echo $url_desktop[1]; ?>"
+                            height="<?php echo $url_desktop[2]; ?>">
+                    </picture>
+
                     <div class="owl-slider-content">
                         <?php the_content(); ?>
                     </div>

@@ -1,4 +1,7 @@
 <?php get_header();?>
+<div class="page-title-h1">
+    <h1><?php echo __('active') ?></h1> 
+</div>
 <div class="menu-sub"></div>
 <div id="single-row">
     <div class="single-content">

@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width" />
     <!-- <meta name="facebook-domain-verification" content="91lenwxb0nqyrpfos1s5gl8kttei4l" /> -->
     <meta name="google-site-verification" content="8Cqw_SSKDqlxTUmeaXPfqLLvUEKhzxeq33PG33Ln6O4" />
+
+    <?php
+    // Chỉ chạy đoạn này nếu Rank Math KHÔNG tự in description qua wp_head
+    if (!defined('RANK_MATH_VERSION')) :
+    ?>
+        <?php if (is_single() || is_page()) : ?>
+            <meta name="description" content="<?php echo wp_strip_all_tags(get_the_excerpt()); ?>" />
+        <?php elseif (is_category() || is_tag() || is_archive()) : ?>
+            <meta name="description" content="<?php echo strip_tags(term_description()); ?>" />
+        <?php endif; ?>
+    <?php endif; ?>
+
+
+
     <link rel="icon" type="image/x-icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/icons/favicon.ico">
     <link rel="apple-touch-icon"
         href="<?php echo esc_url(get_template_directory_uri()); ?>/images/icons/apple-touch-icon.png">
@@ -13,7 +27,9 @@
     <?php wp_head(); ?>
     <!-- phan theo doi va quang cao cua zalo  -->
     <script async="" src="https://s.zzcdn.me/ztr/ztracker.js?id=7056180858377605120"></script>
-    <link rel="preload" as="image" href="https://www.digiwin.com.vn/wp-content/uploads/2022/12/About-us-Top-banner-rev-2025.webp" fetchpriority="high">
+    <link rel="preload" as="image"
+        href="https://www.digiwin.com.vn/wp-content/uploads/2022/12/About-us-Top-banner-rev-2025.webp"
+        fetchpriority="high">
 
     <!-- Google Tag Manager -->
     <script>

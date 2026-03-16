@@ -17,7 +17,8 @@ require_once DIR_HELPER . 'code/function-wp-send-mail.php';
 require_once DIR_HELPER . 'code/function-custom-comment.php';
 
 
-function dgw_get_lang() {
+function dgw_get_lang()
+{
     return $_COOKIE['site_lang'] ?? 'vn';
 }
 
@@ -98,7 +99,7 @@ function MenuMobile($arr, $item_link = 'menu-mobile-item-link')
         <a href="<?php echo home_url($key) ?>" style="  " class="<?php echo $item_link ?>">
             <?php echo $val[dgw_get_lang()] ?>
         </a>
-<?php
+    <?php
     endforeach;
 }
 
@@ -323,11 +324,11 @@ function uploadFileDownLoad($File, $name)
 // Đẩy biến is_internal: 'yes' lên DataLayer.
 // Dựa vào biến này, mình sẽ cấu hình trên Google Tag Manager để chặn không kích hoạt thẻ GA4, giúp dữ liệu báo cáo sạch hơn.
 
-add_action('wp_head', function() {
+add_action('wp_head', function () {
     if (is_user_logged_in()) {
         $user = wp_get_current_user();
         $role = (array) $user->roles;
-        ?>
+    ?>
         <script>
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
@@ -336,6 +337,26 @@ add_action('wp_head', function() {
                 'is_internal': 'yes'
             });
         </script>
-        <?php
+<?php
     }
+});
+
+
+add_action('wp_enqueue_scripts', 'remove_wp_block_library_css', 100);
+function remove_wp_block_library_css()
+{
+    wp_dequeue_style('wp-block-library');          // 移除核心區塊樣式
+    wp_dequeue_style('wp-block-library-theme');    // 移除主題區塊樣式
+    wp_dequeue_style('wc-block-style');            // 如果有 WooCommerce，移除其區塊樣式
+}
+
+
+
+add_action('after_setup_theme', function () {
+    add_image_size('casestudies-desktop', 410, 307, true); // crop đúng tỉ lệ
+    add_image_size('casestudies-mobile', 150, 113, true);
+    add_image_size('slider-desktop', 1920, 800, true);
+    add_image_size('slider-mobile',  768,  500, true);
+    add_image_size('card-desktop', 300, 200, true);
+    add_image_size('card-mobile',  480, 320, true);
 });

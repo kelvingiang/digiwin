@@ -9,21 +9,6 @@
     left: 0;
     z-index: 1000000000;
     background-color: transparent !important;
-
-    .company-logo {
-        width: 150px;
-        margin-left: 1rem;
-        margin-top: 0.5rem;
-        @include Respond(lg) {
-            width: 110px;
-        }
-        @include Respond(md) {
-            width: 100px;
-        }
-        @include Respond(sm) {
-            width: 70px;
-        }
-    }
 }
 .languages-box {
     font-family: Arial, Helvetica, sans-serif !important;
@@ -43,7 +28,7 @@
         }
     }
     .not-link {
-        color: #00384e
+        color: #00384e;
     }
 }
 
@@ -60,30 +45,31 @@
     @include Respond(md) {
         display: none;
     }
-    .company-logo {
-        width: 130px;
-        padding-left: 1rem;
-    }
+}
 
-    // .languages-box {
-    //     font-size: 0.7rem;
-    //     font-family: "Times New Roman", Times, serif !important;
-    //     margin-top: 0rem;
-    //     padding: 2px 10px;
-    //     color: rgb(107, 106, 106);
-    //     height: 100%;
-    //     .link-languages {
-    //         color: rgba(107, 106, 106, 0.726);
-    //         font-weight: 300;
-    //         font-size: 0.7rem;
-    //         font-weight: bold;
-    //         cursor: pointer;
-    //         padding: 0.2rem;
-    //         &:hover {
-    //             color: rgb(15, 15, 15);
-    //         }
-    //     }
-    // }
+.logo-desktop {
+    display: block;
+    @include Respond(md) {
+        display: none;
+    }
+    @include Respond(sm) {
+        display: none;
+    }
+    @include Respond(xs) {
+        display: none;
+    }
+}
+
+.logo-mobile {
+    display: none;
+    @include Respond(md) {
+        display: block;
+    }
+}
+
+.company-logo {
+    margin-left: 1rem;
+    margin-top: 0.5rem;
 }
 
 .start {
