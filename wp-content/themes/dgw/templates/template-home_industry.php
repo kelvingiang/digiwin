@@ -46,7 +46,7 @@
                         <?php endif; ?>
                     </div>
                     <div class="item-content">
-                        <?php echo $title; ?>
+                       <h3> <?php echo $title; ?></h3>
                     </div>
                 </a>
             </div>

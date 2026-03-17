@@ -38,7 +38,7 @@
                     endwhile;
                 endif;
                 wp_reset_postdata();
-                wp_reset_query();
+             
                 ?>
             </div>
             <a class="content-more my-link" href="<?php echo home_url('activities') ?>">
@@ -64,7 +64,7 @@
                     endwhile;
                 endif;
                 wp_reset_postdata();
-                wp_reset_query();
+             
                 ?>
             </div>
             <!-- 69 is category ID -->
@@ -90,7 +90,7 @@
                     endwhile;
                 endif;
                 wp_reset_postdata();
-                wp_reset_query();
+             
                 ?>
             </div>
             <!-- 70 is category ID -->
@@ -117,7 +117,7 @@
                     endwhile;
                 endif;
                 wp_reset_postdata();
-                wp_reset_query();
+             
                 ?>
             </div>
             <a class="content-more my-link" href="<?php echo home_url('cases') ?>"><i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?></a>
@@ -143,7 +143,7 @@
                     endwhile;
                 endif;
                 wp_reset_postdata();
-                wp_reset_query();
+             
                 ?>
             </div>
             <!-- 104 is category ID -->

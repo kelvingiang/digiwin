@@ -1,4 +1,4 @@
-<h2 class="h2-home-title"><?php _e('Corporate management focus') ?></h2>
+<h1 class="h2-home-title"><?php _e('Corporate management focus') ?></h1>
 <div id="business-home">
     <?php
     $wp_query = getCustomPostAtHome('resources', 4);
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="item-content">
-                    <?php the_title(); ?>
+                    <h3><?php the_title(); ?></h3>
                 </div>
             </div>
     <?php
