@@ -37,4 +37,12 @@ error_log
 # --- 6. 開發工具與系統快取 ---
 /css/
 /et-cache/
-/data/*
+/data/*npm uninstall @playwright/test
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

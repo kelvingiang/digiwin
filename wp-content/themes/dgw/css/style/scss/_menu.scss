@@ -113,12 +113,8 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
             padding: 0.5rem 0.6rem;
         }
         &-link {
-            @include MenuLink(relative, 1rem, 1rem, 0.5rem);
-            font-size: 1.3rem;
-            // @include Respond(lg) {
-            //     @include MenuLink(relative, 0.7rem, 0rem, 0rem);
-            //     font-size: 0.7rem;
-            // }
+            @include MenuLink(relative, 1.1rem, 1rem, 0.5rem);
+            white-space: nowrap;
         }
         &-bg {
             @include MenuBG;
@@ -157,7 +153,8 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
         }
     }
     .active {
-        > a, > label {
+        > a,
+        > label {
             color: #00384e !important;
         }
     }
@@ -180,7 +177,7 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
             border-bottom: 1px solid #fff;
             cursor: pointer;
             &-link {
-                @include MenuLink(relative, 1.3rem, 0rem, 1.5rem);
+                @include MenuLink(relative, 1.1rem, 0rem, 1.5rem);
             }
             &-bg {
                 @include MenuBGSub;

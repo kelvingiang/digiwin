@@ -31,6 +31,8 @@ body {
   margin: 0;
   min-height: 100vh; /* Đảm bảo body luôn phủ kín màn hình */
   background-color: white; /* Đổi màu này nếu bạn muốn nền trắng thay vì đỏ */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body:focus-within {
@@ -327,7 +329,7 @@ hr.style-two {
 
 .multi-slider-icon {
   width: 40px;
-  fill: #5892dd;
+  fill: #5491e0;
   opacity: 0.6;
 }
 .multi-slider-icon:hover {
@@ -1158,11 +1160,11 @@ hr.style-two {
   padding: 1rem 0.5rem;
   cursor: pointer;
   color: #013142;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: bold;
   z-index: 20;
   transition: all 1s;
-  font-size: 1.3rem;
+  white-space: nowrap;
 }
 .menu-main-item-bg {
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,c3d6e5+24,ffffff+50,c3d3e0+79,c9dae8+100 */
@@ -1210,7 +1212,8 @@ hr.style-two {
   opacity: 1;
   margin-top: 0.6rem;
 }
-.menu-main .active > a, .menu-main .active > label {
+.menu-main .active > a,
+.menu-main .active > label {
   color: #00384e !important;
 }
 .menu-main .menu-main-sub-1 {
@@ -1237,7 +1240,7 @@ hr.style-two {
   padding: 0rem 1.5rem;
   cursor: pointer;
   color: #013142;
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   font-weight: bold;
   z-index: 20;
   transition: all 1s;
@@ -1633,7 +1636,7 @@ html[lang=en-US] .has-sub::after {
 }
 .page-title-h1 {
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   color: #2e7eda;
   margin-top: 60px;
 }
@@ -1651,7 +1654,7 @@ html[lang=en-US] .has-sub::after {
   padding: 0.5rem 1rem;
   font-weight: bold;
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: #013142;
 }
 @media (max-width: 991.98px) {

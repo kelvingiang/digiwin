@@ -30,6 +30,9 @@ body {
     margin: 0;
     min-height: 100vh; /* Đảm bảo body luôn phủ kín màn hình */
     background-color: white; /* Đổi màu này nếu bạn muốn nền trắng thay vì đỏ */
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 body:focus-within {
@@ -312,7 +315,7 @@ hr.style-two {
 
 .multi-slider-icon {
     width: 40px;
-    fill: #5892dd;
+    fill: #5491e0;
     opacity: 0.6;
     &:hover {
         opacity: 1;
