@@ -16,15 +16,15 @@ error_log
 
 # --- 3. 排除 wp-content 中的非開發內容 ---
 #/wp-content/languages/
-/wp-content/upgrade/
+#/wp-content/upgrade/
 /wp-content/cache/
 /wp-content/et-cache/
 /wp-content/backups/
-/wp-content/uploads/
+#/wp-content/uploads/
 
 # --- 4. 插件與主題管理 ---
 # 這裡改為忽略目錄下的內容，但允許 Git 進入目錄掃描
-/wp-content/plugins/*
+#/wp-content/plugins/*
 /wp-content/themes/*
 
 !/wp-content/themes/
