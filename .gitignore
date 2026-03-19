@@ -46,3 +46,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+# --- 6. Loại bỏ file rác hệ thống & IDE ---
+.DS_Store
+.DS_Store?
