@@ -32,8 +32,8 @@
             ?>
         </div>
         <div class="single-sidebar">
-            <?php get_template_part('templates/template', 'side_cases');  ?>
             <?php get_template_part('templates/template', 'side_active'); ?>
+            <?php get_template_part('templates/template', 'side_cases');  ?>
             <?php get_template_part('templates/template', 'side_articles'); ?>
         </div>
     </div>

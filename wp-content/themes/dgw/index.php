@@ -4,7 +4,7 @@
     <div style="position: relative;">
         <?php
         if (!is_single()) {
-             get_template_part('templates/template', 'slider_owl');
+            // get_template_part('templates/template', 'slider_owl');
         }
         ?>
     </div>

@@ -38,7 +38,7 @@ function getTranslate()
         'Classic Case' => '典範案例 ',
         'Latest Event' => '最近活動',
         'Read More' => "更多",
-        'Office' => '辦公室',
+        'Office In VietNam' => '越南辦公室',
         'link' => '連接',
         'join' => '招募員工',
         'distribution' => '經銷合作',
@@ -58,6 +58,17 @@ function getTranslate()
         'Reply' => '回覆',
         'Perform Calculations' => '請回答',
         'The calculation problem is incorrect. Please enter the correct answer!' => '計算題錯誤，請輸入正確答案！',
+        'Zalo OA Community' => 'Zalo OA 社區',
+        'Scan to join Zalo OA & get the latest industry reports' => '掃碼關注 Zalo OA, 獲取最新行業報告',
+        'Free Resources for Businesses' => '企業專用免費資源',
+        'Download 2026 Digital Transformation Whitepaper' => '下載 2026 數位轉型白皮書',
+        'Solutions & Industries' => '解決方案與產業',
+        'System Administration (ERP)' => '系統管理 (ERP)',
+        'Production Management (MES)' => '生產管理 (MES)',
+        'Smart Warehouse (WMS)' => '智慧倉儲 (WMS)',
+        'Digital Transformation in the Plastics Industry' => '塑膠產業數位轉型',
+        'Case Studies' => '成功案例',
+        'Awards & Certificates' => '獎項與證書',
     );
     return array_merge($data);
 }

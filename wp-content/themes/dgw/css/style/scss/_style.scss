@@ -214,46 +214,7 @@ hr.style-two {
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
 
-#footer {
-    margin-top: 2rem;
-    background-color: rgb(37, 59, 80);
-    padding-top: 1rem;
-    .footer-space {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 20px;
-        color: #fffffff5;
-        @include Respond(md) {
-            grid-template-columns: 1fr;
-        }
-        h3 {
-            text-align: center;
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-        }
-        ul li {
-            list-style: none;
-            margin: 0.5rem 0;
-            font-size: 1.1rem;
-            a {
-                color: #d8bf4d;
-                font-weight: bold;
-                &:hover {
-                    color: #5892dd;
-                }
-            }
-        }
-    }
-    .copy-right {
-        display: flex;
-        justify-content: flex-end;
-        padding-right: 2rem;
-        p {
-            color: rgba(196, 196, 196, 0.836);
-        }
-    }
-}
+
 
 .margin-top {
     padding-top: 1rem;
@@ -280,18 +241,18 @@ hr.style-two {
     #back-top {
         position: fixed;
         bottom: 135px;
-        right: 1px;
+        right: 10px;
         margin-left: 580px;
         display: block;
         font-size: 2rem;
         cursor: pointer;
-        opacity: 0.4;
+        opacity: 0.5;
         &:hover {
             opacity: 1;
         }
         svg {
-            fill: #666;
-            width: 30px;
+            fill: #ffbb00;
+            width: 40px;
             height: 40px;
         }
     }

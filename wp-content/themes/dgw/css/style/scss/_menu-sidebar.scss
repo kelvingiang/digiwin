@@ -1,97 +1,106 @@
-.side-menu {
-    background-color: $color_bg;
-    div {
-        // min-height: 50px;
-        border-bottom: 1px solid #ccc;
-        &:hover {
-            background-color: $color_bg_hover;
-        }
-        a {
-            display: block;
-            padding: 1rem;
-            color: #fff;
-            font-size: 1.1em;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-    }
+.side-list {
+    border-radius: 14px;
+    background: transparent;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+.side-list-title {
+    margin-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 1rem;
+    color: #2e7eda;
 }
 
+//=================================================================
 .side-tab {
-    display: flex;
-    flex-direction: row;
-    div {
-        flex: 1;
-        cursor: pointer;
-        h3 {
-            font-size: 1.1rem;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-            color: rgb(184, 186, 187);
-        }
-    }
-    .tab-select {
-        background-color: rgb(228, 229, 230);
-        border-radius: 3px 3px 0 0;
-        h3 {
-            color: $color_text_title;
-        }
-    }
+    display: inline-flex;
+    background: transparent;
+    padding: 4px;
+    border-radius: 999px;
+    gap: 5px;
+    // margin-bottom: 20px;
+}
+
+.tab-title {
+    padding: 16px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.25s ease;
+}
+
+.tab-title.active {
+    background: #2e7eda;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(22, 119, 255, 0.25);
+}
+
+.tab-title:hover {
+    color: #12468f;
 }
 
 .side-tab-content {
-    > div {
-        display: none;
-    }
-    .content-select {
-        display: block;
-    }
+    margin-top: 15px;
 }
 
-.side-list {
-    border-radius: 0.3rem;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    margin-bottom: 2rem;
-    &-title {
-        border-radius: 0.3rem 0.3rem 0 0;
-        border-bottom: 2px rgb(228, 226, 226) solid;
-        // margin-bottom: 0.5rem;
-        background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.226) 50%, rgba(156, 156, 156, 0.568) 95%);
-        h2 {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: $color_text_title;
-            padding: 1rem 1rem 0.5rem;
-        }
+.card-list {
+    display: none;
+    flex-direction: column;
+    //gap: 10px;
+}
+
+.card-list.active {
+    display: flex;
+}
+
+/* card */
+.card-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    margin: 1px 0;
+    border-radius: 12px;
+    background: #fff;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1px solid #f0f0f0;
+
+    @include Respond(md) {
+        font-size: 1.05rem;
     }
-    .item {
-        padding-bottom: 1rem;
-        border-bottom: dotted 1px #999;
-        padding: 0.5rem 1rem;
-        transition-duration: 1s;
-        // font-weight: 600;
-        font-size: 1.1rem;
-        color: $color_blue_link;
-        cursor: pointer;
-        @include Respond(md) {
-            font-size: 1.2rem;
-        }
-        &:hover {
-            color: $color_blue_link_hover;
-            background-color: #ebebeb;
-        }
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+        border-color: #e6f0ff;
     }
-    // &-img {
-    //     margin: 1rem;
-    //     opacity: 0.8;
-    //     img {
-    //         width: 85%;
-    //     }
-    // }
-    // &:hover {
-    //     background-color: rgb(229, 231, 231);
-    //     .side-list-item-img {
-    //         opacity: 1;
-    //     }
-    // }
+
+    .card-title {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: #333;
+        transition: 0.2s;
+    }
+
+    &:hover .card-title {
+        color: #1677ff;
+    }
+
+    /* mũi tên */
+    &::after {
+        content: "›";
+        font-size: 18px;
+        color: #bbb;
+        transition: 0.2s;
+    }
+
+    &:hover::after {
+        color: #1677ff;
+        transform: translateX(3px);
+    }
 }

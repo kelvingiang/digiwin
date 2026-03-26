@@ -31,4 +31,12 @@ define('SMTP_AUTH', true);
 define('SMTP_USERNAME', 'kelvinctcvn@gmail.com'); 
 define('SMTP_PASSWORD', 'yidgmjjlepprajbn'); 
 define('SMTP_FROM_EMAIL', 'kelvinctcvn@gmail.com');
-define('SMTP_FROM_NAME', 'Digiwin vietnam');      
+define('SMTP_FROM_NAME', 'Digiwin vietnam');   
+
+if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    define('WP_HOME', 'http://localhost/digiwin');
+    define('WP_SITEURL', 'http://localhost/digiwin');
+} else {
+    define('WP_HOME', 'https://www.digiwin.com.vn');
+    define('WP_SITEURL', 'https://www.digiwin.com.vn');
+}

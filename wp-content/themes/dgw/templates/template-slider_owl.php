@@ -58,7 +58,8 @@ if ($wp_query->have_posts()) {
         <?php
         if ($wp_query->have_posts()) :
             $count = 0;
-            while ($wp_query->have_posts()) : $wp_query->the_post();
+            while ($wp_query->have_posts()) : 
+                $wp_query->the_post();
                 $count++;
                 $link = get_post_meta($post->ID, '_metabox_link', true);
                 $thumb_id = get_post_thumbnail_id($post->ID);
