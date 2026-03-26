@@ -69,65 +69,56 @@
 </style>
 <script>
     jQuery(document).ready(function() {
-        // set so luong hien thi thong qua responsive
-        var count = 0;
-        bsContainerWidth = jQuery("body").width()
-        if (bsContainerWidth <= 500) {
-            count = 1;
-        } else if (bsContainerWidth <= 950) {
-            count = 2;
-        } else if (bsContainerWidth <= 1170) {
-            count = 3;
-        } else {
-            count = 3;
-        }
-
-
-        jQuery('#casestudies-slider .owl-carousel').owlCarousel({
-
-            loop: true,
-            margin: 10,
-            nav: false,
-            autoplay: true,
-            autoplayTimeout: 30000,
-            dots: true,
-            autoplayHoverPause: true,
-            items: count,
-            nav: true,
-            navText: ['<svg class="multi-slider-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M201.4 297.4C188.9 309.9 188.9 330.2 201.4 342.7L361.4 502.7C373.9 515.2 394.2 515.2 406.7 502.7C419.2 490.2 419.2 469.9 406.7 457.4L269.3 320L406.6 182.6C419.1 170.1 419.1 149.8 406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3L201.3 297.3z"/></svg>',
-                '<svg class="multi-slider-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z"/></svg>'
-            ],
-            // onInitialized: setEqualHeight, // ← Owl 初始化後
-            onInitialized: function() {
-                jQuery('#casestudies-slider .owl-dot').each(function(index) {
-                    jQuery(this).attr('aria-label', '切換到第 ' + (index + 1) + ' 張');
-                });
-
-                // nav 按鈕也一起補（加分）
-                jQuery('#casestudies-slider .owl-prev')
-                    .attr('aria-label', '上一張');
-                jQuery('#casestudies-slider .owl-next')
-                    .attr('aria-label', '下一張');
+    jQuery('#casestudies-slider .owl-carousel').owlCarousel({
+        loop: true,
+        margin: 10,
+        nav: true,
+        autoplay: true,
+        autoplayTimeout: 30000,
+        dots: true,
+        autoplayHoverPause: true,
+        navText: [
+            '<svg class="multi-slider-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M201.4 297.4C188.9 309.9 188.9 330.2 201.4 342.7L361.4 502.7C373.9 515.2 394.2 515.2 406.7 502.7C419.2 490.2 419.2 469.9 406.7 457.4L269.3 320L406.6 182.6C419.1 170.1 419.1 149.8 406.6 137.3C394.1 124.8 373.8 124.8 361.3 137.3L201.3 297.3z"/></svg>',
+            '<svg class="multi-slider-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z"/></svg>'
+        ],
+        
+        // SỬ DỤNG RESPONSIVE THAY CHO BIẾN COUNT
+        responsive: {
+            0: {
+                items: 1 // Dưới 500px hiện 1 cái
             },
-            onResized: setEqualHeight, // ← Owl resize 後
-            onTranslated: setEqualHeight // ← Owl 動畫切換後
+            501: {
+                items: 2 // Từ 501px đến 950px hiện 2 cái
+            },
+            951: {
+                items: 3 // Trên 951px hiện 3 cái
+            }
+        },
 
-        });
-
-        function setEqualHeight() {
-            var maxHeight = 0;
-
-            // 先清除高度，避免之前套過的造成錯誤
-            jQuery('#casestudies-slider .item').css('height', 'auto');
-
-            // 找出最高 item
-            jQuery('#casestudies-slider .item').each(function() {
-                var h = jQuery(this).outerHeight();
-                if (h > maxHeight) maxHeight = h;
+        onInitialized: function() {
+            jQuery('#casestudies-slider .owl-dot').each(function(index) {
+                jQuery(this).attr('aria-label', '切換到第 ' + (index + 1) + ' 張');
             });
-
-            // 套用到所有 item
-            jQuery('#casestudies-slider .item').css('height', maxHeight + 'px');
-        }
+            jQuery('#casestudies-slider .owl-prev').attr('aria-label', '上一張');
+            jQuery('#casestudies-slider .owl-next').attr('aria-label', '下一張');
+            
+            // Gọi hàm cân bằng chiều cao sau khi init
+            setTimeout(setEqualHeight, 200); 
+        },
+        onResized: setEqualHeight,
+        onTranslated: setEqualHeight
     });
+
+    function setEqualHeight() {
+        var maxHeight = 0;
+        var items = jQuery('#casestudies-slider .item');
+        items.css('height', 'auto');
+        items.each(function() {
+            var h = jQuery(this).outerHeight();
+            if (h > maxHeight) maxHeight = h;
+        });
+        items.css('height', maxHeight + 'px');
+    }
+});
+    
 </script>
