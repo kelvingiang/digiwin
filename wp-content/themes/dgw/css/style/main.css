@@ -2951,6 +2951,7 @@ html[lang=en-US] .has-sub::after {
 }
 #footer .footer-icon div img {
   width: 30px;
+  height: 35px;
   margin-right: 10px;
   opacity: 0.8;
 }
