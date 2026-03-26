@@ -9,6 +9,12 @@ a {
     box-sizing: border-box;
 }
 
+html {
+    -webkit-text-size-adjust: 100%; /* Cho Safari trên iOS */
+    -moz-text-size-adjust: 100%;    /* Cho Firefox (nếu cần) */
+    text-size-adjust: 100%;         /* Chuẩn chung */
+}
+
 html[lang="zh-TW"] body {
     font-family:
         "DFKai",
@@ -20,6 +26,8 @@ html[lang="zh-TW"] body {
 html[lang="vi-VN"] body {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+
 
 body {
     user-select: none;
@@ -33,6 +41,7 @@ body {
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
 }
 
 body:focus-within {
