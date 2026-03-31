@@ -61,7 +61,7 @@ function getTranslate()
         'Zalo OA Community' => 'cộng đồng zalo OA',
         'Scan to join Zalo OA & get the latest industry reports' => 'quét mã tham gia zalo AO nhận báo cáo ngành mới nhất hay dịch giúp',
         'Free Resources for Businesses' => 'Tài Nguyên miễn phí cho Doanh Nghiệp',
-        'Solutions & Industries' => 'Giải Pháp & Chuyên Nghành',
+        'Solutions & Industries' => 'Giải Pháp & Chuyên Ngành',
         'Download 2026 Digital Transformation Whitepaper' => 'Tải Whitepaper CĐS 2026',
         'System Administration (ERP)' => 'Quản Trị Hệ Thống (ERP)',
         'Production Management (MES)' => 'Quản Lý Sản Xuất',
