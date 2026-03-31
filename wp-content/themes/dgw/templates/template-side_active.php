@@ -27,7 +27,7 @@
                 $wp_query->the_post();
             ?>
                 <a class="card-item" href="<?php the_permalink(); ?>">
-                    <div class="card-title"><?php the_title(); ?>dd</div>
+                    <div class="card-title"><?php the_title(); ?></div>
                 </a>
             <?php endwhile;
             wp_reset_postdata(); ?>

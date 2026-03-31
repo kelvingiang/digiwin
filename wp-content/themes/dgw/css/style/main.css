@@ -2855,6 +2855,10 @@ html[lang=en-US] .has-sub::after {
   cursor: pointer;
   padding-bottom: 0.6rem;
 }
+#footer .footer-space .article-link li a svg {
+  width: 18px;
+  height: 18px;
+}
 #footer .footer-space .download-link {
   width: 100%;
   height: 130px;
@@ -2907,7 +2911,8 @@ html[lang=en-US] .has-sub::after {
   padding-top: 10px;
 }
 #footer .footer-space .contact-list li div:first-child svg {
-  width: 1.3rem !important;
+  width: 25px;
+  height: 25px;
 }
 #footer .footer-space .contact-list li div:nth-child(2) {
   line-height: 1.5;
@@ -2930,10 +2935,11 @@ html[lang=en-US] .has-sub::after {
   text-align: right;
   padding-left: 50px;
 }
-#footer .footer-space .social-link svg {
-  width: 2rem !important;
+#footer .footer-space .social-link .icon-link svg {
+  width: 30px;
+  height: 30px;
 }
-#footer .footer-space .social-link svg:hover {
+#footer .footer-space .social-link .icon-link svg:hover {
   fill: #d4dfec;
 }
 #footer .footer-icon {
@@ -2982,6 +2988,9 @@ html[lang=en-US] .has-sub::after {
 #footer .copy-right div:last-child {
   justify-self: end;
   text-align: right; /* Đảm bảo chữ bên trong cũng căn phải nếu có nhiều dòng */
+}
+#footer .h3-title {
+  text-transform: uppercase;
 }
 #footer .dot-title::before {
   content: ""; /* 必須設定 content 虛擬元素才會顯示 */
