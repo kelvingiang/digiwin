@@ -2168,13 +2168,13 @@ html[lang=en-US] .has-sub::after {
 .languages-box {
   font-family: Arial, Helvetica, sans-serif !important;
   margin-top: 0rem;
-  padding: 2px 10px;
+  padding: 2px 5px;
   height: 100%;
 }
 .languages-box label {
   font-weight: bold;
   font-size: 0.7rem;
-  padding: 0.3rem;
+  padding: 0.1rem;
 }
 .languages-box .link-languages {
   color: rgba(107, 106, 106, 0.726);

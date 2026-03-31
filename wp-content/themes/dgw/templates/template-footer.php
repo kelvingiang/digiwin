@@ -19,6 +19,7 @@
                <div>
                    <div>
                        <img class="company-logo"
+                           title="digiwin company"
                            alt="digiwin company"
                            src="<?php echo PART_IMAGES . 'logo-white-Digiwin.png' ?>"
                            width="150"
@@ -170,7 +171,7 @@
                    <h3><?php _e('Zalo OA Community') ?> </h3>
                    <ul class='footer-list'>
                        <li>
-                           <img alt="digiwin zalo" width="100" height="100" src="<?php echo PART_IMAGES . 'zalo-qrcode.jpg'; ?>" />
+                           <img title="digiwin zalo" alt="digiwin zalo" width="100" height="100" src="<?php echo PART_IMAGES . 'zalo-qrcode.jpg'; ?>" />
                        </li>
                        <li class="zalo-text">
                            <?php _e('Scan to join Zalo OA & get the latest industry reports') ?>
@@ -202,24 +203,24 @@
 
            <div class="footer-icon">
                <div>
-                   <img title="reddot winner" alt="reddot winner" src="<?php echo  PART_IMAGES . 'foot-icon-1.png' ?>" />
+                   <img title="reddot winner" alt="reddot winner" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-1.png' ?>" />
                    <label> REDDOT WINNER </label>
                </div>
                <div>
-                   <img title="cmmi" alt="cmmi" src="<?php echo  PART_IMAGES . 'foot-icon-2.png' ?>" />
+                   <img title="cmmi" alt="cmmi" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-2.png' ?>" />
                    <label> CMMI <br><i> Level 4 </i></label>
                </div>
                <div>
-                   <img title="muse design" alt="muse design" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
+                   <img title="muse design" alt="muse design" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
                    <label> MUSE DESIGN <br><i> Awards </i></label>
                    </a>
                </div>
                <div>
-                   <img title="Control Engineering" alt="Control Engineering" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />
+                   <img title="Control Engineering" alt="Control Engineering" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />
                    <label> CONTROL ENGINEERING <br> <i>Product of the Year</i> </label>
                </div>
                <div>
-                   <img title="isrs" alt="isrs" src="<?php echo  PART_IMAGES . 'foot-icon-5.png' ?>" />
+                   <img title="isrs" alt="isrs" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-5.png' ?>" />
                    <label> ISRS <br> <i>Reporting Standards</i> </label>
                </div>
            </div>
