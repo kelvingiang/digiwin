@@ -674,7 +674,8 @@ hr.style-two {
   transition: all 1s;
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 #industry-home .item .item-content {
   font-weight: bold;
@@ -933,14 +934,12 @@ hr.style-two {
 
 @keyframes animationImg {
   0% {
-    opacity: 0;
-    -ms-transform: scale(0.7, 0.7); /* IE 9 */
+    opacity: 0; /* IE 9 */
     transform: scale(0.7, 0.7);
   }
   /*        90%  {width: 90%; opacity: 0.2}*/
   100% {
-    opacity: 1;
-    -ms-transform: scale(1, 1); /* IE 9 */
+    opacity: 1; /* IE 9 */
     transform: scale(1, 1);
   }
 }
@@ -1134,9 +1133,7 @@ hr.style-two {
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,c3d6e5+24,ffffff+50,c3d3e0+79,c9dae8+100 */
   background: rgb(208, 228, 247);
   /* Old browsers */
-  background: -moz-linear-gradient(top, rgba(231, 231, 231, 0.9) 0%, rgba(231, 231, 231, 0.9) 100%);
   /* FF3.6-15 */
-  background: -webkit-linear-gradient(top, rgba(231, 231, 231, 0.9) 0%, rgba(231, 231, 231, 0.9) 100%);
   /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom, rgba(231, 231, 231, 0.9) 0%, rgba(231, 231, 231, 0.9) 100%);
   /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
@@ -1163,10 +1160,6 @@ hr.style-two {
   content: "❯";
   margin-left: 3px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 .menu-main-item:hover .menu-main-item-bg {
@@ -1343,10 +1336,6 @@ html[lang=zh-TW] .has-sub::after {
   content: "❯";
   margin-left: -3px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -1354,10 +1343,6 @@ html[lang=en-US] .has-sub::after {
   content: "❯";
   margin-left: 1px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -1616,7 +1601,7 @@ html[lang=en-US] .has-sub::after {
   text-align: center;
   font-size: 0.7rem;
   color: transparent;
-  margin-top: 60px;
+  margin-top: 15px;
 }
 
 .menu-sub {
@@ -1838,7 +1823,8 @@ html[lang=en-US] .has-sub::after {
   aspect-ratio: 16/9 !important;
   width: 100% !important;
   height: auto !important;
-  object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
+  -o-object-fit: cover !important;
+     object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
   display: block;
 }
 #slider .active a {
@@ -2309,7 +2295,8 @@ html[lang=en-US] .has-sub::after {
   max-width: 100%;
   height: auto;
   display: block;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .side-right {
