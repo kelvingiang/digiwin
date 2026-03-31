@@ -48,7 +48,7 @@
                     fill: #0d72f7;
                 }
             }
-            &:hover a{
+            &:hover a {
                 color: #fff;
             }
         }
@@ -79,6 +79,12 @@
             li {
                 cursor: pointer;
                 padding-bottom: 0.6rem;
+                a {
+                    svg {
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
             }
         }
         .download-link {
@@ -137,7 +143,8 @@
                     width: 35px;
                     padding-top: 10px;
                     svg {
-                        width: 1.3rem !important;
+                        width: 25px;
+                        height: 25px;
                     }
                 }
                 div:nth-child(2) {
@@ -163,11 +170,13 @@
                 text-align: right;
                 padding-left: 50px;
             }
-
-            svg {
-                width: 2rem !important;
-                &:hover {
-                    fill: #d4dfec;
+            .icon-link {
+                svg {
+                    width: 30px;
+                    height: 30px;
+                    &:hover {
+                        fill: #d4dfec;
+                    }
                 }
             }
         }
@@ -218,7 +227,9 @@
             text-align: right; /* Đảm bảo chữ bên trong cũng căn phải nếu có nhiều dòng */
         }
     }
-
+    .h3-title {
+        text-transform: uppercase;
+    }
     .dot-title::before {
         content: ""; /* 必須設定 content 虛擬元素才會顯示 */
         display: inline-block;

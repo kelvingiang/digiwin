@@ -58,7 +58,7 @@ function getTranslate()
         'Reply' => '回覆',
         'Perform Calculations' => '請回答',
         'The calculation problem is incorrect. Please enter the correct answer!' => '計算題錯誤，請輸入正確答案！',
-        'Zalo OA Community' => 'Zalo OA 社區',
+        'Zalo OA Community' => '越南鼎捷 Zalo OA',
         'Scan to join Zalo OA & get the latest industry reports' => '掃碼關注 Zalo OA, 獲取最新行業報告',
         'Free Resources for Businesses' => '企業專用免費資源',
         'Download 2026 Digital Transformation Whitepaper' => '下載 2026 數位轉型白皮書',
