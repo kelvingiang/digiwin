@@ -69,6 +69,21 @@ function getTranslate()
         'Digital Transformation in the Plastics Industry' => '塑膠產業數位轉型',
         'Case Studies' => '成功案例',
         'Awards & Certificates' => '獎項與證書',
+        //=======   
+        'Login' => '登入',
+        'Register' => '註冊',
+        'Password' => '密碼',
+        'E-mail' => 'E-mail',
+        'Welcome back!' => '歡迎回來！',
+        'Full Name' => '姓名',
+        'Register a new account' => '註冊新帳戶',
+        'Register for free to download documents' => '免費註冊以下載文件',
+        'Company Name' => '公司名稱',
+        'Position' => '職位',
+        'Phone' => '電話',
+        'Tax Number' => '稅號',
+        'Industry' => '行業',
+        'Department' => '部門',
     );
     return array_merge($data);
 }

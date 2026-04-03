@@ -9,6 +9,7 @@ class Metabox_Main
     public function __construct()
     {
         $defaultOption = array(
+            'metabox_source' => TRUE,
             'metabox_view' => TRUE,
             'metabox_web' => TRUE,
             'metabox_download' => TRUE,
@@ -25,6 +26,7 @@ class Metabox_Main
         );
 
         $this->_controller_options = get_option($this->_controller_name, $defaultOption);
+        $this->metabox_source();
         $this->metabox_view();
         $this->metabox_web();
         $this->metabox_download();
@@ -39,6 +41,15 @@ class Metabox_Main
         $this->metabox_link();
         $this->metabox_sidebar();
         add_action('admin_init', array($this, 'do_output_buffer'));
+    }
+
+
+     public function metabox_source()
+    {
+        if ($this->_controller_options['metabox_source']) {
+            require_once(DIR_METABOX . 'metabox-source.php');
+            new Metabox_source();
+        }
     }
 
 

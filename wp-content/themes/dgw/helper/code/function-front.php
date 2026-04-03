@@ -86,3 +86,7 @@ function get_products($cate)
     $row = $wpdb->get_results($sql, ARRAY_A);
     return $row;
 }
+
+
+
+

@@ -15,6 +15,7 @@ require_once DIR_HELPER . 'code/admin-custom-columns.php';
 require_once DIR_HELPER . 'code/function-ajax.php';
 require_once DIR_HELPER . 'code/function-wp-send-mail.php';
 require_once DIR_HELPER . 'code/function-custom-comment.php';
+require_once DIR_HELPER . 'code/function-download-file.php';
 
 
 function dgw_get_lang()
@@ -337,7 +338,7 @@ add_action('wp_head', function () {
                 'is_internal': 'yes'
             });
         </script>
-<?php
+    <?php
     }
 });
 
@@ -360,3 +361,89 @@ add_action('after_setup_theme', function () {
     add_image_size('card-desktop', 300, 200, true);
     add_image_size('card-mobile',  480, 320, true);
 });
+
+add_action('wp_footer', function () { ?>
+    <div id="auth-popup-overlay">
+        <div id="auth-popup-box">
+            <button id="auth-popup-close">✕</button>
+
+            <div class="popup-logo"></div>
+
+            <div id="tab-buttons">
+                <button class="tab-btn active" data-tab="login"><?php _e('Login' , 'dgw') ?></button>
+                <button class="tab-btn" data-tab="register"><?php _e('Register', 'dgw') ?></button>
+            </div>
+
+            <div id="tab-login" class="tab-content">
+                <h3><?php _e('Login') ?></h3>
+                <p class="popup-sub"><?php _e('Welcome back!') ?></p>
+                <label><?php _e('E-mail') ?></label>
+                <input type="email" id="login-email" placeholder="example@email.com" />
+                <label><?php _e('Password', 'dgw') ?></label>
+                <input type="password" id="login-password" placeholder="••••••••" />
+                <button id="btn-login"><?php _e('Login', 'dgw') ?></button>
+                <p id="login-msg" class="msg"></p>
+            </div>
+
+            <div id="tab-register" class="tab-content tab-register" style="display:none">
+                <div>
+                    <h3><?php _e('Register a new account', 'dgw') ?></h3>
+                    <p class="popup-sub"><?php _e('Register for free to download documents') ?></p>
+                </div>
+
+                <div class="register-row">
+                    <div>
+                        <label><?php _e('E-mail' , 'dgw')?></label>
+                        <input type="email" id="reg-email" placeholder="example@email.com" />
+                    </div>
+                    <div>
+                        <label><?php _e('Password' , 'dgw')?></label>
+                        <input type="password" id="reg-password" placeholder="Tối thiểu 6 ký tự" />
+                    </div>
+                </div>
+
+                <hr class="hr-style">
+  
+                <div>
+                    <label><?php _e('Company' , 'dgw') ?></label>
+                    <input type="text" id="reg-company" />
+                </div>
+                <div class="register-row">
+                    <div>
+                        <label><?php _e('Full Name' , 'dgw') ?>
+                        </label>
+                        <input type="text" id="reg-username" placeholder="Nguyễn Văn A" />
+                    </div>
+                    <div>
+                        <label><?php _e('Position' , 'dgw') ?></label>
+                        <input type="text" id="reg-position" />
+                    </div>
+                </div>
+                <div class="register-row">
+                    <div>
+                        <label><?php _e('Phone' , 'dgw') ?></label>
+                        <input type="text" id="reg-phone" />
+                    </div>
+                    <div>
+                        <label><?php _e('Tax Number' , 'dgw') ?></label>
+                        <input type="text" id="reg-tax" />
+                    </div>
+                </div>
+
+                <div class="register-row">
+                    <div>
+                        <label><?php _e('Industry' , 'dgw') ?></label>
+                        <input type="text" id="reg-industry" />
+                    </div>
+
+                    <div>
+                        <label><?php _e('Department' , 'dgw') ?></label>
+                        <input type="text" id="reg-department" />
+                    </div>
+                </div>
+                <button id="btn-register"><?php _e('Register', 'dgw') ?> </button>
+                <p id="register-msg" class="msg"></p>
+            </div>
+        </div>
+    </div>
+<?php });

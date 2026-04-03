@@ -69,6 +69,21 @@ function getTranslate()
         'Digital Transformation in the Plastics Industry' => 'Chuyển Đổi Số Ngành Nhựa',
         'Case Studies' => 'Câu Chuyện Thành Công',
         'Awards & Certificates' => 'Giải Thưởng & Chứng Chỉ',
+        //==========
+        'Login' => 'Đăng Nhập',
+        'Register' => 'Đăng Ký',    
+        'Password' => 'Mật Khẩu',
+        'E-mail' => 'E-mail',
+        'Welcome back!' => 'Chào Mừng Đã Quay Lại!',
+        'Full Name' => 'Họ Tên',
+        'Register a new account' => 'Đăng Ký Tài Khoản Mới',
+        'Register for free to download documents' => 'Đăng Ký Miễn Phí Để Tải Tài Liệu',    
+        'Company Name' => 'Tên Công Ty',
+        'Position' => 'Chức Vụ',    
+        'Phone' => 'Điện Thoại',
+        'Tax Number' => 'Mã Số Thuế',   
+        'Industry' => 'Ngành Nghề',
+        'Department' => 'Phòng Ban',
     );
     return array_merge($data);
 }
