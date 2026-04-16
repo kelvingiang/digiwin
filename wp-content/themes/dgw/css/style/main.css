@@ -1,8 +1,4 @@
 @charset "UTF-8";
-@font-face {
-  font-family: "DFKai";
-  src: url("../fonts/kaiu.ttf") format("woff2");
-}
 a {
   text-decoration: none;
 }
@@ -21,7 +17,12 @@ html {
 }
 
 html[lang=zh-TW] body {
-  font-family: "DFKai", Microsoft YaHei, Arial, sans-serif;
+  font-family: "Noto Sans TC", "Microsoft JhengHei", "DFKai-SB", Arial, sans-serif;
+}
+
+/* 2. Đối với Tiếng Hoa Giản thể (China) */
+html[lang=zh-CN] body {
+  font-family: "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
 }
 
 html[lang=vi-VN] body {

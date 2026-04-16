@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "eloquent-pact-493206-g4",
+  "private_key_id": "cafc20f9a4d17c42a5bf1460faf905aa8dbc067c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCZdt4k7lri3XlZ\nssDP0lM6LvJlXjZC8Tlqp5MErF3lIkcqceV+Yh7TDNCRWiiM39+SMuAINSVINaYk\nX9CKFH/FyeAMysrQ34Ajexrl0SHeGidp2Q5Wjea+UL14OowVEsxPnBPRb0udfmsF\nX1TJruvVBKDgs4UpsKFvRWTBqexhMEDIF7t9rhe6VpA+mFTCWLHzIa6zkoNcBaxP\nGM30u2nxj9m2KCu60fOCUjppD904tfiW0BSJ80CbcAb6tXxISD02OmssvEELK58Q\nb2kJeuXhMVuGpIZNJp75vKiQIkVQn53VMF6YLK04TOvrHmYHeUAnt7x0ewwH4AgA\n2NA2VrXZAgMBAAECggEAA+CoQm7LA+5HKEBMlWOx1SebBHssgVABh05GeB4tKC06\ndu+A9jV0pG4E4MCnriQ491jK5teFl+JnzoWk6gbpvJMPfXCWo8+bN/+etshW4/sC\nscQO0+/gG5Zu1yMZki29qlRIqZMiP2Tn6i9AtUYyxhjeF2y0dGYhX25K2lwuBr2X\nR+fxj7yrKXwTH1uYQwCpucmlTf5fwmU7T+dsqm8HpzjgxOGLkvMvmdJaZpAmOHYQ\nFh+qDQ/RwP2JLA1/8Qo32+wCJTZhct5Lsht/n+YErXB/EzeQ33wLaFGqn6vtaYlO\n+/Uj7a+9jeoM6MD2m+endtBAEdR9ED+LMs6s+xqOQQKBgQDGgKrbVAr3NJV4jrXE\n0oAs/Klxkdr0apTxWybltmFtn0LSrQoTFASi2H+Kz0SsIbgGvvUMq9WiZr8yLin3\nDzfrPCYlDQSwX3OUyZRPda6yZV1syQEJzkDf9hWtBGubUxKtDSIZLp4dPYFq1FrI\nUNNSzFIDPv2Wsfq1nIAxuHs9eQKBgQDF6od79/nYi/P9bclyj69jEzFukYB098Ej\n50UiVGCK5fzlXuVq6S/jgPO49DZjBT8tZg8g9GkdnEPDe7qBhPI9rV4zGZ6MCHPJ\n2btVPfLJgEIvElyg1MNdbtqdMHEYYN7wMwE8+ZOgfBlo7LvAuW3KPiHpe3zh1smX\nwHeFDkwDYQKBgQCcEwTD6MOqdRzlKog+1ifTt2FfG4hlzvuG/d2KlijqsWMwFMAs\nGfw/MiyuLqPXF7gDDdfM+7rAszq3sNZsG/oiqitvzFmYd6SAIzLKe0Q9njej1jNL\ny3D05x9J54TYHqw7hmz+EcpeQULlhUxP3kUZ/+6oALoQ56Wxb/jXny6/OQKBgQCS\nrV+/lmYKAJ7QwV68kpRO/thxs0/aYAs5yppH+PSbvBsS+qNX+n3NQ7Jc7lCoTikm\nQi8QI1ML6NWnuLjeaGMHJsdbY69G5LS7cawOXpzijTV/oUIYx9YKFq/aMx5+DLzs\nk0BlqimolJBYXKpBCKu/aRDE8wn4bbB10ORDLfdTwQKBgHljiHZu5CCibtwDkxsk\nrM5kpMVAnVp24tkrQ3+g9U50FVubpTnFJOEI6wtY1KiPhhoRHs/9UcD6aetOVBer\ndTJCfOywwGHeCT22EY5JF1jc7pfNQtnEi5Ot7JAJxYlqQB3iiRhzSRHvW5xdwUIx\nwEUpcXieBwA3nPjU+/lYsfzp\n-----END PRIVATE KEY-----\n",
+  "client_email": "digiwin@eloquent-pact-493206-g4.iam.gserviceaccount.com",
+  "client_id": "105966999519043396406",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/digiwin%40eloquent-pact-493206-g4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

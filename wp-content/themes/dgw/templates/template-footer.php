@@ -37,6 +37,7 @@
                        <?php
                         // Giá trị mặc định
                         $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin'; // fallback link
+                        $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download'; 
 
                         $allowed_langs = ['vn', 'cn'];
                         $lang = isset($_COOKIE['site_lang']) ? $_COOKIE['site_lang'] : '';
@@ -45,8 +46,10 @@
                         if (in_array($lang, $allowed_langs, true)) {
                             if ($lang === 'vn') {
                                 $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin';
+                                $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download';
                             } elseif ($lang === 'cn') {
                                 $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin';
+                                $link_download = WP_HOME . '/resources/circular-99-guide-zhtc';
                             }
                         }
                         ?>
@@ -59,11 +62,12 @@
 
                    </div>
                    <div class="download-link">
-                       <label class="download-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                       <label class="download-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z" />
-                           </svg><?php _e('Free Resources for Businesses') ?></label>
+                           </svg><?php _e('Free Resources for Businesses') ?>
+                       </label>
 
-                       <a href="<?php echo WP_HOME . '/resource/cate/104/tag/' ?>">
+                       <a href="<?php echo $link_download ?>">
                            <div class="download-btn">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:20px; height:20px">
                                    <path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L208 576L208 464C208 428.7 236.7 400 272 400L448 400L448 234.5C448 217.5 441.3 201.2 429.3 189.2L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM272 444C261 444 252 453 252 464L252 592C252 603 261 612 272 612C283 612 292 603 292 592L292 564L304 564C337.1 564 364 537.1 364 504C364 470.9 337.1 444 304 444L272 444zM304 524L292 524L292 484L304 484C315 484 324 493 324 504C324 515 315 524 304 524zM400 444C389 444 380 453 380 464L380 592C380 603 389 612 400 612L432 612C460.7 612 484 588.7 484 560L484 496C484 467.3 460.7 444 432 444L400 444zM420 572L420 484L432 484C438.6 484 444 489.4 444 496L444 560C444 566.6 438.6 572 432 572L420 572zM508 464L508 592C508 603 517 612 528 612C539 612 548 603 548 592L548 548L576 548C587 548 596 539 596 528C596 517 587 508 576 508L548 508L548 484L576 484C587 484 596 475 596 464C596 453 587 444 576 444L528 444C517 444 508 453 508 464z" />
