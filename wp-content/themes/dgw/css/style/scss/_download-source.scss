@@ -91,7 +91,7 @@
     transition: all 0.15s;
 }
 .tab-btn.active {
-    background: #534ab7;
+    background: #0862e9;
     color: #fff;
 }
 
@@ -116,7 +116,7 @@
     transition: border 0.15s;
 }
 .tab-content input:focus {
-    border-color: #534ab7;
+    border-color: #0451c4;
     box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
 }
 .tab-content input::placeholder {
@@ -124,11 +124,17 @@
 }
 
 /* ===== BUTTON ===== */
+.btn-space {
+    display: grid;
+         grid-template-columns: 2fr 1fr;
+    gap: 12px;
+}
 #btn-login,
+#btn-forget-password,
 #btn-register {
     width: 100%;
     padding: 11px;
-    background: #534ab7;
+    background: #0862e9;
     color: #fff;
     border: none;
     border-radius: 9px;
@@ -137,9 +143,14 @@
     cursor: pointer;
     transition: background 0.15s;
 }
+#btn-forget-password {
+    background: #727374;
+}
+
 #btn-login:hover,
+#btn-forget-password:hover,
 #btn-register:hover {
-    background: #3c3489;
+    background: #0243a5;
 }
 
 /* ===== FOOTER TEXT ===== */
@@ -150,7 +161,7 @@
     margin-top: 14px;
 }
 .popup-footer a {
-    color: #534ab7;
+    color: #0451c4;
     text-decoration: none;
     font-weight: 500;
 }
@@ -176,4 +187,112 @@
       border: none;
     border-top: 2px dotted #b4b3b3;
     margin: 10px 0;
+}
+
+//===== POPUP QUÊN MẬT KHẨU ===== ==============================================*/
+/* Lớp nền mờ toàn màn hình */
+.dwf-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75); /* Làm nền tối hơn để tập trung vào popup */
+    z-index: 999999; /* Đảm bảo luôn nằm trên cùng */
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px); /* Hiệu ứng làm mờ nền phía sau (hiện đại) */
+}
+
+/* Khung nội dung chính */
+.dwf-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: dwf-slide-up 0.3s ease-out; /* Hiệu ứng hiện ra nhẹ nhàng */
+}
+
+/* Nút đóng (X) */
+.dwf-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.dwf-close:hover { color: #333; }
+
+/* Tiêu đề */
+.dwf-header h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    color: #333;
+    font-weight: 700;
+    text-align: center;
+}
+.dwf-header p {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Form và Input */
+.dwf-form { display: block; }
+
+.dwf-input-group { margin-bottom: 20px; }
+
+.dwf-input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+    box-sizing: border-box; /* Quan trọng để input không bị tràn */
+}
+.dwf-input-group input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* Nút bấm Gửi */
+.dwf-btn-submit {
+    width: 100%;
+    padding: 13px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+.dwf-btn-submit:hover { background-color: #0056b3; }
+.dwf-btn-submit:disabled { background-color: #ccc; cursor: not-allowed; }
+
+/* Thông báo phản hồi */
+.dwf-status-msg {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 14px;
+    min-height: 20px;
+}
+.dwf-status-msg.success { color: #28a745; }
+.dwf-status-msg.error { color: #dc3545; }
+
+/* Animation hiện popup */
+@keyframes dwf-slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

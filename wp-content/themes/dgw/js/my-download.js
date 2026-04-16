@@ -6,9 +6,9 @@ jQuery(document).ready(function ($) {
 
     // Lưu lại thông tin trước khi gửi AJAX
     pendingDownload = {
-      post_id: $(this).attr("data-post-id"),
-      post_title: $(this).attr("data-post-title"),
-      post_source: $(this).attr("data-post-source"),
+      post_id: jQuery(this).attr("data-post-id"),
+      post_title: jQuery(this).attr("data-post-title"),
+      post_source: jQuery(this).attr("data-post-source"),
     };
 
     // Gửi AJAX lên server
@@ -58,6 +58,50 @@ jQuery(document).ready(function ($) {
       // },
     });
   });
+
+  jQuery(document).on("click", "#btn-forget-password", function (e) {
+    e.preventDefault();
+    jQuery("#auth-popup-overlay").fadeOut(200);
+
+    // Hiện popup forgot với Flexbox để căn giữa
+    jQuery("#popup-forgot-password").css("display", "flex").hide().fadeIn(300);
+  });
+
+  // Đóng popup khi click nút X hoặc click ra ngoài vùng trắng
+    jQuery(document).on('click', '.dwf-close, #popup-forgot-password', function(e) {
+        if (e.target !== this) return;
+        $('#popup-forgot-password').fadeOut(200);
+    });
+
+  // 2. Đóng popup
+  jQuery(document).on("click", ".close-popup, .dw-popup-overlay", function (e) {
+    if (e.target !== this) return;
+    jQuery("#popup-forgot-password").fadeOut();
+  });
+
+  // 3. Xử lý gửi Form bằng AJAX (không load lại trang)
+
+  jQuery('#forgot_password_form_ajax').on('submit', function(e) {
+        e.preventDefault();
+        var email = $('#user_email').val();
+        var nonce = $('#forgot_nonce').val();
+
+        jQuery('#btn-submit-forgot').text('Đang gửi...');
+
+        jQuery.ajax({
+            url: MyAjax.ajax_url, // dw_params được truyền từ wp_localize_script
+            type: 'POST',
+            data: {
+                action: 'member_forgot_password',
+                user_email: email,
+                nonce: nonce
+            },
+            success: function(response) {
+                jQuery('#forgot-password-msg').html(response.data.message);
+                jQuery('#btn-submit-forgot').text('Gửi yêu cầu');
+            }
+        });
+    });
 });
 
 // khi nhấn enter sẽ tự submit from
@@ -85,6 +129,15 @@ jQuery(document).on("click", "#btn-login", function () {
           .css("color", "green")
           .text("Đăng nhập thành công!");
         setTimeout(function () {
+          // ✅ 判斷在哪個頁面
+          const page = jQuery("#tab-login").data("page");
+
+          if (page === "member") {
+            window.location.href = window.location.href;
+            // window.location.href = "/"; // ← member page 轉首頁
+            return;
+          }
+
           jQuery("#auth-popup-overlay").remove();
           if (pendingDownload) {
             jQuery.ajax({
@@ -145,24 +198,25 @@ jQuery(document).on("click", "#btn-register", function () {
   });
 });
 
+
 // ===== HIỆN POPUP =====
 function showLoginPopup() {
-    jQuery('#login-email').val('');
-    jQuery('#login-password').val('');
-    jQuery('#login-msg').text('');
+  jQuery("#login-email").val("");
+  jQuery("#login-password").val("");
+  jQuery("#login-msg").text("");
 
-    jQuery('#auth-popup-overlay').addClass('show');
+  jQuery("#auth-popup-overlay").addClass("show");
 }
 
 // Đóng popup
-jQuery(document).on('click', '#auth-popup-close', function() {
-    jQuery('#auth-popup-overlay').removeClass('show');
+jQuery(document).on("click", "#auth-popup-close", function () {
+  jQuery("#auth-popup-overlay").removeClass("show");
 });
 
-jQuery(document).on('click', '#auth-popup-overlay', function(e) {
-    if (e.target === this) {
-        jQuery('#auth-popup-overlay').removeClass('show');
-    }
+jQuery(document).on("click", "#auth-popup-overlay", function (e) {
+  if (e.target === this) {
+    jQuery("#auth-popup-overlay").removeClass("show");
+  }
 });
 
 jQuery(document).on("click", ".tab-btn", function () {
@@ -171,4 +225,3 @@ jQuery(document).on("click", ".tab-btn", function () {
   jQuery(".tab-content").hide();
   jQuery("#tab-" + jQuery(this).data("tab")).show();
 });
-

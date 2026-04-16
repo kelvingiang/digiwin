@@ -230,7 +230,8 @@
            <div class="copy-right">
                <div>&copy; 2026 DIGIWIN Vietnam. All rights reserved</div>
 
-               <div><a class="foot-link" href="https://www.digiwin.com.vn/digiwinasean_privacy-policy/">Chính Sách Bảo Mật | Điều Kiện Sử Dụng </a></div>
+               <div><a class="foot-link"
+                       href="<?php echo WP_HOME . '/digiwinasean_privacy-policy/' ?>">Chính Sách Bảo Mật | Điều Kiện Sử Dụng </a></div>
            </div>
        </footer>
    <?php } ?>
