@@ -19,7 +19,7 @@ function member_forgot_password_form() {
             <div id="forgot-password-msg" class="dwf-status-msg"></div>
         </form>
     </div>
-</div>>
+</div>
     <?php
     return ob_get_clean();
 }

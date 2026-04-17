@@ -67,22 +67,23 @@ wp_footer(); ?>
   }
 
   document.addEventListener('DOMContentLoaded', function() {
+    
     // 禁止右鍵選單，這樣用戶無法透過右鍵選取「複製」功能
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-    });
+    // document.addEventListener('contextmenu', function(e) {
+    //   e.preventDefault();
+    // });
 
     //禁止快捷鍵，如 Ctrl+C 來複製內容。
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && (e.key === 'c' || e.key === 'a' || e.key === 'x')) {
-        e.preventDefault();
-      }
-    });
+    // document.addEventListener('keydown', function(e) {
+    //   if (e.ctrlKey && (e.key === 'c' || e.key === 'a' || e.key === 'x')) {
+    //     e.preventDefault();
+    //   }
+    // });
 
     //禁止用戶拖拽文本或圖片來進行複製。
-    document.addEventListener('dragstart', function(e) {
-      e.preventDefault();
-    });
+    // document.addEventListener('dragstart', function(e) {
+    //   e.preventDefault();
+    // });
 
     //禁止 F12（開發者工具），避免部分用戶檢視網站代碼。
     //   document.addEventListener('keydown', function(e) {
