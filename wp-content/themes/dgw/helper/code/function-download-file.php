@@ -372,6 +372,7 @@ function handle_reset_password()
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm'] ?? '';
     $key = $_POST['key'] ?? '';
+    $email = $_POST['email'] ?? '';
 
     if (empty($password) || empty($confirm) || empty($key)) {
         wp_send_json_error(array('message' => '請輸入密碼'));
@@ -384,7 +385,7 @@ function handle_reset_password()
     if (!empty($key)) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $model_download = new Model_Download();
-        $model_download->reset_password($key, $password_hash);
+        $model_download->reset_password($email, $password_hash);
     }
 
     wp_send_json_success(array(
@@ -461,11 +462,21 @@ function handle_forgot_password()
         wp_send_json_error(['message' => 'Email không tồn tại trong hệ thống.']);
     }
 
+    // --- BẮT ĐẦU TẠO TOKEN ---
+    // 1. Tạo một token ngẫu nhiên cực dài
+    $plain_token = bin2hex(random_bytes(32)); 
+    // 2. Hash token trước khi lưu vào DB (Bảo mật PHP 8.2)
+    $hashed_token = hash('sha256', $plain_token);
+    // 3. Thời gian hết hạn (24h kể từ bây giờ)
+    $expiry = time() + (24 * 60 * 60);
+
+    $model_download->update_token($email, $hashed_token, $expiry);
+
     // Tạo mã bảo mật reset mật khẩu của WordPress
-    $key = generate_simple_key(8);
-    if (is_wp_error($key)) {
-        wp_send_json_error(['message' => 'Không thể tạo khóa khôi phục. Vui lòng thử lại sau.']);
-    }
+    // $key = generate_simple_key(8);
+    // if (is_wp_error($key)) {
+    //     wp_send_json_error(['message' => 'Không thể tạo khóa khôi phục. Vui lòng thử lại sau.']);
+    // }
 
     // Tạo link reset mật khẩu chuyên nghiệp
     //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
@@ -483,7 +494,7 @@ function handle_forgot_password()
     $subject = "Yêu cầu đặt lại mật khẩu - " . get_bloginfo('name');
 
     // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
-    $reset_url = home_url('/reset-password/?key=' . $user->ID );
+    $reset_url = home_url('/reset-password/?key=' . $hashed_token .'&email=' . rawurlencode($email));
 
     $message = "
     <html>

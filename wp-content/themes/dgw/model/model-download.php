@@ -90,6 +90,19 @@ class Model_Download
         ));
     }
 
+    public function update_token($email, $token, $expiry)
+    {
+        return $this->_db->update(
+            $this->_table_registry,
+            [
+                'token' => $token,
+                'expiry' => $expiry,
+                'update_date'  => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
+            ],
+            ['email' => $email]
+        );
+    }
+
     // 3. 更新使用者密碼
     public function update_login($id, $session_key, $ip_address)
     {
@@ -120,15 +133,17 @@ class Model_Download
 
     
     // 3. 更新使用者密碼
-    public function reset_password($session_key, $new_password_hash)
+    public function reset_password($email, $new_password_hash)
     {
         return $this->_db->update(
             $this->_table_registry,
             [
                 'password'    => $new_password_hash,
+                'token'       => null, // 清除 token
+                'expiry'      => null, // 清除 expiry
                 'update_date' => current_time('mysql')
             ],
-            ['ID' => $session_key]
+            ['email' => $email]
         );
     }
     // 4. 更新使用者一般資訊
