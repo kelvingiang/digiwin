@@ -1335,7 +1335,7 @@ hr.style-two {
 
 html[lang=zh-TW] .has-sub::after {
   content: "❯";
-  margin-left: -3px;
+  margin-left: 1px;
   display: inline-block;
   transform: rotate(90deg);
 }

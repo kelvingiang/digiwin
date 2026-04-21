@@ -277,7 +277,7 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
 }
 
 html[lang="zh-TW"] .has-sub::after {
-    @include HasSub(90deg, -3px);
+    @include HasSub(90deg, 1px);
 }
 
 html[lang="en-US"] .has-sub::after {
