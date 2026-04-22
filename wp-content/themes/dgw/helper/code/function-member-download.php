@@ -36,14 +36,15 @@ add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
 add_action('wp_footer', function () {
     $post_id    = get_the_ID();
     $post_title = get_the_title();
-    $post_source = get_post_meta($post_id, '_metabox_source', true);
+    // $post_source = get_post_meta($post_id, '_metabox_source', true);
 ?>
     <script>
         jQuery(document).ready(function($) {
-            $('#my-load-data').attr({
+            jQuery('#my-load-data').attr({
                 'data-post-id': '<?php echo esc_js($post_id); ?>',
                 'data-post-title': '<?php echo esc_js($post_title); ?>',
-                'data-post-source': '<?php echo esc_js($post_source); ?>'
+                // 'data-post-source': '<?php //echo esc_js($post_source); 
+                                        ?>'
             });
         });
     </script>
@@ -71,7 +72,7 @@ function my_download_file()
     }
 
     // 1. Kiểm tra đăng nhập
-    $user = is_custom_logged_in();
+    $user = is_member_logged_in();
     if (!$user) {
         wp_send_json_error(['code' => 'not_logged_in']);
         return;
@@ -80,7 +81,7 @@ function my_download_file()
     // 2. Nhận dữ liệu từ JS gửi lên
     $post_id    = isset($_POST['post_id'])    ? intval($_POST['post_id'])              : 0;
     $post_title = isset($_POST['post_title']) ? sanitize_text_field($_POST['post_title']) : '';
-    $post_source = isset($_POST['post_source']) ? sanitize_text_field($_POST['post_source']) : '';
+    $post_source =  get_post_meta($post_id, '_metabox_source', true);
 
     if (empty($post_source)) {
         wp_send_json_error(['message' => 'Không có link file']);
@@ -132,9 +133,9 @@ function my_download_file()
 /* =========================================================
 phần login 
 ========================================================= */
-add_action('wp_ajax_download_custom_login',        'handle_custom_login');
-add_action('wp_ajax_nopriv_download_custom_login', 'handle_custom_login');
-function handle_custom_login()
+add_action('wp_ajax_download_member_login',        'handle_member_login');
+add_action('wp_ajax_nopriv_download_member_login', 'handle_member_login');
+function handle_member_login()
 {
     $model_download = new Model_Download();
 
@@ -160,6 +161,12 @@ function handle_custom_login()
     // Kiểm tra password có khớp không
     if (!password_verify($password, $user->password)) {
         wp_send_json_error(['message' => 'Mật khẩu không đúng']);
+        return;
+    }
+
+    // Kiểm tra account có đã kích hoạt chưa (status = 1)
+    if ($user->status != 1) {
+        wp_send_json_error(['message' => 'Tài khoản chưa được kích hoạt']);
         return;
     }
     // ===== KẾT THÚC PHẦN XÁC THỰC =====
@@ -197,10 +204,10 @@ function handle_custom_login()
 /* =========================================================
 PHẦN ĐĂNG KÝ  register 
 ========================================================= */
-add_action('wp_ajax_download_custom_register',        'handle_custom_register');
-add_action('wp_ajax_nopriv_download_custom_register', 'handle_custom_register');
+add_action('wp_ajax_download_member_register',        'handle_member_register');
+add_action('wp_ajax_nopriv_download_member_register', 'handle_member_register');
 
-function handle_custom_register()
+function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
 
@@ -251,15 +258,81 @@ function handle_custom_register()
         return;
     }
 
-    // 4. 生成激活碼
-    $registration_data['active_code'] = generate_active_code(6, 'number');
 
-    // 5. 調用 Model 執行寫入
 
+    // --- BẮT ĐẦU TẠO TOKEN ---
+    // 1. Tạo một token ngẫu nhiên cực dài
+    $plain_token = bin2hex(random_bytes(32));
+    // 2. Hash token trước khi lưu vào DB (Bảo mật PHP 8.2)
+    $registration_data['active_code'] = hash('sha256', $plain_token);
     $result = $model_download->insert_registration_data($registration_data);
-
     if ($result) {
-        wp_send_json_success(['message' => 'Đăng ký thành công! Vui lòng đăng nhập']);
+
+        // Tạo link reset mật khẩu chuyên nghiệp
+        //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
+        // ==================== 修復 1: 設置正確的郵件頭部 ====================
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        // 修復 2: 添加明確的FROM地址 (使用WordPress網站郵箱)
+        $from_email = get_option('admin_email');
+        $from_name = get_bloginfo('name');
+        $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
+
+        // 修復 3: 添加Reply-To
+        $headers[] = 'Reply-To: ' . $from_email;
+
+        $subject = "kích hoạt tài khoản - " . get_bloginfo('name');
+
+        // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
+        $reset_url = home_url('/active-member/?key=' . $registration_data['active_code'] . '&email=' . rawurlencode($registration_data['email']));
+
+        $message = "
+    <html>
+        <body style='font-family: Arial, sans-serif; color: #333;'>
+            <h2>Chúc mừng bạn đã đăng ký thành công</h2>
+            <p>Chào " . esc_html($registration_data['username']) . ",</p>
+            <p>chào bạn đã là thành viên của trang web công ty Digiwin.</p>
+            <p>Vui lòng nhấp vào liên kết dưới đây để kích hoạt tài khoản của mình:</p>
+            <p>
+                <a href='" . esc_url($reset_url) . "' style='background-color: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
+                    Kích hoạt tài khoản
+                </a>
+            </p>
+            <p><strong>Hoặc sao chép liên kết này vào trình duyệt:</strong><br>
+            " . esc_url($reset_url) . "</p>
+            <p>Nếu bạn không yêu cầu điều này, hãy bỏ qua email này. Liên kết này sẽ hết hạn trong 24 giờ.</p>
+            <hr>
+            <p><small>" . get_bloginfo('name') . "</small></p>
+        </body>
+    </html>
+    ";
+
+        // ==================== 修復 5: 添加詳細的調試日誌 ====================
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Forgot Password Attempt\n";
+        $log_message .= "Email: " . $registration_data['email'] . "\n";
+        $log_message .= "Username: " . (isset($registration_data['username']) ? $registration_data['username'] : 'N/A') . "\n";
+        $log_message .= "From: " . $from_email . "\n";
+        $log_message .= "Headers: " . print_r($headers, true) . "\n";
+
+        // 使用WordPress的debug.log或自訂日誌檔案
+        error_log($log_message, 3, WP_CONTENT_DIR . '/forgot-password.log');
+
+        // ==================== 修復 6: 發送郵件並捕獲詳細錯誤 ====================
+        $sent = wp_mail(
+            (string)$registration_data['email'],           // TO
+            (string)$subject,         // SUBJECT
+            (string)$message,         // MESSAGE
+            $headers                  // HEADERS (修復後)
+        );
+        if ($sent) {
+            wp_send_json_success([
+                'message' => 'Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.'
+            ]);
+        } else {
+            wp_send_json_success([
+                'message' => 'Đăng ký thành công nhưng hệ thống không thể gửi mail kích hoạt. Vui lòng liên hệ quản trị viên.'
+            ]);
+        }
     } else {
         wp_send_json_error(['message' => 'Đăng ký thất bại, vui lòng thử lại']);
     }
@@ -276,7 +349,7 @@ function ajax_check_member_login()
         wp_send_json_error('Invalid nonce', 403);
     }
 
-    $user = is_custom_logged_in();
+    $user = is_member_logged_in();
 
     wp_send_json_success([
         'logged_in' => (bool) $user,
@@ -323,7 +396,7 @@ function handle_change_password()
     }
 
     // 2. 確認使用者有登入
-    $user = is_custom_logged_in();
+    $user = is_member_logged_in();
     if (!$user) {
         wp_send_json_error(array('message' => '請先登入'));
     }
@@ -393,6 +466,57 @@ function handle_reset_password()
     ));
 }
 
+
+/* =========================================================
+RESET PASWORD 
+========================================================= */
+add_action('wp_ajax_member_active_account',        'handle_active_account');
+add_action('wp_ajax_nopriv_member_active_account', 'handle_active_account');
+
+function handle_active_account()
+{
+    // 1. Kiểm tra Nonce bảo mật
+    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
+        wp_send_json_error(array('message' => 'Xác thực bảo mật thất bại.'), 403);
+    }
+
+    // 2. Lấy dữ liệu từ Frontend
+    $key   = sanitize_text_field($_POST['key'] ?? '');
+    $email = sanitize_email($_POST['email'] ?? '');
+
+    // 3. Kiểm tra dữ liệu đầu vào
+    if (empty($email) || empty($key)) {
+        wp_send_json_error(array('message' => 'Thông tin kích hoạt không đầy đủ.'));
+    }
+
+    $model_download = new Model_Download();
+
+    // 4. Kiểm tra User có tồn tại với Email này không
+    $user = $model_download->get_user_by_email($email);
+    if (!$user) {
+        wp_send_json_error(array('message' => 'Tài khoản không tồn tại.'));
+    }
+
+    // 5. Thực hiện kích hoạt (Gọi hàm update trong Model)
+    // Lưu ý: Hàm này trả về số dòng bị ảnh hưởng hoặc false
+    $activated = $model_download->active_member($email, $key);
+
+    if ($activated !== false) {
+        // Nếu $activated === 0 nghĩa là tài khoản đã kích hoạt từ trước rồi (status đã là 1)
+        // Nếu $activated > 0 nghĩa là vừa cập nhật thành công
+        wp_send_json_success(array(
+            'message' => 'Tài khoản của bạn đã được kích hoạt thành công!'
+        ));
+    } else {
+        // Trường hợp lỗi SQL hoặc không khớp active_code
+        wp_send_json_error(array(
+            'message' => 'Kích hoạt thất bại. Mã kích hoạt không chính xác hoặc đã hết hạn.'
+        ));
+    }
+
+    wp_die(); // Luôn kết thúc hàm AJAX của WordPress bằng wp_die()
+}
+
 /* =========================================================
 CẬP NHẬT THONG TIN KHÁCH HÀNG
 ========================================================= */
@@ -407,7 +531,7 @@ function handle_change_info()
     }
 
     // 2. 確認使用者有登入
-    $user = is_custom_logged_in();
+    $user = is_member_logged_in();
     if (!$user) {
         wp_send_json_error(array('message' => '請先登入'));
     }
@@ -464,19 +588,13 @@ function handle_forgot_password()
 
     // --- BẮT ĐẦU TẠO TOKEN ---
     // 1. Tạo một token ngẫu nhiên cực dài
-    $plain_token = bin2hex(random_bytes(32)); 
+    $plain_token = bin2hex(random_bytes(32));
     // 2. Hash token trước khi lưu vào DB (Bảo mật PHP 8.2)
     $hashed_token = hash('sha256', $plain_token);
     // 3. Thời gian hết hạn (24h kể từ bây giờ)
     $expiry = time() + (24 * 60 * 60);
 
     $model_download->update_token($email, $hashed_token, $expiry);
-
-    // Tạo mã bảo mật reset mật khẩu của WordPress
-    // $key = generate_simple_key(8);
-    // if (is_wp_error($key)) {
-    //     wp_send_json_error(['message' => 'Không thể tạo khóa khôi phục. Vui lòng thử lại sau.']);
-    // }
 
     // Tạo link reset mật khẩu chuyên nghiệp
     //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
@@ -494,7 +612,7 @@ function handle_forgot_password()
     $subject = "Yêu cầu đặt lại mật khẩu - " . get_bloginfo('name');
 
     // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
-    $reset_url = home_url('/reset-password/?key=' . $hashed_token .'&email=' . rawurlencode($email));
+    $reset_url = home_url('/reset-password/?key=' . $hashed_token . '&email=' . rawurlencode($email));
 
     $message = "
     <html>
@@ -570,7 +688,7 @@ add_action('wp_footer', function () {
 /* =========================================================
 // ===== HÀM KIỂM TRA ĐĂNG NHẬP =====
 ========================================================= */
-function is_custom_logged_in()
+function is_member_logged_in()
 {
     $model_download = new Model_Download();
 
@@ -612,57 +730,6 @@ function get_member_information($session_key)
     return $data;
 }
 
-
-/* =========================================================
-HÀM TẠO MÃ ACTIVE NGẪU NHIÊN =====
-========================================================= */
-function generate_active_code($length = 6, $type = 'number')
-{
-    switch ($type) {
-
-        // Chỉ số — ví dụ: 847392
-        case 'number':
-            $code = '';
-            for ($i = 0; $i < $length; $i++) {
-                $code .= random_int(0, 9);
-            }
-            return $code;
-
-            // Chữ hoa + số — ví dụ: A3K9BX
-        case 'alphanumeric':
-            $chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // bỏ 0,O,1,I dễ nhầm
-            $code  = '';
-            for ($i = 0; $i < $length; $i++) {
-                $code .= $chars[random_int(0, strlen($chars) - 1)];
-            }
-            return $code;
-
-            // Hex — ví dụ: a3f8c2d1
-        case 'hex':
-            return bin2hex(random_bytes($length / 2));
-
-        default:
-            return generate_active_code($length, 'number');
-    }
-}
-
-/* =========================================================
-ramdom tạo mã khẩu khi member quên mật khẩu
-========================================================= */
-function generate_simple_key($length = 8)
-{
-    // Tập hợp các ký tự bao gồm chữ cái và chữ số
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-
-    // Sử dụng random_int để đảm bảo tính bảo mật trên PHP 8.2
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[random_int(0, $charactersLength - 1)];
-    }
-
-    return $randomString;
-}
 
 /* =========================================================
 只在 member page 載入 JS

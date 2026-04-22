@@ -51,7 +51,7 @@ if (!empty($_COOKIE['custom_session'])) {
             </div>
 
             <hr class="hr-style">
-
+<!-- PHAN DANG KY REGISTER================================================================= -->
             <div>
                 <label><?php _e('Company', 'dgw') ?></label>
                 <input type="text" id="reg-company" />

@@ -15,7 +15,7 @@ require_once DIR_HELPER . 'code/admin-custom-columns.php';
 require_once DIR_HELPER . 'code/function-ajax.php';
 require_once DIR_HELPER . 'code/function-wp-send-mail.php';
 require_once DIR_HELPER . 'code/function-custom-comment.php';
-require_once DIR_HELPER . 'code/function-download-file.php';
+require_once DIR_HELPER . 'code/function-member-download.php';
 
 
 function dgw_get_lang()

@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
     pendingDownload = {
       post_id: jQuery(this).attr("data-post-id"),
       post_title: jQuery(this).attr("data-post-title"),
-      post_source: jQuery(this).attr("data-post-source"),
+     // post_source: jQuery(this).attr("data-post-source"),
     };
 
     // Gửi AJAX lên server
@@ -20,11 +20,9 @@ jQuery(document).ready(function ($) {
         nonce: MyAjax.nonce,
         post_id: pendingDownload.post_id,
         post_title: pendingDownload.post_title,
-        post_source: pendingDownload.post_source,
+        //post_source: pendingDownload.post_source,
       },
-      // beforeSend: function () {
-      //   jQuery("#my-load-data").text("Processing...");
-      // },
+   
       success: function (res) {
         if (res.success) {
           // cách load file mở trang mới
@@ -53,9 +51,6 @@ jQuery(document).ready(function ($) {
       error: function () {
         alert("An error occurred!");
       },
-      // complete: function () {
-      //   jQuery("#my-load-data").text(btnText);
-      // },
     });
   });
 
@@ -68,10 +63,14 @@ jQuery(document).ready(function ($) {
   });
 
   // Đóng popup khi click nút X hoặc click ra ngoài vùng trắng
-    jQuery(document).on('click', '.dwf-close, #popup-forgot-password', function(e) {
-        if (e.target !== this) return;
-        $('#popup-forgot-password').fadeOut(200);
-    });
+  jQuery(document).on(
+    "click",
+    ".dwf-close, #popup-forgot-password",
+    function (e) {
+      if (e.target !== this) return;
+      jQuery("#popup-forgot-password").fadeOut(200);
+    },
+  );
 
   // 2. Đóng popup
   jQuery(document).on("click", ".close-popup, .dw-popup-overlay", function (e) {
@@ -80,28 +79,27 @@ jQuery(document).ready(function ($) {
   });
 
   // 3. Xử lý gửi Form bằng AJAX (không load lại trang)
+  jQuery(document).on("submit", "#forgot_password_form_ajax", function (e) {
+    e.preventDefault();
+    var email = jQuery("#user_email").val();
+    var nonce = jQuery("#forgot_nonce").val();
 
-  jQuery('#forgot_password_form_ajax').on('submit', function(e) {
-        e.preventDefault();
-        var email = $('#user_email').val();
-        var nonce = $('#forgot_nonce').val();
+    jQuery("#btn-submit-forgot").text("Đang gửi...");
 
-        jQuery('#btn-submit-forgot').text('Đang gửi...');
-
-        jQuery.ajax({
-            url: MyAjax.ajax_url, // dw_params được truyền từ wp_localize_script
-            type: 'POST',
-            data: {
-                action: 'member_forgot_password',
-                user_email: email,
-                nonce: nonce
-            },
-            success: function(response) {
-                jQuery('#forgot-password-msg').html(response.data.message);
-                jQuery('#btn-submit-forgot').text('Gửi yêu cầu');
-            }
-        });
+    jQuery.ajax({
+      url: MyAjax.ajax_url, // dw_params được truyền từ wp_localize_script
+      type: "POST",
+      data: {
+        action: "member_forgot_password",
+        user_email: email,
+        nonce: nonce,
+      },
+      success: function (response) {
+        jQuery("#forgot-password-msg").html(response.data.message);
+        jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
+      },
     });
+  });
 });
 
 // khi nhấn enter sẽ tự submit from
@@ -117,7 +115,7 @@ jQuery(document).on("click", "#btn-login", function () {
     url: MyAjax.ajax_url,
     type: "POST",
     data: {
-      action: "download_custom_login",
+      action: "download_member_login",
       nonce: MyAjax.nonce,
       email: jQuery("#login-email").val(),
       password: jQuery("#login-password").val(),
@@ -171,7 +169,7 @@ jQuery(document).on("click", "#btn-register", function () {
     url: MyAjax.ajax_url,
     type: "POST",
     data: {
-      action: "download_custom_register",
+      action: "download_member_register",
       nonce: MyAjax.nonce,
       username: jQuery("#reg-username").val(),
       email: jQuery("#reg-email").val(),
@@ -197,7 +195,6 @@ jQuery(document).on("click", "#btn-register", function () {
     },
   });
 });
-
 
 // ===== HIỆN POPUP =====
 function showLoginPopup() {

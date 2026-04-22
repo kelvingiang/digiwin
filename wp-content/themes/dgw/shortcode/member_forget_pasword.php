@@ -1,6 +1,6 @@
 <?php
 function member_forgot_password_form() {
-    if ( is_user_logged_in() ) return '';
+    // if ( is_user_logged_in() ) return '';
 
     ob_start(); ?>
 <div id="popup-forgot-password" class="dwf-wrapper" style="display:none;">

@@ -90,6 +90,40 @@ class Model_Download
         ));
     }
 
+    public function active_member($email, $token)
+    {
+        // 1. Kiểm tra đầu vào
+        if (empty($email) || empty($token)) {
+            return false;
+        }
+
+        $data = [
+            'status'      => '1',
+            'update_date' => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
+        ];
+
+        $where = [
+            'email'       => $email,
+            'active_code' => $token // Hãy chắc chắn $token này đã được hash nếu trong DB lưu chuỗi hash
+        ];
+
+        $result = $this->_db->update(
+            $this->_table_registry,
+            $data,
+            $where
+        );
+
+        // DEBUG: Nếu bạn đang chạy thử, hãy uncomment dòng dưới để xem lỗi thực sự là gì
+        /*
+    if ($result === false) {
+        error_log("Update Error: " . $this->_db->last_error);
+    }
+    */
+
+        // Trả về true nếu update thành công HOẶC nếu bản ghi vốn dĩ đã là status = 1 (không thay đổi)
+        return ($result !== false);
+    }
+
     public function update_token($email, $token, $expiry)
     {
         return $this->_db->update(
@@ -130,8 +164,6 @@ class Model_Download
         );
     }
 
-
-    
     // 3. 更新使用者密碼
     public function reset_password($email, $new_password_hash)
     {
@@ -146,6 +178,7 @@ class Model_Download
             ['email' => $email]
         );
     }
+
     // 4. 更新使用者一般資訊
     public function update_info($session_key, $data)
     {
