@@ -17,10 +17,16 @@
         $param = $wp->query_vars;
         $postCount = get_option('first_load');
 
-        $cate = '97';
+        // $cate = '97';
         $postType = 'joinus';
         $tax = 'joinus_category';
-        getCustomsPostByCate($postType, $cate, $postCount, $tax);
+           $term = get_term_by('slug', 'recruit_staff', $tax);
+
+        if ($term) {
+            $cate = $term->term_id; // Tự động lấy ID tương ứng (98 hoặc 115)
+            getCustomsPostByCate($postType, $cate, $postCount, $tax);
+        }
+        
         ?>
     </div>
     <div id="load-more">

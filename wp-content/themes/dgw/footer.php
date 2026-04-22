@@ -86,11 +86,11 @@ wp_footer(); ?>
     // });
 
     //禁止 F12（開發者工具），避免部分用戶檢視網站代碼。
-    //   document.addEventListener('keydown', function(e) {
-    //     if (e.key === 'F12') {
-    //       e.preventDefault();
-    //     }
-    //   });
+      // document.addEventListener('keydown', function(e) {
+      //   if (e.key === 'F12') {
+      //     e.preventDefault();
+      //   }
+      // });
   });
   //============================================================================================
   // phần click vào item để chuyển đến trang single xem toàn bộ nội dụng bài đăng ==============

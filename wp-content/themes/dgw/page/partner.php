@@ -5,14 +5,9 @@
     <?php pageImg($post->ID); ?>
 </div>
 <div class="page-title-h1">
-    <h1><?php echo __('distribution') ?></h1> 
+    <h1><?php echo __('distribution') ?></h1>
 </div>
 <div class="menu-sub">
-    <?php
-    // $menu_category = 'joinus_category';
-    // $menu_page = 'join-digiwin';
-    // menuSub($menu_category, $menu_page);
-    ?>
 </div>
 
 <div class="container-fluid">
@@ -20,10 +15,17 @@
         <?php
         global $wp;
         $postCount = get_option('first_load');
-        $cate = '98';
+        // $cate = '98';
         $postType = 'joinus';
         $tax = 'joinus_category';
-        getCustomsPostByCate($postType, $cate, $postCount, $tax);
+        // Lấy object term thông qua slug (ví dụ slug là 'tuyen-dung')
+        $term = get_term_by('slug', 'distribution', $tax);
+
+        if ($term) {
+            $cate = $term->term_id; // Tự động lấy ID tương ứng (98 hoặc 115)
+            getCustomsPostByCate($postType, $cate, $postCount, $tax);
+        }
+        // getCustomsPostByCate($postType, $cate, $postCount, $tax);
         ?>
     </div>
     <div id="load-more">

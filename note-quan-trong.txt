@@ -1,0 +1,6 @@
+note các vẫn để quan trong
+1/ file google-credentials.json là dùng để xác thực để ghi lên google sheets
+  - tài khoảng google xác thực là giangkelvin@gmail.com
+  - file ghi trong tài khoản giaminh0265@yahoo.com
+
+2/ trong file footer.php dòng từ dòng 69 là các chức năng không có tô đen copy nội dung và F12 để xem source HTMLz
