@@ -748,78 +748,19 @@ add_action('wp_enqueue_scripts', function () {
 /* =========================================================
 phan ghi lên file google sheets
 ========================================================= */
-require_once get_stylesheet_directory() . '/vendor/autoload.php';
+// require_once get_stylesheet_directory() . '/vendor/autoload.php';
+
+
+
+
+require_once WP_CONTENT_DIR . '/themes/dgw/vendor/autoload.php';
 
 function sync_to_google_sheets($data)
 {
     $spreadsheetId = '11XOFnz7wWw1L3GKLKNtmrnwQu5uY-YusMKXu9L6SFkI';
-
-    // 重要：請確認 Excel 下方標籤名稱是否真的是 'Sheet1'
-    // 如果是越南文，請改成 'Trang tính1!A:E'
-    $range = 'Sheet1!A:E'; 
-
-    $path_to_json = dirname(__DIR__, 2) . '/class/eloquent-pact-493206-g4-cafc20f9a4d1.json';
-
-    if (!file_exists($path_to_json)) {
-        error_log("Google Sheets Error: File not found at $path_to_json");
-        return false;
-    }
-
-    try {
-        $client = new \Google\Client();
-        $client->setAuthConfig($path_to_json);
-        $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
-
-        $service = new \Google\Service\Sheets($client);
-
-        // 確保 $data 中的 key 存在，避免 PHP 8.2 的 Warning
-        $values = [
-            [
-                $data['name'] ?? '',
-                $data['email'] ?? '',
-                $data['id'] ?? '',
-                $data['date'] ?? date('Y-m-d H:i:s'),
-                $data['message'] ?? ''
-            ]
-        ];
-
-        $body = new \Google\Service\Sheets\ValueRange([
-            'values' => $values
-        ]);
-
-        // 增加 insertDataOption 參數
-        $params = [
-            'valueInputOption' => 'RAW',
-            'insertDataOption' => 'INSERT_ROWS' 
-        ];
-
-        // 執行
-        $result = $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
-        
-        return true;
-    } catch (\Exception $e) {
-        // 輸出詳細錯誤到 WordPress Log (wp-content/debug.log)
-        error_log('Google Sheets API Error: ' . $e->getMessage());
-        return false;
-    }
-}
-
-
-
-
-function sync_to_google_sheets_old($data)
-{
-    // echo '<pre>'; print_r($data); echo '</pre>';
-    // die();
-    // 1. 填入你的專屬 ID (從網址列取得)
-    $spreadsheetId = '11XOFnz7wWw1L3GKLKNtmrnwQu5uY-YusMKXu9L6SFkI';
-
-    // 2. 設定工作表名稱與寫入範圍 (根據你的截圖，工作表名稱通常是預設的 Sheet1)
     $range = 'Sheet1!A:E';
-
-    // 3. 設定 JSON 金鑰的路徑 (請將你的 json 檔案放到安全的路徑)
-    $path_to_json = dirname(__DIR__, 2) . '/class/eloquent-pact-493206-g4-cafc20f9a4d1.json';
-
+    // $path_to_json = ABSPATH . 'google-credentials.json';
+    $path_to_json = WP_CONTENT_DIR . '/google-credentials.json';
     try {
         $client = new \Google\Client();
         $client->setAuthConfig($path_to_json);
@@ -827,7 +768,6 @@ function sync_to_google_sheets_old($data)
 
         $service = new \Google\Service\Sheets($client);
 
-        // 4. 準備你要寫入的資料 (對應 A, B, C, D 欄)
         $values = [
             [
                 $data['name'],
@@ -842,16 +782,16 @@ function sync_to_google_sheets_old($data)
             'values' => $values
         ]);
 
+        // Đổi thành USER_ENTERED để tối ưu định dạng hiển thị trên Sheets
         $params = [
-            'valueInputOption' => 'RAW' // 寫入純文字
+            'valueInputOption' => 'USER_ENTERED'
         ];
 
-        // 5. 執行寫入動作 (Append 會自動加在最後一行空白列)
         $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
 
         return true;
     } catch (Exception $e) {
-        error_log('Google Sheets 寫入失敗: ' . $e->getMessage());
+        error_log('Google Sheets Sync Error: ' . $e->getMessage());
         return false;
     }
 }

@@ -46,6 +46,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+google-credentials.json
 # --- 6. Loại bỏ file rác hệ thống & IDE ---
 .DS_Store
 .DS_Store?
