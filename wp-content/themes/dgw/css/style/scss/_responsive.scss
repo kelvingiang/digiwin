@@ -1,29 +1,35 @@
 @mixin Respond($breakpoint) {
+  // Mobile cực nhỏ (Portrait phones)
   @if $breakpoint == xs {
     @media (max-width: 575.98px) {
       @content;
     }
   }
 
-  @if $breakpoint == sm {
+  // Mobile/Tablet nhỏ (Landscape phones/Small tablets)
+  @else if $breakpoint == sm {
     @media (max-width: 767.98px) {
       @content;
     }
   }
 
-  @if $breakpoint == md {
+  // Tablet (Tablets)
+  @else if $breakpoint == md {
     @media (max-width: 991.98px) {
       @content;
     }
   }
 
-  @if $breakpoint == lg {
+  // Laptop/Desktop nhỏ
+  @else if $breakpoint == lg {
     @media (max-width: 1199.98px) {
       @content;
     }
   }
   
-  @if $breakpoint == xl {
+  // Màn hình lớn (Desktop-first approach)
+  // Lưu ý: Nếu bạn viết cho màn hình cực lớn thì dùng min-width ở đây
+  @else if $breakpoint == xl {
     @media (min-width: 1200px) {
       @content;
     }

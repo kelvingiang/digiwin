@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 a {
     text-decoration: none;
 }
@@ -17,7 +20,7 @@ html {
 
 html[lang="zh-TW"] body {
     font-family:
-        "DFKai",
+        "noto sans tc",
         Microsoft YaHei,
         Arial,
         sans-serif;

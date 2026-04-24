@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 @keyframes slider-title {
     0% {
         top: -100%;

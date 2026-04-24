@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 @keyframes animationImg {
     0%  { 
         opacity: 0.0;  

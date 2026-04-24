@@ -8,7 +8,7 @@ jQuery(document).ready(function ($) {
     pendingDownload = {
       post_id: jQuery(this).attr("data-post-id"),
       post_title: jQuery(this).attr("data-post-title"),
-     // post_source: jQuery(this).attr("data-post-source"),
+      // post_source: jQuery(this).attr("data-post-source"),
     };
 
     // Gửi AJAX lên server
@@ -22,7 +22,7 @@ jQuery(document).ready(function ($) {
         post_title: pendingDownload.post_title,
         //post_source: pendingDownload.post_source,
       },
-   
+
       success: function (res) {
         if (res.success) {
           // cách load file mở trang mới
@@ -69,6 +69,7 @@ jQuery(document).ready(function ($) {
     function (e) {
       if (e.target !== this) return;
       jQuery("#popup-forgot-password").fadeOut(200);
+      jQuery("#forgot-password-msg").text("");
     },
   );
 
@@ -95,8 +96,20 @@ jQuery(document).ready(function ($) {
         nonce: nonce,
       },
       success: function (response) {
+        if (response.success) {
+          jQuery("#user_email").val("");
+          jQuery("#forgot-password-msg")
+            .html(response.data.message)
+            .css("color", "green");
+          jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
+        } else {
+          jQuery("#user_email").val("");
+          jQuery("#forgot-password-msg")
+            .html(response.data.message)
+            .css("color", "red");
+          jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
+        }
         jQuery("#forgot-password-msg").html(response.data.message);
-        jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
       },
     });
   });
@@ -186,8 +199,20 @@ jQuery(document).on("click", "#btn-register", function () {
         jQuery("#register-msg")
           .css("color", "green")
           .text("Đăng ký thành công!");
+
+        jQuery("#reg-username").val("");
+        jQuery("#reg-email").val("");
+        jQuery("#reg-password").val("");
+        jQuery("#reg-company").val("");
+        jQuery("#reg-phone").val("");
+        jQuery("#reg-tax").val("");
+        jQuery("#reg-industry").val("");
+        jQuery("#reg-position").val("");
+        jQuery("#reg-department").val("");
+
         setTimeout(function () {
           jQuery('.tab-btn[data-tab="login"]').click();
+           jQuery("#register-msg").text("");
         }, 1000);
       } else {
         jQuery("#register-msg").css("color", "red").text(res.data.message);

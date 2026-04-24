@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 $menu_mobile_color: rgba(194, 18, 18, 0.76);
 .menu-mobile {
     display: none;

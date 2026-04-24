@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 .vote-link {
     cursor: pointer;
     padding-right: 0.5rem;

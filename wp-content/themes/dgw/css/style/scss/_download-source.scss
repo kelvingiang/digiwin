@@ -1,6 +1,20 @@
+@use "define" as *;
+@use "responsive" as *;
+
+/* ===== BIẾN HỆ THỐNG (VARIABLES) ===== */
+$bg-color: #f1f1f1;
+$text-primary: #194b96;
+$text-dark: #1a1a1a;
+$text-muted: #888;
+$border-color: #ddd;
+$btn-blue: #0862e9;
+$btn-blue-hover: #0243a5;
+$btn-gray: #818181;
+$btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
+
 /* ===== OVERLAY ===== */
 #auth-popup-overlay {
-      display: none;
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -9,14 +23,19 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 999999;
     padding: 60px;
-    box-sizing: border-box; /* ← padding không làm tràn width */
+    box-sizing: border-box;
     justify-content: center;
-    align-items: flex-start; /* ← không kéo giãn box theo chiều dọc */
-    overflow-y: auto; 
-    
-}
-#auth-popup-overlay.show {
-    display: flex !important;
+    align-items: flex-start;
+    overflow-y: auto;
+
+    /* Gộp chung cho Tablet và Mobile */
+    @include Respond(md) {
+        padding: 20px 10px; 
+    }
+
+    &.show {
+        display: flex !important;
+    }
 }
 
 /* ===== BOX ===== */
@@ -24,12 +43,72 @@
     background: #fff;
     border-radius: 16px;
     padding: 30px 28px 0px;
-    width: 500px;
+    width: 50%;
     position: relative;
     font-family: sans-serif;
+    box-sizing: border-box;
+
+    @include Respond(md) {
+        width: 70% !important;
+        padding: 30px 15px 0px;
+        flex-shrink: 0;
+    }
+
+    @include Respond(sm) {
+        width: 90% !important;
+        padding: 30px 15px 0px;
+        flex-shrink: 0;
+    }
 }
 
-/* ===== NÚT ĐÓNG ===== */
+/* ===== LAYOUT CHUNG ===== */
+.member-space {
+    padding: 100px 20%;
+    
+    @include Respond(md) {
+        padding: 100px 10%;
+    }
+    @include Respond(sm) {
+        padding: 100px 2%;
+    }
+}
+
+.one-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 10px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.three-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 10px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hr-style {
+    border: none;
+    border-top: 1px dotted #b4b3b3;
+    margin: 10px 0;
+}
+
+/* ===== THÀNH PHẦN POPUP ===== */
 #auth-popup-close {
     position: absolute;
     top: 14px;
@@ -38,174 +117,216 @@
     border: none;
     font-size: 18px;
     cursor: pointer;
-    color: #888;
+    color: $text-muted;
     padding: 4px 8px;
     border-radius: 6px;
     line-height: 1;
-}
-#auth-popup-close:hover {
-    background: #f5f5f5;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
 }
 
-/* ===== LOGO ===== */
 .popup-logo {
-    height:20px;
+    height: 20px;
     border-radius: 10px;
-    background: transparent
+    background: transparent;
 }
 
-/* ===== TIÊU ĐỀ ===== */
-#auth-popup-box h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1a1a1a;
-    text-align: center;
-    margin: 0 0 4px;
-}
-#auth-popup-box .popup-sub {
-    font-size: 13px;
-    color: #888;
-    text-align: center;
-    margin: 0 0 20px;
-}
-
-/* ===== TAB ===== */
-#tab-buttons {
-    display: flex;
-    border: 0.5px solid #e0dfd8;
-    border-radius: 10px;
-    padding: 3px;
-    margin-bottom: 20px;
-    gap: 3px;
-}
-.tab-btn {
-    flex: 1;
-    padding: 8px;
-    border: none;
-    background: none;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #888;
-    cursor: pointer;
-    transition: all 0.15s;
-}
-.tab-btn.active {
-    background: #0862e9;
-    color: #fff;
-}
-
-/* ===== INPUT ===== */
-.tab-content label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #555;
-    display: block;
-    margin-bottom: 6px;
-}
-.tab-content input {
-    width: 100%;
-    padding: 10px 14px;
-    border: 0.5px solid #ddd;
-    border-radius: 9px;
-    font-size: 14px;
-    color: #1a1a1a;
-    box-sizing: border-box;
-    outline: none;
-    margin-bottom: 14px;
-    transition: border 0.15s;
-}
-.tab-content input:focus {
-    border-color: #0451c4;
-    box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
-}
-.tab-content input::placeholder {
-    color: #bbb;
-}
-
-/* ===== BUTTON ===== */
-.btn-space {
-    display: grid;
-         grid-template-columns: 2fr 1fr;
-    gap: 12px;
-}
-#btn-login,
-#btn-forget-password,
-#btn-register {
-    width: 100%;
-    padding: 11px;
-    background: #0862e9;
-    color: #fff;
-    border: none;
-    border-radius: 9px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-}
-#btn-forget-password {
-    background: #727374;
-}
-
-#btn-login:hover,
-#btn-forget-password:hover,
-#btn-register:hover {
-    background: #0243a5;
-}
-
-/* ===== FOOTER TEXT ===== */
 .popup-footer {
     text-align: center;
     font-size: 13px;
-    color: #888;
+    color: $text-muted;
     margin-top: 14px;
-}
-.popup-footer a {
-    color: #0451c4;
-    text-decoration: none;
-    font-weight: 500;
+
+    a {
+        color: #0451c4;
+        text-decoration: none;
+        font-weight: 500;
+    }
 }
 
-/* ===== MESSAGE ===== */
+/* ===== FORM ĐĂNG NHẬP / ĐĂNG KÝ ===== */
+#ui-login-form {
+    background-color: $bg-color;
+    border: 1px solid $bg-color;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+}
+
+#tab-buttons {
+    display: flex;
+    border-radius: 10px;
+    gap: 3px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    background: white;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease; /* Tối ưu hơn 'all' */
+
+    &.active {
+        background-color: $bg-color;
+        color: $text-primary;
+    }
+}
+
+.row-cell {
+    label {
+        font-size: 15px;
+        font-weight: 500;
+        color: $text-primary;
+        display: block;
+        margin-bottom: 0px;
+        margin-left: 8px;
+        opacity: 0.9;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 0.5px solid $border-color;
+        border-radius: 9px;
+        font-size: 14px;
+        color: $text-dark;
+        box-sizing: border-box;
+        outline: none;
+        margin-bottom: 14px;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        &::placeholder {
+            color: #bbb;
+        }
+
+        &:focus {
+            border-color: #1d5ab6;
+            box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+        }
+    }
+}
+
+/* ===== BUTTONS ===== */
+.btn-space {
+    text-align: center;
+    width: 100%;
+}
+
+.btn-two-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr 1fr;
+    }
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-my-style {
+    width: 70%;
+    text-align: center;
+    padding: 20px;
+    background-color: $btn-blue;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    @include Respond(md) {
+        width: 90%;
+    }
+
+    &:hover {
+        background-color: $btn-blue-hover;
+    }
+}
+
+.btn-password {
+    background-color: #727374;
+    width: 90%;
+}
+
+.btn-logout {
+    text-align: center;
+    padding: 15px 25px;
+    background-color: $btn-gray;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: $btn-gray-hover;
+    }
+}
+
+/* ===== TRẠNG THÁI ĐĂNG NHẬP ===== */
+.logout-space {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px dotted #b4b3b3;
+    padding-bottom: 12px;
+
+    label {
+        font-size: 15px;
+        font-weight: bold;
+        color: $text-primary;
+    }
+}
+
+.logged-in,
+.tab-register,
+.tab-login {
+    background-color: $bg-color;
+    border: 1px solid $bg-color;
+    height: auto; 
+    display: block;
+    margin-bottom: 2rem;
+    padding: 10px 20px;
+}
+
 .msg {
-    font-size: 13px;
+    font-size: 1rem;
+    font-weight: bold;
     padding: 8px 12px;
-    border-radius: 8px;
     margin-top: 10px;
     text-align: center;
 }
 
-.tab-register {
-    .register-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
-    
-}
-.hr-style{
-      border: none;
-    border-top: 2px dotted #b4b3b3;
-    margin: 10px 0;
-}
-
-//===== POPUP QUÊN MẬT KHẨU ===== ==============================================*/
-/* Lớp nền mờ toàn màn hình */
+/* ===== POPUP QUÊN MẬT KHẨU ===== */
 .dwf-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.75); /* Làm nền tối hơn để tập trung vào popup */
-    z-index: 999999; /* Đảm bảo luôn nằm trên cùng */
-    display: none; 
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 999999;
+    display: none;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(3px); /* Hiệu ứng làm mờ nền phía sau (hiện đại) */
+    backdrop-filter: blur(3px); 
 }
 
-/* Khung nội dung chính */
 .dwf-container {
     background: #ffffff;
     width: 100%;
@@ -214,10 +335,9 @@
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     position: relative;
-    animation: dwf-slide-up 0.3s ease-out; /* Hiệu ứng hiện ra nhẹ nhàng */
+    animation: dwf-slide-up 0.3s ease-out;
 }
 
-/* Nút đóng (X) */
 .dwf-close {
     position: absolute;
     top: 15px;
@@ -226,73 +346,36 @@
     color: #999;
     cursor: pointer;
     line-height: 1;
-    transition: color 0.2s;
-}
-.dwf-close:hover { color: #333; }
+    transition: color 0.2s ease;
 
-/* Tiêu đề */
-.dwf-header h3 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
-    color: #333;
-    font-weight: 700;
-    text-align: center;
-}
-.dwf-header p {
-    font-size: 14px;
-    color: #666;
-    text-align: center;
-    margin-bottom: 25px;
+    &:hover {
+        color: #333;
+    }
 }
 
-/* Form và Input */
-.dwf-form { display: block; }
-
-.dwf-input-group { margin-bottom: 20px; }
-
-.dwf-input-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-    transition: border-color 0.2s;
-    box-sizing: border-box; /* Quan trọng để input không bị tràn */
-}
-.dwf-input-group input:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+.dwf-header {
+    h3 {
+        margin: 0 0 10px 0;
+        font-size: 24px;
+        color: $text-primary;
+        font-weight: 700;
+        text-align: center;
+    }
+    p {
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 25px;
+    }
 }
 
-/* Nút bấm Gửi */
-.dwf-btn-submit {
-    width: 100%;
-    padding: 13px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.dwf-btn-submit:hover { background-color: #0056b3; }
-.dwf-btn-submit:disabled { background-color: #ccc; cursor: not-allowed; }
-
-/* Thông báo phản hồi */
-.dwf-status-msg {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 14px;
-    min-height: 20px;
-}
-.dwf-status-msg.success { color: #28a745; }
-.dwf-status-msg.error { color: #dc3545; }
-
-/* Animation hiện popup */
 @keyframes dwf-slide-up {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

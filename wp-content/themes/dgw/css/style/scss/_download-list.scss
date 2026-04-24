@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 .dowdload-list {
     .item {
         display: flex;
