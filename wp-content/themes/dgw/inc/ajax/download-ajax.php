@@ -1,61 +1,5 @@
 <?php
 
-use SimplePie\Parse\Date;
-
-require_once get_template_directory() . '/model/model-download.php';
-
-/* =========================================================
-// tao 2026-04 thêm file my-download.js  =======
-========================================================= */
-function my_enqueue_scripts()
-{
-
-    // 1. Đăng ký file JS của bạn
-    wp_enqueue_script(
-        'my-script',
-        get_stylesheet_directory_uri() . '/js/my-download.js',
-        ['jquery'],
-        null,
-        true
-    );
-
-    // 2. Truyền data từ PHP → JS (WordPress tự làm phần còn lại)
-    wp_localize_script('my-script', 'MyAjax', [
-        'ajax_url'   => admin_url('admin-ajax.php'),
-        'nonce'      => wp_create_nonce('my_nonce'),
-        // 'post_id'    => get_the_ID(),
-        // 'post_title' => get_the_title(),
-    ]);
-}
-add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
-
-
-/* =========================================================
-// Hook vào footer, tự động gán data attribute vào button bằng JS  
-========================================================= */
-add_action('wp_footer', function () {
-    $post_id    = get_the_ID();
-    $post_title = get_the_title();
-    // $post_source = get_post_meta($post_id, '_metabox_source', true);
-?>
-    <script>
-        jQuery(document).ready(function($) {
-            jQuery('#my-load-data').attr({
-                'data-post-id': '<?php echo esc_js($post_id); ?>',
-                'data-post-title': '<?php echo esc_js($post_title); ?>',
-                // 'data-post-source': '<?php //echo esc_js($post_source); 
-                                        ?>'
-            });
-        });
-    </script>
-<?php
-});
-
-
-/* =========================================================
-// 註冊 AJAX 動作 (登入者與訪客皆可使用)
-========================================================= */
-
 /* =========================================================
 phần download file
 ========================================================= */
@@ -139,13 +83,36 @@ function handle_member_login()
 {
     $model_download = new Model_Download();
 
+
+    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
+
+    $i18n = [
+        'vn' => [
+            'empty'     => "Vui lòng điền đầy đủ thông tin",
+            'email'     => "Email không tồn tại",
+            'password'  => "Mật khẩu không đúng",
+            'active'    => "Tài khoản chưa kích hoạt",
+            'success'   => " Đăng nhập thành công!",
+        ],
+        'cn' => [
+            'empty'     => "請填寫完整資訊",
+            'email'     => "帳號不存在",
+            'password'  => "密碼錯誤",
+            'active'    => "帳號尚未啟動",
+            'success'   => "登入成功！"
+        ],
+
+    ];
+    // 取得目前的語言包，如果沒對應到就用英文
+    $msg = $i18n[$lang] ?? $i18n['vn'];
+
     // ===== PHẦN BỊ THIẾU — xác thực email + password =====
     $email    = sanitize_email($_POST['email']);
     $password = $_POST['password'];
 
     // Kiểm tra rỗng
     if (empty($email) || empty($password)) {
-        wp_send_json_error(['message' => 'Vui lòng điền đầy đủ thông tin']);
+        wp_send_json_error(['message' => $msg['empty']]);
         return;
     }
 
@@ -154,19 +121,19 @@ function handle_member_login()
 
     // Không tìm thấy user
     if (!$user) {
-        wp_send_json_error(['message' => 'Email không tồn tại']);
+        wp_send_json_error(['message' => $msg['email']]);
         return;
     }
 
     // Kiểm tra password có khớp không
     if (!password_verify($password, $user->password)) {
-        wp_send_json_error(['message' => 'Mật khẩu không đúng']);
+        wp_send_json_error(['message' => $msg['password']]);
         return;
     }
 
     // Kiểm tra account có đã kích hoạt chưa (status = 1)
     if ($user->status != 1) {
-        wp_send_json_error(['message' => 'Tài khoản chưa được kích hoạt']);
+        wp_send_json_error(['message' => $msg['active']]);
         return;
     }
     // ===== KẾT THÚC PHẦN XÁC THỰC =====
@@ -198,7 +165,7 @@ function handle_member_login()
         true
     );
 
-    wp_send_json_success(['message' => 'Đăng nhập thành công!']);
+    wp_send_json_success(['message' => $msg['success']]);
 }
 
 /* =========================================================
@@ -211,6 +178,32 @@ function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
 
+    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
+
+    $i18n = [
+        'vn' => [
+            'empty'     => "Vui lòng điền đầy đủ thông tin",
+            'email'     => "Email không hợp lệ",
+            'password'  => "Mật khẩu phải có ít nhất 6 ký tự",
+            'exist'     => "Email hoặc tên đăng nhập đã tồn tại",
+            'success'   => "Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản",
+            'not_send'  => "Đăng ký thành công nhưng hệ thống không thể gửi mail kích hoạt. Vui lòng liên hệ quản trị viên",
+            'failure'   => "Đăng ký thất bại, vui lòng thử lại"
+        ],
+        'cn' => [
+            'empty'     => "請填寫完整資訊",
+            'email'     => "電子郵件格式錯誤",
+            'password'  => "密碼長度至少為 6 個字元",
+            'exist'     => "電子郵件或使用者名稱已存在",
+            'success'   => "註冊成功！請檢查您的電子郵件以啟動帳號",
+            'not_send'  => "註冊成功，但系統無法傳送啟動郵件。請聯繫管理員",
+            'failure'   => "註冊失敗，請稍後重試"
+        ],
+
+    ];
+    // 取得目前的語言包，如果沒對應到就用英文
+    $msg = $i18n[$lang] ?? $i18n['vn'];
+    //--------------------------------------------------------------------
     // 1. 接收並清洗數據
     $registration_data = [
         'username'   => sanitize_text_field($_POST['username']),
@@ -224,26 +217,23 @@ function handle_member_register()
         'position'   => sanitize_text_field($_POST['position']),
     ];
 
-    // 2. 邏輯驗證 (Validation)
-
     // 檢查必填項 (修正了你原代碼中的括號語法錯誤)
-    foreach (['username', 'email', 'password', 'company', 'phone'] as $field) {
-        if (empty($registration_data[$field])) {
-            wp_send_json_error(['message' => 'Vui lòng điền đầy đủ thông tin']);
-            return;
-        }
-    }
-
     if (!is_email($registration_data['email'])) {
-        wp_send_json_error(['message' => 'Email không hợp lệ']);
+        wp_send_json_error(['message' => $msg['email']]);
         return;
     }
 
     if (strlen($registration_data['password']) < 6) {
-        wp_send_json_error(['message' => 'Mật khẩu phải có ít nhất 6 ký tự']);
+        wp_send_json_error(['message' => $msg['password']]);
         return;
     }
 
+    foreach (['username', 'email', 'password', 'company', 'phone'] as $field) {
+        if (empty($registration_data[$field])) {
+            wp_send_json_error(['message' => $msg['empty']]);
+            return;
+        }
+    }
 
     $model_download = new Model_Download();
 
@@ -254,11 +244,9 @@ function handle_member_register()
     );
 
     if ($exists > 0) {
-        wp_send_json_error(['message' => 'Email hoặc tên đăng nhập đã tồn tại']);
+        wp_send_json_error(['message' => $msg['exist']]);
         return;
     }
-
-
 
     // --- BẮT ĐẦU TẠO TOKEN ---
     // 1. Tạo một token ngẫu nhiên cực dài
@@ -267,7 +255,6 @@ function handle_member_register()
     $registration_data['active_code'] = hash('sha256', $plain_token);
     $result = $model_download->insert_registration_data($registration_data);
     if ($result) {
-
         // Tạo link reset mật khẩu chuyên nghiệp
         //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
         // ==================== 修復 1: 設置正確的郵件頭部 ====================
@@ -281,31 +268,44 @@ function handle_member_register()
         // 修復 3: 添加Reply-To
         $headers[] = 'Reply-To: ' . $from_email;
 
-        $subject = "kích hoạt tài khoản - " . get_bloginfo('name');
+        $subject = "Activate account - " . get_bloginfo('name');
 
         // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
         $reset_url = home_url('/active-member/?key=' . $registration_data['active_code'] . '&email=' . rawurlencode($registration_data['email']));
 
         $message = "
-    <html>
-        <body style='font-family: Arial, sans-serif; color: #333;'>
-            <h2>Chúc mừng bạn đã đăng ký thành công</h2>
-            <p>Chào " . esc_html($registration_data['username']) . ",</p>
-            <p>chào bạn đã là thành viên của trang web công ty Digiwin.</p>
-            <p>Vui lòng nhấp vào liên kết dưới đây để kích hoạt tài khoản của mình:</p>
-            <p>
-                <a href='" . esc_url($reset_url) . "' style='background-color: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
-                    Kích hoạt tài khoản
-                </a>
-            </p>
-            <p><strong>Hoặc sao chép liên kết này vào trình duyệt:</strong><br>
-            " . esc_url($reset_url) . "</p>
-            <p>Nếu bạn không yêu cầu điều này, hãy bỏ qua email này. Liên kết này sẽ hết hạn trong 24 giờ.</p>
-            <hr>
-            <p><small>" . get_bloginfo('name') . "</small></p>
-        </body>
-    </html>
-    ";
+                    <html>
+                        <body style='font-family: Arial, sans-serif; color: #333;'>
+                            <h2>Chúc mừng bạn đã đăng ký thành công</h2>
+                            <p>Chào " . esc_html($registration_data['username']) . ",</p>
+                            <p>chào bạn đã là thành viên của trang web công ty Digiwin.</p>
+                            <p>Vui lòng nhấp vào liên kết dưới đây để kích hoạt tài khoản của mình:</p>
+                            <p>
+                                <a href='" . esc_url($reset_url) . "' style='background-color: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
+                                    Kích hoạt tài khoản
+                                </a>
+                            </p>
+                            <p><strong>Hoặc sao chép liên kết này vào trình duyệt:</strong><br>
+                            " . esc_url($reset_url) . "</p>
+                            <p><small>" . get_bloginfo('name') . "</small></p>
+                        <br>
+                        <hr>
+                        <br>
+                            <h2>恭喜您註冊成功</h2>
+                            <p>您好 " . esc_html($registration_data['username']) . ",</p>
+                            <p>歡迎您成為 鼎新 (Digiwin) 公司網站的會員。</p>
+                            <p>請點擊下方連結以啟動您的帳號：</p>
+                            <p>
+                                <a href='" . esc_url($reset_url) . "' style='background-color: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
+                                    啟動帳號
+                                </a>
+                            </p>
+                            <p><strong>或者將此連結複製並貼上到瀏覽器中：</strong><br>
+                            " . esc_url($reset_url) . "</p>
+                            <p><small>" . get_bloginfo('name') . "</small></p>
+                        </body>
+                    </html>
+                 ";
 
         // ==================== 修復 5: 添加詳細的調試日誌 ====================
         $log_message = "[" . date('Y-m-d H:i:s') . "] Forgot Password Attempt\n";
@@ -326,24 +326,24 @@ function handle_member_register()
         );
         if ($sent) {
             wp_send_json_success([
-                'message' => 'Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản.'
+                'message' => $msg['success']
             ]);
         } else {
             wp_send_json_success([
-                'message' => 'Đăng ký thành công nhưng hệ thống không thể gửi mail kích hoạt. Vui lòng liên hệ quản trị viên.'
+                'message' => $msg['not_send']
             ]);
         }
     } else {
-        wp_send_json_error(['message' => 'Đăng ký thất bại, vui lòng thử lại']);
+        wp_send_json_error(['message' => $msg['failure']]);
     }
 }
 /* =========================================================
 // AJAX endpoint（登入 / 未登入 都可呼叫）
 ========================================================= */
-add_action('wp_ajax_check_member_login',        'ajax_check_member_login');
-add_action('wp_ajax_nopriv_check_member_login', 'ajax_check_member_login');
+add_action('wp_ajax_check_member_login',        'handle_check_member_login');
+add_action('wp_ajax_nopriv_check_member_login', 'handle_check_member_login');
 
-function ajax_check_member_login()
+function handle_check_member_login()
 {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error('Invalid nonce', 403);
@@ -361,10 +361,10 @@ function ajax_check_member_login()
 /* =========================================================
 // AJAX 登出
 ========================================================= */
-add_action('wp_ajax_member_logout',        'ajax_member_logout');
-add_action('wp_ajax_nopriv_member_logout', 'ajax_member_logout');
+add_action('wp_ajax_member_logout',        'handle_member_logout');
+add_action('wp_ajax_nopriv_member_logout', 'handle_member_logout');
 
-function ajax_member_logout()
+function handle_member_logout()
 {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error('Invalid nonce', 403);
@@ -379,7 +379,10 @@ function ajax_member_logout()
     // 清除 cookie
     setcookie('custom_session', '', time() - 3600, '/');
 
-    wp_send_json_success(['logged_out' => true]);
+    wp_send_json_success([
+        'logged_out' => true,
+        'message'    => 'Đăng xuất thành công.'
+    ]);
 }
 
 /* =========================================================
@@ -571,10 +574,31 @@ function handle_forgot_password()
     // Kiểm tra bảo mật nonce (tên trường 'nonce' phải khớp với data gửi từ JS)
     check_ajax_referer('ajax_forgot_nonce', 'nonce');
 
+
+    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
+
+    $i18n = [
+        'vn' => [
+            'not_exist' => "Email không tồn tại",
+            'email'     => "Vui lòng nhập địa chỉ email hợp lệ",
+            'success'   => "Thành công! hãy kiểm tra email, link này chỉ có hiệu lực trong 24H",
+            'failure'   => "Lỗi hệ thống không thể gửi mail, hãy liên lạc với chúng tôi"
+        ],
+        'cn' => [
+            'not_exist' => "電子郵件不存在",
+            'email'     => "請輸入有效的電子郵件地址",
+            'success'   => "成功！重設密碼連結已傳送到您的 E-mail, 該連結將在24小時後失效",
+            'failure'   => "系統錯誤，無法傳送郵件，請與我們聯繫"
+        ],
+
+    ];
+    // 取得目前的語言包，如果沒對應到就用英文
+    $msg = $i18n[$lang] ?? $i18n['vn'];
+
     // Làm sạch dữ liệu đầu vào
     $email = isset($_POST['user_email']) ? sanitize_email($_POST['user_email']) : '';
     if (empty($email) || !is_email($email)) {
-        wp_send_json_error(['message' => 'Vui lòng nhập địa chỉ email hợp lệ.']);
+        wp_send_json_error(['message' => $msg['email']]);
     }
 
     $model_download = new Model_Download();
@@ -583,7 +607,7 @@ function handle_forgot_password()
 
     if (!$user) {
         // Bảo mật: Đôi khi nên báo "Thành công" luôn để tránh bị dò tìm email người dùng
-        wp_send_json_error(['message' => 'Email không tồn tại trong hệ thống.']);
+        wp_send_json_error(['message' => $msg['not_exist']]);
     }
 
     // --- BẮT ĐẦU TẠO TOKEN ---
@@ -609,7 +633,7 @@ function handle_forgot_password()
     // 修復 3: 添加Reply-To
     $headers[] = 'Reply-To: ' . $from_email;
 
-    $subject = "Yêu cầu đặt lại mật khẩu - " . get_bloginfo('name');
+    $subject = "Reset Password - " . get_bloginfo('name');
 
     // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
     $reset_url = home_url('/reset-password/?key=' . $hashed_token . '&email=' . rawurlencode($email));
@@ -631,6 +655,23 @@ function handle_forgot_password()
             <p>Nếu bạn không yêu cầu điều này, hãy bỏ qua email này. Liên kết này sẽ hết hạn trong 24 giờ.</p>
             <hr>
             <p><small>" . get_bloginfo('name') . "</small></p>
+            <br>
+            <hr>
+            <br>
+             <h2>重設密碼請求</h2>
+                <p>您好 " . esc_html($user->username) . ",</p>
+                <p>我們收到了您的帳號重設密碼請求。</p>
+                <p>請點擊下方連結以設定新密碼：</p>
+                <p>
+                    <a href='" . esc_url($reset_url) . "' style='background-color: #0073aa; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>
+                        重設密碼
+                    </a>
+                </p>
+                <p><strong>或者將此連結複製並貼上到瀏覽器中：</strong><br>
+                " . esc_url($reset_url) . "</p>
+                <p>如果您未曾發送此請求，請忽略此郵件。該連結將在 24 小時後失效。</p>
+                <hr>
+                <p><small>" . get_bloginfo('name') . "</small></p>
         </body>
     </html>
     ";
@@ -656,33 +697,13 @@ function handle_forgot_password()
     error_log("[" . date('Y-m-d H:i:s') . "] Email sent result: " . ($sent ? 'TRUE' : 'FALSE') . "\n", 3, WP_CONTENT_DIR . '/forgot-password.log');
 
     if ($sent) {
-        wp_send_json_success(['message' => 'Thành công! Một liên kết đặt lại mật khẩu đã được gửi đến email của bạn.']);
+        wp_send_json_success(['message' => $msg['success']]);
     } else {
-        // 詳細的錯誤信息 (僅在開發環境顯示)
-        $error_msg = 'Lỗi hệ thống không thể gửi mail.';
-
-        if (WP_DEBUG) {
-            $error_msg .= ' (wp_mail() trả về FALSE. Kiểm tra log: /wp-content/forgot-password.log)';
-        }
-
-        wp_send_json_error(['message' => $error_msg]);
+        wp_send_json_error(['message' => $msg['failure']]);
     }
 
     wp_die();
 }
-
-
-/* =========================================================
-CAC FUNCTION THÔNG THƯỜNG KHÔNG GỌI AJAX ============================================================
-========================================================= */
-// 只在 member page 載入登入註冊的 HTML 結構 them function vo footer, HTML
-// gọi shortcode trực tiếp
-add_action('wp_footer', 'member_login_register_form');
-
-// khi goi shortcode cho giá trị trả về 
-add_action('wp_footer', function () {
-    echo member_forgot_password_form();
-});
 
 
 /* =========================================================
@@ -703,95 +724,4 @@ function is_member_logged_in()
     $user = $model_download->get_user_by_session($session_key);
 
     return $user ? $user : false;
-}
-
-
-/* =========================================================
-// Hàm convert link Google Drive
-========================================================= */
-function convert_gdrive_to_download($url)
-{
-    // Lấy FILE_ID từ link
-    if (preg_match('/\/file\/d\/([a-zA-Z0-9_-]+)/', $url, $matches)) {
-        $file_id = $matches[1];
-        return 'https://drive.google.com/uc?export=download&id=' . $file_id;
-    }
-    return $url;
-}
-
-
-/* =========================================================
-LẤY THÔNG TIN KHÁCH HÀNG THEO MÃ COOKIE
-========================================================= */
-function get_member_information($session_key)
-{
-    $model_download = new Model_Download();
-    $data = $model_download->get_user_by_session($session_key);
-    return $data;
-}
-
-
-/* =========================================================
-只在 member page 載入 JS
- =========================================================*/
-add_action('wp_enqueue_scripts', function () {
-    if (!is_page('member')) return;
-
-    wp_enqueue_script('member-auth', get_template_directory_uri() . '/js/member-auth.js', [], '1.0', true);
-    wp_localize_script('member-auth', 'MemberAuth', [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce'   => wp_create_nonce('member_auth_nonce'),
-    ]);
-});
-
-
-/* =========================================================
-phan ghi lên file google sheets
-========================================================= */
-// require_once get_stylesheet_directory() . '/vendor/autoload.php';
-
-
-
-
-require_once WP_CONTENT_DIR . '/themes/dgw/vendor/autoload.php';
-
-function sync_to_google_sheets($data)
-{
-    $spreadsheetId = '11XOFnz7wWw1L3GKLKNtmrnwQu5uY-YusMKXu9L6SFkI';
-    $range = 'Sheet1!A:E';
-    // $path_to_json = ABSPATH . 'google-credentials.json';
-    $path_to_json = WP_CONTENT_DIR . '/google-credentials.json';
-    try {
-        $client = new \Google\Client();
-        $client->setAuthConfig($path_to_json);
-        $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
-
-        $service = new \Google\Service\Sheets($client);
-
-        $values = [
-            [
-                $data['name'],
-                $data['email'],
-                $data['id'],
-                $data['date'],
-                $data['message']
-            ]
-        ];
-
-        $body = new \Google\Service\Sheets\ValueRange([
-            'values' => $values
-        ]);
-
-        // Đổi thành USER_ENTERED để tối ưu định dạng hiển thị trên Sheets
-        $params = [
-            'valueInputOption' => 'USER_ENTERED'
-        ];
-
-        $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
-
-        return true;
-    } catch (Exception $e) {
-        error_log('Google Sheets Sync Error: ' . $e->getMessage());
-        return false;
-    }
 }

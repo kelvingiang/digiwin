@@ -99,6 +99,7 @@ class Model_Download
 
         $data = [
             'status'      => '1',
+            'active_code' => '',
             'update_date' => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
         ];
 

@@ -1,15 +1,13 @@
 <?php
 function member_forgot_password_form()
 {
-    // if ( is_user_logged_in() ) return '';
-
     ob_start(); ?>
     <div id="popup-forgot-password" class="dwf-wrapper" style="display:none;">
         <div class="dwf-container">
             <span class="dwf-close">&times;</span>
             <div class="dwf-header">
-                <h3>Quên mật khẩu</h3>
-                <p>Nhập email của bạn để nhận liên kết đặt lại mật khẩu:</p>
+                <h3><?php _e('Forget Password') ?></h3>
+                <p><?php _e('Enter your email address to reset your password') ?></p>
             </div>
             <form id="forgot_password_form_ajax" class="dwf-form">
                 <div class="one-columns">
@@ -20,7 +18,7 @@ function member_forgot_password_form()
 
                 <?php wp_nonce_field('ajax_forgot_nonce', 'forgot_nonce'); ?>
                 <div class="btn-space">
-                    <button type="submit" id="btn-submit-forgot" class="btn-my-style">Gửi yêu cầu</button>
+                    <button type="submit" id="btn-submit-forgot" class="btn-my-style"><?php _e('Submit Email') ?></button>
                 </div>
                 <div id="forgot-password-msg" class="msg"></div>
             </form>

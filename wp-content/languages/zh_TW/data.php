@@ -73,6 +73,7 @@ function getTranslate()
         'Login' => '登入',
         'Register' => '註冊',
         'Password' => '密碼',
+        'Forget Password' => '忘記密碼',
         'E-mail' => 'E-mail',
         'Welcome back!' => '歡迎回來！',
         'Full Name' => '姓名',
@@ -84,6 +85,10 @@ function getTranslate()
         'Tax Number' => '稅號',
         'Industry' => '行業',
         'Department' => '部門',
+         'Enter your email address to reset your password' => '請輸入您的電子郵件地址以重設密碼',
+         'Submit Email' => '提交',
+         'New Password' => '新密碼',
+         'Confirm Password' => '確定密碼',
     );
     return array_merge($data);
 }

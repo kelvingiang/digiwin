@@ -16,8 +16,6 @@ if ($email && $token) {
     $model_download = new Model_Download();
     $user = $model_download->get_user_by_email($email);
     if ($user) {
-
-
         // Kiểm tra thời gian và hash
         if (time() > $user->expiry) {
             $error_message = "Liên kết đã hết hạn (quá 24 giờ).";
@@ -28,39 +26,45 @@ if ($email && $token) {
             $user_id = $user->ID;
         }
     } else {
-
         $error_message = "Người dùng không tồn tại.";
     }
 } else {
-
     $error_message = "Yêu cầu không hợp lệ.";
 }
 ?>
-<div>
-    <?php pageImg($post->ID); ?>
-</div>
+
 <div class="container-fluid">
     <div class="reset-password-page">
         <div class="reset-password-form">
-            <div>
-                <label class="title">Password</label>
-                <input type="password"
-                    id="new-password"
-                    placeholder="New Password"
-                    required>
-                </input>
+            <div class="one-columns" >
+                <div class="row-cell">
+                    <label><?php _e('New Password') ?></label>
+                    <input type="password"
+                        id="new-password"
+                        placeholder="***********"
+                        required>
+                    </input>
+                </div>
             </div>
-            <div>
-                <label class="title">Confirm Password</label>
-                <input type="password"
-                    id="confirm-password"
-                    placeholder="Confirm Password"
-                    required>
-                </input>
+
+            <div class="one-columns">
+                <div class="row-cell">
+                    <label class="title"><?php _e('Confirm Password') ?></label>
+                    <input type="password"
+                        id="confirm-password"
+                        placeholder="***********"
+                        required>
+                    </input>
+                </div>
             </div>
-            <div>
-                <button id="btn-reset-password" class="btn-resetpassword">Reset Password</button>
+
+            <div class="btn-space">
+                <button id="btn-reset-password" class="btn-my-style">
+                    <?php _e('Submit Email') ?>
+                </button>
+                <p id="change-password-msg" class="msg"></p>
             </div>
+
         </div>
         <div>
             <div class="">

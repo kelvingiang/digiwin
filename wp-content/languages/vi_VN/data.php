@@ -73,6 +73,7 @@ function getTranslate()
         'Login' => 'Đăng Nhập',
         'Register' => 'Đăng Ký',    
         'Password' => 'Mật Khẩu',
+        'Forget Password' => 'Quên Mật Khẩu',
         'E-mail' => 'E-mail',
         'Welcome back!' => 'Chào Mừng Đã Quay Lại!',
         'Full Name' => 'Họ Tên',
@@ -84,6 +85,10 @@ function getTranslate()
         'Tax Number' => 'Mã Số Thuế',   
         'Industry' => 'Ngành Nghề',
         'Department' => 'Phòng Ban',
+        'Enter your email address to reset your password' => 'Nhập email của bạn để thiết lập lại mật khẩu',
+        'Submit Email' => 'Gởi Yêu Cầu',
+        'New Password' => 'Mật Khẩu Mới',
+        'Confirm Password' => 'Xác Nhận Mật Khẩu',
     );
     return array_merge($data);
 }

@@ -67,9 +67,16 @@ async function handleLogout() {
             body: form, 
             credentials: 'include' 
         });
+
+        if (!res.ok) throw new Error('Network response was not ok');
         const result = await res.json();
 
-        if (result.data.logged_out) {
+        if (result.success && result.data.logged_out) {
+            // Tùy chọn: Thêm hiệu ứng loading hoặc thông báo trước khi refresh
+            console.log('✅ Logout thành công, đang làm mới trang...');
+            
+            // Refresh trang để cập nhật lại trạng thái Server-side (Menu, Header...)
+            window.location.reload(); 
             showLoginForm();
         }
     } catch (e) {

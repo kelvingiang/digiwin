@@ -1,27 +1,37 @@
 <?php
-// require_once DIR_HELPER . 'code/function-front-in-group.php';
-require_once DIR_HELPER . 'code/function-front-custom-post.php';
-require_once DIR_HELPER . 'code/function-front-menu-side.php';
-require_once DIR_HELPER . 'code/function-front-menu-sub.php';
-require_once DIR_HELPER . 'code/function-front.php';
-require_once DIR_HELPER . 'code/function-front-category.php';
-require_once DIR_HELPER . 'code/function-front-menu.php';
-
-require_once DIR_HELPER . 'code/admin-add-post-tag-field.php';
-require_once DIR_HELPER . 'code/admin-add-post-taxonomy-field.php';
-require_once DIR_HELPER . 'code/admin-add-filter.php';
-require_once DIR_HELPER . 'code/admin-custom-columns.php';
-
-require_once DIR_HELPER . 'code/function-ajax.php';
-require_once DIR_HELPER . 'code/function-wp-send-mail.php';
-require_once DIR_HELPER . 'code/function-custom-comment.php';
-require_once DIR_HELPER . 'code/function-member-download.php';
+require_once get_template_directory() . '/inc/init.php';
 
 
 function dgw_get_lang()
 {
-    return $_COOKIE['site_lang'] ?? 'vn';
+  // Kiểm tra AJAX POST
+    if (wp_doing_ajax() && isset($_POST['lang'])) {
+        return sanitize_text_field($_POST['lang']) === 'zh-TW' ? 'cn' : 'vn';
+    }
+    
+    // Kiểm tra GET request
+    if (isset($_GET['lang'])) {
+        return sanitize_text_field($_GET['lang']) === 'cn' ? 'cn' : 'vn';
+    }
+    
+    // Lấy từ cookie
+    return isset($_COOKIE['site_lang']) ? sanitize_text_field($_COOKIE['site_lang']) : 'vn';
 }
+
+add_filter('locale', function ($locale) {
+
+    // ưu tiên AJAX
+    if (wp_doing_ajax() && isset($_POST['lang'])) {
+
+        $lang = $_POST['lang'];
+
+        // mapping chuẩn WP
+        if ($lang === 'zh-TW') return 'zh_TW';
+        if ($lang === 'vi-VN') return 'vi_VN';
+    }
+
+    return $locale;
+});
 
 // sắp xếp lại trình tự các input trong phần comment ==========
 add_filter('comment_form_fields', function ($fields) {
@@ -173,7 +183,7 @@ function toBack($num)
 }
 
 //======= THAY DOI LOGO DANG NHAP O ADMIN =====================================================
-if (!is_admin()) {
+// if (!is_admin()) {
 
     // custom admin login logo
     function custom_login_logo()
@@ -184,10 +194,10 @@ if (!is_admin()) {
     }
 
     add_action('login_head', 'custom_login_logo');
-} else {
-    require_once DIR_HELPER . 'code/function-add-media.php';
-    require_once DIR_HELPER . 'code/function-upload-file.php';
-}
+// } else {
+    // require_once DIR_HELPER . 'code/function-add-media.php';
+    // require_once DIR_HELPER . 'code/function-upload-file.php';
+// }
 
 // ====================FUNCTION SEO=========================================================== 
 function seo()

@@ -47,65 +47,8 @@ if (!empty($_COOKIE['custom_session'])) {
         </div>
 
         <div id="tab-register" class="tab-content tab-register" style="display:none">
-
-            <div class="two-columns">
-                <div class="row-cell">
-                    <label><?php _e('E-mail', 'dgw') ?></label>
-                    <input type="email" id="reg-email" placeholder="example@email.com" />
-                </div>
-                <div class="row-cell">
-                    <label><?php _e('Password', 'dgw') ?></label>
-                    <input type="password" id="reg-password" placeholder="Tối thiểu 6 ký tự" />
-                </div>
-            </div>
-
-            <hr class="hr-style">
             <!-- PHAN DANG KY REGISTER================================================================= -->
-
-            <div class="three-columns">
-                <div class="row-cell">
-                    <label><?php _e('Full Name', 'dgw') ?>
-                    </label>
-                    <input type="text" id="reg-username" placeholder="Nguyễn Văn A" />
-                </div>
-                <div class="row-cell">
-                    <label><?php _e('Phone', 'dgw') ?></label>
-                    <input type="text" id="reg-phone" class="type-phone-more" maxlength="15" />
-                </div>
-                <div class="row-cell">
-                    <label><?php _e('Position', 'dgw') ?></label>
-                    <input type="text" id="reg-position" />
-                </div>
-            </div>
-
-            <div class="two-columns">
-                <div class="row-cell">
-                    <label><?php _e('Company', 'dgw') ?></label>
-                    <input type="text" id="reg-company" />
-                </div>
-                <div class="row-cell">
-                    <label><?php _e('Tax Number', 'dgw') ?></label>
-                    <input type="text" id="reg-tax" class="type-number" maxlength="13" />
-                </div>
-            </div>
-
-            <div class="two-columns">
-                <div class="row-cell">
-                    <label><?php _e('Industry', 'dgw') ?></label>
-                    <input type="text" id="reg-industry" />
-                </div>
-
-                <div class="row-cell">
-                    <label><?php _e('Department', 'dgw') ?></label>
-                    <input type="text" id="reg-department" />
-                </div>
-            </div>
-
-            <div class="btn-space">
-                <button id="btn-register" class="btn-my-style"><?php _e('Register', 'dgw') ?> </button>
-            </div>
-            
-            <p id="register-msg" class="msg"></p>
+            <?php dgw_render_auth_form_full() ?>
 
         </div>
     </div>
@@ -122,6 +65,7 @@ if (!empty($_COOKIE['custom_session'])) {
                 <input type="password" id="chang-password" />
             </div>
             <div class="row-cell">
+                
                 <label><?php _e('Confirm Password', 'dgw'); ?></label>
                 <input type="password" id="chang-confirm-password" />
             </div>

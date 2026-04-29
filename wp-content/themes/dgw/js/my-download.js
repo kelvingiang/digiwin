@@ -84,8 +84,16 @@ jQuery(document).ready(function ($) {
     e.preventDefault();
     var email = jQuery("#user_email").val();
     var nonce = jQuery("#forgot_nonce").val();
+    const btn = jQuery("#btn-submit-forgot");
+    const currentLang = document.documentElement.lang;
+    const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
 
-    jQuery("#btn-submit-forgot").text("Đang gửi...");
+    const uiText = {
+      vn: { loading: "Đang xử lý...", original: "Gửi yêu cầu" },
+      cn: { loading: "处理中...", original: "提交" },
+    };
+    const langSet = uiText[sendLang];
+    btn.prop("disabled", true).addClass("is-loading").text(langSet.loading);
 
     jQuery.ajax({
       url: MyAjax.ajax_url, // dw_params được truyền từ wp_localize_script
@@ -93,6 +101,7 @@ jQuery(document).ready(function ($) {
       data: {
         action: "member_forgot_password",
         user_email: email,
+        lang: sendLang,
         nonce: nonce,
       },
       success: function (response) {
@@ -101,14 +110,15 @@ jQuery(document).ready(function ($) {
           jQuery("#forgot-password-msg")
             .html(response.data.message)
             .css("color", "green");
-          jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
+          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
         } else {
           jQuery("#user_email").val("");
           jQuery("#forgot-password-msg")
             .html(response.data.message)
             .css("color", "red");
-          jQuery("#btn-submit-forgot").text("Gửi yêu cầu");
+          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
         }
+          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
         jQuery("#forgot-password-msg").html(response.data.message);
       },
     });
@@ -124,6 +134,18 @@ jQuery(document).on("keydown", "#login-email, #login-password", function (e) {
 
 // ===== ĐĂNG NHẬP ==================================
 jQuery(document).on("click", "#btn-login", function () {
+  const $this = jQuery(this);
+  const currentLang = document.documentElement.lang;
+  const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
+
+  // Cấu hình ngôn ngữ hiển thị tại client
+  const uiText = {
+    vn: { loading: "Đang xử lý...", original: "Đăng Nhập" },
+    cn: { loading: "处理中...", original: "登入" },
+  };
+  const langSet = uiText[sendLang];
+  $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
+
   jQuery.ajax({
     url: MyAjax.ajax_url,
     type: "POST",
@@ -132,13 +154,12 @@ jQuery(document).on("click", "#btn-login", function () {
       nonce: MyAjax.nonce,
       email: jQuery("#login-email").val(),
       password: jQuery("#login-password").val(),
+      lang: sendLang,
     },
     success: function (res) {
       if (res.success) {
         console.log("DEBUG:", res.data.debug);
-        jQuery("#login-msg")
-          .css("color", "green")
-          .text("Đăng nhập thành công!");
+        jQuery("#login-msg").css("color", "green").text(res.data.message);
         setTimeout(function () {
           // ✅ 判斷在哪個頁面
           const page = jQuery("#tab-login").data("page");
@@ -148,7 +169,10 @@ jQuery(document).on("click", "#btn-login", function () {
             // window.location.href = "/"; // ← member page 轉首頁
             return;
           }
-
+          $this
+            .prop("disabled", false)
+            .removeClass("is-loading")
+            .text(langSet.original);
           jQuery("#auth-popup-overlay").remove();
           if (pendingDownload) {
             jQuery.ajax({
@@ -171,6 +195,10 @@ jQuery(document).on("click", "#btn-login", function () {
         }, 1000);
       } else {
         jQuery("#login-msg").css("color", "red").text(res.data.message);
+        $this
+          .prop("disabled", false)
+          .removeClass("is-loading")
+          .text(langSet.original);
       }
     },
   });
@@ -178,6 +206,19 @@ jQuery(document).on("click", "#btn-login", function () {
 
 // ===== ĐĂNG KÝ =====
 jQuery(document).on("click", "#btn-register", function () {
+  const $this = jQuery(this);
+  const currentLang = document.documentElement.lang;
+  const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
+
+  // Cấu hình ngôn ngữ hiển thị tại client
+  const uiText = {
+    vn: { loading: "Đang xử lý...", original: "Đăng ký" },
+    cn: { loading: "处理中...", original: "注册" },
+  };
+  const langSet = uiText[sendLang];
+  // 1. Vô hiệu hóa button để tránh spam request
+  $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
+
   jQuery.ajax({
     url: MyAjax.ajax_url,
     type: "POST",
@@ -193,13 +234,11 @@ jQuery(document).on("click", "#btn-register", function () {
       industry: jQuery("#reg-industry").val(),
       position: jQuery("#reg-position").val(),
       department: jQuery("#reg-department").val(),
+      lang: sendLang,
     },
     success: function (res) {
       if (res.success) {
-        jQuery("#register-msg")
-          .css("color", "green")
-          .text("Đăng ký thành công!");
-
+        jQuery("#register-msg").css("color", "green").text(res.data.message);
         jQuery("#reg-username").val("");
         jQuery("#reg-email").val("");
         jQuery("#reg-password").val("");
@@ -209,13 +248,20 @@ jQuery(document).on("click", "#btn-register", function () {
         jQuery("#reg-industry").val("");
         jQuery("#reg-position").val("");
         jQuery("#reg-department").val("");
-
         setTimeout(function () {
           jQuery('.tab-btn[data-tab="login"]').click();
-           jQuery("#register-msg").text("");
-        }, 1000);
+          jQuery("#register-msg").text("");
+          $this
+            .prop("disabled", false)
+            .removeClass("is-loading")
+            .text(langSet.original);
+        }, 5000);
       } else {
         jQuery("#register-msg").css("color", "red").text(res.data.message);
+        $this
+          .prop("disabled", false)
+          .removeClass("is-loading")
+          .text(langSet.original);
       }
     },
   });

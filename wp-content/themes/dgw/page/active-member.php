@@ -15,37 +15,38 @@ if ($email && $token) {
     require_once get_template_directory() . '/model/model-download.php';
     $model_download = new Model_Download();
     $user = $model_download->get_user_by_email($email);
-    echo '<pre>';
-    print_r($user);
-    echo '</pre>';
+
     if ($user) {
-
-
-        if (!hash_equals($user->token, hash('sha256', $token))) {
+        if (!hash_equals($user->active_code,  $token)) {
             $error_message = "Mã xác thực không hợp lệ.";
         } else {
             $is_valid = true;
             $user_id = $user->ID;
         }
     } else {
-
         $error_message = "Người dùng không tồn tại.";
     }
 } else {
-
     $error_message = "Yêu cầu không hợp lệ.";
 }
 ?>
-<div>
-    <?php pageImg($post->ID); ?>
-</div>
 <div class="container-fluid">
     <div class="reset-password-page">
         <div class="reset-password-form">
-    
-            <div>
-                <button id="btn-active-member" class="btn-resetpassword">Active Account</button>
-            </div>
+            <?php if ($is_valid && isset($user) && $user->status == 0) : ?>
+                <div>
+                    <?php if ($user->status == 0): ?>
+                        <button id="btn-active-member" class="btn-resetpassword">Active Account</button>
+                        <label id="active-msg" class="msg"></label>
+                    <?php else: ?>
+                        <label class="msg" ><?php _e('tai khoang da dc kich hoat', 'dgw'); ?></label>
+                    <?php endif ?>
+                </div>
+            <?php else: ?>
+                <div>
+                    <label class="msg-error"><?php echo esc_html($error_message);?></label>
+                </div>
+            <?php endif ?>
         </div>
         <div>
             <div class="">
@@ -75,18 +76,19 @@ if ($email && $token) {
             success: function(res) {
                 if (res.success) {
                     // 顯示密碼修改成功
-                    jQuery("#change-password-msg")
+                    jQuery("#active-msg")
                         .css("color", "green")
-                        .text("密碼修改成功！");
+                        .text("您的賬號已激活成功！即張轉到登入介面");
+                    jQuery("#btn-active-member").prop("disabled", true);
                     setTimeout(function() {
                         // Thay đổi URL dưới đây bằng link trang member của bạn
-                      //window.location.href = "<?php //echo home_url('/member'); ?>";
-                    }, 2000);
+                         window.location.href = "<?php echo home_url('/member'); ?>";
+                    }, 1000);
                 } else {
                     // 顯示錯誤訊息 (例如密碼太短、舊密碼錯誤等)
-                    jQuery("#change-password-msg")
+                    jQuery("#active-msg")
                         .css("color", "red")
-                        .text(res.data.message);
+                        .text('Có lỗi xảy ra, vui lòng thử lại.');
                 }
             }
         });

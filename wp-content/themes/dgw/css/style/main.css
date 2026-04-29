@@ -295,6 +295,18 @@ hr.style-two {
   opacity: 1;
 }
 
+.msg {
+  font-size: 1rem;
+  font-weight: bold;
+  color: green;
+}
+
+.msg-error {
+  font-size: 1rem;
+  color: rgb(173, 1, 1);
+  font-weight: bold;
+}
+
 #single-row {
   display: grid;
   grid-template-columns: 1fr;
@@ -3279,6 +3291,22 @@ html[lang=en-US] .has-sub::after {
 .btn-my-style:hover {
   background-color: #0243a5;
 }
+.btn-my-style:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.btn-my-style.is-loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
 
 .btn-password {
   background-color: #727374;
@@ -3353,7 +3381,7 @@ html[lang=en-US] .has-sub::after {
 .dwf-container {
   background: #ffffff;
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   padding: 40px 30px;
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -3412,40 +3440,5 @@ html[lang=en-US] .has-sub::after {
   align-items: center;
 }
 .reset-password-page .reset-password-form > div {
-  width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  margin-bottom: 20px;
-}
-.reset-password-page .reset-password-form > div input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 0.5px solid #ddd;
-  border-radius: 9px;
-  font-size: 14px;
-  color: #1a1a1a;
-  box-sizing: border-box;
-  outline: none;
-  margin-bottom: 14px;
-  transition: border 0.15s;
-}
-.reset-password-page .reset-password-form > div .btn-resetpassword {
-  width: 100%;
-  padding: 13px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-.reset-password-page .reset-password-form > div .btn-resetpassword:hover {
-  background-color: #0056b3;
-}
-.reset-password-page .reset-password-form > div .btn-resetpassword:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  width: 50%;
 }

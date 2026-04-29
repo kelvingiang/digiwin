@@ -30,7 +30,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
 
     /* Gộp chung cho Tablet và Mobile */
     @include Respond(md) {
-        padding: 20px 10px; 
+        padding: 20px 10px;
     }
 
     &.show {
@@ -64,7 +64,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
 /* ===== LAYOUT CHUNG ===== */
 .member-space {
     padding: 100px 20%;
-    
+
     @include Respond(md) {
         padding: 100px 10%;
     }
@@ -172,7 +172,9 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     font-weight: bold;
     color: #666;
     cursor: pointer;
-    transition: background-color 0.15s ease, color 0.15s ease; /* Tối ưu hơn 'all' */
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease; /* Tối ưu hơn 'all' */
 
     &.active {
         background-color: $bg-color;
@@ -201,7 +203,9 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
         box-sizing: border-box;
         outline: none;
         margin-bottom: 14px;
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
 
         &::placeholder {
             color: #bbb;
@@ -253,6 +257,26 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     &:hover {
         background-color: $btn-blue-hover;
     }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    &.is-loading {
+        &::after {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-left: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+    }
 }
 
 .btn-password {
@@ -298,7 +322,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
 .tab-login {
     background-color: $bg-color;
     border: 1px solid $bg-color;
-    height: auto; 
+    height: auto;
     display: block;
     margin-bottom: 2rem;
     padding: 10px 20px;
@@ -324,13 +348,13 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     display: none;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(3px); 
+    backdrop-filter: blur(3px);
 }
 
 .dwf-container {
     background: #ffffff;
     width: 100%;
-    max-width: 420px;
+    max-width: 500px;
     padding: 40px 30px;
     border-radius: 12px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
