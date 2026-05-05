@@ -4,6 +4,33 @@ use SimplePie\Parse\Date;
 
 require_once get_template_directory() . '/model/model-download.php';
 
+
+// 1. Hàm tạo thời điểm hết hạn (24 giờ kể từ lúc yêu cầu)
+function dgw_generate_expiry_time(): string {
+    // Sử dụng DateTimeImmutable của PHP 8.2 để an toàn và chính xác
+    $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
+    
+    // Thêm đúng 24 giờ cho mốc hết hạn
+    $expiry = $now->modify('+24 hours');
+    
+    // Trả về định dạng chuẩn database MySQL: YYYY-MM-DD HH:MM:SS
+    return $expiry->format('Y-m-d H:i:s');
+}
+
+// 2. Hàm kiểm tra Token còn hạn hay không
+function dgw_is_token_valid(string $expiry_from_db): bool {
+    try {
+        $expiry_time = new DateTimeImmutable($expiry_from_db, new DateTimeZone('Asia/Ho_Chi_Minh'));
+        $current_time = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
+
+        // Nếu thời gian hiện tại vẫn nhỏ hơn thời gian hết hạn => Hợp lệ
+        return $current_time < $expiry_time;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+
 /* =========================================================
 // tao 2026-04 thêm file my-download.js  =======
 ========================================================= */

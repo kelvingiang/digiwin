@@ -127,14 +127,23 @@ class Model_Download
 
     public function update_token($email, $token, $expiry)
     {
+        // Đảm bảo $expiry là số nguyên để tránh lỗi định dạng
+        $expiry = (int) $expiry;
+
         return $this->_db->update(
             $this->_table_registry,
             [
-                'token' => $token,
-                'expiry' => $expiry,
-                'update_date'  => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
+                'token'       => $token,
+                'expiry'      => $expiry, // Lưu số nguyên 10 chữ số (Vd: 1714821600)
+                'update_date' => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
             ],
-            ['email' => $email]
+            ['email' => $email],
+            [
+                '%s', // token là string
+                '%d', // expiry PHẢI là integer để so sánh nhanh và chính xác
+                '%s'  // update_date là string (datetime)
+            ],
+            ['%s'] // email là string
         );
     }
 

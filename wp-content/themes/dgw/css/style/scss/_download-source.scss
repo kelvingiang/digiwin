@@ -183,6 +183,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
 }
 
 .row-cell {
+    text-align: left;
     label {
         font-size: 15px;
         font-weight: 500;
@@ -401,5 +402,89 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     to {
         transform: translateY(0);
         opacity: 1;
+    }
+}
+
+//============= GIAO DIỆN THÀNH VIÊN ĐANG HOẠT ĐỘNG ============================
+// _active-member.scss
+
+// Tối ưu theo cấu trúc module, dễ bảo trì
+.dgw-activate {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    padding: 60px 0;
+    align-items: start;
+
+    &-main {
+        height: 100%;
+        // Kỹ thuật căn giữa tuyệt đối nội dung bên trong
+        display: flex;
+        align-items: center; // Căn giữa theo chiều dọc
+        justify-content: center; // Căn giữa theo chiều ngang
+        text-align: center;
+        width: 100%;
+    }
+    .reset-password-form {
+        width: 70%;
+    }
+
+    &-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .dgw-loader {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #27ae60;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: spinDgw 1s linear infinite;
+    }
+
+    .msg {
+        padding: 20px;
+        border-radius: 6px;
+        &--error {
+            color: #c0392b;
+        }
+        &--info {
+            color: #2980b9;
+        }
+    }
+
+    .txt-success,
+    .dgw-status-msg {
+        color: #27ae60;
+        font-weight: bold;
+    }
+    .txt-error {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+}
+
+@keyframes spinDgw {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dgw-error-box {
+    padding: 20px;
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 8px;
+    text-align: center;
+    width: 90%;
+    height: 100%;
+    margin-top: 2rem;
+    padding-top: 10%;
+    h3 {
+        color: #c53030;
+        margin-bottom: 10px;
     }
 }

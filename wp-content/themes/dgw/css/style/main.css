@@ -3216,6 +3216,9 @@ html[lang=en-US] .has-sub::after {
   color: #194b96;
 }
 
+.row-cell {
+  text-align: left;
+}
 .row-cell label {
   font-size: 15px;
   font-weight: 500;
@@ -3427,18 +3430,75 @@ html[lang=en-US] .has-sub::after {
     opacity: 1;
   }
 }
-.reset-password-page {
+.dgw-activate {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  margin-top: 70px;
-  gap: 30px;
+  gap: 20px;
+  padding: 60px 0;
+  align-items: start;
 }
-.reset-password-page .reset-password-form {
+.dgw-activate-main {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+.dgw-activate .reset-password-form {
+  width: 70%;
+}
+.dgw-activate-sidebar {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 20px;
 }
-.reset-password-page .reset-password-form > div {
-  width: 50%;
+.dgw-activate .dgw-loader {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #27ae60;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  animation: spinDgw 1s linear infinite;
+}
+.dgw-activate .msg {
+  padding: 20px;
+  border-radius: 6px;
+}
+.dgw-activate .msg--error {
+  color: #c0392b;
+}
+.dgw-activate .msg--info {
+  color: #2980b9;
+}
+.dgw-activate .txt-success,
+.dgw-activate .dgw-status-msg {
+  color: #27ae60;
+  font-weight: bold;
+}
+.dgw-activate .txt-error {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+@keyframes spinDgw {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.dgw-error-box {
+  padding: 20px;
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  text-align: center;
+  width: 90%;
+  height: 100%;
+  margin-top: 2rem;
+  padding-top: 10%;
+}
+.dgw-error-box h3 {
+  color: #c53030;
+  margin-bottom: 10px;
 }

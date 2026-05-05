@@ -1,4 +1,8 @@
-<?php /*  Template Name: Reset Password Page */ ?>
+<?php /*  Template Name: Reset Password Page */
+
+use phpseclib3\File\ASN1\Maps\Time;
+
+?>
 <?php get_header();
 get_template_part('templates/template', 'header');
 
@@ -15,63 +19,79 @@ if ($email && $token) {
     require_once get_template_directory() . '/model/model-download.php';
     $model_download = new Model_Download();
     $user = $model_download->get_user_by_email($email);
+
     if ($user) {
         // Kiểm tra thời gian và hash
         if (time() > $user->expiry) {
-            $error_message = "Liên kết đã hết hạn (quá 24 giờ).";
-        } elseif (!hash_equals($user->token, hash('sha256', $token))) {
-            $error_message = "Mã xác thực không hợp lệ.";
+            $error_message = __("The link has expired. Please request a new code", "dgw");
+        } elseif (!hash_equals($user->token,  hash('sha256', $token))) {
+            $error_message = __("Invalid verification code", "dgw");
         } else {
             $is_valid = true;
             $user_id = $user->ID;
         }
     } else {
-        $error_message = "Người dùng không tồn tại.";
+        $error_message = __("The user does not exist.", "dgw");
     }
 } else {
-    $error_message = "Yêu cầu không hợp lệ.";
+    $error_message = __("Invalid request.", "dgw");
 }
 ?>
 
 <div class="container-fluid">
-    <div class="reset-password-page">
-        <div class="reset-password-form">
-            <div class="one-columns" >
-                <div class="row-cell">
-                    <label><?php _e('New Password') ?></label>
-                    <input type="password"
-                        id="new-password"
-                        placeholder="***********"
-                        required>
-                    </input>
+    <div class="dgw-activate">
+        <main class="dgw-activate-main">
+            <?php if ($is_valid) : ?>
+                <div class="reset-password-form">
+                    <div class="one-columns">
+                        <div class="row-cell">
+                            <label><?php _e('New Password') ?></label>
+                            <input type="password"
+                                id="new-password"
+                                placeholder="***********"
+                                required>
+                            </input>
+                        </div>
+                    </div>
+
+                    <div class="one-columns">
+                        <div class="row-cell">
+                            <label class="title"><?php _e('Confirm Password') ?></label>
+                            <input type="password"
+                                id="confirm-password"
+                                placeholder="***********"
+                                required>
+                            </input>
+                        </div>
+                    </div>
+
+                    <div class="btn-space">
+                        <button id="btn-reset-password" class="btn-my-style">
+                            <?php _e('Submit Email') ?>
+                        </button>
+                        <p id="change-password-msg" class="msg"></p>
+                    </div>
+
                 </div>
-            </div>
-
-            <div class="one-columns">
-                <div class="row-cell">
-                    <label class="title"><?php _e('Confirm Password') ?></label>
-                    <input type="password"
-                        id="confirm-password"
-                        placeholder="***********"
-                        required>
-                    </input>
+            <?php else : ?>
+                <!-- TRƯỜNG HỢP 2: TOKEN SAI HOẶC HẾT HẠN -> ẨN FORM & HIỆN LỖI -->
+                <div class="dgw-error-box">
+                    <h3><?php _e('Cannot Reset Password', 'dgw'); ?></h3>
+                    <p style="color: #c53030; font-weight: 500; margin: 0;">
+                        <?php echo esc_html($error_message); ?>
+                    </p>
+                    <!-- Bạn có thể thêm 1 nút "Yêu cầu lại" dẫn về trang Quên mật khẩu ở đây -->
+                    <a href="<?php echo home_url('/member'); ?>" class="btn-my-style"
+                        style="margin-top: 38px; display: inline-block;">
+                        <?php _e('Request a new code', 'dgw'); ?>
+                    </a>
                 </div>
-            </div>
-
-            <div class="btn-space">
-                <button id="btn-reset-password" class="btn-my-style">
-                    <?php _e('Submit Email') ?>
-                </button>
-                <p id="change-password-msg" class="msg"></p>
-            </div>
-
-        </div>
-        <div>
-            <div class="">
-                <?php get_template_part('templates/template', 'side_cases'); ?>
-                <?php get_template_part('templates/template', 'side_active'); ?>
-            </div>
-        </div>
+            <?php endif; ?>
+        </main>
+        <aside class="dgw-active-sidebar">
+            <?php get_template_part('templates/template', 'side_cases'); ?>
+            <?php get_template_part('templates/template', 'side_active'); ?>
+        </aside>
     </div>
 </div>
 <script>
@@ -84,6 +104,8 @@ if ($email && $token) {
         // Sửa lỗi ở đây: Dùng json_encode để an toàn và đúng tên biến PHP
         const key = <?php echo json_encode((string)$token); ?>;
         const email = <?php echo json_encode((string)$email); ?>;
+        const currentLang = document.documentElement.lang;
+        const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
 
         jQuery.ajax({
             url: MyAjax.ajax_url,
@@ -94,14 +116,15 @@ if ($email && $token) {
                 password: Password, // 傳送舊密碼
                 confirm: Confirm, // 傳送新密碼
                 key: key, // 傳送 key
-                email: email // 傳送 email
+                email: email, // 傳送 email
+                lang: sendLang
             },
             success: function(res) {
                 if (res.success) {
                     // 顯示密碼修改成功
                     jQuery("#change-password-msg")
                         .css("color", "green")
-                        .text("密碼修改成功！");
+                        .text(res.data.message);
                     setTimeout(function() {
                         // Thay đổi URL dưới đây bằng link trang member của bạn
                         window.location.href = "<?php echo home_url('/member'); ?>";

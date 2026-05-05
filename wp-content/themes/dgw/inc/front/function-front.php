@@ -94,12 +94,12 @@ function get_products($cate)
 function dgw_get_auth_fields_config(): array {
     return [
         ['id' => 'email',      'label' => __('E-mail', 'dgw'),    'col' => 'two', 'type' => 'email',    'place' => 'example@email.com'],
-        ['id' => 'password',   'label' => __('Password', 'dgw'),  'col' => 'two', 'type' => 'password', 'place' => 'Tối thiểu 6 ký tự'],
+        ['id' => 'password',   'label' => __('Password', 'dgw'),  'col' => 'two', 'type' => 'password', 'place' => '******'],
         
         ['type' => 'separator'],
 
         ['id' => 'company',    'label' => __('Company Name', 'dgw'), 'col' => 'one', 'type' => 'text'],
-        ['id' => 'username',   'label' => __('Full Name', 'dgw'),    'col' => 'two', 'type' => 'text', 'place' => 'Nguyễn Văn A'],
+        ['id' => 'username',   'label' => __('Full Name', 'dgw'),    'col' => 'two', 'type' => 'text', 'place' => ''],
         ['id' => 'position',   'label' => __('Position', 'dgw'),     'col' => 'two', 'type' => 'text'],
         ['id' => 'phone',      'label' => __('Phone', 'dgw'),        'col' => 'two', 'type' => 'text', 'class' => 'type-phone-more', 'max' => 15],
         ['id' => 'tax',        'label' => __('Tax Number', 'dgw'),   'col' => 'two', 'type' => 'text', 'class' => 'type-number', 'max' => 13],

@@ -62,12 +62,12 @@ if (!empty($_COOKIE['custom_session'])) {
         <div class="two-columns">
             <div class="row-cell">
                 <label><?php _e('Password', 'dgw'); ?></label>
-                <input type="password" id="chang-password" />
+                <input type="password" id="chang-password" placeholder="********" />
             </div>
             <div class="row-cell">
-                
+
                 <label><?php _e('Confirm Password', 'dgw'); ?></label>
-                <input type="password" id="chang-confirm-password" />
+                <input type="password" id="chang-confirm-password" placeholder="********" />
             </div>
         </div>
 
@@ -76,12 +76,11 @@ if (!empty($_COOKIE['custom_session'])) {
             <p id="change-password-msg" class="msg"></p>
         </div>
 
-
         <hr class="hr-style" style="margin-bottom: 2rem;" />
 
         <div class="three-columns">
             <div class="row-cell">
-                <label><?php _e('User Name', 'dgw') ?></label>
+                <label><?php _e('Full Name', 'dgw') ?></label>
                 <input type="text" id="chang-username" value="<?php echo $data->username; ?>" />
             </div>
             <div class="row-cell">
@@ -96,14 +95,15 @@ if (!empty($_COOKIE['custom_session'])) {
 
         <div class="two-columns">
             <div class="row-cell">
-                <label><?php _e('Company', 'dgw') ?></label>
+                <label><?php _e('Company Name', 'dgw') ?></label>
                 <input type="text" id="chang-company" value="<?php echo $data->company; ?>" />
             </div>
             <div class="row-cell">
-                <label><?php _e('Tax', 'dgw') ?></label>
+                <label><?php _e('Tax Number', 'dgw') ?></label>
                 <input type="text" id="chang-tax" class="type-number" maxlength="13" value="<?php echo $data->tax; ?>" />
             </div>
         </div>
+
         <div class="two-columns">
             <div class="row-cell">
                 <label><?php _e('Industry', 'dgw') ?></label>
@@ -114,7 +114,6 @@ if (!empty($_COOKIE['custom_session'])) {
                 <input type="text" id="chang-department" value="<?php echo $data->department; ?>" />
             </div>
         </div>
-
 
         <div class="btn-space">
             <button id="btn-change-info" class="btn-my-style"><?php _e('Change Information', 'dgw') ?></button>
@@ -130,6 +129,8 @@ if (!empty($_COOKIE['custom_session'])) {
             // 💡 建議至少要傳遞舊密碼與新密碼，確保安全性
             const Password = jQuery("#chang-password").val();
             const Confirm = jQuery("#chang-confirm-password").val();
+            const currentLang = document.documentElement.lang;
+            const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
 
             jQuery.ajax({
                 url: MyAjax.ajax_url,
@@ -138,14 +139,15 @@ if (!empty($_COOKIE['custom_session'])) {
                     action: "member_change_password",
                     nonce: MemberAuth.nonce,
                     password: Password, // 傳送舊密碼
-                    confirm: Confirm // 傳送新密碼
+                    confirm: Confirm, // 傳送新密碼
+                    lang: sendLang
                 },
                 success: function(res) {
                     if (res.success) {
                         // 顯示密碼修改成功
                         jQuery("#change-password-msg")
                             .css("color", "green")
-                            .text("密碼修改成功！");
+                            .text(res.data.message);
                     } else {
                         // 顯示錯誤訊息 (例如密碼太短、舊密碼錯誤等)
                         jQuery("#change-password-msg")
@@ -158,6 +160,9 @@ if (!empty($_COOKIE['custom_session'])) {
 
         jQuery(document).on("click", "#btn-change-info", function(e) {
             e.preventDefault(); // 防止按鈕預設行為
+
+            const currentLang = document.documentElement.lang;
+            const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
 
             // 💡 建議至少要傳遞舊密碼與新密碼，確保安全性
             const Username = jQuery("#chang-username").val();
@@ -180,14 +185,15 @@ if (!empty($_COOKIE['custom_session'])) {
                     industry: Industry,
                     department: Department,
                     position: Position,
-                    tax: Tax
+                    tax: Tax,
+                    lang: sendLang
                 },
                 success: function(res) {
                     if (res.success) {
                         // 顯示資訊修改成功
                         jQuery("#change-info-msg")
                             .css("color", "green")
-                            .text("資訊修改成功！");
+                            .text(res.data.message);
                     } else {
                         // 顯示錯誤訊息 (例如密碼太短、舊密碼錯誤等)
                         jQuery("#change-info-msg")
