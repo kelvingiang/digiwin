@@ -4,23 +4,25 @@ get_header();
 get_template_part('templates/template', 'header');
 
 // Sử dụng filter_input để đảm bảo an toàn dữ liệu đầu vào (PHP 8.2)
-$email = filter_input(INPUT_GET, 'email', FILTER_SANITIZE_EMAIL);
-$token = filter_input(INPUT_GET, 'key', FILTER_SANITIZE_SPECIAL_CHARS);
-$hashed_token = hash('sha256', $token); // Mã hóa token ngay khi nhận để tránh lỗi khi so sánh sau này
+$email = sanitize_email(wp_unslash($_GET['email'] ?? ''));
+$token = sanitize_key(wp_unslash($_GET['key'] ?? ''));
 
 $is_valid      = false;
 $error_message = '';
 $user_data     = null;
 
-if ($email && $hashed_token) {
+if ($email && $token) {
     // Chỉ nạp model khi cần thiết để tối ưu bộ nhớ
     require_once get_template_directory() . '/model/model-download.php';
     $model_download = new Model_Download();
     $user_data      = $model_download->get_user_by_email($email);
-
+    // Debug: Hiển thị token gốc và hashed_token để kiểm tra
     if ($user_data) {
+        $db_code      = trim((string)$user_data->active_code);
+        $hashed_token = hash('sha256', $token);
+
         // hash_equals chống Timing Attack
-        if (hash_equals((string)$user_data->active_code, (string)$hashed_token)) {
+        if (hash_equals($db_code, $hashed_token)) {
             $is_valid = true;
         } else {
             $error_message = __('Invalid verification code', 'dgw');

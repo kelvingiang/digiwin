@@ -1,5 +1,51 @@
 <?php
 
+function get_member_messages($lang = 'vi')
+{
+    $i18n = [
+        'vi' => [
+            'empty'           => "Vui lòng điền đầy đủ thông tin",
+            'email_invalid'   => "Email không hợp lệ",
+            'not_exist'       => "Email không tồn tại",
+            'password_wrong'  => "Mật khẩu không đúng",
+            'password_short'  => "Mật khẩu phải có ít nhất 6 ký tự",
+            'password_mismatch' => "Mật khẩu xác nhận không khớp",
+            'active_req'      => "Tài khoản chưa được kích hoạt",
+            'exist'           => "Email hoặc tên đăng nhập đã tồn tại",
+            'success'         => "Thao tác thành công!",
+            'success_activate' => "Tài khoản của bạn đã được kích hoạt!",
+            'success_change'  => "Mật khẩu đã được cập nhật",
+            'success_change_info'  => "Thông tin đã được cập nhật",
+            'success_register' => "Đăng ký thành công, vui lòng kiểm tra email để kích hoạt tài khoản",
+            'mail_sent'       => "Hãy kiểm tra email (có hiệu lực trong 24H)",
+            'failure'         => "Xác thực bảo mật thất bại",
+            'error_system'    => "Lỗi hệ thống, vui lòng thử lại",
+            'login_req'       => "Vui lòng đăng nhập trước"
+        ],
+        'cn' => [
+            'empty'           => "請填寫完整資訊",
+            'email_invalid'   => "電子郵件格式錯誤",
+            'not_exist'       => "帳號不存在",
+            'password_wrong'  => "密碼錯誤",
+            'password_short'  => "密碼長度至少為 6 個字元",
+            'password_mismatch' => "兩次輸入的密碼不一致",
+            'active_req'      => "帳號尚未啟動",
+            'exist'           => "電子郵件或使用者名稱已存在",
+            'success'         => "登入成功！",
+            'success_activate' => "您的帳戶已成功激活！",
+            'success_change'  => "密碼已成功更新",
+            'success_change_info'  => "資訊已成功更新",
+            'success_register' => "註冊成功，請前往信箱點擊啟動連結",
+            'mail_sent'       => "請檢查 E-mail，將在24小時後失效",
+            'failure'         => "安全驗證失敗",
+            'error_system'    => "系統錯誤，請稍後重試",
+            'login_req'       => "請先登入"
+        ]
+    ];
+    return $i18n[$lang] ?? $i18n['vi'];
+}
+
+
 /* =========================================================
 phần download file
 ========================================================= */
@@ -81,32 +127,9 @@ add_action('wp_ajax_download_member_login',        'handle_member_login');
 add_action('wp_ajax_nopriv_download_member_login', 'handle_member_login');
 function handle_member_login()
 {
-    $model_download = new Model_Download();
-
-
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'empty'     => "Vui lòng điền đầy đủ thông tin",
-            'email'     => "Email không tồn tại",
-            'password'  => "Mật khẩu không đúng",
-            'active'    => "Tài khoản chưa kích hoạt",
-            'success'   => " Đăng nhập thành công!",
-        ],
-        'cn' => [
-            'empty'     => "請填寫完整資訊",
-            'email'     => "帳號不存在",
-            'password'  => "密碼錯誤",
-            'active'    => "帳號尚未啟動",
-            'success'   => "登入成功！"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
-
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // ===== PHẦN BỊ THIẾU — xác thực email + password =====
+    $model_download = new Model_Download();
     $email    = sanitize_email($_POST['email']);
     $password = $_POST['password'];
 
@@ -121,19 +144,19 @@ function handle_member_login()
 
     // Không tìm thấy user
     if (!$user) {
-        wp_send_json_error(['message' => $msg['email']]);
+        wp_send_json_error(['message' => $msg['not_exist']]);
         return;
     }
 
     // Kiểm tra password có khớp không
     if (!password_verify($password, $user->password)) {
-        wp_send_json_error(['message' => $msg['password']]);
+        wp_send_json_error(['message' => $msg['password_wrong']]);
         return;
     }
 
     // Kiểm tra account có đã kích hoạt chưa (status = 1)
     if ($user->status != 1) {
-        wp_send_json_error(['message' => $msg['active']]);
+        wp_send_json_error(['message' => $msg['active_req']]);
         return;
     }
     // ===== KẾT THÚC PHẦN XÁC THỰC =====
@@ -178,31 +201,8 @@ function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
 
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
 
-    $i18n = [
-        'vn' => [
-            'empty'     => "Vui lòng điền đầy đủ thông tin",
-            'email'     => "Email không hợp lệ",
-            'password'  => "Mật khẩu phải có ít nhất 6 ký tự",
-            'exist'     => "Email hoặc tên đăng nhập đã tồn tại",
-            'success'   => "Đăng ký thành công! Vui lòng kiểm tra email để kích hoạt tài khoản",
-            'not_send'  => "Đăng ký thành công nhưng hệ thống không thể gửi mail kích hoạt. Vui lòng liên hệ quản trị viên",
-            'failure'   => "Đăng ký thất bại, vui lòng thử lại"
-        ],
-        'cn' => [
-            'empty'     => "請填寫完整資訊",
-            'email'     => "電子郵件格式錯誤",
-            'password'  => "密碼長度至少為 6 個字元",
-            'exist'     => "電子郵件或使用者名稱已存在",
-            'success'   => "註冊成功！請檢查您的電子郵件以啟動帳號",
-            'not_send'  => "註冊成功，但系統無法傳送啟動郵件。請聯繫管理員",
-            'failure'   => "註冊失敗，請稍後重試"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
     //--------------------------------------------------------------------
     // 1. 接收並清洗數據
     $registration_data = [
@@ -219,12 +219,12 @@ function handle_member_register()
 
     // 檢查必填項 (修正了你原代碼中的括號語法錯誤)
     if (!is_email($registration_data['email'])) {
-        wp_send_json_error(['message' => $msg['email']]);
+        wp_send_json_error(['message' => $msg['email_invalid']]);
         return;
     }
 
     if (strlen($registration_data['password']) < 6) {
-        wp_send_json_error(['message' => $msg['password']]);
+        wp_send_json_error(['message' => $msg['password_short']]);
         return;
     }
 
@@ -326,7 +326,7 @@ function handle_member_register()
         );
         if ($sent) {
             wp_send_json_success([
-                'message' => $msg['success']
+                'message' => $msg['success_register']
             ]);
         } else {
             wp_send_json_success([
@@ -394,31 +394,7 @@ add_action('wp_ajax_nopriv_member_change_password', 'handle_change_password');
 function handle_change_password()
 {
 
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'login'     => "Vui lòng đăng nhập trước",
-            'password'  => "Vui lòng nhập mật khẩu",
-            'confirm'   => "Mật khẩu xác nhận không khớp",
-            'password_length' => "Mật khẩu phải có ít nhất 6 ký tự",
-            'success'   => "Hãy kiểm tra email, link này chỉ có hiệu lực trong 24H",
-            'failure'   => "Xác thực bảo mật thất bại",
-            'success_change' => "Mật khẩu đã được cập nhật thành công"
-        ],
-        'cn' => [
-            'login'     => "請先登入",
-            'password'  => "請輸入密碼",
-            'confirm'   => "兩次輸入的密碼不一致",
-            'password_length' => "密碼長度至少為 6 個字元",
-            'success'   => "重設密碼連結已傳送到您的 E-mail, 將在24小時後失效",
-            'failure'   => "安全驗證失敗",
-            'success_change' => "密碼已成功更新"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
@@ -435,15 +411,15 @@ function handle_change_password()
     $confirm = $_POST['confirm'] ?? '';
 
     if (empty($password) || empty($confirm)) {
-        wp_send_json_error(array('message' => $msg['password']));
+        wp_send_json_error(array('message' => $msg['password_wrong']));
     }
 
     if ($password !== $confirm) {
-        wp_send_json_error(array('message' => $msg['confirm']));
+        wp_send_json_error(array('message' => $msg['password_mismatch']));
     }
 
     if (strlen($password) < 6) {
-        wp_send_json_error(['message' => $msg['password_length']]);
+        wp_send_json_error(['message' => $msg['password_short']]);
     }
 
 
@@ -468,27 +444,7 @@ add_action('wp_ajax_nopriv_member_reset_password', 'handle_reset_password');
 
 function handle_reset_password()
 {
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'password'  => "Vui lòng nhập mật khẩu",
-            'confirm'   => "Mật khẩu xác nhận không khớp",
-            'password_length' => "Mật khẩu phải có ít nhất 6 ký tự",
-            'failure'   => "Xác thực bảo mật thất bại",
-            'success_change' => "Mật khẩu đã được cập nhật thành công"
-        ],
-        'cn' => [
-            'password'  => "請輸入密碼",
-            'confirm'   => "兩次輸入的密碼不一致",
-            'password_length' => "密碼長度至少為 6 個字元",
-            'failure'   => "安全驗證失敗",
-            'success_change' => "密碼已成功更新"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
@@ -503,15 +459,15 @@ function handle_reset_password()
     $email = $_POST['email'] ?? '';
 
     if (empty($password) || empty($confirm) || empty($key) || empty($email)) {
-        wp_send_json_error(array('message' => $msg['password']));
+        wp_send_json_error(array('message' => $msg['empty']));
     }
 
     if ($password !== $confirm) {
-        wp_send_json_error(array('message' => $msg['confirm']));
+        wp_send_json_error(array('message' => $msg['password_mismatch']));
     }
 
     if (strlen($password) < 6) {
-        wp_send_json_error(['message' => $msg['password_length']]);
+        wp_send_json_error(['message' => $msg['password_short']]);
     }
 
     if (!empty($key)) {
@@ -534,27 +490,7 @@ add_action('wp_ajax_nopriv_member_active_account', 'handle_active_account');
 
 function handle_active_account()
 {
-
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'failure'   => "Xác thực bảo mật thất bại",
-            'success_activate' => "Tài khoản của bạn đã được kích hoạt thành công!",
-            'failure_activate' => "Kích hoạt thất bại. Mã kích hoạt không chính xác hoặc đã hết hạn.",
-            'not_found' => "Tài khoản không tồn tại.",
-            'fill_all' => "Vui lòng điền đầy đủ thông tin"
-        ],
-        'cn' => [
-            'failure'   => "安全驗證失敗",
-            'success_activate' => "您的帳戶已成功激活！",
-            'failure_activate' => "激活失敗。激活碼不正確或已過期。",
-            'fill_all' => "請填寫所有欄位"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // 1. Kiểm tra Nonce bảo mật
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
@@ -566,7 +502,7 @@ function handle_active_account()
 
     // 3. Kiểm tra dữ liệu đầu vào
     if (empty($email) || empty($key)) {
-        wp_send_json_error(array('message' => $msg['fill_all']));
+        wp_send_json_error(array('message' => $msg['empty']));
     }
 
     $model_download = new Model_Download();
@@ -574,7 +510,7 @@ function handle_active_account()
     // 4. Kiểm tra User có tồn tại với Email này không
     $user = $model_download->get_user_by_email($email);
     if (!$user) {
-        wp_send_json_error(array('message' => $msg['not_found']));
+        wp_send_json_error(array('message' => $msg['not_exist']));
     }
 
     // 5. Thực hiện kích hoạt (Gọi hàm update trong Model)
@@ -591,7 +527,7 @@ function handle_active_account()
     } else {
         // Trường hợp lỗi SQL hoặc không khớp active_code
         wp_send_json_error(array(
-            'message' => $msg['failure_activate']
+            'message' => $msg['failure']
         ));
     }
 
@@ -606,26 +542,7 @@ add_action('wp_ajax_nopriv_member_change_info', 'handle_change_info');
 
 function handle_change_info()
 {
-
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'login'     => "Vui lòng đăng nhập trước",
-            'fill_all'  => "Vui lòng điền đầy đủ thông tin",
-            'failure'   => "Xác thực bảo mật thất bại",
-            'success'   => "Thông tin đã được cập nhật thành công"
-        ],
-        'cn' => [
-            'login'     => "請先登入",
-            'fill_all'  => "請填寫所有欄位",
-            'failure'   => "安全驗證失敗",
-            'success'   => "資訊已成功更新"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
 
     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
@@ -635,7 +552,7 @@ function handle_change_info()
     // 2. 確認使用者有登入
     $user = is_member_logged_in();
     if (!$user) {
-        wp_send_json_error(array('message' => $msg['login']));
+        wp_send_json_error(array('message' => $msg['login_req']));
     }
 
     // 3. 接收前端傳來的資訊
@@ -651,7 +568,7 @@ function handle_change_info()
 
     // 4. 驗證輸入的資訊 (檢查陣列中是否有任何一個值是空字串)
     if (in_array('', $update_data, true)) {
-        wp_send_json_error(array('message' => $msg['fill_all']));
+        wp_send_json_error(array('message' => $msg['empty']));
     }
 
     if (!empty($_COOKIE['custom_session'])) {
@@ -661,7 +578,7 @@ function handle_change_info()
     }
 
     wp_send_json_success(array(
-        'message' => $msg['success']
+        'message' => $msg['success_change_info']
     ));
 }
 
@@ -670,34 +587,14 @@ add_action('wp_ajax_nopriv_member_forgot_password', 'handle_forgot_password');
 
 function handle_forgot_password()
 {
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // Kiểm tra bảo mật nonce (tên trường 'nonce' phải khớp với data gửi từ JS)
     check_ajax_referer('ajax_forgot_nonce', 'nonce');
-
-
-    $lang = $_POST['lang'] ?? 'vi'; // 取得語系，預設英文
-
-    $i18n = [
-        'vn' => [
-            'not_exist' => "Email không tồn tại",
-            'email'     => "Vui lòng nhập địa chỉ email hợp lệ",
-            'success'   => "Hãy kiểm tra email, link này chỉ có hiệu lực trong 24H",
-            'failure'   => "Lỗi hệ thống không thể gửi mail, hãy liên lạc với chúng tôi"
-        ],
-        'cn' => [
-            'not_exist' => "電子郵件不存在",
-            'email'     => "請輸入有效的電子郵件地址",
-            'success'   => "重設密碼連結已傳送到您的 E-mail, 將在24小時後失效",
-            'failure'   => "系統錯誤，無法傳送郵件，請與我們聯繫"
-        ],
-
-    ];
-    // 取得目前的語言包，如果沒對應到就用英文
-    $msg = $i18n[$lang] ?? $i18n['vn'];
 
     // Làm sạch dữ liệu đầu vào
     $email = isset($_POST['user_email']) ? sanitize_email($_POST['user_email']) : '';
     if (empty($email) || !is_email($email)) {
-        wp_send_json_error(['message' => $msg['email']]);
+        wp_send_json_error(['message' => $msg['email_invalid']]);
     }
 
     $model_download = new Model_Download();
@@ -714,9 +611,9 @@ function handle_forgot_password()
     $plain_token = bin2hex(random_bytes(32));
     // 2. Hash token trước khi lưu vào DB (Bảo mật PHP 8.2)
     $hashed_token = hash('sha256', $plain_token);
-    $expiry = time() + (5 * 60); // TEST 5 phút
+    // $expiry = time() + (5 * 60); // TEST 5 phút
     // 3. Thời gian hết hạn (24h kể từ bây giờ)
-    // $expiry = time() + (24 * 60 * 60);
+    $expiry = time() + (24 * 60 * 60);
 
     $model_download->update_token($email, $hashed_token, $expiry);
 
@@ -797,7 +694,7 @@ function handle_forgot_password()
     error_log("[" . date('Y-m-d H:i:s') . "] Email sent result: " . ($sent ? 'TRUE' : 'FALSE') . "\n", 3, WP_CONTENT_DIR . '/forgot-password.log');
 
     if ($sent) {
-        wp_send_json_success(['message' => $msg['success']]);
+        wp_send_json_success(['message' => $msg['mail_sent']]);
     } else {
         wp_send_json_error(['message' => $msg['failure']]);
     }
