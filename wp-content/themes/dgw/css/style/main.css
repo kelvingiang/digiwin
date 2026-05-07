@@ -17,11 +17,11 @@ html {
 }
 
 html[lang=zh-TW] body {
-  font-family: "noto sans tc", Microsoft YaHei, Arial, sans-serif;
+  font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
 }
 
 html[lang=vi-VN] body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Noto Sans", Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -1342,12 +1342,12 @@ hr.style-two {
 
 html[lang=zh-TW] .has-sub::after {
   content: "❯";
-  margin-left: -3px;
+  margin-left: 1px;
   display: inline-block;
   transform: rotate(90deg);
 }
 
-html[lang=en-US] .has-sub::after {
+html[lang=vi-VN] .has-sub::after {
   content: "❯";
   margin-left: 1px;
   display: inline-block;
@@ -2375,7 +2375,7 @@ html[lang=en-US] .has-sub::after {
   border-radius: 0;
   background-color: rgb(241, 241, 241);
   border-bottom: 1px solid #ccc;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   padding-top: 10px;
   padding-left: 10px;
@@ -3501,4 +3501,34 @@ html[lang=en-US] .has-sub::after {
 .dgw-error-box h3 {
   color: #c53030;
   margin-bottom: 10px;
+}
+
+/* Hiệu ứng vòng xoay  cho button download*/
+.my-download-spinner {
+  display: inline-block !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 10px !important;
+  vertical-align: middle !important;
+  /* Bắt buộc phải là hình tròn */
+  border-radius: 50% !important;
+  /* Đảm bảo khung viền không làm méo hình */
+  box-sizing: border-box !important;
+  /* Tắt màu nền phòng trường hợp Divi tự thêm vào */
+  background-color: transparent !important;
+  /* Cài đặt màu sắc viền */
+  border: 2px solid rgba(0, 0, 0, 0.1) !important; /* Màu viền mờ */
+  border-top-color: #474747 !important; /* Màu phần xoay (xanh dương) */
+  animation: spin 0.8s linear infinite !important;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Tùy chỉnh khi nút bị disable */
+#my-load-data:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }

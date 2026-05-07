@@ -2,5 +2,16 @@ note các vẫn để quan trong
 1/ file google-credentials.json là dùng để xác thực để ghi lên google sheets
   - tài khoảng google xác thực là giangkelvin@gmail.com
   - file ghi trong tài khoản giaminh0265@yahoo.com
+  - ghi thay lên google sheets sync_to_google_sheets() 153 on function-member-download.php
+  - tìm hiểu thêm các bước thiết lập cho phép php ghi lê google drive
 
 2/ trong file footer.php dòng từ dòng 69 là các chức năng không có tô đen copy nội dung và F12 để xem source HTMLz
+
+3/ tạo button download bài viết trong Divi
+   - ID = "my-load-data"
+   - dán link source vào mục download link from  google drive  
+
+4/ thiết lập thông báo đến lark bằng php  
+   - sử dụng Lark AnyCross
+   - sau khi thiết lập AnyCross trên Lark sẽ có  $webhookUrl = "https://open.larksuite.com/open-apis/bot/v2/hook/2a2da959-0b1e-4b3c-ab3f-85703d65e3b0";
+   - sử dụng hàm sendNotificationToLark($message) 124 on download-ajax.php 

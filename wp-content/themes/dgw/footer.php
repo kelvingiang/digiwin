@@ -126,7 +126,6 @@ wp_footer(); ?>
   });
 </script>
 
-<!-- add zalo chat trực tiếp trên web 19/06/2024  -->
 </body>
 
 </html>

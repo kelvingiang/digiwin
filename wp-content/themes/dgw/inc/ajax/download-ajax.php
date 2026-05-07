@@ -94,22 +94,22 @@ function my_download_file()
 
     // 1. Chuẩn bị dữ liệu theo đúng định dạng hàm sync_to_google_sheets yêu cầu
     $data_for_sheet = [
-        "name"    => $post_title,       // Cột A: Tên tài liệu
-        "email"   => $post_source,      // Cột B: Link tài liệu gốc
-        "id"      => $user->ID,
-        "date"    => Date('d-M-y H:i:s'),    // Cột C: ID người dùng
-        "message" => "Tải thành công 111"   // Cột D: Thông điệp trạng thái
+        "title"    => $post_title,       // Cột A: Tên tài liệu
+        "file"     => $post_source,      // Cột B: Link tài liệu gốc
+        "name"     => $user->username,   // Cột C: Tên người dùng
+        "email"    => $user->email,    // Cột C: ID người dùng
+        "date"     => Date('d-M-y H:i:s')   // Cột D: Thông điệp trạng thái
     ];
 
     // 2. Gọi hàm đồng bộ (nhớ bỏ tất cả các lệnh echo trong hàm sync_to_google_sheets nếu có)
     $sync_result = sync_to_google_sheets($data_for_sheet);
 
     // 3. (Tùy chọn) Log lại nếu đồng bộ thất bại, KHÔNG echo ra ngoài
-    if (!$sync_result) {
-        error_log('AJAX Error: Đồng bộ Google Sheets thất bại cho bài viết ID: ' . $post_id);
+    if ($sync_result) {
+        sendNotificationToLark($post_title . " was downloaded by " . $user->username . ' on ' . Date('d-M-y') . ' at '. Date('H:i:s'));
+    } else {
+        error_log('AJAX Success: Đồng bộ Google Sheets thành công cho bài viết ID: ' . $post_id);
     }
-    // ==========================================
-
 
     // 3. Trả kết quả về JS
     wp_send_json_success([
@@ -118,6 +118,30 @@ function my_download_file()
         'post_source' => $download_url,
         'message'    => 'Nhận thông tin thành công!'
     ]);
+}
+
+// Hàm gửi thông báo đến Lark (Feishu) =============================================
+function sendNotificationToLark($message)
+{
+    $webhookUrl = "https://open.larksuite.com/open-apis/bot/v2/hook/2a2da959-0b1e-4b3c-ab3f-85703d65e3b0";
+
+    $data = [
+        "msg_type" => "text",
+        "content" => [
+            "text" => $message
+        ]
+    ];
+
+    $ch = curl_init($webhookUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    return $response;
 }
 
 /* =========================================================
@@ -200,7 +224,6 @@ add_action('wp_ajax_nopriv_download_member_register', 'handle_member_register');
 function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
-
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
 
     //--------------------------------------------------------------------
@@ -256,7 +279,6 @@ function handle_member_register()
     $result = $model_download->insert_registration_data($registration_data);
     if ($result) {
         // Tạo link reset mật khẩu chuyên nghiệp
-        //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
         // ==================== 修復 1: 設置正確的郵件頭部 ====================
         $headers = array('Content-Type: text/html; charset=UTF-8');
 
@@ -264,10 +286,7 @@ function handle_member_register()
         $from_email = get_option('admin_email');
         $from_name = get_bloginfo('name');
         $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
-
-        // 修復 3: 添加Reply-To
         $headers[] = 'Reply-To: ' . $from_email;
-
         $subject = "Activate account - " . get_bloginfo('name');
 
         // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
@@ -483,7 +502,7 @@ function handle_reset_password()
 
 
 /* =========================================================
-RESET PASWORD 
+activate account 
 ========================================================= */
 add_action('wp_ajax_member_active_account',        'handle_active_account');
 add_action('wp_ajax_nopriv_member_active_account', 'handle_active_account');

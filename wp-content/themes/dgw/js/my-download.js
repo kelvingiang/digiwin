@@ -4,11 +4,33 @@ jQuery(document).ready(function ($) {
   jQuery("#my-load-data").on("click", function (e) {
     e.preventDefault();
 
+    var $btn = jQuery(this); // Lưu lại đối tượng nút bấm
+    var originalHtml = $btn.html(); // Lưu lại nội dung gốc của nút (để phục hồi sau khi load xong)
+
+    // 1. NHẬN DIỆN NGÔN NGỮ VÀ TẠO TỪ ĐIỂN
+    const currentLang = document.documentElement.lang;
+    const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
+    const i18n = {
+      vn: {
+        processing: "Đang xử lý...",
+        downloading: "Đang tải xuống...",
+        noFile: "Không có file để tải!",
+        error: "Đã có lỗi xảy ra!",
+      },
+      cn: {
+        processing: "正在處理...", // Tiếng Hoa Phồn thể
+        downloading: "正在下載...",
+        noFile: "沒有可供下載的檔案！",
+        error: "發生錯誤！",
+      },
+    };
+    // Lấy bộ chữ tương ứng với ngôn ngữ hiện tại
+    const text = i18n[sendLang];
+
     // Lưu lại thông tin trước khi gửi AJAX
     pendingDownload = {
       post_id: jQuery(this).attr("data-post-id"),
       post_title: jQuery(this).attr("data-post-title"),
-      // post_source: jQuery(this).attr("data-post-source"),
     };
 
     // Gửi AJAX lên server
@@ -22,13 +44,28 @@ jQuery(document).ready(function ($) {
         post_title: pendingDownload.post_title,
         //post_source: pendingDownload.post_source,
       },
+      // ---- THÊM HIỆU ỨNG LOADING Ở ĐÂY ----
+      beforeSend: function () {
+        // Khóa nút và đổi nội dung thành hiệu ứng loading
+        $btn.prop("disabled", true);
+        $btn.html(
+          '<span class="my-download-spinner"></span>' + text.processing,
+        );
+
+        // Nếu bạn muốn làm mờ toàn bộ trang hoặc hiện popup loading, có thể gọi hàm ở đây
+        // jQuery('#loading-overlay').show();
+      },
+      // -------------------------------------
 
       success: function (res) {
         if (res.success) {
           // cách load file mở trang mới
           //  window.open(res.data.post_source, '_blank');
           var url = res.data.post_source;
-
+          // Báo cho user biết bắt đầu tải
+          $btn.html(
+            '<span class="my-download-spinner"></span>' + text.downloading,
+          );
           // Tạo iframe ẩn → download mà không rời trang
           var iframe = document.createElement("iframe");
           iframe.style.display = "none";
@@ -44,12 +81,23 @@ jQuery(document).ready(function ($) {
             // Chưa đăng nhập → hiện popup
             showLoginPopup();
           } else {
-            alert("Không có file để tải!");
+            alert(text.noFile);
           }
         }
       },
       error: function () {
-        alert("An error occurred!");
+        alert(text.error);
+      },
+      // ---- TẮT HIỆU ỨNG LOADING Ở ĐÂY ----
+      complete: function () {
+        // Cho dừng 1 chút xíu (khoảng 1.5s) để user kịp nhìn thấy chữ "Đang tải xuống..."
+        // Nếu không cần thiết, bạn có thể bỏ setTimeout và chạy thẳng 2 lệnh bên trong
+        setTimeout(function () {
+          $btn.prop("disabled", false); // Mở khóa nút
+          $btn.html(originalHtml); // Trả lại text/icon ban đầu
+        }, 1500);
+
+        // jQuery('#loading-overlay').hide(); // Tắt popup loading nếu có dùng
       },
     });
   });
@@ -110,15 +158,24 @@ jQuery(document).ready(function ($) {
           jQuery("#forgot-password-msg")
             .html(response.data.message)
             .css("color", "green");
-          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
+          btn
+            .text(langSet.original)
+            .removeClass("is-loading")
+            .prop("disabled", false);
         } else {
           jQuery("#user_email").val("");
           jQuery("#forgot-password-msg")
             .html(response.data.message)
             .css("color", "red");
-          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
+          btn
+            .text(langSet.original)
+            .removeClass("is-loading")
+            .prop("disabled", false);
         }
-          btn.text(langSet.original).removeClass("is-loading").prop("disabled", false);
+        btn
+          .text(langSet.original)
+          .removeClass("is-loading")
+          .prop("disabled", false);
         jQuery("#forgot-password-msg").html(response.data.message);
       },
     });

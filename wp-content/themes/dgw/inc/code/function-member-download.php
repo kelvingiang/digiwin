@@ -6,19 +6,21 @@ require_once get_template_directory() . '/model/model-download.php';
 
 
 // 1. Hàm tạo thời điểm hết hạn (24 giờ kể từ lúc yêu cầu)
-function dgw_generate_expiry_time(): string {
+function dgw_generate_expiry_time(): string
+{
     // Sử dụng DateTimeImmutable của PHP 8.2 để an toàn và chính xác
     $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
-    
+
     // Thêm đúng 24 giờ cho mốc hết hạn
     $expiry = $now->modify('+24 hours');
-    
+
     // Trả về định dạng chuẩn database MySQL: YYYY-MM-DD HH:MM:SS
     return $expiry->format('Y-m-d H:i:s');
 }
 
 // 2. Hàm kiểm tra Token còn hạn hay không
-function dgw_is_token_valid(string $expiry_from_db): bool {
+function dgw_is_token_valid(string $expiry_from_db): bool
+{
     try {
         $expiry_time = new DateTimeImmutable($expiry_from_db, new DateTimeZone('Asia/Ho_Chi_Minh'));
         $current_time = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
@@ -70,8 +72,6 @@ add_action('wp_footer', function () {
             jQuery('#my-load-data').attr({
                 'data-post-id': '<?php echo esc_js($post_id); ?>',
                 'data-post-title': '<?php echo esc_js($post_title); ?>',
-                // 'data-post-source': '<?php //echo esc_js($post_source); 
-                                        ?>'
             });
         });
     </script>
@@ -165,11 +165,11 @@ function sync_to_google_sheets($data)
 
         $values = [
             [
+                $data['title'],
+                $data['file'],
                 $data['name'],
                 $data['email'],
-                $data['id'],
                 $data['date'],
-                $data['message']
             ]
         ];
 

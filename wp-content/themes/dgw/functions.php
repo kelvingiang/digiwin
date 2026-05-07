@@ -76,40 +76,13 @@ add_action('init', function () {
 }, 1);
 
 
-// add_action('init', function () {
-
-//     if (isset($_GET['lang'])) {
-//         $lang = ($_GET['lang'] === 'cn') ? 'cn' : 'vn';
-
-//         setcookie(
-//             'site_lang',
-//             $lang,
-//             time() + YEAR_IN_SECONDS,
-//             COOKIEPATH,
-//             COOKIE_DOMAIN
-//         );
-
-//         $_COOKIE['site_lang'] = $lang;
-//     }
-
-// }, 1);
-
-
-
-
 add_filter('language_attributes', function ($output) {
-
     $lang = dgw_get_lang();
-
     if ($lang === 'cn') {
         return 'lang="zh-TW"';
     }
-
     return 'lang="vi-VN"';
-
 });
-
-
 
 //=== khi cài Divi Builder sẽ tự tạo project  post-type câu dưới là bỏ đi cái post-type đó ================== 
 add_action('init', function () {
@@ -120,11 +93,9 @@ add_action('init', function () {
   THAY DOI FILE DATA NGON NGU THEO SESSION LANGGUAGE
   =============================================================== */
 
-
 function change_translate_text($translated)
 {
     $lang = dgw_get_lang();
-
     $languages = ($lang === 'cn') ? 'zh_TW' : 'vi_VN';
 
     if (is_admin()) {
@@ -147,7 +118,6 @@ function change_translate_text($translated)
 
     return $translated;
 }
-
 add_filter('gettext', 'change_translate_text', 20);
 
 /* =======================================  
@@ -155,7 +125,6 @@ add_filter('gettext', 'change_translate_text', 20);
   ======================================= */
 
 add_action('after_setup_theme', 'blankslate_setup');
-
 function blankslate_setup()
 {
     load_theme_textdomain('blankslate', get_template_directory() . '/languages');
@@ -171,7 +140,6 @@ function blankslate_setup()
 }
 
 add_action('wp_enqueue_scripts', 'blankslate_load_scripts');
-
 function blankslate_load_scripts()
 {
     wp_enqueue_style('blankslate-style', get_stylesheet_uri());
