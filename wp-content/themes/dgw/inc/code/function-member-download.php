@@ -2,7 +2,7 @@
 
 use SimplePie\Parse\Date;
 
-require_once get_template_directory() . '/model/model-download.php';
+require_once get_template_directory() . '/model/model-download-function.php';
 
 
 // 1. Hàm tạo thời điểm hết hạn (24 giờ kể từ lúc yêu cầu)
@@ -120,7 +120,7 @@ LẤY THÔNG TIN KHÁCH HÀNG THEO MÃ COOKIE
 ========================================================= */
 function get_member_information($session_key)
 {
-    $model_download = new Model_Download();
+    $model_download = new Model_Download_Function();
     $data = $model_download->get_user_by_session($session_key);
     return $data;
 }

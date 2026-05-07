@@ -1,0 +1,274 @@
+[33mcommit 3e0271f6839ce3cd0c5b1ce60d2f0a4ac2fd58cf[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m)[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu May 7 13:39:31 2026 +0700
+
+    hoàn thành download phần front v2
+
+[33mcommit 729ff0815a6e60171be3e702410dbf9c5216f6f8[m[33m ([m[1;31morigin/develop[m[33m)[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed May 6 10:11:48 2026 +0700
+
+    hoan thanh quan li member download v1
+
+[33mcommit e2fdfa743ba421951abfdaaf95c37e1f506f2f27[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Tue May 5 15:30:23 2026 +0700
+
+    hoan thanh vien quan ly custom download
+
+[33mcommit f182fa16d53cdfdf10bb43dc5387f7f5a94a7460[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 29 18:09:07 2026 +0700
+
+    sap xep lai cau truc file va 1 phan da ngon ngu
+
+[33mcommit fed5261cd214f8296979832ccec640cf1192398d[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 24 16:19:29 2026 +0700
+
+    hoàn thành phần dắng ký thành viên
+    
+    Co-authored-by: Copilot <copilot@github.com>
+
+[33mcommit 422ddc1acbd155e3a51753c7420ede2587e34efd[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 22 17:41:45 2026 +0700
+
+    thay đổi cách nhập ID  joinus không cần chỉnh sửa khi đưa lên hosting
+
+[33mcommit a29b7aa8272a8c3bb240e3f4ccbda4758e3f73c9[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 22 16:01:08 2026 +0700
+
+    chinh lại phân ghi vào google sheets
+
+[33mcommit 0973ab41f2b4dbf7f85a56700ff3cd38dfa77462[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 22 14:17:38 2026 +0700
+
+    111
+
+[33mcommit 68d3f8fb2bab017f8e31ee6e963755a69d6cfa10[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 22 13:50:07 2026 +0700
+
+    ân source code tai html chi lay tai ajax
+
+[33mcommit 6d8c43e78512a8a1b1746128edcb0e04865c71e8[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Tue Apr 21 09:58:30 2026 +0700
+
+    eee
+
+[33mcommit 4f06f8460f8385de03d46e84d8a6b99d8393e80b[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 17:49:05 2026 +0700
+
+    xong phần reset password by  forget password
+
+[33mcommit a7545da70d50df49a2e40d7b7308a09fe8ed777e[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 14:43:57 2026 +0700
+
+    xoa dc lõi >
+
+[33mcommit 21ceb5d2a73d08f15d384744aef83084cf496816[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 11:12:05 2026 +0700
+
+    them file js
+
+[33mcommit 887b78018119946ee40ca0562aa75056f0cef4d9[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 10:44:30 2026 +0700
+
+    them short code
+
+[33mcommit 7902edb26e5f3b3a9b86a87b5fce20ef0660e234[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 10:38:12 2026 +0700
+
+    thêm vendor lần 3
+
+[33mcommit de6535e3a26001d6c525ce4f305bed8d20087ba9[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 10:36:42 2026 +0700
+
+    lần hai thêm vendor
+
+[33mcommit c96cc64d675c6be9178efcaeb47b8cbfaa932041[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 17 10:35:20 2026 +0700
+
+    them file model download và vendor
+
+[33mcommit 71233d08113b12a0dc9dd90a3f6c8637bb0b0fac[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Apr 16 12:19:51 2026 +0700
+
+    ddd
+
+[33mcommit 237cfd7ba5836cdf7e3ab0b17ae2fcb6dd414692[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Fri Apr 3 18:06:59 2026 +0700
+
+    xong phân login, register, download, language
+
+[33mcommit 65088eaa71bc518ca974ba5ed45a35b564940a5a[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Wed Apr 1 09:59:33 2026 +0700
+
+    mo phan slider
+
+[33mcommit c0e1e5f9bf7603455edc5009cac0dae782fdd8f6[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Tue Mar 31 15:39:32 2026 +0700
+
+    111
+
+[33mcommit ee882de06ad6eebe471d2e25577a7ede64023889[m
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Tue Mar 31 15:12:23 2026 +0700
+
+    cho h1 trong suot
+
+[33mcommit f6ab5e007016ffd742901b47a138b78c447881ac[m
+Merge: d1cac2e8 2ffce709
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Tue Mar 31 12:00:34 2026 +0700
+
+    Fix merge conflict in main.min.css
+
+[33mcommit d1cac2e81f09155acfaff20b5cb2e611c995db2a[m
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Tue Mar 31 11:24:52 2026 +0700
+
+    đd
+
+[33mcommit 2ffce709e360a0317ca58550ee0ad0f2199ac989[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Tue Mar 31 11:15:03 2026 +0700
+
+    fix footer 001
+
+[33mcommit 63e68a971bcdc921bdd21ed6b4833c70637242bd[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Tue Mar 31 09:30:19 2026 +0700
+
+    hoan thanh footer
+
+[33mcommit 2056fd31bfd020fe9841fd662d16915c7f57ea0d[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Mar 26 16:13:16 2026 +0700
+
+    chinh font cho safasri
+
+[33mcommit 3bce1bfbada6ac00232761db08e2e478e46df890[m
+Merge: c986c828 cee813f4
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Mar 26 16:10:57 2026 +0700
+
+    Merge branch 'main' of https://github.com/kelvingiang/digiwin
+
+[33mcommit c986c828010a42c1713e2e9944d2c0848e973ecc[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Mar 26 16:10:55 2026 +0700
+
+    ttt
+
+[33mcommit cee813f4331e707fe62a261d0616fdeab3acf382[m
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Thu Mar 26 16:09:10 2026 +0700
+
+    chinh font cho safari
+
+[33mcommit a20ce49efc96d521730d3c39c8b8d6a5cb9c9ce9[m
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Thu Mar 26 14:50:15 2026 +0700
+
+    edit phan home_cases hiên thi đung so luong tren moblie chạy safari
+
+[33mcommit a9218871cc71523d27085dce552d9df7a6ed9aae[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Mar 26 13:45:18 2026 +0700
+
+    edit footer and sidebar
+
+[33mcommit f42bdbc53ff58a9c692985c4b2660c976f5a84d2[m
+Author: Gia Minh <giaminh0265@yahoo.com>
+Date:   Thu Mar 19 17:35:36 2026 +0700
+
+    xoa phan ko su dung
+
+[33mcommit f1f8118e133be7f53882d508f5466f047ec8ec48[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Thu Mar 19 11:31:33 2026 +0700
+
+    chuân
+
+[33mcommit d4f505eec8a2e263a5daa7b48ab482cb9df98390[m
+Merge: b60d8e69 52d35454
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Thu Mar 19 11:28:03 2026 +0700
+
+    Merge remote-tracking branch 'refs/remotes/origin/main'
+
+[33mcommit b60d8e6914d0965c6f1907ebefed776a2fc04c66[m
+Author: kelvin Giang <52771444+giaminh0256@users.noreply.github.com>
+Date:   Thu Mar 19 10:38:29 2026 +0700
+
+    gitignro
+
+[33mcommit 52d354546b179ee99da58a111ad1f399186c714c[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Thu Mar 19 10:38:29 2026 +0700
+
+    gitignro
+
+[33mcommit eb902559d702b90bf69d9435d9b2b9ed6f77448a[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Thu Mar 19 10:32:52 2026 +0700
+
+    add plugin and upload folder
+
+[33mcommit 7adc0cd8fc2006e5d41e6e5d4d079aa4e1c29d62[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Thu Mar 19 09:57:28 2026 +0700
+
+    cap nhât database
+
+[33mcommit 020d76d472b938f509b516bd71921ad16edf694c[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Wed Mar 18 16:36:03 2026 +0700
+
+    fix lỗi cho safari
+
+[33mcommit d32c52b2e5483f7cbf0ac1937a1f576bbdcc2382[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Tue Mar 17 10:09:43 2026 +0700
+
+    them H1
+
+[33mcommit 35ecd7e921584663db8916086d80b5b9f3560d63[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Mon Mar 16 11:46:15 2026 +0700
+
+    thay doi
+
+[33mcommit 6b7d77e12e1f86978d1a7fec788e41e2f4bd0e8b[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Thu Feb 5 10:25:38 2026 +0700
+
+    them phan trang tra nguoi dagn nhap
+
+[33mcommit a04e38e1701d282370327a5a0aa97bfe12b0de4d[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Mon Jan 26 11:22:12 2026 +0700
+
+    chinh sua file gitignore
+
+[33mcommit 89380a22abe80e05e9eb1e7b73d32496d83973ed[m
+Author: Kelvin Giang <giaminh0265@yahoo.com>
+Date:   Mon Jan 26 11:02:39 2026 +0700
+
+    first up code

@@ -16,8 +16,8 @@ $user_id = 0;
 
 if ($email && $token) {
 
-    require_once get_template_directory() . '/model/model-download.php';
-    $model_download = new Model_Download();
+    require_once get_template_directory() . '/model/model-download-function.php';
+    $model_download = new Model_Download_Function();
     $user = $model_download->get_user_by_email($email);
 
     if ($user) {

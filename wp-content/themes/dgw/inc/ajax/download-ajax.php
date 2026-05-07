@@ -1,5 +1,4 @@
 <?php
-
 function get_member_messages($lang = 'vi')
 {
     $i18n = [
@@ -45,16 +44,13 @@ function get_member_messages($lang = 'vi')
     return $i18n[$lang] ?? $i18n['vi'];
 }
 
-
 /* =========================================================
 phần download file
 ========================================================= */
 add_action('wp_ajax_my_download_file', 'my_download_file');
 add_action('wp_ajax_nopriv_my_download_file', 'my_download_file');
-
 function my_download_file()
 {
-    $model_download = new Model_Download();
     // 1. Kiểm tra nonce bảo mật
     if (!check_ajax_referer('my_nonce', 'nonce', false)) {
         wp_send_json_error(['message' => 'Không hợp lệ']);
@@ -77,12 +73,11 @@ function my_download_file()
         wp_send_json_error(['message' => 'Không có link file']);
         return;
     }
-
     // Convert link Google Drive sang link download
     $download_url = convert_gdrive_to_download($post_source);
 
     // Lưu vào database nội bộ
-    $model_download->insert_download_detail([
+    get_model()->insert_download_detail([
         'user_id' => $user->ID,
         'title' => $post_title,
         'resource' => $post_source
@@ -106,7 +101,7 @@ function my_download_file()
 
     // 3. (Tùy chọn) Log lại nếu đồng bộ thất bại, KHÔNG echo ra ngoài
     if ($sync_result) {
-        sendNotificationToLark($post_title . " was downloaded by " . $user->username . ' on ' . Date('d-M-y') . ' at '. Date('H:i:s'));
+        sendNotificationToLark($post_title . " was downloaded by " . $user->username . ' on ' . Date('d-M-y') . ' at ' . Date('H:i:s'));
     } else {
         error_log('AJAX Success: Đồng bộ Google Sheets thành công cho bài viết ID: ' . $post_id);
     }
@@ -153,7 +148,6 @@ function handle_member_login()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
     // ===== PHẦN BỊ THIẾU — xác thực email + password =====
-    $model_download = new Model_Download();
     $email    = sanitize_email($_POST['email']);
     $password = $_POST['password'];
 
@@ -164,7 +158,7 @@ function handle_member_login()
     }
 
     // Tìm user theo email trong DB
-    $user = $model_download->get_user_by_email($email);
+    $user = get_model()->get_user_by_email($email);
 
     // Không tìm thấy user
     if (!$user) {
@@ -198,7 +192,7 @@ function handle_member_login()
     }
 
     // Cập nhật vào DB
-    $model_download->update_login($user->ID, $session_key, $ip_address);
+    get_model()->update_login($user->ID, $session_key, $ip_address);
 
     // Lưu vào cookie trình duyệt
     // ✅ setcookie tương thích mọi phiên bản PHP
@@ -220,7 +214,6 @@ PHẦN ĐĂNG KÝ  register
 ========================================================= */
 add_action('wp_ajax_download_member_register',        'handle_member_register');
 add_action('wp_ajax_nopriv_download_member_register', 'handle_member_register');
-
 function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
@@ -258,10 +251,8 @@ function handle_member_register()
         }
     }
 
-    $model_download = new Model_Download();
-
     // 3. 檢查唯一性 (Email & Username)
-    $exists = $model_download->check_email_username_exists(
+    $exists = get_model()->check_email_username_exists(
         ['email' => $registration_data['email']],
         ['username' => $registration_data['username']]
     );
@@ -276,7 +267,7 @@ function handle_member_register()
     $plain_token = bin2hex(random_bytes(32));
     // 2. Hash token trước khi lưu vào DB (Bảo mật PHP 8.2)
     $registration_data['active_code'] = hash('sha256', $plain_token);
-    $result = $model_download->insert_registration_data($registration_data);
+    $result = get_model()->insert_registration_data($registration_data);
     if ($result) {
         // Tạo link reset mật khẩu chuyên nghiệp
         // ==================== 修復 1: 設置正確的郵件頭部 ====================
@@ -361,7 +352,6 @@ function handle_member_register()
 ========================================================= */
 add_action('wp_ajax_check_member_login',        'handle_check_member_login');
 add_action('wp_ajax_nopriv_check_member_login', 'handle_check_member_login');
-
 function handle_check_member_login()
 {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
@@ -382,7 +372,6 @@ function handle_check_member_login()
 ========================================================= */
 add_action('wp_ajax_member_logout',        'handle_member_logout');
 add_action('wp_ajax_nopriv_member_logout', 'handle_member_logout');
-
 function handle_member_logout()
 {
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
@@ -392,8 +381,8 @@ function handle_member_logout()
     // 只清空 session_key 欄位，不刪整行
     if (!empty($_COOKIE['custom_session'])) {
         $session_key = sanitize_text_field($_COOKIE['custom_session']);
-        $model_download = new Model_Download();
-        $model_download->clear_session($session_key);
+
+        get_model()->clear_session($session_key);
     }
     // 清除 cookie
     setcookie('custom_session', '', time() - 3600, '/');
@@ -409,7 +398,6 @@ UPDATA PASWORD
 ========================================================= */
 add_action('wp_ajax_member_change_password',        'handle_change_password');
 add_action('wp_ajax_nopriv_member_change_password', 'handle_change_password');
-
 function handle_change_password()
 {
 
@@ -441,12 +429,11 @@ function handle_change_password()
         wp_send_json_error(['message' => $msg['password_short']]);
     }
 
-
     if (!empty($_COOKIE['custom_session'])) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $session_key = sanitize_text_field($_COOKIE['custom_session']);
-        $model_download = new Model_Download();
-        $model_download->update_password($session_key, $password_hash);
+
+        get_model()->update_password($session_key, $password_hash);
     }
 
     wp_send_json_success(array(
@@ -460,7 +447,6 @@ RESET PASWORD
 ========================================================= */
 add_action('wp_ajax_member_reset_password',        'handle_reset_password');
 add_action('wp_ajax_nopriv_member_reset_password', 'handle_reset_password');
-
 function handle_reset_password()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
@@ -468,9 +454,6 @@ function handle_reset_password()
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
     }
-
-    // 2. 確認使用者有登入
-
     // 3. 接收前端傳來的密碼
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm'] ?? '';
@@ -491,8 +474,8 @@ function handle_reset_password()
 
     if (!empty($key)) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
-        $model_download = new Model_Download();
-        $model_download->reset_password($email, $password_hash);
+
+        get_model()->reset_password($email, $password_hash);
     }
 
     wp_send_json_success(array(
@@ -506,7 +489,6 @@ activate account
 ========================================================= */
 add_action('wp_ajax_member_active_account',        'handle_active_account');
 add_action('wp_ajax_nopriv_member_active_account', 'handle_active_account');
-
 function handle_active_account()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
@@ -524,10 +506,8 @@ function handle_active_account()
         wp_send_json_error(array('message' => $msg['empty']));
     }
 
-    $model_download = new Model_Download();
-
     // 4. Kiểm tra User có tồn tại với Email này không
-    $user = $model_download->get_user_by_email($email);
+    $user = get_model()->get_user_by_email($email);
     if (!$user) {
         wp_send_json_error(array('message' => $msg['not_exist']));
     }
@@ -535,7 +515,7 @@ function handle_active_account()
     // 5. Thực hiện kích hoạt (Gọi hàm update trong Model)
     // Lưu ý: Hàm này trả về số dòng bị ảnh hưởng hoặc false
     $hashed_token = hash('sha256', $key);
-    $activated = $model_download->active_member($email, $hashed_token);
+    $activated = get_model()->active_member($email, $hashed_token);
 
     if ($activated !== false) {
         // Nếu $activated === 0 nghĩa là tài khoản đã kích hoạt từ trước rồi (status đã là 1)
@@ -558,7 +538,6 @@ CẬP NHẬT THONG TIN KHÁCH HÀNG
 ========================================================= */
 add_action('wp_ajax_member_change_info',        'handle_change_info');
 add_action('wp_ajax_nopriv_member_change_info', 'handle_change_info');
-
 function handle_change_info()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
@@ -591,9 +570,9 @@ function handle_change_info()
     }
 
     if (!empty($_COOKIE['custom_session'])) {
-        $model_download = new Model_Download();
+
         $session_key = sanitize_text_field($_COOKIE['custom_session']);
-        $model_download->update_info($session_key, $update_data);
+        get_model()->update_info($session_key, $update_data);
     }
 
     wp_send_json_success(array(
@@ -603,7 +582,6 @@ function handle_change_info()
 
 add_action('wp_ajax_member_forgot_password',        'handle_forgot_password');
 add_action('wp_ajax_nopriv_member_forgot_password', 'handle_forgot_password');
-
 function handle_forgot_password()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
@@ -615,11 +593,7 @@ function handle_forgot_password()
     if (empty($email) || !is_email($email)) {
         wp_send_json_error(['message' => $msg['email_invalid']]);
     }
-
-    $model_download = new Model_Download();
-    $user = $model_download->get_user_by_email($email);
-
-
+    $user = get_model()->get_user_by_email($email);
     if (!$user) {
         // Bảo mật: Đôi khi nên báo "Thành công" luôn để tránh bị dò tìm email người dùng
         wp_send_json_error(['message' => $msg['not_exist']]);
@@ -634,7 +608,7 @@ function handle_forgot_password()
     // 3. Thời gian hết hạn (24h kể từ bây giờ)
     $expiry = time() + (24 * 60 * 60);
 
-    $model_download->update_token($email, $hashed_token, $expiry);
+    get_model()->update_token($email, $hashed_token, $expiry);
 
     // Tạo link reset mật khẩu chuyên nghiệp
     //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
@@ -727,8 +701,6 @@ function handle_forgot_password()
 ========================================================= */
 function is_member_logged_in()
 {
-    $model_download = new Model_Download();
-
     // Không có cookie → chưa đăng nhập
     if (!isset($_COOKIE['custom_session'])) return false;
 
@@ -737,7 +709,32 @@ function is_member_logged_in()
     if (empty($session_key)) return false;
 
     // Tìm session_key trong DB
-    $user = $model_download->get_user_by_session($session_key);
+    $user = get_model()->get_user_by_session($session_key);
 
     return $user ? $user : false;
+}
+
+/**
+ * Helper function để lấy instance duy nhất của Model_Download_Function
+ * Đảm bảo tối ưu bộ nhớ và code sạch sẽ.
+ */
+if (! function_exists('get_model')) {
+    function get_model()
+    {
+        static $instance = null;
+        if (null === $instance) {
+            // Kiểm tra nếu class chưa tồn tại thì gọi file chứa nó vào
+            if (!class_exists('Model_Download_Function')) {
+                // SỬA ĐƯỜNG DẪN NÀY CHO ĐÚNG VỚI CẤU TRÚC THƯ MỤC CỦA BẠN
+                // Ví dụ: file model nằm cùng thư mục:
+                // require_once __DIR__ . '/ten-file-chua-class-model.php'; 
+
+                // Hoặc nếu nó nằm trong thư mục model:
+                require_once get_stylesheet_directory() . '/model/model_download_function.php';
+            }
+
+            $instance = new Model_Download_Function();
+        }
+        return $instance;
+    }
 }
