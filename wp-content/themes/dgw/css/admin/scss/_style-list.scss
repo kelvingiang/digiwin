@@ -86,6 +86,10 @@ $table_header_text: #555555;
     text-align: center;
 }
 
+.column-company {
+    width: 350px !important;
+    text-align: center;
+}
 // cac column trong taxonomy=============================
 
 .column-slug {
@@ -99,6 +103,27 @@ $table_header_text: #555555;
 }
 .column-name {
     width: 23%;
+}
+
+.column-member_email{
+    width: 20% !important;
+    text-align: left;
+}
+ .column-member_download_count {
+    width: 80px !important;
+    text-align: center;
+}
+ .column-member_name,.column-member_phone {
+    width: 150px !important;
+    text-align: left;
+
+}
+ .column-member_company {
+    width: 350px !important;
+    text-align: left;
+}
+.column-create_date{
+    text-align: right;
 }
 
 ///===========================================================================

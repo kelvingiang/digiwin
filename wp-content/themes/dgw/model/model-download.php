@@ -1,17 +1,25 @@
 <?php
 
 if (!class_exists('WP_List_Table')) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php ';
+    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class Model_Member extends WP_List_Table {
+class Model_Download extends WP_List_Table
+{
 
     private $_pre_page = 30;
     private $_sql;
     private $_stt = 1;
     private $table;
+    private $download_table;
 
-    public function __construct($args = array()) {
+    public function __construct($args = array())
+    {
+        // 1. FIX LỖI FATAL ERROR: Nạp các thư viện Admin bắt buộc trước khi gọi parent
+        if (! function_exists('convert_to_screen')) {
+            require_once ABSPATH . 'wp-admin/includes/template.php';
+            require_once ABSPATH . 'wp-admin/includes/screen.php';
+        }
         $args = array(
             'plural' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
             'singular' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
@@ -20,10 +28,12 @@ class Model_Member extends WP_List_Table {
         );
         parent::__construct($args);
         global $wpdb;
-        $this->table = $wpdb->prefix . 'member';
+        $this->table = $wpdb->prefix . 'download_registrations';
+        $this->download_table = $wpdb->prefix . 'download_detail';
     }
 
-    public function prepare_items() {
+    public function prepare_items()
+    {
         $columns = $this->get_columns();  // NHUNG GI CAN HIEN THI TREN BANG 
         $hidden = $this->get_hidden_columns(); // NHUNG COT TA SE AN DI
         $sorttable = $this->get_sortable_columns(); // CAC COT DC SAP XEP TANG HOAC GIAM DAN
@@ -34,7 +44,7 @@ class Model_Member extends WP_List_Table {
         $total_items = $this->total_items(); // TONG SO DONG DA LIEU
         $per_page = $this->_pre_page; // SO TRANG 
         $total_pages = ceil($total_items / $per_page); // TONG SO TRANG
-// PHAN TRANG
+        // PHAN TRANG
         $args = array(
             'total_items' => $total_items,
             'per_page' => $per_page,
@@ -43,107 +53,136 @@ class Model_Member extends WP_List_Table {
         $this->set_pagination_args($args);
     }
 
-    public function get_columns() {
+    public function get_columns()
+    {
         $arr = array(
             'cb' => '<input type="checkbox" />',
-            'company' => __('Company '),
-            'description' => __('Description'),
-            'use_soft' => __('Softwear'),
-            'career' => __('Career'),
-            'create_date' => __('Create Date'),
+            'member_email' => 'E-mail',
+            'member_name' => '姓名',
+            'member_company' => '公司名稱',
+            'member_phone' => '聯絡電話',
+            'member_download_count' => '下載次數',
+            'create_date' => '註冊日期',
         );
         return $arr;
     }
 
     // ====KHAI  BAO CAC COT BI AN DI TREN GRIDVIEW=====================================
-    public function get_hidden_columns() {
+    public function get_hidden_columns()
+    {
         return array();
     }
 
     // ==== CAC COT AP DUNG  SAP XEP  ============================================
-    public function get_sortable_columns() {
+    public function get_sortable_columns()
+    {
         return array(
-            'company' => array('company', true),
-            'create_date' => array('create_date', true),
+            // 'company' => array('company', true),
+            //'create_date' => array('create_date', true),
         );
     }
 
-    private function table_data() {
+    private function table_data()
+    {
         global $wpdb;
-// LAY GIA TRI SAP XEP DU LIEU TREN COT
+
+        // LAY GIA TRI SAP XEP DU LIEU TREN COT
         $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
         $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
-        $sql = 'SELECT m.* FROM ' . $this->table . ' AS m  ';
+
+        // 基本 SELECT 與 JOIN
+        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+            FROM {$this->table} AS m 
+            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
+
         $whereArr = array();  // TAO MANG WHERE ============
 
+        // 修正 1：加上 m. 前綴
         if (getParams('customvar') == 'trash') {
-            $whereArr[] = "(trash = 1)";
+            $whereArr[] = "(m.trash = 1)";
         } else {
-            $whereArr[] = "(trash = 0)";
+            $whereArr[] = "(m.trash = 0)";
         }
 
         if (getParams('s') != ' ') {
             $s = esc_sql(getParams('s'));
-            $whereArr[] = "(m.company  LIKE '%$s%')";
+            $whereArr[] = "(m.company LIKE '%$s%')";
         }
 
-// CHUYEN CAC GIA TRI where KET VOI NHAU BOI and ==========================
+        // CHUYEN CAC GIA TRI where KET VOI NHAU BOI and
         if (count($whereArr) > 0) {
             $sql .= " WHERE " . join(" AND ", $whereArr);
         }
-// orderby
-        $sql .= 'ORDER BY m.' . esc_sql($orderby) . ' ' . esc_sql($order);
+
+        // 推薦加上 GROUP BY，防止同一個會員因為多筆下載紀錄而重複顯示
+        $sql .= " GROUP BY m.ID ";
+
+        // 修正 2：在 ORDER BY 前面加上一個「空格」
+        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
+
         $this->_sql = $sql;
-//LAY GIA TRI PHAN TRANG PAGEING
+
+        // LAY GIA TRI PHAN TRANG PAGEING
         $paged = max(1, @$_REQUEST['paged']);
         $offset = ($paged - 1) * $this->_pre_page;
 
-        $sql .= ' LIMIT  ' . $this->_pre_page . ' OFFSET ' . $offset;
+        // 這裡的 LIMIT 前面我也幫你確認好空格了
+        $sql .= " LIMIT " . $this->_pre_page . " OFFSET " . $offset;
 
-// LAY KET QUA  THONG QUA CAU sql
+        // LAY KET QUA THONG QUA CAU sql
         $data = $wpdb->get_results($sql, ARRAY_A);
+
+        // 💡【除錯小技巧】如果還是沒資料，把下面兩行註解拿掉，看看印出什麼錯誤！
+        // var_dump($sql);
+        // var_dump($wpdb->last_error);
+
         return $data;
     }
 
     // TINH TONG SO DONG DU LIEU  DE AP DUNG CHO VIEC PHAN TRANG
-    public function total_items() {
+    public function total_items()
+    {
         global $wpdb;
         return $wpdb->query($this->_sql);
     }
 
-// SO TONG ITEM DUNG DE PHAN TRANG
-    public function total_list() {
+    // SO TONG ITEM DUNG DE PHAN TRANG
+    public function total_list()
+    {
         global $wpdb;
         return $wpdb->get_var("SELECT COUNT(*) FROM $this->table");
     }
 
-// SO TONG ITEM TRONG TRASH(SO RAC)
-    public function total_trash() {
+    // SO TONG ITEM TRONG TRASH(SO RAC)
+    public function total_trash()
+    {
         global $wpdb;
         return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 1");
     }
 
-// SO TONG ITEM HIEN HANH
-    public function total_publish() {
+    // SO TONG ITEM HIEN HANH
+    public function total_publish()
+    {
         global $wpdb;
         return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 0");
     }
 
-    function get_views() {
+    function get_views()
+    {
         $views = array();
         $current = (!empty($_REQUEST['customvar']) ? $_REQUEST['customvar'] : 'all');
 
-//All link
+        //All link
         $class = ($current == 'all' ? ' class="current"' : '');
         $all_url = remove_query_arg('customvar');
         $views['all'] = "<strong>" . __('All') . " (" . $this->total_list() . ")</strong>";
 
-//Foo link
+        //Foo link
         $foo_url = add_query_arg('customvar', 'published');
         $class = ($current == 'foo' ? ' class="current"' : '');
         $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published') . " (" . $this->total_publish() . ")</a>";
 
-//Bar link
+        //Bar link
         $bar_url = add_query_arg('customvar', 'trash');
         $class = ($current == 'bar' ? ' class="current"' : '');
         $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash') . "(" . $this->total_trash() . ")</a>";
@@ -152,7 +191,8 @@ class Model_Member extends WP_List_Table {
     }
 
     // CAC ITEM TRONG SELECT BOX CHUC NANG 'UNG DUNG'
-    public function get_bulk_actions() {
+    public function get_bulk_actions()
+    {
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
                 'restore' => __('Restore'),
@@ -167,16 +207,16 @@ class Model_Member extends WP_List_Table {
     }
 
     //  NOI DUNG HIEN THI CUA COT TRONG GRID
-    public function column_cb($item) {
+    public function column_cb($item)
+    {
         $singular = $this->_args['singular'];
         $html = '<input type="checkbox" name="' . $singular . '[]" value="' . $item['ID'] . '"/>';
         return $html;
     }
 
-    public function column_company($item) {
-
+    public function column_member_email($item)
+    {
         $page = getParams('page');
-
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
                 'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore') . '</a>',
@@ -188,28 +228,32 @@ class Model_Member extends WP_List_Table {
                 'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash') . '</a>',
             );
         }
-        $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['company'] . '</a> </strong>' . $this->row_actions($actions);
+        $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['email'] . '</a> </strong>' . $this->row_actions($actions);
         return $html;
     }
+    
+    public function column_member_name($item)
+    {
+        echo $item['username'];
+    }
 
-    public function column_date($item) {
+    public function column_member_company($item)
+    {
+        echo $item['company'];
+    }
+
+    public function column_member_phone($item)
+    {
+        echo $item['phone'];
+    }
+
+    public function column_member_download_count($item)
+    {
+        echo $item['download_count'];
+    }
+
+    public function column_create_date($item)
+    {
         echo $item['create_date'];
     }
-
-    public function column_description($item) {
-        echo $item['description'];
-    }
-
-    public function column_use_soft($item) {
-        echo $item['use_soft'];
-    }
-
-    public function column_career($item) {
-        echo $item['career'];
-    }
-
-    public function column_create_date($item) {
-        echo $item['create_date'];
-    }
-
 }

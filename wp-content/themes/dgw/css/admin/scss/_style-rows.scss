@@ -1,10 +1,10 @@
 .row-one-column {
-   display: grid;
+    display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
-    .col{
-    margin: 1rem 0rem;
-}
+    .col {
+        margin: 1rem 0rem;
+    }
 }
 
 .row-two-column {
@@ -31,8 +31,6 @@
     gap: 10px;
 }
 
-
-
 .cell-title {
     width: 100%;
     font-weight: bold;
@@ -54,4 +52,110 @@
     margin-top: 1rem;
     margin-bottom: 1.2rem;
     margin-left: 10px;
+}
+
+
+/* 外層容器基本設定 */
+.admin-chang-password {
+    max-width: 320px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 1rem;
+}
+
+/* 「更新密碼」按鈕樣式 */
+.btn-outline {
+    background-color: transparent;
+    color: #0467d8;
+    border: 2px solid #0467d8;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background-color: #0467d8;
+    color: #ffffff;
+}
+
+/* 表單容器 - 預設隱藏與豎排設定 */
+.admin-chang-password-form {
+    display: none; /* 預設隱藏 */
+    flex-direction: column; /* 讓內容豎排 (垂直排列) */
+    gap: 15px; /* 輸入框與按鈕之間的間距 */
+    margin-top: 15px;
+    padding: 20px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    
+    /* 展開動畫基礎設定 */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 顯示表單時的 Class (由 JS 觸發) */
+.admin-chang-password-form.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 輸入框樣式 */
+.form-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box; /* 確保 padding 不會撐破外層 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #0467d8;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+/* 「確認」按鈕樣式 */
+.btn-primary {
+    width: 100%;
+    background-color: #0467d8;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0356a0;
+}
+
+
+.downloaded-detail {
+    border-bottom: 1px solid #ccc;
+    display: grid;  
+    grid-template-columns: 0.5fr 3fr 1fr;
+    div {
+        margin: 0.5rem;
+        &:first-child {
+            text-align: center;
+        }
+        &:nth-child(2) {
+            font-weight: bold;
+        }
+        &:last-child {
+            text-align: right;
+            padding-right: 10px;
+        }
+    }
 }

@@ -11,7 +11,7 @@ function get_member_messages($lang = 'vi')
             'password_mismatch' => "Mật khẩu xác nhận không khớp",
             'active_req'      => "Tài khoản chưa được kích hoạt",
             'exist'           => "Email hoặc tên đăng nhập đã tồn tại",
-            'success'         => "Thao tác thành công!",
+            'success'         => "Đăng nhập thành công!",
             'success_activate' => "Tài khoản của bạn đã được kích hoạt!",
             'success_change'  => "Mật khẩu đã được cập nhật",
             'success_change_info'  => "Thông tin đã được cập nhật",
@@ -713,6 +713,107 @@ function is_member_logged_in()
 
     return $user ? $user : false;
 }
+
+
+
+
+add_action('wp_ajax_admin_update_client_password', 'ajax_admin_handle_client_password');
+add_action('wp_ajax_nopriv_admin_update_client_password', 'ajax_admin_handle_client_password');
+
+function ajax_admin_handle_client_password()
+{
+    $msg = get_member_messages($_POST['lang'] ?? 'vi');
+    // 1. 安全檢查：確認目前操作者是否有編輯使用者的權限
+    if (!current_user_can('edit_users')) {
+        wp_send_json_error(['message' => '您沒有權限執行此操作。']);
+    }
+
+    $email  = $_POST['email'] ?? '';
+    $name   = $_POST['name'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($email) && !empty($password)) {
+
+        // 2. 加密新密碼
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
+
+        // 3. 呼叫你的 Model 根據 ID 更新密碼
+        // 假設你的 Model 有 update_password_by_id 這個方法
+        $result = get_model()->reset_password($email, $password_hash);
+
+        if ($result) {
+            // wp_send_json_success(['message' => '客戶密碼已成功更新！']);
+            // Tạo link reset mật khẩu chuyên nghiệp
+            //$url = network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login');
+            // ==================== 修復 1: 設置正確的郵件頭部 ====================
+            $headers = array('Content-Type: text/html; charset=UTF-8');
+
+            // 修復 2: 添加明確的FROM地址 (使用WordPress網站郵箱)
+            $from_email = get_option('admin_email');
+            $from_name = get_bloginfo('name');
+            $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
+            // 修復 3: 添加Reply-To
+            $headers[] = 'Reply-To: ' . $from_email;
+            $subject = "New Password - " . get_bloginfo('name');
+            $message = "
+                        <html>
+                            <body style='font-family: Arial, sans-serif; color: #333;'>
+                                <h2>đặt lại mật khẩu</h2>
+                                <p>Chào " . esc_html($name) . ",</p>
+                                <p>Chúng tôi đã đặt lại mật khẩu cho tài khoản của bạn.</p>
+                                <p>Mật khẩu mới: " . $password . " </p>
+                                <hr>
+                                <p><small>" . get_bloginfo('name') . "</small></p>
+                                <br>
+                                <hr>
+                                <br>
+                                <h2>重設密碼</h2>
+                                    <p>您好 " . esc_html($name) . ",</p>
+                                    <p>您的帳號已重設密碼。</p>
+                                    <p>新密碼是：" . $password . "</p>
+                                    <hr>
+                                    <p><small>" . get_bloginfo('name') . "</small></p>
+                            </body>
+                        </html>
+                     ";
+
+            // ==================== 修復 5: 添加詳細的調試日誌 ====================
+            $log_message = "[" . date('Y-m-d H:i:s') . "] Forgot Password Attempt\n";
+            $log_message .= "Email: " . $email . "\n";
+            $log_message .= "Username: " . (isset($user->username) ? $user->username : 'N/A') . "\n";
+            $log_message .= "From: " . $from_email . "\n";
+            $log_message .= "Headers: " . print_r($headers, true) . "\n";
+
+            // 使用WordPress的debug.log或自訂日誌檔案
+            error_log($log_message, 3, WP_CONTENT_DIR . '/forgot-password.log');
+
+            // ==================== 修復 6: 發送郵件並捕獲詳細錯誤 ====================
+            $sent = wp_mail(
+                (string)$email,           // TO
+                (string)$subject,         // SUBJECT
+                (string)$message,         // MESSAGE
+                $headers                  // HEADERS (修復後)
+            );
+
+            error_log("[" . date('Y-m-d H:i:s') . "] Email sent result: " . ($sent ? 'TRUE' : 'FALSE') . "\n", 3, WP_CONTENT_DIR . '/forgot-password.log');
+
+            if ($sent) {
+                wp_send_json_success(['message' => '客戶密碼已成功更新，並已發送新密碼到客戶郵箱！']);
+            } else {
+                wp_send_json_error(['message' => $msg['failure']]);
+            }
+        } else {
+            wp_send_json_error(['message' => '資料庫更新失敗.']);
+        }
+    } else {
+        wp_send_json_error(['message' => '無效的使用者 Email 或密碼。']);
+    }
+
+
+
+    wp_die();
+}
+
 
 /**
  * Helper function để lấy instance duy nhất của Model_Download_Function

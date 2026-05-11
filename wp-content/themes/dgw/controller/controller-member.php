@@ -1,105 +1,88 @@
 <?php
-
+require_once(DIR_MODEL . 'model-download.php');
 class Controller_Member
 {
+    private $model;
 
     public function __construct()
     {
-        add_action('init', array($this, 'register_custom_post'));
-        add_action('manage_edit-member_columns', array($this, 'manage_columns'));
-        add_action('manage_member_posts_custom_column', array($this, 'render_columns'));
-
-        add_filter('manage_edit-member_sortable_columns', array($this, 'sortable_views_column'));
-        add_filter('request', array($this, 'sort_views_column'));
+        add_action('admin_menu', array($this, 'create'));
+        $this->model = new Model_Download_Function();
     }
 
-    public function register_custom_post()
+    public function create()
     {
-        $labels = array(
-            'name' => __('Member'),
-            'singular_name' => __('Member'),
-            'add_new' => __('Add New'),
-            'add_new_item' => __('Add Item'),
-            'edit_item' => __('Edit'),
-            'new_item' => __('Add Item'),
-            'all_items' => __('All Item'),
-            'view_item' => __('View Item'),
-            'search_items' => __('Search'),
-            'not_found' => __('No slides found.'),
-            'not_found_in_trash' => __('No found in Trash.'),
-            'parent_item_colon' => '',
-            'menu_name' => __('Member')
-        );
-        $args = array(
-            'labels' => $labels,
-            'public' => true,
-            'exclude_from_search' => true,
-            'publicly_queryable' => true,
-            'show_ui' => true,
-            'show_in_menu' => TRUE,
-            'menu_icon' => PART_ICON . 'icon-link.png',
-            'query_var' => true,
-            'rewrite' => true,
-            'capability_type' => 'post',
-            'has_archive' => true,
-            'hierarchical' => false,
-            'menu_position' => 8,
-            'supports' => array('thumbnail', 'editor', 'title', 'comments'),
-        );
-        register_post_type('member', $args);
+        // THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
+        $page_title = __('資料下載'); // TIEU DE CUA TRANG
+        $menu_title = __('資料下載');  // TEN HIEN TRONG MENU
+        // CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
+        $capability = 'manage_categories'; // QUYEN TRUY CAP DE THAY MENU NAY
+        $menu_slug = 'member_page'; // TEN slug TEN DUY NHAT KO DC TRUNG VOI TRANG KHAC GAN TREN THANH DIA CHI OF MENU
+        // THAM SO THU 5 GOI DEN HAM HIEN THI GIAO DIEN TRONG MENU
+        $icon = PART_ICON . 'icon-setting.png';  // THAM SO THU 6 LA LINK DEN ICON DAI DIEN
+        $position = 2; // VI TRI HIEN THI TRONG MENU
+
+        add_menu_page($page_title, $menu_title, $capability, $menu_slug, array($this, 'dispatchActive'), $icon, $position);
     }
 
-    //==== QUAN LY COT HIEN THI TRON BANG
-    public function manage_columns($columns)
-    {
-        unset($columns['create-date']); // an cot ngay mac dinh
-        unset($columns['categories']);
-        unset($columns['home']);
-        unset($columns['language']);
-        unset($columns['order']);
-        unset($columns['author']);
-        //==== THEM COT VA BAN
-        $columns['create-date'] = __('Create Date');
-        return $columns;
-    }
+    /* PHAN DIEN HUONG CHO  CAC ACTION ============================ */
 
-    //==== HIEN THI NOI DUNG TRONG COT
-    public function render_columns($columns)
+    public function dispatchActive()
     {
-        global $post;
-        switch ($columns) {
-            case 'category':
-                $terms = wp_get_post_terms($post->ID, 'resources_category');
 
-                if (count($terms) > 0) {
-                    foreach ($terms as $key => $term) {
-                        echo '<a href=' . custom_redirect($term->slug) . '&' . $term->taxonomy . '=' . $term->slug . '>' . $term->name . '</a></br>';
-                    }
-                }
+        $action = getParams('action');
+        switch ($action) {
+            case 'trash':
+            case 'restore':
+                $this->trashAction();
+                break;
+            case 'delete':
+                $this->deleteAction();
+                break;
+            default:
+                $this->displayPage();
                 break;
         }
     }
 
-    //====== SAP SEP THEO TRINH TU
-    public function sortable_views_column($columns)
+    public function createUrl()
     {
-        $columns['order'] = 'order';
-        $columns['create-date'] = 'create-date';
-        return $columns;
+        echo $url = 'admin.php?page=' . getParams('page');
+
+        if (getParams('filter_category') != '0') {
+            $url .= '&filter_category=' . getParams('filter_category');
+        }
+
+        if (mb_strlen(getParams('s'))) {
+            $url .= '&s=' . getParams('s');
+        }
+        return $url;
     }
 
-    public function sort_views_column($vars)
+    public function displayPage()
     {
-        if (isset($vars['orderby']) && 'order' == $vars['orderby']) {
-            $vars = array_merge(
-                $vars,
-                array(
-                    'meta_key' => '_metabox_order', //Custom field key
-                    'orderby' => '_metabox_order' //Custom field value (number)
-                )
-            );
+        if (getParams('action') == -1) {
+            $url = $this->createUrl();
+            wp_redirect($url);
         }
-    
-        return $vars;
+
+        if (isPost()) {
+            update_option('first_load', $_POST['txt-first-load']);
+            update_option('more_load', $_POST['txt-more-load']);
+        }
+        require_once(DIR_VIEW . 'view-member.php');
+    }
+
+    public function trashAction()
+    {
+        $this->model->toTrash(getParams(), getParams('action'));
+        require_once(DIR_VIEW . 'view-member.php');
+    }
+
+
+    public function deleteAction()
+    {
+        $this->model->toDelete(getParams());
+        require_once(DIR_VIEW . 'view-member.php');
     }
 }

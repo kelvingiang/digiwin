@@ -81,6 +81,13 @@ class Model_Download_Function
         );
     }
 
+    public function get_user_by_id($id)
+    {
+        return $this->_db->get_row(
+            $this->_db->prepare("SELECT * FROM {$this->_table_registry} WHERE ID = %d", $id)
+        );
+    }
+
     public function check_email_username_exists($email, $username)
     {
         return $this->_db->get_var($this->_db->prepare(
@@ -210,5 +217,82 @@ class Model_Download_Function
             ['session_key' => null],
             ['session_key' => $session_key]
         );
+    }
+
+    //================================================
+    public function toTrash($arrData = array(), $options = array())
+    {
+        global $wpdb;
+        // 判斷 trash 的值 (1 或 0)
+        $trash = ($options == 'trash') ? 1 : 0;
+
+        // 讓 status 取得與 trash 相反的值 (trash 為 1 則 status 為 0，反之亦然)
+        $status = ($trash == 1) ? 0 : 1;
+
+        // KIEM TRA PHAN UPFDATE CÓ PHAN DANG CHUOI HAY KHONG
+
+        if (!is_array($arrData['id'])) {
+            $data = array(
+                'trash'  => $trash,
+                'status' => $status
+            );
+            $where = array('ID' => absint($arrData['id']));
+            $wpdb->update($this->_table_registry, $data, $where);
+        } else {
+            $arrData['id'] = array_map('absint', $arrData['id']);
+            $ids = join(',', $arrData['id']);
+            $sql = "UPDATE $this->_table_registry SET `trash` = $trash, `status` = $status  WHERE ID IN ($ids)";
+            $wpdb->query($sql);
+        }
+    }
+
+
+    public function toDelete($arrData = array(), $options = array())
+    {
+        global $wpdb;
+        // KIEM TRA PHAN DELETE CÓ PHAN DANG CHUOI HAY KHONG
+
+        if (!is_array($arrData['id'])) {
+            $where = array('ID' => absint($arrData['id']));
+            $wpdb->delete($this->_table_registry, $where);
+        } else {
+            $arrData['id'] = array_map('absint', $arrData['id']);
+            $ids = join(',', $arrData['id']);
+            $sql = "DELETE FROM $this->_table_registry WHERE ID IN ($ids)";
+            $wpdb->query($sql);
+        }
+    }
+
+    //====================================================
+    public function get_downloaded_by_user($user_id)
+    {
+        return $this->_db->get_results(
+
+            $this->_db->prepare("SELECT * FROM {$this->_table_details} WHERE user_id = %d", $user_id)
+        );
+    }
+
+    public function get_all_downloads()
+    {
+        // d 代表 下載紀錄表 (downloads)
+        // m 代表 會員表 (members)
+        $sql = "SELECT d.*, m.username, m.email, m.company, m.phone 
+            FROM {$this->_table_details} AS d
+            LEFT JOIN {$this->_table_registry} AS m ON d.user_id = m.ID 
+            ORDER BY d.download_date DESC";
+
+        return $this->_db->get_results($sql);
+    }
+
+    public function get_download_stats_by_title()
+    {
+        // 撰寫統計 SQL：選取標題，並計算每個標題出現的次數
+        $sql = "SELECT title, COUNT(ID) AS download_count 
+            FROM {$this->_table_details} 
+            GROUP BY title 
+            ORDER BY download_count DESC";
+
+        // 執行查詢並回傳結果 (建議回傳 ARRAY_A 方便你在前端用 foreach 迴圈印出)
+        return $this->_db->get_results($sql, ARRAY_A);
     }
 }

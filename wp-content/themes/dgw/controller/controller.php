@@ -23,6 +23,8 @@ class Controller_Main
             'controller_join_us' => true,
             'controller_logo' => true,
             'controller_popup' => true,
+            'controller_member' => true,
+            'controller_member_download' => true,
         );
 
         $this->_controller_options = get_option($this->_controller_name, $defaultOption);
@@ -31,6 +33,8 @@ class Controller_Main
         $this->page_information();
         $this->page_setting();
         $this->page_logo();
+        $this->page_member();
+        $this->page_member_download();
 
         $this->post_slider();
         $this->post_solutions();
@@ -59,6 +63,23 @@ class Controller_Main
             new Controller_logo();
         }
     }
+
+    public function page_member()
+    {
+        if ($this->_controller_options['controller_member']) {
+            require_once(DIR_CONTROLLER . 'controller-member.php');
+            new Controller_Member();
+        }
+    }
+
+      public function page_member_download()
+    {
+        if ($this->_controller_options['controller_member_download']) {
+            require_once(DIR_CONTROLLER . 'controller-member-download.php');
+            new Controller_Member_Download_Report();
+        }
+    }
+
 
 
     public function page_setting()
