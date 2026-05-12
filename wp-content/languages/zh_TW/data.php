@@ -105,6 +105,7 @@ function getTranslate()
         'The link has expired. Please request a new code'=>'連結已過期，請重新申請',
         'Cannot Reset Password' => '無法重設密碼',
         'Request a new code' => '重新申請',
+        'Submitting...' => '處理中...',
     );
     return array_merge($data);
 }

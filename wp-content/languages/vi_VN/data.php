@@ -105,6 +105,7 @@ function getTranslate()
         'The link has expired. Please request a new code'=>'Liên kết đã hết hạn, Vui lòng yêu cầu mã mới',
         'Cannot Reset Password' => 'Không thể đặt lại mật khẩu',
         'Request a new code' => 'Yêu cầu mã mới',
+        'Submitting...' => 'Đang xử lý...',
     );
     return array_merge($data);
 }

@@ -15,3 +15,8 @@ note các vẫn để quan trong
    - sử dụng Lark AnyCross
    - sau khi thiết lập AnyCross trên Lark sẽ có  $webhookUrl = "https://open.larksuite.com/open-apis/bot/v2/hook/2a2da959-0b1e-4b3c-ab3f-85703d65e3b0";
    - sử dụng hàm sendNotificationToLark($message) 124 on download-ajax.php 
+
+5/ sau khi đăng nhập thông tin sẽ dc lưu vào cookie, lâu sau vô sẽ không cần đăng nhập, 
+   nếu đăng nhập trên máy khác sẽ bị thoát trên máy này thông qua so sánh cell session_key
+   
+

@@ -6,6 +6,9 @@
     grid-template-columns: 1fr;
     gap: 20px;
     margin: 0rem 1.5rem;
+    @include Respond(md) {
+        margin: 1rem 0.2rem;
+    }
 }
 
 #single-two-row {

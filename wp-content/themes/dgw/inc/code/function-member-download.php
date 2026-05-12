@@ -140,13 +140,26 @@ add_action('wp_enqueue_scripts', function () {
 });
 
 
+function get_current_custom_user() {
+    $model_download = new Model_Download_Function();
+    // Nếu không có cookie session, trả về null
+    if (empty($_COOKIE['custom_session'])) {
+        return null;
+    }
+
+    $session_key = $_COOKIE['custom_session'];
+    
+    // Giả sử model của bạn có hàm này để lấy user từ bảng DB dựa vào session_key
+    // Bạn cần điều chỉnh tên hàm get_user_by_session cho đúng với core của bạn
+    $user = $model_download->get_user_by_session($session_key); 
+    
+    return $user ?: null;
+}
+
 /* =========================================================
 phan ghi lên file google sheets
 ========================================================= */
 // require_once get_stylesheet_directory() . '/vendor/autoload.php';
-
-
-
 
 require_once WP_CONTENT_DIR . '/themes/dgw/vendor/autoload.php';
 

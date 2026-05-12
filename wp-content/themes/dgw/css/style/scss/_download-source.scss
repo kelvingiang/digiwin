@@ -45,7 +45,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     padding: 30px 28px 0px;
     width: 50%;
     position: relative;
-    font-family: sans-serif;
+    // font-family: sans-serif;
     box-sizing: border-box;
 
     @include Respond(md) {
@@ -58,6 +58,7 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
         width: 90% !important;
         padding: 30px 15px 0px;
         flex-shrink: 0;
+        
     }
 }
 
