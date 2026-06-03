@@ -24,14 +24,28 @@ define('PART_CLASS', THEME_PART . '/class/');
 /** SMTP 配置 (為了增強 Email 發送可靠性) */
 define('SMTP_HOST', 'smtp.gmail.com');  // 
 // define('SMTP_PORT', 587);                     
-define('SMTP_PORT', 465);                     
 // define('SMTP_SECURE', 'tls');                 
+define('SMTP_PORT', 465);                     
 define('SMTP_SECURE', 'ssl');                 
 define('SMTP_AUTH', true);                    
-define('SMTP_USERNAME', 'kelvinctcvn@gmail.com'); 
-define('SMTP_PASSWORD', 'yidgmjjlepprajbn'); 
-define('SMTP_FROM_EMAIL', 'kelvinctcvn@gmail.com');
-define('SMTP_FROM_NAME', 'Digiwin vietnam');   
+define('SMTP_USERNAME', 'digiwin.asean@gmail.com'); 
+define('SMTP_PASSWORD', 'kmtgtlxtmdpqojyc'); 
+define('SMTP_FROM_EMAIL', '  ');
+define('SMTP_FROM_NAME', 'Digiwin vietnam'); 
+
+// define('SMTP_USERNAME', 'kelvinctcvn@gmail.com'); 
+// define('SMTP_PASSWORD', 'yidgmjjlepprajbn'); 
+// define('SMTP_FROM_EMAIL', 'kelvinctcvn@gmail.com');
+// define('SMTP_HOST', 'dwm6.digiwin.com');  // 
+// // // define('SMTP_PORT', 587);                     
+// define('SMTP_PORT', 465);                     
+// // define('SMTP_SECURE', 'tls');                 
+// // define('SMTP_SECURE', 'ssl');                 
+// define('SMTP_AUTH', true);                    
+// define('SMTP_USERNAME', 'marketing_vn@digiwin.com'); 
+// define('SMTP_PASSWORD', 'Dgw##20260114ss'); 
+// define('SMTP_FROM_EMAIL', 'marketing_vn@digiwin.com');
+// define('SMTP_FROM_NAME', 'Digiwin vietnam');
 
 if ($_SERVER['HTTP_HOST'] === 'localhost') {
     define('WP_HOME', 'http://localhost/digiwin');

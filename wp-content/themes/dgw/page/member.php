@@ -1,16 +1,24 @@
 <?php /*  Template Name: Member Page */ ?>
 <?php get_header();
 get_template_part('templates/template', 'header');
+
 $data = null;
 if (!empty($_COOKIE['custom_session'])) {
     $data = get_member_information($_COOKIE['custom_session']);
 }
 
+
+// Sau đó test xem có đọc được không
+// if (isset($_COOKIE['custom_session'])) {
+//     echo "✅ Cookie read successfully!";
+// } else {
+//     echo "❌ Cookie not found!";
+// }
+
 ?>
 
 
 <div class="member-space">
-
     <!-- 未登入 -->
     <div id="ui-login-form" style="display:none">
         <div id="tab-buttons">
@@ -55,17 +63,26 @@ if (!empty($_COOKIE['custom_session'])) {
 
     <!-- 已登入 -->
     <div id="ui-logged-in" class="logged-in " style="display:none;">
+
         <div class="logout-space">
             <label><?php echo $data->email; ?></label>
-            <button id="btn-logout" class="btn-logout">登出</button>
+            <button id="btn-logout" class="btn-logout">
+                <?php _e('Logout', 'dgw') ?>
+            </button>
         </div>
-        <div class="two-columns">
+        <div class="three-columns">
+
             <div class="row-cell">
-                <label><?php _e('Password', 'dgw'); ?></label>
+                <label><?php _e('Current Password', 'dgw'); ?></label>
+                <input type="password" id="current-password" placeholder="********" />
+            </div>
+
+            <div class="row-cell">
+                <label><?php _e('New Password', 'dgw'); ?></label>
                 <input type="password" id="chang-password" placeholder="********" />
             </div>
-            <div class="row-cell">
 
+            <div class="row-cell">
                 <label><?php _e('Confirm Password', 'dgw'); ?></label>
                 <input type="password" id="chang-confirm-password" placeholder="********" />
             </div>
@@ -127,6 +144,7 @@ if (!empty($_COOKIE['custom_session'])) {
             e.preventDefault(); // 防止按鈕預設行為
 
             // 💡 建議至少要傳遞舊密碼與新密碼，確保安全性
+            const Current = jQuery("#current-password").val();
             const Password = jQuery("#chang-password").val();
             const Confirm = jQuery("#chang-confirm-password").val();
             const currentLang = document.documentElement.lang;
@@ -138,6 +156,7 @@ if (!empty($_COOKIE['custom_session'])) {
                 data: {
                     action: "member_change_password",
                     nonce: MemberAuth.nonce,
+                    current: Current, // 傳送舊密碼
                     password: Password, // 傳送舊密碼
                     confirm: Confirm, // 傳送新密碼
                     lang: sendLang
@@ -148,6 +167,13 @@ if (!empty($_COOKIE['custom_session'])) {
                         jQuery("#change-password-msg")
                             .css("color", "green")
                             .text(res.data.message);
+                        // Tự động refresh trang sau 30 giây (30000 milliseconds)
+                        setTimeout(function() {
+                            jQuery("#change-password-msg").text('');
+                            jQuery("#current-password").val('');
+                            jQuery("#chang-password").val('');
+                            jQuery("#chang-confirm-password").val('');
+                        }, 5000);
                     } else {
                         // 顯示錯誤訊息 (例如密碼太短、舊密碼錯誤等)
                         jQuery("#change-password-msg")
@@ -194,6 +220,10 @@ if (!empty($_COOKIE['custom_session'])) {
                         jQuery("#change-info-msg")
                             .css("color", "green")
                             .text(res.data.message);
+                        // Tự động refresh trang sau 30 giây (30000 milliseconds)
+                        setTimeout(function() {
+                            jQuery("#change-info-msg").text('');
+                        }, 5000);
                     } else {
                         // 顯示錯誤訊息 (例如密碼太短、舊密碼錯誤等)
                         jQuery("#change-info-msg")

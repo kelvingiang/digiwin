@@ -6,6 +6,7 @@ function get_member_messages($lang = 'vi')
             'empty'           => "Vui lòng điền đầy đủ thông tin",
             'email_invalid'   => "Email không hợp lệ",
             'not_exist'       => "Email không tồn tại",
+            'current_password_wrong' => "Mật khẩu hiện tại không đúng",
             'password_wrong'  => "Mật khẩu không đúng",
             'password_short'  => "Mật khẩu phải có ít nhất 6 ký tự",
             'password_mismatch' => "Mật khẩu xác nhận không khớp",
@@ -25,6 +26,7 @@ function get_member_messages($lang = 'vi')
             'empty'           => "請填寫完整資訊",
             'email_invalid'   => "電子郵件格式錯誤",
             'not_exist'       => "帳號不存在",
+            'current_password_wrong' => "當前密碼錯誤",
             'password_wrong'  => "密碼錯誤",
             'password_short'  => "密碼長度至少為 6 個字元",
             'password_mismatch' => "兩次輸入的密碼不一致",
@@ -147,67 +149,132 @@ add_action('wp_ajax_nopriv_download_member_login', 'handle_member_login');
 function handle_member_login()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
-    // ===== PHẦN BỊ THIẾU — xác thực email + password =====
+
     $email    = sanitize_email($_POST['email']);
     $password = $_POST['password'];
 
-    // Kiểm tra rỗng
     if (empty($email) || empty($password)) {
         wp_send_json_error(['message' => $msg['empty']]);
         return;
     }
 
-    // Tìm user theo email trong DB
     $user = get_model()->get_user_by_email($email);
 
-    // Không tìm thấy user
     if (!$user) {
         wp_send_json_error(['message' => $msg['not_exist']]);
         return;
     }
 
-    // Kiểm tra password có khớp không
     if (!password_verify($password, $user->password)) {
         wp_send_json_error(['message' => $msg['password_wrong']]);
         return;
     }
 
-    // Kiểm tra account có đã kích hoạt chưa (status = 1)
     if ($user->status != 1) {
         wp_send_json_error(['message' => $msg['active_req']]);
         return;
     }
-    // ===== KẾT THÚC PHẦN XÁC THỰC =====
 
-    // Sinh session_key mới mỗi lần đăng nhập
     $session_key = bin2hex(random_bytes(32));
+    $ip_address  = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'];
 
-    $ip_address   = '';
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip_address = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-    }
-
-    // Cập nhật vào DB
     get_model()->update_login($user->ID, $session_key, $ip_address);
 
-    // Lưu vào cookie trình duyệt
-    // ✅ setcookie tương thích mọi phiên bản PHP
+    // ✅ JUST THIS - Cực đơn giản
+    //$is_localhost = strpos($_SERVER['HTTP_HOST'], 'localhost') !== false || strpos($_SERVER['HTTP_HOST'], '127.0.0') !== false;
+
+    // setcookie(
+    //     'custom_session',
+    //     $session_key,
+    //     time() + (7 * 24 * 60 * 60),
+    //     COOKIEPATH,
+    //     COOKIE_DOMAIN,
+    //     false,  // Secure (tùy chọn)
+    //     true    // HttpOnly (bắt buộc nên có) ← chống XSS
+    // );
+
+    // Tạm thời bỏ domain để test
     setcookie(
         'custom_session',
         $session_key,
-        time() + (7 * 24 * 60 * 60),
-        '/',
-        '',
-        true,
-        true
+        [
+            'expires' => time() + (7 * 24 * 60 * 60),
+            'path' => '/',
+            'domain' => '',  // ← Bỏ domain test
+            'secure' => false,  // ← Local dùng false
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]
     );
+
+
 
     wp_send_json_success(['message' => $msg['success']]);
 }
+// function handle_member_login()
+// {
+//     $msg = get_member_messages($_POST['lang'] ?? 'vi');
+//     // ===== PHẦN BỊ THIẾU — xác thực email + password =====
+//     $email    = sanitize_email($_POST['email']);
+//     $password = $_POST['password'];
+
+//     // Kiểm tra rỗng
+//     if (empty($email) || empty($password)) {
+//         wp_send_json_error(['message' => $msg['empty']]);
+//         return;
+//     }
+
+//     // Tìm user theo email trong DB
+//     $user = get_model()->get_user_by_email($email);
+
+//     // Không tìm thấy user
+//     if (!$user) {
+//         wp_send_json_error(['message' => $msg['not_exist']]);
+//         return;
+//     }
+
+//     // Kiểm tra password có khớp không
+//     if (!password_verify($password, $user->password)) {
+//         wp_send_json_error(['message' => $msg['password_wrong']]);
+//         return;
+//     }
+
+//     // Kiểm tra account có đã kích hoạt chưa (status = 1)
+//     if ($user->status != 1) {
+//         wp_send_json_error(['message' => $msg['active_req']]);
+//         return;
+//     }
+//     // ===== KẾT THÚC PHẦN XÁC THỰC =====
+
+//     // Sinh session_key mới mỗi lần đăng nhập
+//     $session_key = bin2hex(random_bytes(32));
+
+//     $ip_address   = '';
+//     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+//         $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+//     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+//         $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+//     } else {
+//         $ip_address = $_SERVER['REMOTE_ADDR'];
+//     }
+
+//     // Cập nhật vào DB
+//     get_model()->update_login($user->ID, $session_key, $ip_address);
+
+//     // Lưu vào cookie trình duyệt
+//     // ✅ setcookie tương thích mọi phiên bản PHP
+//     setcookie(
+//         'custom_session',
+//         $session_key,
+//         time() + (7 * 24 * 60 * 60),
+//         '/',
+//         '',
+//         true,
+//         true
+//     );
+
+//     wp_send_json_success(['message' => $msg['success']]);
+// }
 
 /* =========================================================
 PHẦN ĐĂNG KÝ  register 
@@ -277,7 +344,7 @@ function handle_member_register()
         $from_email = get_option('admin_email');
         $from_name = get_bloginfo('name');
         $headers[] = 'From: ' . $from_name . ' <' . $from_email . '>';
-        $headers[] = 'Reply-To: ' . $from_email;
+        $headers[] = 'Reply-To: marketing_vn@digiwin.com';
         $subject = "Activate account - " . get_bloginfo('name');
 
         // 修復 4: 使用 HTML 格式 (更容易被郵件服務器接受)
@@ -339,8 +406,11 @@ function handle_member_register()
                 'message' => $msg['success_register']
             ]);
         } else {
-            wp_send_json_success([
-                'message' => $msg['not_send']
+            $phpmailer_error = $GLOBALS['phpmailer']->ErrorInfo ?? 'Unknown error';
+            error_log("Email failed: " . $phpmailer_error);
+            wp_send_json_error([
+                'message' => $msg['not_send'],
+                'error_detail' => $phpmailer_error
             ]);
         }
     } else {
@@ -400,8 +470,8 @@ add_action('wp_ajax_member_change_password',        'handle_change_password');
 add_action('wp_ajax_nopriv_member_change_password', 'handle_change_password');
 function handle_change_password()
 {
-
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
+    
     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
@@ -409,16 +479,24 @@ function handle_change_password()
 
     // 2. 確認使用者有登入
     $user = is_member_logged_in();
+    // Đã xóa dòng echo print_r để trả về chuẩn JSON
     if (!$user) {
         wp_send_json_error(array('message' => $msg['login']));
     }
 
     // 3. 接收前端傳來的密碼
+    $current = $_POST['current'] ?? '';
     $password = $_POST['password'] ?? '';
     $confirm = $_POST['confirm'] ?? '';
 
-    if (empty($password) || empty($confirm)) {
+    if (empty($password) || empty($confirm) || empty($current)) {
         wp_send_json_error(array('message' => $msg['password_wrong']));
+    }
+
+  // 4. Kiểm tra mật khẩu hiện tại
+    // Tối ưu: Dùng trực tiếp $user->password đã lấy ở bước 2
+    if (!password_verify($current, $user->password)) {
+        wp_send_json_error(array('message' => $msg['current_password_wrong'])); // Bạn có thể thêm message 'current_password_wrong' cho rõ ràng hơn
     }
 
     if ($password !== $confirm) {
@@ -429,6 +507,9 @@ function handle_change_password()
         wp_send_json_error(['message' => $msg['password_short']]);
     }
 
+  
+
+    // 5. Cập nhật mật khẩu mới
     if (!empty($_COOKIE['custom_session'])) {
         $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $session_key = sanitize_text_field($_COOKIE['custom_session']);
@@ -436,10 +517,65 @@ function handle_change_password()
         get_model()->update_password($session_key, $password_hash);
     }
 
+    // 6. Trả về kết quả thành công chuẩn JSON
     wp_send_json_success(array(
         'message' => $msg['success_change']
     ));
 }
+// function handle_change_password()
+// {
+
+//     $msg = get_member_messages($_POST['lang'] ?? 'vi');
+//     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
+//     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
+//         wp_send_json_error(array('message' => $msg['failure']), 403);
+//     }
+
+//     // 2. 確認使用者有登入
+//     $user = is_member_logged_in();
+//     echo "User: " . print_r($user, true); // DEBUG: 查看 $user 內容
+//     if (!$user) {
+//         wp_send_json_error(array('message' => $msg['login']));
+//     }
+
+//     // 3. 接收前端傳來的密碼
+//     $current = $_POST['current'] ?? '';
+//     $password = $_POST['password'] ?? '';
+//     $confirm = $_POST['confirm'] ?? '';
+
+//     if (empty($password) || empty($confirm) || empty($current)) {
+//         wp_send_json_error(array('message' => $msg['password_wrong']));
+//     }
+
+//     if ($password !== $confirm) {
+//         wp_send_json_error(array('message' => $msg['password_mismatch']));
+//     }
+
+//     if (strlen($password) < 6) {
+//         wp_send_json_error(['message' => $msg['password_short']]);
+//     }
+
+//     if(!empty($current) && !empty($password) && !empty($confirm) && !empty($_COOKIE['custom_session'])) {
+//         // Kiểm tra mật khẩu hiện tại có đúng không
+//         $session_key = sanitize_text_field($_COOKIE['custom_session']);
+//         $user_data = get_model()->get_user_by_session($session_key);
+
+//         if (!$user_data || !password_verify($current, $user_data->password)) {
+//             wp_send_json_error(array('message' => $msg['password_wrong']));
+//         }
+//     }
+
+//     if (!empty($_COOKIE['custom_session'])) {
+//         $password_hash = password_hash($password, PASSWORD_BCRYPT);
+//         $session_key = sanitize_text_field($_COOKIE['custom_session']);
+
+//         get_model()->update_password($session_key, $password_hash);
+//     }
+
+//     wp_send_json_success(array(
+//         'message' => $msg['success_change']
+//     ));
+// }
 
 
 /* =========================================================

@@ -378,6 +378,58 @@ hr.style-two {
   width: 100%;
   height: 500px;
 }
+.single-space-download-btn {
+  margin-top: 1rem;
+  text-align: center;
+  /* Thiết kế cấu trúc nút */
+}
+.single-space-download-btn .btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #449ef3, #0270d6); /* Màu gradient hiện đại */
+  border-radius: 10px; /* Bo tròn hoàn toàn */
+  box-shadow: 0 4px 15px rgba(74, 74, 75, 0.3); /* Hiệu ứng đổ bóng */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.single-space-download-btn {
+  /* Tùy chỉnh Icon SVG */
+}
+.single-space-download-btn .btn-download .icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+.single-space-download-btn {
+  /* Hiệu ứng khi di chuột vào (Hover) */
+}
+.single-space-download-btn .btn-download:hover {
+  transform: translateY(-3px); /* Nảy lên nhẹ */
+  box-shadow: 0 8px 25px rgba(121, 121, 122, 0.4); /* Bóng đậm và to hơn */
+  background: linear-gradient(135deg, #379af7, #015cb1);
+  color: #ffffff;
+}
+.single-space-download-btn {
+  /* Hiệu ứng icon mũi tên di chuyển xuống khi hover */
+}
+.single-space-download-btn .btn-download:hover .icon {
+  transform: translateY(5px);
+}
+.single-space-download-btn {
+  /* Hiệu ứng khi click (Active) */
+}
+.single-space-download-btn .btn-download:active {
+  transform: translateY(1px); /* Nhấn lún xuống */
+  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
+}
 .single-space .article-title {
   font-size: 1.1rem;
   color: #571307;
@@ -3640,7 +3692,7 @@ html[lang=vi-VN] .has-sub::after {
   background-color: transparent !important;
   /* Cài đặt màu sắc viền */
   border: 2px solid rgba(0, 0, 0, 0.1) !important; /* Màu viền mờ */
-  border-top-color: #474747 !important; /* Màu phần xoay (xanh dương) */
+  border-top-color: #ffffff !important; /* Màu phần xoay (xanh dương) */
   animation: spin 0.8s linear infinite !important;
 }
 

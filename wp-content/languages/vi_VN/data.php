@@ -90,6 +90,7 @@ function getTranslate()
         'New Password' => 'Mật Khẩu Mới',
         'Confirm Password' => 'Xác Nhận Mật Khẩu',
         'Change Password' => 'Đổi Mật Khẩu',
+        'Current Password' => 'Mật Khẩu Hiện Tại',
         'Change Information' => 'Đổi Thông Tin',
         'Invalid verification code' => 'Mã xác thực không hợp lệ!',
         'Account activated successfully' => 'Kích hoạt tài khoản thành công!',
@@ -106,6 +107,9 @@ function getTranslate()
         'Cannot Reset Password' => 'Không thể đặt lại mật khẩu',
         'Request a new code' => 'Yêu cầu mã mới',
         'Submitting...' => 'Đang xử lý...',
+        'Logout' => 'Đăng Xuất',
+        'Download File digiwin'=> 'Tải Tài Liệu',
+
     );
     return array_merge($data);
 }

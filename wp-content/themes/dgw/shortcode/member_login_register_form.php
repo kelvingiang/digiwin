@@ -2,7 +2,7 @@
 
 function member_login_register_form()
 {
-    if (is_user_logged_in()) return 'Bạn đã đăng nhập.'; ?>
+   // if (is_user_logged_in()) return 'Bạn đã đăng nhập.'; ?>
 
     <div id="auth-popup-overlay">
         <div id="auth-popup-box">

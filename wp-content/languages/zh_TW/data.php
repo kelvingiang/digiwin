@@ -90,6 +90,7 @@ function getTranslate()
         'New Password' => '新密碼',
         'Confirm Password' => '確定密碼',
         'Change Password' => '修改密碼',
+        'Current Password' => '當前密碼',
         'Change Information' => '修改資訊',
         'Invalid verification code' => '驗證碼無效！',
         'Account activated successfully' => '帳號啟用成功!',
@@ -106,6 +107,8 @@ function getTranslate()
         'Cannot Reset Password' => '無法重設密碼',
         'Request a new code' => '重新申請',
         'Submitting...' => '處理中...',
+        'Logout' => '登出',
+        'Download File digiwin'=> '下載文件',
     );
     return array_merge($data);
 }

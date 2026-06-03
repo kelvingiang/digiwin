@@ -373,4 +373,32 @@ add_action('after_setup_theme', function () {
 });
 
 
+// Cho phép inline styles trong table
+add_filter( 'safe_style_css', function( $styles ) {
+    $styles[] = 'background-color';
+    $styles[] = 'color';
+    return $styles;
+});
 
+add_filter( 'wp_kses_allowed_html', function( $allowedposttags ) {
+    $allowedposttags['table']['style'] = true;
+    $allowedposttags['tr']['style'] = true;
+    $allowedposttags['td']['style'] = true;
+    $allowedposttags['th']['style'] = true;
+    return $allowedposttags;
+}, 10, 1 );
+
+
+// ==================== EMAIL DEBUG ====================
+// Bật debug cho PHPMailer - Chỉ khi WP_DEBUG = true
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    add_action('phpmailer_init', function($phpmailer) {
+        // Bật debug mode
+        $phpmailer->SMTPDebug = 2; // 0=off, 1=client, 2=client+server
+        
+        // Ghi log debug output
+        $phpmailer->Debugoutput = function($str, $level) {
+            error_log("PHPMailer Debug: " . $str);
+        };
+    });
+}

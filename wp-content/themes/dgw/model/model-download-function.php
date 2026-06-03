@@ -69,7 +69,7 @@ class Model_Download_Function
     {
         if (empty($session_key)) return false;
         return $this->_db->get_row(
-            $this->_db->prepare("SELECT `ID`, `username`, `company`, `tax`, `industry`, `department`, `position`, `phone`, `email`  FROM {$this->_table_registry} WHERE session_key = %s", $session_key)
+            $this->_db->prepare("SELECT `ID`, `username`, `password`, `company`, `tax`, `industry`, `department`, `position`, `phone`, `email`  FROM {$this->_table_registry} WHERE session_key = %s", $session_key)
         );
     }
 
