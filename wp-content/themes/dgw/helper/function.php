@@ -1,4 +1,5 @@
 <?php
+// dua toan bo cac function vao file nay de giam do phuc tap cua file functions.php
 require_once get_template_directory() . '/inc/init.php';
 
 

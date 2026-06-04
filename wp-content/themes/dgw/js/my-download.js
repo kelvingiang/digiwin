@@ -262,49 +262,146 @@ jQuery(document).on("click", "#btn-login", function () {
 });
 
 // ===== ĐĂNG KÝ =====
+// jQuery(document).on("click", "#btn-register", function () {
+//   const $this = jQuery(this);
+//   const currentLang = document.documentElement.lang;
+//   const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
+
+//   // Cấu hình ngôn ngữ hiển thị tại client
+//   const uiText = {
+//     vn: { loading: "Đang xử lý...", original: "Đăng ký" },
+//     cn: { loading: "处理中...", original: "注册" },
+//   };
+//   const langSet = uiText[sendLang];
+//   // 1. Vô hiệu hóa button để tránh spam request
+//   $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
+
+//   jQuery.ajax({
+//     url: MyAjax.ajax_url,
+//     type: "POST",
+//     data: {
+//       action: "download_member_register",
+//       nonce: MyAjax.nonce,
+//       username: jQuery("#reg-username").val(),
+//       email: jQuery("#reg-email").val(),
+//       password: jQuery("#reg-password").val(),
+//       company: jQuery("#reg-company").val(),
+//       phone: jQuery("#reg-phone").val(),
+//       tax: jQuery("#reg-tax").val(),
+//       industry: jQuery("#reg-industry").val(),
+//       position: jQuery("#reg-position").val(),
+//       department: jQuery("#reg-department").val(),
+//       lang: sendLang,
+//     },
+//     success: function (res) {
+//       if (res.success) {
+//         jQuery("#register-msg").css("color", "green").text(res.data.message);
+//         jQuery("#reg-username").val("");
+//         jQuery("#reg-email").val("");
+//         jQuery("#reg-password").val("");
+//         jQuery("#reg-company").val("");
+//         jQuery("#reg-phone").val("");
+//         jQuery("#reg-tax").val("");
+//         jQuery("#reg-industry").val("");
+//         jQuery("#reg-position").val("");
+//         jQuery("#reg-department").val("");
+//         setTimeout(function () {
+//           jQuery('.tab-btn[data-tab="login"]').click();
+//           jQuery("#register-msg").text("");
+//           $this
+//             .prop("disabled", false)
+//             .removeClass("is-loading")
+//             .text(langSet.original);
+//         }, 5000);
+//       } else {
+//         jQuery("#register-msg").css("color", "red").text(res.data.message);
+//         $this
+//           .prop("disabled", false)
+//           .removeClass("is-loading")
+//           .text(langSet.original);
+//       }
+//     },
+//   });
+// });
+
 jQuery(document).on("click", "#btn-register", function () {
   const $this = jQuery(this);
   const currentLang = document.documentElement.lang;
   const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
 
-  // Cấu hình ngôn ngữ hiển thị tại client
+  // Cấu hình thông báo chung cho tiếng Việt và tiếng Trung (Phồn thể)
   const uiText = {
-    vn: { loading: "Đang xử lý...", original: "Đăng ký" },
-    cn: { loading: "处理中...", original: "注册" },
+    vn: { 
+      loading: "Đang xử lý...", 
+      original: "Đăng ký",
+      emptyMsg: "Vui lòng điền đầy đủ thông tin." 
+    },
+    cn: { 
+      loading: "處理中...", 
+      original: "註冊",
+      emptyMsg: "請填寫完整資訊。" 
+    },
   };
   const langSet = uiText[sendLang];
-  // 1. Vô hiệu hóa button để tránh spam request
+
+  const formFields = [
+    { id: "#reg-username", key: "username" },
+    { id: "#reg-email", key: "email" },
+    { id: "#reg-password", key: "password" },
+    { id: "#reg-company", key: "company" },
+    { id: "#reg-phone", key: "phone" },
+    { id: "#reg-tax", key: "tax" },
+    { id: "#reg-industry", key: "industry" },
+    { id: "#reg-position", key: "position" },
+    { id: "#reg-department", key: "department" }
+  ];
+
+  let hasEmptyField = false; // Đổi thành cờ boolean cho đơn giản
+  let requestData = {
+    action: "download_member_register",
+    nonce: MyAjax.nonce,
+    lang: sendLang,
+  };
+
+  // 1. Kiểm tra rỗng
+  formFields.forEach(function (field) {
+    const $input = jQuery(field.id);
+    const val = $input.val() ? $input.val().trim() : "";
+
+    if (val === "") {
+      hasEmptyField = true;
+      $input.css("border-color", "red"); // Vẫn giữ viền đỏ để user biết ô nào thiếu
+    } else {
+      $input.css("border-color", "");
+      requestData[field.key] = val;
+    }
+  });
+
+  // 2. Nếu có bất kỳ ô nào trống, báo lỗi chung và DỪNG
+  if (hasEmptyField) {
+    jQuery("#register-msg").css("color", "red").text(langSet.emptyMsg);
+    return; 
+  }
+
+  // Clear message lỗi cũ nếu có
+  jQuery("#register-msg").text("");
+
+  // 3. Vô hiệu hóa button để tránh spam request
   $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
 
+  // 4. Gửi AJAX
   jQuery.ajax({
     url: MyAjax.ajax_url,
     type: "POST",
-    data: {
-      action: "download_member_register",
-      nonce: MyAjax.nonce,
-      username: jQuery("#reg-username").val(),
-      email: jQuery("#reg-email").val(),
-      password: jQuery("#reg-password").val(),
-      company: jQuery("#reg-company").val(),
-      phone: jQuery("#reg-phone").val(),
-      tax: jQuery("#reg-tax").val(),
-      industry: jQuery("#reg-industry").val(),
-      position: jQuery("#reg-position").val(),
-      department: jQuery("#reg-department").val(),
-      lang: sendLang,
-    },
+    data: requestData,
     success: function (res) {
       if (res.success) {
         jQuery("#register-msg").css("color", "green").text(res.data.message);
-        jQuery("#reg-username").val("");
-        jQuery("#reg-email").val("");
-        jQuery("#reg-password").val("");
-        jQuery("#reg-company").val("");
-        jQuery("#reg-phone").val("");
-        jQuery("#reg-tax").val("");
-        jQuery("#reg-industry").val("");
-        jQuery("#reg-position").val("");
-        jQuery("#reg-department").val("");
+        
+        formFields.forEach(function(field) {
+            jQuery(field.id).val("");
+        });
+
         setTimeout(function () {
           jQuery('.tab-btn[data-tab="login"]').click();
           jQuery("#register-msg").text("");
@@ -323,7 +420,6 @@ jQuery(document).on("click", "#btn-register", function () {
     },
   });
 });
-
 // ===== HIỆN POPUP =====
 function showLoginPopup() {
   jQuery("#login-email").val("");

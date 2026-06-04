@@ -31,7 +31,23 @@ function style_header_scripts()
                 wp_enqueue_script('jcarousel-js');
 
                 //====== MY STYLE ==================================================================
-                wp_register_style('my-main-css', get_template_directory_uri() . '/css/style/main.min.css', array(), '1.0', 'all');
+                // wp_register_style('my-main-css', get_template_directory_uri() . '/css/style/main.min.css', array(), '1.0', 'all');
+                // wp_enqueue_style('my-main-css');
+
+                // 1. Lấy đường dẫn vật lý của file trên server để kiểm tra thời gian sửa đổi
+                $css_file_path = get_template_directory() . '/css/style/main.min.css';
+
+                // 2. Nếu file tồn tại thì lấy timestamp làm version, nếu không thì dùng mặc định '1.0'
+                $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1.0';
+
+                //====== MY STYLE ==================================================================
+                wp_register_style(
+                        'my-main-css',
+                        get_template_directory_uri() . '/css/style/main.min.css',
+                        array(),
+                        $css_version, // Sử dụng biến thời gian tự động ở đây thay vì '1.0'
+                        'all'
+                );
                 wp_enqueue_style('my-main-css');
         } else {
 

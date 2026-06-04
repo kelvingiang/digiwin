@@ -58,7 +58,6 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
         width: 90% !important;
         padding: 30px 15px 0px;
         flex-shrink: 0;
-        
     }
 }
 
@@ -218,6 +217,31 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
             box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
         }
     }
+  select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 0.5px solid $border-color;
+    border-radius: 9px;
+    font-size: 14px;
+    color: $text-dark;
+    box-sizing: border-box;
+    outline: none ;
+    margin-bottom: 14px;  
+    background-color: #fff; /* Nên có màu nền cho select */
+    
+    &:focus {
+        border-color: #1d5ab6;
+        box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+    }  
+    
+    /* Style cho option - Rất hạn chế */
+    option {
+        font-size: 16px;
+        color: rgb(2, 81, 172) !important;
+        font-weight: 500;
+        
+    }
+}
 }
 
 /* ===== BUTTONS ===== */
@@ -526,3 +550,23 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     opacity: 0.7;
 }
 
+
+.privacy-policy {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    gap: 8px;
+    margin: 20px 0;
+
+    div {
+        font-size: 15px;
+        font-weight: bold;
+        color: $text-muted;
+
+        a {
+            color: #0451c4;
+            text-decoration: none;
+           
+        }
+    }
+}

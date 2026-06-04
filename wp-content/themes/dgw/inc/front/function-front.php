@@ -91,20 +91,44 @@ function get_products($cate)
 /**
  * Cấu hình toàn bộ các trường của form thành viên
  */
-function dgw_get_auth_fields_config(): array {
+function dgw_get_auth_fields_config(): array
+{
+
+    // Tạo tùy chọn mặc định và gộp với danh sách chức vụ của bạn
+    $position_options = array_merge(
+        ['' => __('Select Position', 'dgw')],
+        member_position_list()
+    );
+
+    $industry_options = array_merge(
+        ['' => __('Select Industry', 'dgw')],
+        industry_sector_list()
+    );
+
+    $department_options = array_merge(
+        ['' => __('Select Department', 'dgw')],
+        department_list()
+    );
+
     return [
         ['id' => 'email',      'label' => __('E-mail', 'dgw'),    'col' => 'two', 'type' => 'email',    'place' => 'example@email.com'],
         ['id' => 'password',   'label' => __('Password', 'dgw'),  'col' => 'two', 'type' => 'password', 'place' => '******'],
-        
+
         ['type' => 'separator'],
 
         ['id' => 'company',    'label' => __('Company Name', 'dgw'), 'col' => 'one', 'type' => 'text'],
         ['id' => 'username',   'label' => __('Full Name', 'dgw'),    'col' => 'two', 'type' => 'text', 'place' => ''],
-        ['id' => 'position',   'label' => __('Position', 'dgw'),     'col' => 'two', 'type' => 'text'],
+
+        // Gọi biến options đã gộp ở trên vào đây
+        ['id' => 'position',   'label' => __('Position', 'dgw'),     'col' => 'two', 'type' => 'select', 'options' => $position_options],
+
         ['id' => 'phone',      'label' => __('Phone', 'dgw'),        'col' => 'two', 'type' => 'text', 'class' => 'type-phone-more', 'max' => 15],
         ['id' => 'tax',        'label' => __('Tax Number', 'dgw'),   'col' => 'two', 'type' => 'text', 'class' => 'type-number', 'max' => 13],
-        ['id' => 'industry',   'label' => __('Industry', 'dgw'),     'col' => 'two', 'type' => 'text'],
-        ['id' => 'department', 'label' => __('Department', 'dgw'),   'col' => 'two', 'type' => 'text'],
+
+        ['id' => 'industry',   'label' => __('Industry', 'dgw'),     'col' => 'two', 'type' => 'select', 'options' => $industry_options],
+
+        ['id' => 'department', 'label' => __('Department', 'dgw'),   'col' => 'two', 'type' => 'select', 'options' => $department_options],
+
     ];
 }
 
@@ -114,21 +138,24 @@ function dgw_get_auth_fields_config(): array {
  * @param string $button_text Nội dung nút bấm
  * @param object|null $data Dữ liệu user nếu có
  */
-function dgw_render_auth_form_full(string $prefix = 'reg-', string $button_text = '', $data = null): void {
+function dgw_render_auth_form_full(string $prefix = 'reg-', string $button_text = '', $data = null): void
+{
     $fields = dgw_get_auth_fields_config();
     $current_col = '';
     $button_text = $button_text ?: __('Register', 'dgw');
 
-    // 1. Render các Input Fields
     foreach ($fields as $field) {
-        if ($field['type'] === 'separator') {
-            if ($current_col !== '') { echo '</div>'; $current_col = ''; }
+        if (isset($field['type']) && $field['type'] === 'separator') {
+            if ($current_col !== '') {
+                echo '</div>';
+                $current_col = '';
+            }
             echo '<hr class="hr-style">';
             continue;
         }
 
         if ($current_col !== $field['col']) {
-            if ($current_col !== '') echo '</div>'; 
+            if ($current_col !== '') echo '</div>';
             echo '<div class="' . esc_attr($field['col']) . '-columns">';
             $current_col = $field['col'];
         }
@@ -141,32 +168,55 @@ function dgw_render_auth_form_full(string $prefix = 'reg-', string $button_text 
         $place = isset($field['place']) ? 'placeholder="' . esc_attr($field['place']) . '"' : '';
         $input_mode = (str_contains($class, 'number') || str_contains($class, 'phone')) ? 'inputmode="numeric"' : '';
 
-        ?>
+?>
         <div class="row-cell">
             <label><?php echo esc_html($field['label']); ?></label>
-            <input type="<?php echo esc_attr($type); ?>" 
-                   id="<?php echo esc_attr($prefix . $id); ?>" 
-                   class="<?php echo esc_attr($class); ?>" 
-                   value="<?php echo esc_attr($val); ?>" 
-                   <?php echo $place . ' ' . $max . ' ' . $input_mode; ?> 
-                   autocomplete="<?php echo ($type === 'password') ? 'new-password' : 'on'; ?>" />
-        </div>
-        <?php
-    }
-    
-    if ($current_col !== '') echo '</div>'; // Đóng div cột cuối cùng
 
-    // 2. Render phần Button và Message (Đã đưa vào trong function)
+            <?php
+            // PHẦN QUAN TRỌNG NHẤT CẦN CẬP NHẬT Ở ĐÂY:
+            if ($type === 'select') :
+            ?>
+                <select id="<?php echo esc_attr($prefix . $id); ?>" class="<?php echo esc_attr($class); ?>">
+                    <?php
+                    $options = $field['options'] ?? [];
+                    foreach ($options as $opt_value => $opt_label) {
+                        $is_selected = selected($val, $opt_value, false);
+                        echo '<option value="' . esc_attr($opt_value) . '" ' . $is_selected . '>' . esc_html($opt_label) . '</option>';
+                    }
+                    ?>
+                </select>
+
+            <?php else : ?>
+                <input type="<?php echo esc_attr($type); ?>"
+                    id="<?php echo esc_attr($prefix . $id); ?>"
+                    class="<?php echo esc_attr($class); ?>"
+                    value="<?php echo esc_attr($val); ?>"
+                    <?php echo $place . ' ' . $max . ' ' . $input_mode; ?>
+                    autocomplete="<?php echo ($type === 'password') ? 'new-password' : 'on'; ?>" />
+            <?php endif; ?>
+
+        </div>
+    <?php
+    }
+
+    if ($current_col !== '') echo '</div>';
+
     ?>
+    <div class="privacy-policy">
+        <div>
+            <input type="checkbox" id='chk-pri' checked />
+            <label for="chk-pri"><?php echo __('I agree with Digiwin\'s privacy policy', 'dgw'); ?></label>
+        </div>
+        <div>
+            <a href="<?php echo "https://www.digiwin.com.vn/digiwinasean_privacy-policy/"; ?>"
+                target="_blank"><?php echo __('privacy policy', 'dgw'); ?></a>
+        </div>
+    </div>
     <div class="btn-space">
-        <button id="btn-<?php echo ($prefix === 'reg-') ? 'register' : 'change-info'; ?>" class="btn-my-style">
+        <button id="btn-register" class="btn-my-style">
             <?php echo esc_html($button_text); ?>
         </button>
         <p id="<?php echo ($prefix === 'reg-') ? 'register' : 'change-info'; ?>-msg" class="msg"></p>
     </div>
-    <?php
+<?php
 }
-
-
-
-

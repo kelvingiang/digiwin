@@ -102,7 +102,18 @@ if (!empty($_COOKIE['custom_session'])) {
             </div>
             <div class="row-cell">
                 <label><?php _e('Position', 'dgw') ?></label>
-                <input type="text" id="chang-position" value="<?php echo $data->position; ?>" />
+                <!-- <input type="text" id="chang-position" value="<?php echo $data->position; ?>" /> -->
+                <select id="chang-position">
+                    <option value=""><?php _e('Select Position', 'dgw') ?></option>
+                    <?php
+                    $positions = member_position_list();
+                    foreach ($positions as $key => $value) {
+                        $selected = ($data->position === $key) ? 'selected' : '';
+                        echo "<option value='$key' $selected>$value</option>";
+                    }
+                    ?>
+                </select>
+
             </div>
             <div class="row-cell">
                 <label><?php _e('Phone', 'dgw') ?></label>
@@ -124,11 +135,31 @@ if (!empty($_COOKIE['custom_session'])) {
         <div class="two-columns">
             <div class="row-cell">
                 <label><?php _e('Industry', 'dgw') ?></label>
-                <input type="text" id="chang-industry" value="<?php echo $data->industry; ?>" />
+                <!-- <input type="text" id="chang-industry" value="<?php echo $data->industry; ?>" /> -->
+                <select id="chang-industry">
+                    <option value=""><?php _e('Select Industry', 'dgw') ?></option>
+                    <?php
+                    $industries = industry_sector_list();
+                    foreach ($industries as $key => $value) {
+                        $selected = ($data->industry === $key) ? 'selected' : '';
+                        echo "<option value='$key' $selected>$value</option>";
+                    }
+                    ?>
+                </select>
             </div>
             <div class="row-cell">
                 <label><?php _e('Department', 'dgw') ?></label>
-                <input type="text" id="chang-department" value="<?php echo $data->department; ?>" />
+                <!-- <input type="text" id="chang-department" value="<?php echo $data->department; ?>" /> -->
+                <select id="chang-department">
+                    <option value=""><?php _e('Select Department', 'dgw') ?></option>
+                    <?php
+                    $departments = department_list();
+                    foreach ($departments as $key => $value) {
+                        $selected = ($data->department === $key) ? 'selected' : '';
+                        echo "<option value='$key' $selected>$value</option>";
+                    }
+                    ?>
+                </select>
             </div>
         </div>
 
@@ -231,6 +262,38 @@ if (!empty($_COOKIE['custom_session'])) {
                             .text(res.data.message);
                     }
                 }
+            });
+        });
+
+        jQuery(document).ready(function($) {
+            // Hàm kiểm tra và đổi trạng thái nút
+            function toggleSubmitButton() {
+                // Tìm nút button nằm cạnh đó
+                var $btn = $('.btn-space .btn-my-style');
+
+                // Kiểm tra xem ô checkbox có đang được check không
+                if ($('#chk-pri').is(':checked')) {
+                    // Nếu có: Mở khóa nút
+                    $btn.prop('disabled', false).css({
+                        'opacity': '1',
+                        'cursor': 'pointer'
+                    });
+                } else {
+                    // Nếu không: Khóa nút lại
+                    $btn.prop('disabled', true).css({
+                        'opacity': '0.5',
+                        'cursor': 'not-allowed'
+                    });
+                }
+            }
+
+            // 1. Chạy hàm kiểm tra ngay khi trang vừa load xong
+            toggleSubmitButton();
+
+            // 2. Bắt sự kiện mỗi khi người dùng click vào ô checkbox
+            // (Dùng $(document).on giúp code vẫn chạy đúng ngay cả khi form được load bằng Ajax/Popup)
+            $(document).on('change', '#chk-pri', function() {
+                toggleSubmitButton();
             });
         });
     </script>
