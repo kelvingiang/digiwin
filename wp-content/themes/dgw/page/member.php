@@ -16,7 +16,9 @@ if (!empty($_COOKIE['custom_session'])) {
 // }
 
 ?>
-
+<div class="page-title-h1">
+    <h1><?php echo __('member login and register') ?></h1> 
+</div>
 
 <div class="member-space">
     <!-- 未登入 -->
@@ -30,14 +32,14 @@ if (!empty($_COOKIE['custom_session'])) {
 
             <div class="one-columns">
                 <div class="row-cell">
-                    <label><?php _e('E-mail') ?></label>
+                    <label for="login-email" ><?php _e('E-mail') ?></label>
                     <input type="email" id="login-email" placeholder="example@email.com" />
                 </div>
             </div>
 
             <div class="one-columns">
                 <div class="row-cell">
-                    <label><?php _e('Password', 'dgw') ?></label>
+                    <label for="login-password"><?php _e('Password', 'dgw') ?></label>
                     <input type="password" id="login-password" placeholder="••••••••" />
                 </div>
             </div>
@@ -65,7 +67,7 @@ if (!empty($_COOKIE['custom_session'])) {
     <div id="ui-logged-in" class="logged-in " style="display:none;">
 
         <div class="logout-space">
-            <label><?php echo $data->email; ?></label>
+            <label for="btn-logout"><?php echo $data->email; ?></label>
             <button id="btn-logout" class="btn-logout">
                 <?php _e('Logout', 'dgw') ?>
             </button>
@@ -73,17 +75,17 @@ if (!empty($_COOKIE['custom_session'])) {
         <div class="three-columns">
 
             <div class="row-cell">
-                <label><?php _e('Current Password', 'dgw'); ?></label>
+                <label for="current-password"><?php _e('Current Password', 'dgw'); ?></label>
                 <input type="password" id="current-password" placeholder="********" />
             </div>
 
             <div class="row-cell">
-                <label><?php _e('New Password', 'dgw'); ?></label>
+                <label for="chang-password"><?php _e('New Password', 'dgw'); ?></label>
                 <input type="password" id="chang-password" placeholder="********" />
             </div>
 
             <div class="row-cell">
-                <label><?php _e('Confirm Password', 'dgw'); ?></label>
+                <label for="chang-confirm-password"><?php _e('Confirm Password', 'dgw'); ?></label>
                 <input type="password" id="chang-confirm-password" placeholder="********" />
             </div>
         </div>
@@ -97,11 +99,11 @@ if (!empty($_COOKIE['custom_session'])) {
 
         <div class="three-columns">
             <div class="row-cell">
-                <label><?php _e('Full Name', 'dgw') ?></label>
+                <label for="chang-username"><?php _e('Full Name', 'dgw') ?></label>
                 <input type="text" id="chang-username" value="<?php echo $data->username; ?>" />
             </div>
             <div class="row-cell">
-                <label><?php _e('Position', 'dgw') ?></label>
+                <label for="chang-position"><?php _e('Position', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-position" value="<?php echo $data->position; ?>" /> -->
                 <select id="chang-position">
                     <option value=""><?php _e('Select Position', 'dgw') ?></option>
@@ -116,25 +118,25 @@ if (!empty($_COOKIE['custom_session'])) {
 
             </div>
             <div class="row-cell">
-                <label><?php _e('Phone', 'dgw') ?></label>
+                <label for="chang-phone"><?php _e('Phone', 'dgw') ?></label>
                 <input type="text" id="chang-phone" class="type-phone-more" maxlength="15" value="<?php echo $data->phone; ?>" />
             </div>
         </div>
 
         <div class="two-columns">
             <div class="row-cell">
-                <label><?php _e('Company Name', 'dgw') ?></label>
+                <label for="chang-company"><?php _e('Company Name', 'dgw') ?></label>
                 <input type="text" id="chang-company" value="<?php echo $data->company; ?>" />
             </div>
             <div class="row-cell">
-                <label><?php _e('Tax Number', 'dgw') ?></label>
+                <label for="chang-tax"><?php _e('Tax Number', 'dgw') ?></label>
                 <input type="text" id="chang-tax" class="type-number" maxlength="13" value="<?php echo $data->tax; ?>" />
             </div>
         </div>
 
         <div class="two-columns">
             <div class="row-cell">
-                <label><?php _e('Industry', 'dgw') ?></label>
+                <label for="chang-industry"><?php _e('Industry', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-industry" value="<?php echo $data->industry; ?>" /> -->
                 <select id="chang-industry">
                     <option value=""><?php _e('Select Industry', 'dgw') ?></option>
@@ -148,7 +150,7 @@ if (!empty($_COOKIE['custom_session'])) {
                 </select>
             </div>
             <div class="row-cell">
-                <label><?php _e('Department', 'dgw') ?></label>
+                <label for="chang-department"><?php _e('Department', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-department" value="<?php echo $data->department; ?>" /> -->
                 <select id="chang-department">
                     <option value=""><?php _e('Select Department', 'dgw') ?></option>

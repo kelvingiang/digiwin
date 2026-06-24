@@ -403,3 +403,15 @@ if (defined('WP_DEBUG') && WP_DEBUG) {
         };
     });
 }
+
+
+// Date: 2026-06-23
+// Chức năng: Thêm thẻ meta noindex, nofollow riêng cho trang 'member' để chặn Google index
+add_action( 'wp_head', 'custom_noindex_member_page' );
+function custom_noindex_member_page() {
+    // Kiểm tra slug của trang hiện tại, thay 'member' bằng slug chính xác nếu cần
+    if ( is_page( 'member' ) ) {
+        echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+    }
+}
+

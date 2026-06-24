@@ -103,7 +103,7 @@
                   
                   <div class="form-row-math">
                   <div style="font-weight: bold;">' . __('Perform Calculations', 'dgw') . '</div>
-                  <div><label> ' . $question . ' = </label>
+                  <div><label for="math_answer"> ' . $question . ' = </label>
                   <input id="math_answer" name="math_answer" type="text" style="margin-left:10px;"  maxlength="4" required /></div>
                   <span id="math-check-msg" style="margin-left:10px;"></span>
                   </div>

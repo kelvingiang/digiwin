@@ -163,6 +163,7 @@ function getTranslate()
         "Other"                  => "Khác",
         "I agree with Digiwin's privacy policy" => "Tôi đồng ý với chính sách bảo mật của Digiwin",
         "privacy policy" => "Chính sách bảo mật",
+        "Login-Register" => "Đăng nhập - Đăng ký"
     );
     return array_merge($data);
 }

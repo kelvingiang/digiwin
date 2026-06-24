@@ -13,25 +13,65 @@
     z-index: 1000000000;
     background-color: transparent !important;
 }
-.languages-box {
-    // font-family: Arial, Helvetica, sans-serif !important;
-    margin-top: 0rem;
-    padding: 2px 5px;
-    height: 100%;
-    label {
-        font-weight: bold;
-        font-size: 0.7rem;
-        padding: 0.1rem;
-    }
-    .link-languages {
-        color: rgba(107, 106, 106, 0.726);
-        cursor: pointer;
-        &:hover {
-            color: rgb(15, 15, 15);
+.languages-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .login-box {
+        margin-right: 1rem;
+         cursor: pointer;
+        .link-login {
+            color: rgba(107, 106, 106, 0.726);
+            font-weight: bold;
+            font-size: 0.8rem;
+           
+            &:hover {
+                color: rgb(15, 15, 15);
+            }
+        }
+        .link-login-welcome {
+            a {
+                font-weight: bold;
+                font-size: 0.8rem;
+                color: rgb(2, 74, 141);
+                position: relative;
+                svg {
+                    width: 1.2rem;
+                    height: 1.2rem;
+                    fill: rgb(2, 74, 141);
+                    transition: fill 0.3s ease; /* Thêm hiệu ứng chuyển màu cho mượt */
+                    margin-top: 0.2rem;
+                    position: absolute;
+                    left: -1.5rem; /* Điều chỉnh vị trí của icon nếu cần */
+                    bottom: 0.1rem; /* Điều chỉnh vị trí của icon nếu cần */
+                }
+                &:hover {
+                    color: rgb(14, 38, 75);
+                    svg {
+                        fill: rgb(14, 38, 75);
+                    }
+                }
+            }
         }
     }
-    .not-link {
-        color: #00384e;
+    .languages-box {
+        label {
+            font-weight: bold;
+            font-size: 0.7rem;
+            padding: 0.1rem;
+        }
+        .link-languages {
+            color: rgba(107, 106, 106, 0.726);
+            cursor: pointer;
+            &:hover {
+                color: rgb(15, 15, 15);
+            }
+        }
+        .not-link {
+            color: #00384e;
+        }
     }
 }
 
