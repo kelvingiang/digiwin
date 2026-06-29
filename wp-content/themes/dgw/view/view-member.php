@@ -11,6 +11,9 @@ if (getParams('msg') == 1) {
 }
 ?>
 <div class="wrap">
+    <h1 class="wp-heading-inline"><?php echo __('註冊名單', 'dgw'); ?></h1>
+    <a href="<?php echo admin_url('admin.php?page=' . $page . '&action=export_members_excel'); ?>" class="page-title-action"><?php echo __('匯出 Excel 檔案', 'dgw'); ?></a>
+    <hr class="wp-header-end">
     <?php echo @$msg; ?>
     <form action="" method="post" name="<?php echo $page; ?>" id="<?php echo $page; ?>">
         <?php $dataList->search_box(__('Search'), 'search_id') ?>
