@@ -89,13 +89,15 @@ function my_download_file()
     // THÊM ĐOẠN MÃ ĐỒNG BỘ GOOGLE SHEETS VÀO ĐÂY
     // ==========================================
 
+    // [24/06/2026] - Chỉ định rõ tên sheet (sheet1) cần ghi dữ liệu vào Google Sheets 
     // 1. Chuẩn bị dữ liệu theo đúng định dạng hàm sync_to_google_sheets yêu cầu
     $data_for_sheet = [
+        "sheet"    => "Sheet1",          // Tên sheet cần ghi dữ liệu vào (viết hoa chữ S)
         "title"    => $post_title,       // Cột A: Tên tài liệu
         "file"     => $post_source,      // Cột B: Link tài liệu gốc
         "name"     => $user->username,   // Cột C: Tên người dùng
-        "email"    => $user->email,    // Cột C: ID người dùng
-        "date"     => Date('d-M-y H:i:s')   // Cột D: Thông điệp trạng thái
+        "email"    => $user->email,      // Cột D: Email người dùng
+        "date"     => Date('d-M-y H:i:s') // Cột E: Thời gian
     ];
 
     // 2. Gọi hàm đồng bộ (nhớ bỏ tất cả các lệnh echo trong hàm sync_to_google_sheets nếu có)
@@ -298,6 +300,7 @@ function handle_member_register()
         'industry'   => sanitize_text_field($_POST['industry']),
         'department' => sanitize_text_field($_POST['department']),
         'position'   => sanitize_text_field($_POST['position']),
+        'language'   => sanitize_text_field($_POST['lang']),
     ];
 
     // 檢查必填項 (修正了你原代碼中的括號語法錯誤)
@@ -336,6 +339,31 @@ function handle_member_register()
     $registration_data['active_code'] = hash('sha256', $plain_token);
     $result = get_model()->insert_registration_data($registration_data);
     if ($result) {
+        // [24/06/2026] - Ghi thông tin đăng ký vào Google Sheets (Sheet2) sau khi lưu DB thành công
+        $data_for_sheet = [
+            'sheet'  => 'Sheet2',
+            'values' => [
+                $registration_data['username'],
+                $registration_data['position'],
+                $registration_data['email'],
+                $registration_data['company'],
+                "'" . $registration_data['phone'], // Thêm dấu nháy đơn để Google Sheets giữ nguyên dạng chuỗi (không mất số 0)
+                "'" . $registration_data['tax'],   // Thêm dấu nháy đơn để Google Sheets giữ nguyên dạng chuỗi
+                $registration_data['industry'],
+                $registration_data['department'],
+                date('d-M-y H:i:s')
+            ]
+        ];
+        // sync_to_google_sheets($data_for_sheet);
+        // 2. Gọi hàm đồng bộ (nhớ bỏ tất cả các lệnh echo trong hàm sync_to_google_sheets nếu có)
+        $sync_result = sync_to_google_sheets($data_for_sheet);
+
+        // 3. (Tùy chọn) Log lại nếu đồng bộ thất bại, KHÔNG echo ra ngoài
+        if ($sync_result) {
+            sendNotificationToLark("New member registration successful  " . ' on ' . Date('d-M-y') . ' at ' . Date('H:i:s'));
+        } else {
+            error_log('AJAX Success: đăng ký Google Sheets thành công cho bài viết ID:');
+        }
         // Tạo link reset mật khẩu chuyên nghiệp
         // ==================== 修復 1: 設置正確的郵件頭部 ====================
         $headers = array('Content-Type: text/html; charset=UTF-8');
@@ -471,7 +499,7 @@ add_action('wp_ajax_nopriv_member_change_password', 'handle_change_password');
 function handle_change_password()
 {
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
-    
+
     // 1. 驗證 Nonce (請確保你 wp_localize_script 也是用 'member_auth_nonce')
     if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
         wp_send_json_error(array('message' => $msg['failure']), 403);
@@ -493,7 +521,7 @@ function handle_change_password()
         wp_send_json_error(array('message' => $msg['password_wrong']));
     }
 
-  // 4. Kiểm tra mật khẩu hiện tại
+    // 4. Kiểm tra mật khẩu hiện tại
     // Tối ưu: Dùng trực tiếp $user->password đã lấy ở bước 2
     if (!password_verify($current, $user->password)) {
         wp_send_json_error(array('message' => $msg['current_password_wrong'])); // Bạn có thể thêm message 'current_password_wrong' cho rõ ràng hơn
@@ -507,7 +535,7 @@ function handle_change_password()
         wp_send_json_error(['message' => $msg['password_short']]);
     }
 
-  
+
 
     // 5. Cập nhật mật khẩu mới
     if (!empty($_COOKIE['custom_session'])) {

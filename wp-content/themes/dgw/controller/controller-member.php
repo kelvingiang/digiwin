@@ -39,6 +39,12 @@ class Controller_Member
             case 'delete':
                 $this->deleteAction();
                 break;
+            case 'edit':
+                $this->editAction();
+                break;
+            case 'export_members_excel':
+                $this->exportMembersExcelAction();
+                break;
             default:
                 $this->displayPage();
                 break;
@@ -73,6 +79,13 @@ class Controller_Member
         require_once(DIR_VIEW . 'view-member.php');
     }
 
+    public function editAction()
+    {
+        if (isPost()) {
+        }
+        require_once(DIR_VIEW . 'from-member.php');
+    }
+
     public function trashAction()
     {
         $this->model->toTrash(getParams(), getParams('action'));
@@ -84,5 +97,111 @@ class Controller_Member
     {
         $this->model->toDelete(getParams());
         require_once(DIR_VIEW . 'view-member.php');
+    }
+
+    public function exportMembersExcelAction()
+    {
+        // Load composer autoload
+        $autoload_path = get_template_directory() . '/vendor/autoload.php';
+        if (file_exists($autoload_path)) {
+            require_once($autoload_path);
+        }
+
+        require_once(DIR_MODEL . 'model-download.php');
+        require_once(get_template_directory() . '/inc/code/function-member-dictionary.php');
+
+        $exporter = new Model_Download();
+        $data = $exporter->get_export_data();
+
+        if ($data) {
+            $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Set default font to Arial
+            $spreadsheet->getDefaultStyle()->getFont()->setName('Arial');
+
+            $headers = [
+                'E-mail', '姓名 (Username)', '職位 (Position)', '部門 (Department)', '公司名稱 (Company)','稅碼 (Tax)',  '聯絡電話 (Phone)', '行業 (Industry)'
+            ];
+
+            // Set headers
+            $col = 'A';
+            foreach ($headers as $header) {
+                $sheet->setCellValue($col . '1', $header);
+                $col++;
+            }
+
+            // Style header row (A1 to G1)
+            $headerRange = 'A1:H1';
+            $sheet->getStyle($headerRange)->getFont()->setBold(true)->getColor()->setARGB(\PhpOffice\PhpSpreadsheet\Style\Color::COLOR_WHITE);
+            $sheet->getStyle($headerRange)->getFill()
+                ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                ->getStartColor()->setARGB('FF0000FF'); // Blue background
+            $sheet->getStyle($headerRange)->getAlignment()
+                ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER)
+                ->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+            
+            // Set row height to 80
+            $sheet->getRowDimension(1)->setRowHeight(60);
+
+            $industry_dict = get_industry_dictionary();
+            $department_dict = get_department_dictionary();
+            $position_dict = get_position_dictionary();
+
+            $rowIdx = 2;
+            foreach ($data as $row) {
+                $lang = !empty($row['language']) ? $row['language'] : 'vn';
+
+                $industry_key = $row['industry'] ?? '';
+                $department_key = $row['department'] ?? '';
+                $position_key = $row['position'] ?? '';
+
+                $industry_val = $industry_dict[$industry_key][$lang] ?? $industry_key;
+                $department_val = $department_dict[$department_key][$lang] ?? $department_key;
+                $position_val = $position_dict[$position_key][$lang] ?? $position_key;
+
+                $sheet->setCellValue('A' . $rowIdx, $row['email']);
+                $sheet->setCellValue('B' . $rowIdx, $row['username']);
+                $sheet->setCellValue('C' . $rowIdx, $position_val);
+                $sheet->setCellValue('D' . $rowIdx, $department_val);
+                $sheet->setCellValue('E' . $rowIdx, $row['company']);
+                $sheet->setCellValueExplicit('F' . $rowIdx, $row['tax'] , \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                // Use setCellValueExplicit for phone to prevent Excel from converting it to scientific notation
+                $sheet->setCellValueExplicit('G' . $rowIdx, $row['phone'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                $sheet->setCellValue('H' . $rowIdx, $industry_val);
+
+                $rowIdx++;
+            }
+
+            // Auto-size columns to fit content
+            foreach (range('A', 'H') as $columnID) {
+                $sheet->getColumnDimension($columnID)->setAutoSize(true);
+            }
+
+            // Add borders to all cells
+            $styleArray = [
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => 'FF000000'],
+                    ],
+                ],
+            ];
+            $sheet->getStyle('A1:H' . ($rowIdx - 1))->applyFromArray($styleArray);
+
+            $filename = "members_export_" . date("Y-m-d") . ".xlsx";
+
+            // Xóa bỏ mọi output đã được tạo trước đó để tránh file excel bị lỗi hỏng
+            if (ob_get_length()) ob_clean();
+
+            // Set headers for file download
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Cache-Control: max-age=0');
+
+            $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }
+        exit();
     }
 }

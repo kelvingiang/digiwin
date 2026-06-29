@@ -55,6 +55,7 @@ class Model_Download_Function
                 'tax'         => $data['tax'],
                 'industry'    => $data['industry'],
                 'department'  => $data['department'],
+                'language'    => $data['language'],
                 'active_code' => $data['active_code'],
                 'create_date' => current_time('mysql') // 使用 WordPress 推薦的時間函數
             ],

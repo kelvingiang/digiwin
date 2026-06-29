@@ -3,20 +3,34 @@
 use SimplePie\Parse\Date;
 
 require_once get_template_directory() . '/model/model-download-function.php';
-
+// 2026-06-26
+// Cập nhật cho file: /inc/front/function-member-download.php
+if ( ! function_exists( 'dgw_generate_expiry_time' ) ) {
+    function dgw_generate_expiry_time(): string {
+        $timezone = wp_timezone(); 
+        $now = new DateTimeImmutable( 'now', $timezone );
+        $expiry = $now->modify( '+24 hours' );
+        return $expiry->format( 'Y-m-d H:i:s' );
+    }
+}
 
 // 1. Hàm tạo thời điểm hết hạn (24 giờ kể từ lúc yêu cầu)
-function dgw_generate_expiry_time(): string
-{
-    // Sử dụng DateTimeImmutable của PHP 8.2 để an toàn và chính xác
-    $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
+// function dgw_generate_expiry_time(): string
+// {
+//     // Sử dụng DateTimeImmutable của PHP 8.2 để an toàn và chính xác
+//     $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Ho_Chi_Minh'));
 
-    // Thêm đúng 24 giờ cho mốc hết hạn
-    $expiry = $now->modify('+24 hours');
+//     // Thêm đúng 24 giờ cho mốc hết hạn
+//     $expiry = $now->modify('+24 hours');
 
-    // Trả về định dạng chuẩn database MySQL: YYYY-MM-DD HH:MM:SS
-    return $expiry->format('Y-m-d H:i:s');
-}
+//     // Trả về định dạng chuẩn database MySQL: YYYY-MM-DD HH:MM:SS
+//     return $expiry->format('Y-m-d H:i:s');
+// }
+
+// 2026-06-26
+// Ghi chú: Khởi tạo mốc thời gian hết hạn (sau 24 giờ) chuẩn MySQL.
+// Sử dụng function_exists để chống lỗi trùng lặp khi require file nhiều lần.
+
 
 // 2. Hàm kiểm tra Token còn hạn hay không
 function dgw_is_token_valid(string $expiry_from_db): bool
@@ -165,8 +179,26 @@ require_once WP_CONTENT_DIR . '/themes/dgw/vendor/autoload.php';
 
 function sync_to_google_sheets($data)
 {
+    // [24/06/2026] - Hỗ trợ nhận param 'sheet' để tự động ghi vào sheet mong muốn thay vì fix cứng Sheet1
     $spreadsheetId = '11XOFnz7wWw1L3GKLKNtmrnwQu5uY-YusMKXu9L6SFkI';
-    $range = 'Sheet1!A:E';
+    $sheet_name = isset($data['sheet']) ? $data['sheet'] : 'Sheet1';
+    // Nếu có truyền 'values' thì dùng trực tiếp mảng đó, ngược lại dùng cấu trúc mặc định 5 cột
+    if (isset($data['values']) && is_array($data['values'])) {
+        $values = [$data['values']];
+        $range = $sheet_name . '!A:Z'; // Để rộng range tự động khớp số lượng dữ liệu
+    } else {
+        $values = [
+            [
+                isset($data['title']) ? $data['title'] : '',
+                isset($data['file']) ? $data['file'] : '',
+                isset($data['name']) ? $data['name'] : '',
+                isset($data['email']) ? $data['email'] : '',
+                isset($data['date']) ? $data['date'] : '',
+            ]
+        ];
+        $range = $sheet_name . '!A:E';
+    }
+
     // $path_to_json = ABSPATH . 'google-credentials.json';
     $path_to_json = WP_CONTENT_DIR . '/google-credentials.json';
     try {
@@ -175,16 +207,6 @@ function sync_to_google_sheets($data)
         $client->addScope(\Google\Service\Sheets::SPREADSHEETS);
 
         $service = new \Google\Service\Sheets($client);
-
-        $values = [
-            [
-                $data['title'],
-                $data['file'],
-                $data['name'],
-                $data['email'],
-                $data['date'],
-            ]
-        ];
 
         $body = new \Google\Service\Sheets\ValueRange([
             'values' => $values

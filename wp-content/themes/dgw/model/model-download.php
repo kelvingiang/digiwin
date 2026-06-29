@@ -139,6 +139,44 @@ class Model_Download extends WP_List_Table
         return $data;
     }
 
+    public function get_export_data()
+    {
+        global $wpdb;
+
+        // This is almost the same as table_data(), but without pagination.
+        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
+        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+
+        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+            FROM {$this->table} AS m 
+            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
+
+        $whereArr = array();
+
+        if (getParams('customvar') == 'trash') {
+            $whereArr[] = "(m.trash = 1)";
+        } else {
+            $whereArr[] = "(m.trash = 0)";
+        }
+
+        if (getParams('s') != ' ') {
+            $s = esc_sql(getParams('s'));
+            $whereArr[] = "(m.company LIKE '%$s%')";
+        }
+
+        if (count($whereArr) > 0) {
+            $sql .= " WHERE " . join(" AND ", $whereArr);
+        }
+
+        $sql .= " GROUP BY m.ID ";
+        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
+
+        // No pagination for export
+        $data = $wpdb->get_results($sql, ARRAY_A);
+
+        return $data;
+    }
+
     // TINH TONG SO DONG DU LIEU  DE AP DUNG CHO VIEC PHAN TRANG
     public function total_items()
     {
