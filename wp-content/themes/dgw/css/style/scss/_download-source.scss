@@ -1,0 +1,572 @@
+@use "define" as *;
+@use "responsive" as *;
+
+/* ===== BIẾN HỆ THỐNG (VARIABLES) ===== */
+$bg-color: #f1f1f1;
+$text-primary: #194b96;
+$text-dark: #1a1a1a;
+$text-muted: #888;
+$border-color: #ddd;
+$btn-blue: #0862e9;
+$btn-blue-hover: #0243a5;
+$btn-gray: #818181;
+$btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
+
+/* ===== OVERLAY ===== */
+#auth-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999999;
+    padding: 60px;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-y: auto;
+
+    /* Gộp chung cho Tablet và Mobile */
+    @include Respond(md) {
+        padding: 20px 10px;
+    }
+
+    &.show {
+        display: flex !important;
+    }
+}
+
+/* ===== BOX ===== */
+#auth-popup-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 28px 0px;
+    width: 50%;
+    position: relative;
+    // font-family: sans-serif;
+    box-sizing: border-box;
+
+    @include Respond(md) {
+        width: 70% !important;
+        padding: 30px 15px 0px;
+        flex-shrink: 0;
+    }
+
+    @include Respond(sm) {
+        width: 90% !important;
+        padding: 30px 15px 0px;
+        flex-shrink: 0;
+    }
+}
+
+/* ===== LAYOUT CHUNG ===== */
+.member-space {
+    padding: 100px 20%;
+
+    @include Respond(md) {
+        padding: 100px 10%;
+    }
+    @include Respond(sm) {
+        padding: 100px 2%;
+    }
+}
+
+.one-columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 10px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.three-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 10px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hr-style {
+    border: none;
+    border-top: 1px dotted #b4b3b3;
+    margin: 10px 0;
+}
+
+/* ===== THÀNH PHẦN POPUP ===== */
+#auth-popup-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: $text-muted;
+    padding: 4px 8px;
+    border-radius: 6px;
+    line-height: 1;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+.popup-logo {
+    height: 20px;
+    border-radius: 10px;
+    background: transparent;
+}
+
+.popup-footer {
+    text-align: center;
+    font-size: 13px;
+    color: $text-muted;
+    margin-top: 14px;
+
+    a {
+        color: #0451c4;
+        text-decoration: none;
+        font-weight: 500;
+    }
+}
+
+/* ===== FORM ĐĂNG NHẬP / ĐĂNG KÝ ===== */
+#ui-login-form {
+    background-color: $bg-color;
+    border: 1px solid $bg-color;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+}
+
+#tab-buttons {
+    display: flex;
+    border-radius: 10px;
+    gap: 3px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    background: white;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease; /* Tối ưu hơn 'all' */
+
+    &.active {
+        background-color: $bg-color;
+        color: $text-primary;
+    }
+}
+
+.row-cell {
+    text-align: left;
+    label {
+        font-size: 15px;
+        font-weight: 500;
+        color: $text-primary;
+        display: block;
+        margin-bottom: 0px;
+        margin-left: 8px;
+        opacity: 0.9;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 0.5px solid $border-color;
+        border-radius: 9px;
+        font-size: 14px;
+        color: $text-dark;
+        box-sizing: border-box;
+        outline: none;
+        margin-bottom: 14px;
+        transition:
+            border-color 0.15s ease,
+            box-shadow 0.15s ease;
+
+        &::placeholder {
+            color: #bbb;
+        }
+
+        &:focus {
+            border-color: #1d5ab6;
+            box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+        }
+    }
+  select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 0.5px solid $border-color;
+    border-radius: 9px;
+    font-size: 14px;
+    color: $text-dark;
+    box-sizing: border-box;
+    outline: none ;
+    margin-bottom: 14px;  
+    background-color: #fff; /* Nên có màu nền cho select */
+    
+    &:focus {
+        border-color: #1d5ab6;
+        box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1);
+    }  
+    
+    /* Style cho option - Rất hạn chế */
+    option {
+        font-size: 16px;
+        color: rgb(2, 81, 172) !important;
+        font-weight: 500;
+        
+    }
+}
+}
+
+/* ===== BUTTONS ===== */
+.btn-space {
+    text-align: center;
+    width: 100%;
+}
+
+.btn-two-columns {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+
+    @include Respond(md) {
+        grid-template-columns: 1fr 1fr;
+    }
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-my-style {
+    width: 70%;
+    text-align: center;
+    padding: 20px;
+    background-color: $btn-blue;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    @include Respond(md) {
+        width: 90%;
+    }
+
+    &:hover {
+        background-color: $btn-blue-hover;
+    }
+
+    &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    &.is-loading {
+        &::after {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-left: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+    }
+}
+
+.btn-password {
+    background-color: #727374;
+    width: 90%;
+}
+
+.btn-logout {
+    text-align: center;
+    padding: 15px 25px;
+    background-color: $btn-gray;
+    color: #fff;
+    border: none;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: $btn-gray-hover;
+    }
+}
+
+/* ===== TRẠNG THÁI ĐĂNG NHẬP ===== */
+.logout-space {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px dotted #b4b3b3;
+    padding-bottom: 12px;
+
+    label {
+        font-size: 15px;
+        font-weight: bold;
+        color: $text-primary;
+    }
+}
+
+.logged-in,
+.tab-register,
+.tab-login {
+    background-color: $bg-color;
+    border: 1px solid $bg-color;
+    height: auto;
+    display: block;
+    margin-bottom: 2rem;
+    padding: 10px 20px;
+}
+
+.msg {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 8px 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* ===== POPUP QUÊN MẬT KHẨU ===== */
+.dwf-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    z-index: 999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+}
+
+.dwf-container {
+    background: #ffffff;
+    width: 100%;
+    max-width: 500px;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: dwf-slide-up 0.3s ease-out;
+}
+
+.dwf-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #333;
+    }
+}
+
+.dwf-header {
+    h3 {
+        margin: 0 0 10px 0;
+        font-size: 24px;
+        color: $text-primary;
+        font-weight: 700;
+        text-align: center;
+    }
+    p {
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+}
+
+@keyframes dwf-slide-up {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+//============= GIAO DIỆN THÀNH VIÊN ĐANG HOẠT ĐỘNG ============================
+// _active-member.scss
+
+// Tối ưu theo cấu trúc module, dễ bảo trì
+.dgw-activate {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    padding: 60px 0;
+    align-items: start;
+
+    &-main {
+        height: 100%;
+        // Kỹ thuật căn giữa tuyệt đối nội dung bên trong
+        display: flex;
+        align-items: center; // Căn giữa theo chiều dọc
+        justify-content: center; // Căn giữa theo chiều ngang
+        text-align: center;
+        width: 100%;
+    }
+    .reset-password-form {
+        width: 70%;
+    }
+
+    &-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .dgw-loader {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #27ae60;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: spinDgw 1s linear infinite;
+    }
+
+    .msg {
+        padding: 20px;
+        border-radius: 6px;
+        &--error {
+            color: #c0392b;
+        }
+        &--info {
+            color: #2980b9;
+        }
+    }
+
+    .txt-success,
+    .dgw-status-msg {
+        color: #27ae60;
+        font-weight: bold;
+    }
+    .txt-error {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+}
+
+@keyframes spinDgw {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.dgw-error-box {
+    padding: 20px;
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-radius: 8px;
+    text-align: center;
+    width: 90%;
+    height: 100%;
+    margin-top: 2rem;
+    padding-top: 10%;
+    h3 {
+        color: #c53030;
+        margin-bottom: 10px;
+    }
+}
+
+/* Hiệu ứng vòng xoay  cho button download*/
+.my-download-spinner {
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-right: 10px !important;
+    vertical-align: middle !important;
+
+    /* Bắt buộc phải là hình tròn */
+    border-radius: 50% !important;
+
+    /* Đảm bảo khung viền không làm méo hình */
+    box-sizing: border-box !important;
+
+    /* Tắt màu nền phòng trường hợp Divi tự thêm vào */
+    background-color: transparent !important;
+
+    /* Cài đặt màu sắc viền */
+    border: 2px solid rgba(0, 0, 0, 0.1) !important; /* Màu viền mờ */
+    border-top-color: #ffffff !important; /* Màu phần xoay (xanh dương) */
+
+    animation: spin 0.8s linear infinite !important;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tùy chỉnh khi nút bị disable */
+#my-load-data:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+.privacy-policy {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    gap: 8px;
+    margin: 20px 0;
+
+    div {
+        font-size: 15px;
+        font-weight: bold;
+        color: $text-muted;
+
+        a {
+            color: #0451c4;
+            text-decoration: none;
+           
+        }
+    }
+}

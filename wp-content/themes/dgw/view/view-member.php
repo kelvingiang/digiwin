@@ -1,6 +1,6 @@
 <?php
-require_once(DIR_MODEL . 'model-member.php');
-$dataList = new Model_Member(); 
+require_once(DIR_MODEL . 'model-download.php');
+$dataList = new Model_Download();
 $dataList->prepare_items();
 $lbl = '';
 $page = getParams('page');
@@ -10,25 +10,12 @@ if (getParams('msg') == 1) {
     $msg = '<div class="updated notice notice-success is-dismissible"><p>' . __('Data Adjustment succeeded') . '</p></div>';
 }
 ?>
-<style>
-    .column-serial {
-        width: 8rem;
-    } 
-    .column-series, .column-price{
-        width: 10rem;
-    }
-    .column-date{
-        width: 5rem;
-    }
-</style>
-
 <div class="wrap">
-    <h2 style="font-weight: bold">
-        <?php echo esc_html__($lbl); ?>
-        <a href ="<?php echo esc_url($linkAdd); ?>"  class ="add-new-h2"><?php echo esc_html__($lblAdd); ?></a>
-    </h2>
+    <h1 class="wp-heading-inline"><?php echo __('註冊名單', 'dgw'); ?></h1>
+    <a href="<?php echo admin_url('admin.php?page=' . $page . '&action=export_members_excel'); ?>" class="page-title-action"><?php echo __('匯出 Excel 檔案', 'dgw'); ?></a>
+    <hr class="wp-header-end">
     <?php echo @$msg; ?>
-    <form action ="" method="post" name="<?php echo $page; ?>" id="<?php echo $page; ?>">
+    <form action="" method="post" name="<?php echo $page; ?>" id="<?php echo $page; ?>">
         <?php $dataList->search_box(__('Search'), 'search_id') ?>
         <?php $dataList->views(); ?>
         <?php $dataList->display(); ?>

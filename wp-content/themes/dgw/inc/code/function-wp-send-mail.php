@@ -27,7 +27,7 @@ function custom_phpmailer_smtp_config($phpmailer)
     }
 }
 
-// khi có comment post sẽ send mail đển cái user có quyết quản lý  ==============================================================================
+// khi có comment post sẽ send mail đển cái user có quyền quản lý  admin ==============================================================================
 add_action('comment_post', function ($comment_id, $comment_approved) {
     
     // 记录日志

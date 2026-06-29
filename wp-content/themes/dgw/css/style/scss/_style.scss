@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 a {
     text-decoration: none;
 }
@@ -16,25 +19,12 @@ html {
 }
 
 html[lang="zh-TW"] body {
-    font-family:
-        "Noto Sans TC",
-        /* Ưu tiên hàng đầu */ "Microsoft JhengHei",
-        /* Font hệ thống Win (Phồn thể) */ "DFKai-SB",
-        /* Font chữ Khải hệ thống */ Arial,
-        sans-serif;
-}
-
-/* 2. Đối với Tiếng Hoa Giản thể (China) */
-html[lang="zh-CN"] body {
-    font-family:
-        "Noto Sans SC",
-        /* Ưu tiên hàng đầu */ "Microsoft YaHei",
-        /* Font hệ thống Win (Giản thể) */ Arial,
-        sans-serif;
+    font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
 }
 
 html[lang="vi-VN"] body {
-    font-family: Arial, Helvetica, sans-serif;
+    // font-family: Arial, Helvetica, sans-serif;
+    font-family: "Noto Sans", Arial, Helvetica, sans-serif
 }
 
 body {
@@ -205,7 +195,7 @@ h3.article-title {
 h3.group-title {
     color: #517eb9;
     font-size: 1.2em;
-    font-family: "Times New Roman", Times, serif;
+    // font-family: "Times New Roman", Times, serif;
 }
 
 #load-more {
@@ -295,4 +285,15 @@ hr.style-two {
     &:hover {
         opacity: 1;
     }
+}
+
+.msg {
+    font-size: 1rem;
+    font-weight: bold;
+    color: green;
+}
+.msg-error {
+    font-size: 1rem;
+    color: rgb(173, 1, 1);
+    font-weight: bold;
 }

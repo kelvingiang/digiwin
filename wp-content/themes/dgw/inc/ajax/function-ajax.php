@@ -1,5 +1,6 @@
 <?php
-function register_my_session() {
+function register_my_session()
+{
     if (!session_id()) {
         session_start();
     }
@@ -176,7 +177,8 @@ function change_languages()
 add_action('wp_ajax_check_math_captcha', 'check_math_captcha');
 add_action('wp_ajax_nopriv_check_math_captcha', 'check_math_captcha');
 
-function check_math_captcha() {
+function check_math_captcha()
+{
     session_start();
 
     $user_ans = isset($_POST['answer']) ? intval($_POST['answer']) : null;
@@ -188,8 +190,6 @@ function check_math_captcha() {
         wp_send_json(['status' => 'fail']);
     }
 }
-
-
 
 // lấy IP của mạng =========================
 // function getUserIP() {

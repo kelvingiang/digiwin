@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 @keyframes example {
     from {
         scale: 0.8;

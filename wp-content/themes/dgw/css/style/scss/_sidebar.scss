@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 #article-side-list {
     width: 100%;
     .item {

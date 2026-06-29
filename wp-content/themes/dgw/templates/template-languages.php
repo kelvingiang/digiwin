@@ -1,10 +1,35 @@
-<div class="languages-box">
-    <label class="link-languages" data-type="cn" onclick="changeLanguages(this)">
-        中
-    </label> |
-    <label class="link-languages" data-type="vn" onclick="changeLanguages(this)">
-        VN
-    </label>
+<?php
+$data = null;
+if (!empty($_COOKIE['custom_session'])) {
+    $data = get_member_information($_COOKIE['custom_session']);
+}
+?>
+<div class="languages-container">
+    <div class="login-box">
+        <?php if ($data) : ?>
+            <div class="link-login-welcome">
+                <a href="<?php echo home_url('/member'); ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="15" height="15"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                    </svg>
+                    <?php echo $data->username; ?>
+                </a>
+            </div>
+        <?php else : ?>
+            <a href="<?php echo home_url('/member'); ?>" class="link-login">
+                <?php echo __('Login-Register', 'dgw'); ?>
+            </a>
+        <?php endif ?>
+
+    </div>
+    <div class="languages-box">
+        <label class="link-languages" data-type="cn" onclick="changeLanguages(this)">
+            中
+        </label> |
+        <label class="link-languages" data-type="vn" onclick="changeLanguages(this)">
+            VN
+        </label>
+    </div>
 </div>
 
 <script>
@@ -41,8 +66,9 @@
             },
             success: function(res) {
                 if (res.status === 'ok') {
-                    //window.location.reload(); // 或者跳轉回首頁：'<?php //echo home_url(); ?>'
-                    window.location ='<?php echo home_url(); ?>'
+                    //window.location.reload(); // 或者跳轉回首頁：'<?php //echo home_url(); 
+                                                            ?>'
+                    window.location = '<?php echo home_url(); ?>'
                 }
             },
             error: function(err) {

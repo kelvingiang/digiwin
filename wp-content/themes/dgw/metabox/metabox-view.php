@@ -23,7 +23,7 @@ class Metabox_View
         $name = 'admin-metabox-data-nonce';
         wp_nonce_field($action, $name);
 ?>
-        <div class="row-two-column">
+        <div class="row-three-column">
             <div class="col">
                 <div class="cell-title">
                     <label><?php _e('View') ?></label>

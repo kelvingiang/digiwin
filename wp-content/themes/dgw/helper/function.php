@@ -1,26 +1,38 @@
 <?php
-// require_once DIR_HELPER . 'code/function-front-in-group.php';
-require_once DIR_HELPER . 'code/function-front-custom-post.php';
-require_once DIR_HELPER . 'code/function-front-menu-side.php';
-require_once DIR_HELPER . 'code/function-front-menu-sub.php';
-require_once DIR_HELPER . 'code/function-front.php';
-require_once DIR_HELPER . 'code/function-front-category.php';
-require_once DIR_HELPER . 'code/function-front-menu.php';
-
-require_once DIR_HELPER . 'code/admin-add-post-tag-field.php';
-require_once DIR_HELPER . 'code/admin-add-post-taxonomy-field.php';
-require_once DIR_HELPER . 'code/admin-add-filter.php';
-require_once DIR_HELPER . 'code/admin-custom-columns.php';
-
-require_once DIR_HELPER . 'code/function-ajax.php';
-require_once DIR_HELPER . 'code/function-wp-send-mail.php';
-require_once DIR_HELPER . 'code/function-custom-comment.php';
+// dua toan bo cac function vao file nay de giam do phuc tap cua file functions.php
+require_once get_template_directory() . '/inc/init.php';
 
 
 function dgw_get_lang()
 {
-    return $_COOKIE['site_lang'] ?? 'vn';
+  // Kiểm tra AJAX POST
+    if (wp_doing_ajax() && isset($_POST['lang'])) {
+        return sanitize_text_field($_POST['lang']) === 'zh-TW' ? 'cn' : 'vn';
+    }
+    
+    // Kiểm tra GET request
+    if (isset($_GET['lang'])) {
+        return sanitize_text_field($_GET['lang']) === 'cn' ? 'cn' : 'vn';
+    }
+    
+    // Lấy từ cookie
+    return isset($_COOKIE['site_lang']) ? sanitize_text_field($_COOKIE['site_lang']) : 'vn';
 }
+
+add_filter('locale', function ($locale) {
+
+    // ưu tiên AJAX
+    if (wp_doing_ajax() && isset($_POST['lang'])) {
+
+        $lang = $_POST['lang'];
+
+        // mapping chuẩn WP
+        if ($lang === 'zh-TW') return 'zh_TW';
+        if ($lang === 'vi-VN') return 'vi_VN';
+    }
+
+    return $locale;
+});
 
 // sắp xếp lại trình tự các input trong phần comment ==========
 add_filter('comment_form_fields', function ($fields) {
@@ -172,7 +184,7 @@ function toBack($num)
 }
 
 //======= THAY DOI LOGO DANG NHAP O ADMIN =====================================================
-if (!is_admin()) {
+// if (!is_admin()) {
 
     // custom admin login logo
     function custom_login_logo()
@@ -183,10 +195,10 @@ if (!is_admin()) {
     }
 
     add_action('login_head', 'custom_login_logo');
-} else {
-    require_once DIR_HELPER . 'code/function-add-media.php';
-    require_once DIR_HELPER . 'code/function-upload-file.php';
-}
+// } else {
+    // require_once DIR_HELPER . 'code/function-add-media.php';
+    // require_once DIR_HELPER . 'code/function-upload-file.php';
+// }
 
 // ====================FUNCTION SEO=========================================================== 
 function seo()
@@ -360,3 +372,46 @@ add_action('after_setup_theme', function () {
     add_image_size('card-desktop', 300, 200, true);
     add_image_size('card-mobile',  480, 320, true);
 });
+
+
+// Cho phép inline styles trong table
+add_filter( 'safe_style_css', function( $styles ) {
+    $styles[] = 'background-color';
+    $styles[] = 'color';
+    return $styles;
+});
+
+add_filter( 'wp_kses_allowed_html', function( $allowedposttags ) {
+    $allowedposttags['table']['style'] = true;
+    $allowedposttags['tr']['style'] = true;
+    $allowedposttags['td']['style'] = true;
+    $allowedposttags['th']['style'] = true;
+    return $allowedposttags;
+}, 10, 1 );
+
+
+// ==================== EMAIL DEBUG ====================
+// Bật debug cho PHPMailer - Chỉ khi WP_DEBUG = true
+if (defined('WP_DEBUG') && WP_DEBUG) {
+    add_action('phpmailer_init', function($phpmailer) {
+        // Bật debug mode
+        $phpmailer->SMTPDebug = 2; // 0=off, 1=client, 2=client+server
+        
+        // Ghi log debug output
+        $phpmailer->Debugoutput = function($str, $level) {
+            error_log("PHPMailer Debug: " . $str);
+        };
+    });
+}
+
+
+// Date: 2026-06-23
+// Chức năng: Thêm thẻ meta noindex, nofollow riêng cho trang 'member' để chặn Google index
+add_action( 'wp_head', 'custom_noindex_member_page' );
+function custom_noindex_member_page() {
+    // Kiểm tra slug của trang hiện tại, thay 'member' bằng slug chính xác nếu cần
+    if ( is_page( 'member' ) ) {
+        echo '<meta name="robots" content="noindex, nofollow" />' . "\n";
+    }
+}
+

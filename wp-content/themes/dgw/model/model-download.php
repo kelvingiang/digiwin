@@ -1,156 +1,297 @@
 <?php
-class Model_Download
-{
-    private $_db;
-    private $_table_registry;
-    private $_table_details;
 
-    // 建構子：初始化資料庫連線與資料表名稱
-    public function __construct()
+if (!class_exists('WP_List_Table')) {
+    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
+
+class Model_Download extends WP_List_Table
+{
+
+    private $_pre_page = 30;
+    private $_sql;
+    private $_stt = 1;
+    private $table;
+    private $download_table;
+
+    public function __construct($args = array())
+    {
+        // 1. FIX LỖI FATAL ERROR: Nạp các thư viện Admin bắt buộc trước khi gọi parent
+        if (! function_exists('convert_to_screen')) {
+            require_once ABSPATH . 'wp-admin/includes/template.php';
+            require_once ABSPATH . 'wp-admin/includes/screen.php';
+        }
+        $args = array(
+            'plural' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
+            'singular' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
+            'ajax' => FALSE,
+            'screen' => null,
+        );
+        parent::__construct($args);
+        global $wpdb;
+        $this->table = $wpdb->prefix . 'download_registrations';
+        $this->download_table = $wpdb->prefix . 'download_detail';
+    }
+
+    public function prepare_items()
+    {
+        $columns = $this->get_columns();  // NHUNG GI CAN HIEN THI TREN BANG 
+        $hidden = $this->get_hidden_columns(); // NHUNG COT TA SE AN DI
+        $sorttable = $this->get_sortable_columns(); // CAC COT DC SAP XEP TANG HOAC GIAM DAN
+
+        $this->_column_headers = array($columns, $hidden, $sorttable); //DUA 3 GIA TRI TREN VAO DAY DE SHOW DU LIEU
+        $this->items = $this->table_data(); // LAY DU LIEU TU DATABASE
+
+        $total_items = $this->total_items(); // TONG SO DONG DA LIEU
+        $per_page = $this->_pre_page; // SO TRANG 
+        $total_pages = ceil($total_items / $per_page); // TONG SO TRANG
+        // PHAN TRANG
+        $args = array(
+            'total_items' => $total_items,
+            'per_page' => $per_page,
+            'total_pages' => $total_pages
+        );
+        $this->set_pagination_args($args);
+    }
+
+    public function get_columns()
+    {
+        $arr = array(
+            'cb' => '<input type="checkbox" />',
+            'member_email' => 'E-mail',
+            'member_name' => '姓名',
+            'member_company' => '公司名稱',
+            'member_phone' => '聯絡電話',
+            'member_download_count' => '下載次數',
+            'create_date' => '註冊日期',
+        );
+        return $arr;
+    }
+
+    // ====KHAI  BAO CAC COT BI AN DI TREN GRIDVIEW=====================================
+    public function get_hidden_columns()
+    {
+        return array();
+    }
+
+    // ==== CAC COT AP DUNG  SAP XEP  ============================================
+    public function get_sortable_columns()
+    {
+        return array(
+            // 'company' => array('company', true),
+            //'create_date' => array('create_date', true),
+        );
+    }
+
+    private function table_data()
     {
         global $wpdb;
-        $this->_db = $wpdb;
-        $this->_table_registry = $wpdb->prefix . 'download_registrations';
-        $this->_table_details = $wpdb->prefix . 'download_detail';
-    }
 
+        // LAY GIA TRI SAP XEP DU LIEU TREN COT
+        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
+        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
 
-    public function insert_download_detail($data)
-    {
-        $inserted = $this->_db->insert(
-            $this->_table_details,
-            [
-                'user_id'       => $data['user_id'],
-                'title'         => $data['title'],
-                'resource'      => $data['resource'],
-                'download_date' => current_time('mysql') // 1. 修正欄位名稱為 download_date
-            ],
-            [
-                '%d', // user_id 是 int(11)，建議用 %d
-                '%s', // title 是 varchar
-                '%s', // resource 是 varchar
-                '%s'  // download_date 是 datetime，使用 %s
-            ] // 2. 確保這裡有 4 個佔位符對應上面的 4 個欄位
-        );
+        // 基本 SELECT 與 JOIN
+        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+            FROM {$this->table} AS m 
+            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
 
-        // 如果失敗，可以透過 $this->_db->last_error 查看報錯原因
-        if (!$inserted) {
-            error_log('Insert Error: ' . $this->_db->last_error);
+        $whereArr = array();  // TAO MANG WHERE ============
+
+        // 修正 1：加上 m. 前綴
+        if (getParams('customvar') == 'trash') {
+            $whereArr[] = "(m.trash = 1)";
+        } else {
+            $whereArr[] = "(m.trash = 0)";
         }
 
-        return $inserted ? $this->_db->insert_id : false;
+        if (getParams('s') != ' ') {
+            $s = esc_sql(getParams('s'));
+            $whereArr[] = "(m.company LIKE '%$s%')";
+        }
+
+        // CHUYEN CAC GIA TRI where KET VOI NHAU BOI and
+        if (count($whereArr) > 0) {
+            $sql .= " WHERE " . join(" AND ", $whereArr);
+        }
+
+        // 推薦加上 GROUP BY，防止同一個會員因為多筆下載紀錄而重複顯示
+        $sql .= " GROUP BY m.ID ";
+
+        // 修正 2：在 ORDER BY 前面加上一個「空格」
+        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
+
+        $this->_sql = $sql;
+
+        // LAY GIA TRI PHAN TRANG PAGEING
+        $paged = max(1, @$_REQUEST['paged']);
+        $offset = ($paged - 1) * $this->_pre_page;
+
+        // 這裡的 LIMIT 前面我也幫你確認好空格了
+        $sql .= " LIMIT " . $this->_pre_page . " OFFSET " . $offset;
+
+        // LAY KET QUA THONG QUA CAU sql
+        $data = $wpdb->get_results($sql, ARRAY_A);
+
+        // 💡【除錯小技巧】如果還是沒資料，把下面兩行註解拿掉，看看印出什麼錯誤！
+        // var_dump($sql);
+        // var_dump($wpdb->last_error);
+
+        return $data;
     }
 
-    public function insert_registration_data($data)
+    public function get_export_data()
     {
-        $inserted = $this->_db->insert(
-            $this->_table_registry,
-            [
-                'username'    => $data['username'],
-                'email'       => $data['email'],
-                'password'    => password_hash($data['password'], PASSWORD_BCRYPT),
-                'company'     => $data['company'],
-                'phone'       => $data['phone'],
-                'position'    => $data['position'],
-                'tax'         => $data['tax'],
-                'industry'    => $data['industry'],
-                'department'  => $data['department'],
-                'active_code' => $data['active_code'],
-                'create_date' => current_time('mysql') // 使用 WordPress 推薦的時間函數
-            ],
-            ['%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s']
-        );
+        global $wpdb;
 
-        return $inserted ? $this->_db->insert_id : false;
+        // This is almost the same as table_data(), but without pagination.
+        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
+        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+
+        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+            FROM {$this->table} AS m 
+            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
+
+        $whereArr = array();
+
+        if (getParams('customvar') == 'trash') {
+            $whereArr[] = "(m.trash = 1)";
+        } else {
+            $whereArr[] = "(m.trash = 0)";
+        }
+
+        if (getParams('s') != ' ') {
+            $s = esc_sql(getParams('s'));
+            $whereArr[] = "(m.company LIKE '%$s%')";
+        }
+
+        if (count($whereArr) > 0) {
+            $sql .= " WHERE " . join(" AND ", $whereArr);
+        }
+
+        $sql .= " GROUP BY m.ID ";
+        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
+
+        // No pagination for export
+        $data = $wpdb->get_results($sql, ARRAY_A);
+
+        return $data;
     }
 
-    // 1. 透過 Session Key 取得使用者
-    public function get_user_by_session($session_key)
+    // TINH TONG SO DONG DU LIEU  DE AP DUNG CHO VIEC PHAN TRANG
+    public function total_items()
     {
-        if (empty($session_key)) return false;
-        return $this->_db->get_row(
-            $this->_db->prepare("SELECT `ID`, `username`, `company`, `tax`, `industry`, `department`, `position`, `phone`, `email`  FROM {$this->_table_registry} WHERE session_key = %s", $session_key)
-        );
+        global $wpdb;
+        return $wpdb->query($this->_sql);
     }
 
-    // 2. 透過 Email 取得使用者 (用於登入)
-    public function get_user_by_email($email)
+    // SO TONG ITEM DUNG DE PHAN TRANG
+    public function total_list()
     {
-        return $this->_db->get_row(
-            $this->_db->prepare("SELECT * FROM {$this->_table_registry} WHERE email = %s", $email)
-        );
+        global $wpdb;
+        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table");
     }
 
-    public function check_email_username_exists($email, $username)
+    // SO TONG ITEM TRONG TRASH(SO RAC)
+    public function total_trash()
     {
-        return $this->_db->get_var($this->_db->prepare(
-            "SELECT COUNT(*) FROM {$this->_table_registry} WHERE email = %s OR username = %s",
-            $email['email'],
-            $username['username']
-        ));
+        global $wpdb;
+        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 1");
     }
 
-    // 3. 更新使用者密碼
-    public function update_login($id, $session_key, $ip_address)
+    // SO TONG ITEM HIEN HANH
+    public function total_publish()
     {
-        return $this->_db->update(
-            $this->_table_registry,
-            [
-                'session_key' => $session_key,
-                'ip_address'  => $ip_address,
-                'last_login'  => wp_date('Y-m-d H:i:s', null, new DateTimeZone('Asia/Ho_Chi_Minh')),
-            ],
-            ['ID' => $id]
-        );
+        global $wpdb;
+        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 0");
     }
 
-    // 3. 更新使用者密碼
-    public function update_password($session_key, $new_password_hash)
+    function get_views()
     {
-        return $this->_db->update(
-            $this->_table_registry,
-            [
-                'password'    => $new_password_hash,
-                'update_date' => current_time('mysql')
-            ],
-            ['session_key' => $session_key]
-        );
+        $views = array();
+        $current = (!empty($_REQUEST['customvar']) ? $_REQUEST['customvar'] : 'all');
+
+        //All link
+        $class = ($current == 'all' ? ' class="current"' : '');
+        $all_url = remove_query_arg('customvar');
+        $views['all'] = "<strong>" . __('All') . " (" . $this->total_list() . ")</strong>";
+
+        //Foo link
+        $foo_url = add_query_arg('customvar', 'published');
+        $class = ($current == 'foo' ? ' class="current"' : '');
+        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published') . " (" . $this->total_publish() . ")</a>";
+
+        //Bar link
+        $bar_url = add_query_arg('customvar', 'trash');
+        $class = ($current == 'bar' ? ' class="current"' : '');
+        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash') . "(" . $this->total_trash() . ")</a>";
+
+        return $views;
     }
 
+    // CAC ITEM TRONG SELECT BOX CHUC NANG 'UNG DUNG'
+    public function get_bulk_actions()
+    {
+        if (@$_GET['customvar'] == 'trash') {
+            $actions = array(
+                'restore' => __('Restore'),
+                'delete' => __('Delete Permanently')
+            );
+        } else {
+            $actions = array(
+                'trash' => __('Trash'),
+            );
+        }
+        return $actions;
+    }
 
+    //  NOI DUNG HIEN THI CUA COT TRONG GRID
+    public function column_cb($item)
+    {
+        $singular = $this->_args['singular'];
+        $html = '<input type="checkbox" name="' . $singular . '[]" value="' . $item['ID'] . '"/>';
+        return $html;
+    }
+
+    public function column_member_email($item)
+    {
+        $page = getParams('page');
+        if (@$_GET['customvar'] == 'trash') {
+            $actions = array(
+                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore') . '</a>',
+                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently') . ' </a>',
+            );
+        } else {
+            $actions = array(
+                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit') . '</a>',
+                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash') . '</a>',
+            );
+        }
+        $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['email'] . '</a> </strong>' . $this->row_actions($actions);
+        return $html;
+    }
     
-    // 3. 更新使用者密碼
-    public function reset_password($session_key, $new_password_hash)
+    public function column_member_name($item)
     {
-        return $this->_db->update(
-            $this->_table_registry,
-            [
-                'password'    => $new_password_hash,
-                'update_date' => current_time('mysql')
-            ],
-            ['ID' => $session_key]
-        );
-    }
-    // 4. 更新使用者一般資訊
-    public function update_info($session_key, $data)
-    {
-        // 自動加上更新時間
-        $data['update_date'] = current_time('mysql');
-
-        return $this->_db->update(
-            $this->_table_registry,
-            $data,
-            ['session_key' => $session_key]
-        );
+        echo $item['username'];
     }
 
-    // 5. 清除 Session (用於登出)
-    public function clear_session($session_key)
+    public function column_member_company($item)
     {
-        return $this->_db->update(
-            $this->_table_registry,
-            ['session_key' => null],
-            ['session_key' => $session_key]
-        );
+        echo $item['company'];
+    }
+
+    public function column_member_phone($item)
+    {
+        echo $item['phone'];
+    }
+
+    public function column_member_download_count($item)
+    {
+        echo $item['download_count'];
+    }
+
+    public function column_create_date($item)
+    {
+        echo $item['create_date'];
     }
 }

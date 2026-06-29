@@ -15,37 +15,48 @@ error_log
 .htaccess
 
 # --- 3. 排除 wp-content 中的非開發內容 ---
-#/wp-content/languages/
-#/wp-content/upgrade/
 /wp-content/cache/
 /wp-content/et-cache/
 /wp-content/backups/
+#/wp-content/languages/
+#/wp-content/upgrade/
 #/wp-content/uploads/
 
 # --- 4. 插件與主題管理 ---
-# 這裡改為忽略目錄下的內容，但允許 Git 進入目錄掃描
-#/wp-content/plugins/*
 /wp-content/themes/*
 
+# 允許 Git 進入 themes 目錄掃描
 !/wp-content/themes/
-
 
 # --- 5. [關鍵] 保留你的開發項目 ---
 !/wp-content/themes/dgw/
 !/wp-content/themes/dgw/**
 
-# --- 6. 開發工具與系統快取 ---
-/css/
-/et-cache/
-/data/*npm uninstall @playwright/test
+# ====================================================
+# [非常重要] 
+# 以下的排除規則必須放在 !/wp-content/themes/dgw/** 之後，
+# 否則會被上面的「保留規則」強制覆蓋，導致 Git 繼續追蹤它們！
+# ====================================================
 
-# Playwright
+# --- 6. 忽略開發套件與快取 ---
+vendor/
+.agent/
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
-# --- 6. Loại bỏ file rác hệ thống & IDE ---
+_database/
+
+# --- 7. 開發工具與系統快取 ---
+css/
+et-cache/
+data/
+test-results/
+playwright-report/
+blob-report/
+.cache/
+.auth/
+google-credentials.json
+
+# --- 8. 排除系統與 IDE 垃圾文件 ---
 .DS_Store
 .DS_Store?
+.vscode/
+*.code-workspace

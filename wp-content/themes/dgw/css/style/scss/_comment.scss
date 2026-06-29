@@ -1,290 +1,481 @@
-.comment_area {
-    background-color: rgb(235, 234, 234);
-    padding: 1rem;
+@use "define" as *;
+@use "responsive" as *;
 
-    .comment_from {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        margin: 2rem;
-        .comment_input {
-            margin: auto 0;
-            width: 80%;
-            height: 200px;
+// ==========================================
+// 1. BIẾN MÀU SẮC & HIỆU ỨNG (PREMIUM)
+// ==========================================
+$color_label: #1e293b; // Xám xanh đậm, sang hơn
+$color_btn: #005177; // Màu brand của bạn
+$color_btn_dark: #003a55; // Màu brand khi hover
+$color_btn_color: #fff;
+
+$bg_light: #f8fafc;
+$bg_white: #ffffff;
+$border-soft: 1px solid #e2e8f0;
+
+// Bóng đổ đa tầng (Layered Shadows) cực kỳ hiện đại
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 15px -3px rgba(0, 0, 0, 0.07);
+$shadow-lg: 0 10px 25px -5px rgba(0, 81, 119, 0.15); // Bóng hơi ám xanh
+$shadow-glow: 0 0 0 4px rgba(0, 81, 119, 0.15); // Viền sáng khi Focus
+
+// ==========================================
+// 2. KHU VỰC BAO NGOÀI
+// ==========================================
+.comment_area {
+    background-color: transparent; // Chuyển sang trong suốt để tôn khối bên trong
+    padding: 1rem 0;
+}
+
+// ==========================================
+// 3. CONTAINER CHÍNH CỦA BÌNH LUẬN (#comments)
+// ==========================================
+#comments {
+    background-color: $bg_white;
+    border-radius: 16px; // Bo góc tròn trịa hơn
+    border: 1px solid #f1f5f9;
+    margin: 2rem 0;
+    box-shadow: $shadow-md;
+    overflow: hidden;
+    @include Respond(sm) {
+        margin: 0;
+    }
+    // --- DANH SÁCH BÌNH LUẬN ---
+    #comments-list {
+        .comments-title {
+            padding: 0 2rem !important;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+            // Dải màu Gradient tuyệt đẹp
+            background: linear-gradient(135deg, #005177 0%, #0ea5e9 100%);
+            height: 70px; // Tăng chiều cao xíu cho sang
+            display: flex;
+            align-items: center;
+            margin: 0;
+            letter-spacing: 0.5px;
         }
-        .btn_submit {
-            padding: 0.5rem 1.8rem;
-            margin: 2rem;
-            background-color: rgb(4, 76, 136);
-            color: #ccc;
-            font-size: 1rem;
-            font-weight: bold;
-            &:hover {
-                background-color: rgb(3, 54, 95);
-                color: #fff;
+
+        & > ul {
+            padding: 1rem 2rem !important; // Cách lề 2 bên 2rem cho thoáng
+            margin: 0;
+
+            li {
+                list-style: none;
+                margin-bottom: 0.8rem; // Biến mỗi comment thành 1 khối riêng
+                border: $border-soft;
+                border-radius: 12px;
+                background-color: $bg_white;
+                box-shadow: $shadow-sm;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+                // Hiệu ứng Hover nổi khối 3D
+                &:hover {
+                    // transform: translateY(-3px);
+                    box-shadow: $shadow-md;
+                    border-color: #cbd5e1;
+                }
+
+                .comment-body {
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    padding: 0.5rem;
+                    gap: 0.5rem 1rem;
+
+                    .comment-author {
+                        padding: 0;
+                        font-size: 1.05rem;
+                        font-weight: 700;
+                        color: #0f172a;
+                        .fn {
+                            font-style: normal;
+                        }
+                    }
+
+                    .comment-date {
+                        text-align: end;
+                        color: #64748b;
+                        font-size: 0.85rem;
+                        background: transparent; // Trong suốt để tôn khối tác giả
+                        padding: 4px 10px;
+                        border-radius: 20px; // Dạng Pill (viên thuốc)
+                        align-self: center; // Căn giữa theo chiều dọc với tên tác giả
+                    }
+
+                    .comment-text {
+                        grid-column: 1 / span 2;
+                        padding: 0.8rem 0;
+                        color: #334155;
+                        line-height: 1.7;
+                        font-size: 1rem;
+                        p {
+                            margin: 0;
+                        }
+                    }
+
+                    .comment-reply {
+                        grid-column: 1 / span 2;
+                        text-align: right;
+                        margin-top: 0.5rem;
+
+                        a {
+                            display: inline-flex;
+                            align-items: center;
+                            color: $color_btn;
+                            //  background: #e0f2fe; // Xanh nhạt cực êm
+                            padding: 6px 16px;
+                            border-radius: 8px;
+                            text-decoration: none;
+                            font-size: 0.85rem;
+                            font-weight: 600;
+                            transition: all 0.3s;
+
+                            &:hover {
+                                background: $color_btn;
+                                color: #fff;
+                                transform: scale(1.05); // Phóng to nhẹ
+                            }
+                        }
+                    }
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+
+            // --- BÌNH LUẬN CẤP CON ---
+            ul.children {
+                background-color: transparent;
+                border-top: none;
+                margin: -0.5rem 0 1rem 0;
+                padding-left: 2.5rem;
+                position: relative;
+
+                &::before {
+                    content: "";
+                    width: 2px;
+                    height: calc(100% - 20px);
+                    background: #bae6fd; // Cây thư mục màu xanh nhạt
+                    position: absolute;
+                    left: 1rem;
+                    top: -1rem;
+                    border-radius: 2px;
+                }
+
+                li {
+                    background-color: $bg_light; // Phân biệt cấp con bằng nền xám
+                    border: 1px solid #f1f5f9;
+                    box-shadow: none; // Con không đổ bóng để tránh rối
+                    margin-top: 1rem;
+                    margin-bottom: 0;
+
+                    &:hover {
+                        transform: translateX(5px); // Hover con thì dịch nhẹ sang phải
+                        box-shadow: none;
+                        border-color: #e2e8f0;
+                    }
+
+                    &::after {
+                        content: "";
+                        width: 15px;
+                        height: 2px;
+                        background: #bae6fd;
+                        position: absolute;
+                        left: -1.5rem;
+                        top: 2rem;
+                    }
+                }
+            }
+        }
+    }
+
+    // --- KHU VỰC FORM PHẢN HỒI ---
+    .comment-respond {
+        background-color: $bg_white;
+        border-top: 1px solid #e2e8f0;
+        padding: 2rem;
+        position: relative; // Để chứa nút hủy phía trên
+
+        // Dải màu nhấn ở mép trên cùng của Form
+        &::before {
+            content: "";
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #005177, #38bdf8);
+        }
+
+        h3#reply-title {
+            font-size: 1.4rem;
+            color: #0f172a;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+
+            small a {
+                background-color: #fff;
+                color: #ef4444;
+                border: 1px solid #fca5a5;
+                padding: 6px 14px;
+                border-radius: 8px;
+                font-size: 0.85rem;
+                text-decoration: none;
+                transition: 0.3s;
+                font-weight: 600;
+
+                &:hover {
+                    background-color: #fee2e2;
+                    transform: translateY(-2px);
+                }
+            }
+        }
+
+        .comment-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+
+            p {
+                width: 100%;
+                margin: 0 0 1rem 0;
+            }
+            p.comment-form-cookies-consent {
+                display: none;
+            }
+            .comment-notes {
+                font-size: 0.9rem;
+                color: #64748b;
+                margin-bottom: 1.5rem;
+                display: none;
+            }
+
+            // Ô NHẬP TÊN VÀ EMAIL
+            .form-row {
+                width: calc(50% - 15px); // Tăng khoảng cách 2 ô
+                margin-bottom: 1.5rem;
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    font-weight: 600;
+                    margin-bottom: 0.6rem;
+                    color: $color_label;
+                    font-size: 0.95rem;
+
+                    span.required {
+                        color: #ef4444;
+                    }
+                }
+
+                input {
+                    width: 100%;
+                    padding: 0.9rem 1rem;
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 10px;
+                    font-size: 1rem;
+                    color: #0f172a;
+                    transition: all 0.3s ease;
+
+                    &:focus {
+                        background-color: #fff;
+                        border-color: $color_btn;
+                        box-shadow: $shadow-glow; // Viền sáng
+                        outline: none;
+                    }
+
+                    &[readonly] {
+                        background-color: #f1f5f9;
+                        color: #94a3b8;
+                        cursor: not-allowed;
+                    }
+                }
+
+                @include Respond(sm) {
+                    width: 100%;
+                }
+            }
+
+            // Ô NHẬP NỘI DUNG
+            .form-row-comment {
+                width: 100%;
+                margin-bottom: 1.5rem;
+                display: flex;
+                flex-direction: column;
+
+                label {
+                    font-weight: 600;
+                    margin-bottom: 0.6rem;
+                    color: $color_label;
+                    font-size: 0.95rem;
+                    span.required {
+                        color: #ef4444;
+                    }
+                }
+
+                textarea {
+                    width: 100%;
+                    padding: 1rem;
+                    background-color: #f8fafc;
+                    border: 1px solid #e2e8f0;
+                    border-radius: 12px;
+                    font-size: 1rem;
+                    line-height: 1.6;
+                    color: #0f172a;
+                    min-height: 150px;
+                    resize: vertical;
+                    transition: all 0.3s ease;
+
+                    &:focus {
+                        background-color: #fff;
+                        border-color: $color_btn;
+                        box-shadow: $shadow-glow;
+                        outline: none;
+                    }
+                }
+            }
+
+            // MATH CAPTCHA (Bảo mật xịn xò)
+            .form-row-math {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                //background: linear-gradient(to right, #f0f9ff, #fff); // Dải màu sáng dần
+                padding: 1.2rem;
+                border-radius: 12px;
+                // border: 1px solid #bae6fd;
+                margin-bottom: 2rem;
+                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+                @include Respond(sm) {
+                    flex-direction: column;
+                    align-items: flex-start;
+                     div:nth-child(2) {
+                    display: flex;
+                    margin-top: 1rem;
+                    padding-left: 1rem;
+                }
+
+                }
+                div:nth-child(2) {
+                    display: flex;
+                    flex-direction: row;
+                    padding-left: 1rem;
+                }
+                label {
+                    font-weight: 500;
+                    color: #0369a1;
+                    margin: 0;
+                    display: flex;
+                    align-items: center;
+                    font-weight: bold;
+                }
+
+                #math_answer {
+                    width: 70px;
+                    height: 45px;
+                    background-color: #fff;
+                    border: 2px solid #d3d3d3;
+                    border-radius: 8px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    text-align: center;
+                    color: #005177;
+                    transition: 0.3s;
+
+                    &:focus {
+                        border-color: #0284c7;
+                        box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+                        outline: none;
+                    }
+                }
+
+                #math-check-msg {
+                    margin-left: 15px;
+                    font-size: 1.3rem;
+                    display: inline-flex;
+                    align-items: center;
+                    i {
+                        font-size: 1.5rem;
+                    }
+                    .correct {
+                        color: #16a34a !important;
+                        filter: drop-shadow(0 2px 2px rgba(22, 163, 74, 0.3));
+                    }
+                    .wrong {
+                        color: #dc2626 !important;
+                        animation: shake 0.4s ease-in-out;
+                    }
+                }
+            }
+
+            // NÚT SUBMIT (Call to Action)
+            .form-submit {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                margin: 0;
+                @include Respond(sm) {
+                    justify-content: center;
+                }   
+
+                input[type="submit"] {
+                    background: linear-gradient(135deg, $color_btn 0%, $color_btn_dark 100%);
+                    color: $color_btn_color;
+                    border: none;
+                    padding: 0.9rem 3rem;
+                    border-radius: 30px; // Nút viên thuốc (Pill shape) siêu hiện đại
+                    font-size: 1rem;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    box-shadow: $shadow-md;
+                    text-transform: capitalize;
+
+                    &:hover {
+                        transform: translateY(-2px); // Nổi lên
+                        box-shadow: $shadow-lg; // Tỏa bóng xanh
+                        background: linear-gradient(135deg, #026b99 0%, $color_btn 100%);
+                    }
+
+                    &:active {
+                        transform: translateY(1px); // Nhấn xuống
+                        box-shadow: $shadow-sm;
+                    }
+
+                    &:disabled {
+                        background: #cbd5e1;
+                        color: #94a3b8;
+                        box-shadow: none;
+                        cursor: not-allowed;
+                        transform: none;
+                    }
+                }
             }
         }
     }
 }
 
-$color_label: rgb(8, 51, 116);
-$color_btn: #005177;
-$color_btn_hover: #747474;
-$color_btn_color: #fff;
-
-#comments {
-    background-color: #e9e9e9;
-    border-radius: 5px 5px 5px 5px;
-    border: 1px solid #999;
-    margin: 1rem;
-    overflow: hidden;
-    #comments-list {
-        // padding-top: 1rem !important;
-        .comments-title {
-            padding-left: 1rem !important;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #fff;
-            background-color: #005177;
-            height: 50px;
-            padding-top: 18px;
-        }
-        & > ul {
-            padding-left: 0rem !important;
-            li {
-                list-style: none;
-                border-bottom: 1px dotted #333;
-                .comment-body {
-                    display: grid;
-                    grid-template-columns: 4fr 1fr;
-                    .comment-author {
-                        padding-left: 1rem;
-                        min-height: 50px;
-                        // background-color: #c06d6d;
-                        padding-top: 8px;
-                        font-size: 1.1rem;
-                        font-weight: 500;
-                        color: #3b6174e7;
-                    }
-                    .comment-date {
-                        text-align: end;
-                        min-height: 50px;
-                        padding-right: 1rem;
-                        padding-top: 0.5rem;
-                        color: #929292;
-                        font-size: 0.8rem;
-                    }
-                    .comment-text {
-                        padding-left: 2.5rem;
-                    }
-                    .comment-reply {
-                        padding-right: 1rem;
-                        text-align: end;
-                        font-size: 0.8rem;
-                        font-weight: bold;
-                        a {
-                            color: #054c7ca9;
-                            &:hover {
-                                color: #abacac;
-                            }
-                        }
-                    }
-                }
-                &:last-child {
-                    border-bottom: 0px;
-                }
-            }
-            ul.children {
-                border-bottom: 1px dotted #333;
-                background-color: #f7f7f7;
-                position: relative;
-                padding-left: 3rem;
-                li {
-                    list-style: none;
-                }
-                &::before {
-                    content: "";
-                    display: inline-block;
-                    width: 14px;
-                    height: 14px;
-                    background: url("./image/arrow-turn-down-right.svg") no-repeat center center;
-                    background-size: contain;
-                    margin-right: 0.5rem;
-                    vertical-align: middle;
-                    position: absolute;
-                    top: 50%;
-                    left: 10px;
-                }
-            }
-        }
+// Animation rung nhẹ khi nhập sai Captcha
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
     }
-
-    .comment-respond {
-        background-color: #ffffff;
-        border-top: 3px solid #005177;
-        padding: 1rem;
-
-        h3#reply-title {
-            font-size: 1rem;
-            position: relative;
-            width: 100%;
-            color: $color_label;
-
-            small {
-                position: absolute;
-                right: 0;
-                top: 5px;
-                a {
-                    background-color: $color_btn;
-                    color: $color_btn_color;
-                    border: none;
-                    padding: 0.6rem 1.2rem;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    cursor: pointer;
-                    transition: all 0.5s;
-                    margin-right: 0.8rem;
-                    &:hover {
-                        background-color: $color_btn_hover;
-                    }
-                }
-            }
-        }
-        .comment-form {
-            margin-top: 5px;
-            display: flex;
-            flex-wrap: wrap;
-            .form-row {
-                margin-bottom: 1rem;
-                width: 50%;
-                padding: 0 0.5rem;
-                min-height: 50px;
-
-                label {
-                    display: block;
-                    font-weight: 300;
-                    margin-bottom: 0.3rem;
-                    color: $color_label;
-                }
-                input {
-                    width: 100%;
-                    padding: 0.5rem;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    box-sizing: border-box;
-                }
-                &:first-child {
-                    margin-right: 2rem; // ✅ 這樣寫才正確
-                }
-            }
-            .comment-form-cookies-consent {
-                display: none;
-            }
-            .form-row-comment {
-                margin-bottom: 1rem;
-                padding: 0 0.5rem;
-                clear: both;
-                width: 100%;
-                label {
-                    display: block;
-                    font-weight: 300;
-                    margin-bottom: 0.3rem;
-                    color: $color_label;
-                }
-                textarea {
-                    width: 100%;
-                    padding: 0.5rem;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    box-sizing: border-box;
-                }
-            }
-
-            .form-row-math {
-                display: flex;
-                flex-direction: row;
-                margin-left: 0.8rem;
-                label {
-                    display: block;
-                    font-weight: 300;
-                    margin-bottom: 0.5rem;
-                    color: $color_label;
-                    padding-top: 5px;
-                    strong {
-                        font-weight: bold;
-                        color: #013c57;
-                    }
-                }
-                #math_answer {
-                    margin: 0rem 0.5rem;
-                    width: 40px;
-                    height: 30px;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    box-sizing: border-box;
-                    text-align: center;
-                }
-
-                /* math_check_msg 容器 */
-                #math-check-msg {
-                    margin-left: 10px;
-                    font-size: 1rem;
-                    vertical-align: middle;
-                    display: inline-flex; /* 讓 icon 與文字垂直置中 */
-                    align-items: center;
-                    gap: 0.25rem; /* icon 與文字間距 */
-
-                    /* Font Awesome icon */
-                    i {
-                        font-size: 1.5rem !important; /* 調整 icon 大小 */
-                        font-weight: bold !important;
-                        vertical-align: middle !important;
-                    }
-                }
-                /* 正確狀態 */
-                .correct {
-                    color: green !important;
-                }
-
-                /* 錯誤狀態 */
-                .wrong {
-                    color: red !important;
-                }
-            }
-
-            .form-submit {
-                display: flex;
-                justify-content: flex-end; /* ✅ 靠左 */
-                align-items: center; /* ✅ 垂直置中（可選） */
-                padding: 0 1rem;
-                width: 100%;
-                input[type="submit"] {
-                    background-color: $color_btn;
-                    color: $color_btn_color;
-                    border: none;
-                    padding: 0.6rem 1.2rem;
-                    border-radius: 4px;
-                    font-size: 1rem;
-                    cursor: pointer;
-                    transition: all 0.5s;
-                    @include Respond(sm) {
-                        margin-top: 1.5rem;
-                    }
-                    &:hover {
-                        background-color: $color_btn_hover;
-                    }
-                }
-            }
-            .comment-notes {
-                font-size: 0.9rem;
-                color: #666;
-                margin-bottom: 1rem;
-                display: none;
-            }
-        }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
     }
 }

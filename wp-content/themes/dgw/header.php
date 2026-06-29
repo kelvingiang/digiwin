@@ -27,9 +27,11 @@
     <?php wp_head(); ?>
     <!-- phan theo doi va quang cao cua zalo  -->
     <script async="" src="https://s.zzcdn.me/ztr/ztracker.js?id=7056180858377605120"></script>
+    <?php if ( ! is_page( 'member' ) ) : ?>
     <link rel="preload" as="image"
         href="https://www.digiwin.com.vn/wp-content/uploads/2022/12/About-us-Top-banner-rev-2025.webp"
         fetchpriority="high">
+    <?php endif; ?>
 
     <!-- Google Tag Manager -->
     <script>

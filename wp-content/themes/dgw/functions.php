@@ -26,6 +26,14 @@ require_once(DIR_CLASS . 'rewrite.class.php');
 new Rewrite_Url();
 
 
+$shortcode_path = get_template_directory() . '/shortcode/';
+
+if ( is_dir( $shortcode_path ) ) {
+    foreach ( glob( $shortcode_path . "*.php" ) as $filename ) {
+        require_once $filename;
+    }
+}
+
 
 add_action('init', function () {
     if (isset($_GET['mail_test'])) {
@@ -40,15 +48,18 @@ add_action('init', function () {
     }
 });
 
-// if (!isset($_SESSION['languages'])) {
-//     $_SESSION['languages'] = 'vn';
-// }
-/**
- * 設定網站語言（使用 Cookie，WordPress 標準）
- * 用法：?lang=vn 或 ?lang=cn
- */
 add_action('init', function () {
+    // 1. 新增這段：專門處理 AJAX 請求 (POST)
+    if (wp_doing_ajax() && isset($_POST['lang'])) {
+        // 確保值只能是 'cn' 或 'vn'
+        $lang = ($_POST['lang'] === 'cn') ? 'cn' : 'vn';
+        
+        // 第一時間強制覆寫 Cookie 變數，讓後續的 dgw_get_lang() 讀取到正確的值
+        $_COOKIE['site_lang'] = $lang; 
+        return; // AJAX 請求不需要執行後面的 setcookie 給瀏覽器
+    }
 
+    // 2. 原本的程式碼：處理一般頁面請求 (GET)
     if (isset($_GET['lang'])) {
         $lang = ($_GET['lang'] === 'cn') ? 'cn' : 'vn';
 
@@ -62,41 +73,16 @@ add_action('init', function () {
 
         $_COOKIE['site_lang'] = $lang;
     }
-
 }, 1);
 
 
-// 21/11/2025 khi thay đổi session language đông thời thay đổi lang trong thẻ HTMl 
-// tiện cho việc thay đổi font-family theo từng loại ngôn ngữ
-// add_filter('language_attributes', function ($output) {
-//     if (session_status() === PHP_SESSION_NONE) {
-//         session_start();
-//     }
-
-//     if (!empty($_SESSION['languages'])) {
-//         if ($_SESSION['languages'] === 'cn') {
-//             return 'lang="zh-TW"';
-//         } elseif ($_SESSION['languages'] === 'vn') {
-//             return 'lang="en-US"';
-//         }
-//     }
-
-//     return $output; // 如果沒有 session，使用預設語言
-// });
-
 add_filter('language_attributes', function ($output) {
-
     $lang = dgw_get_lang();
-
     if ($lang === 'cn') {
         return 'lang="zh-TW"';
     }
-
     return 'lang="vi-VN"';
-
 });
-
-
 
 //=== khi cài Divi Builder sẽ tự tạo project  post-type câu dưới là bỏ đi cái post-type đó ================== 
 add_action('init', function () {
@@ -106,35 +92,10 @@ add_action('init', function () {
 /* ==============================================================
   THAY DOI FILE DATA NGON NGU THEO SESSION LANGGUAGE
   =============================================================== */
-// function change_translate_text($translated)
-// {
-//     if ($_SESSION['languages'] == 'cn') {
-//         $languages = 'zh_TW';
-//     } else {
-//         $languages = 'vi_VN';
-//     }
-
-//     if (is_admin()) {
-//         $file = dirname(dirname(dirname(__FILE__))) . "/languages/admin_languages/data.php";
-//         // $file = DIR_LANGUAGES . 'admin_language/data.php';
-//     } else {
-//         $file = dirname(dirname(dirname(__FILE__))) . "/languages/{$languages}/data.php";
-//     }
-//     include_once $file;
-
-//     $data = getTranslate();
-//     if (isset($data[$translated])) {
-//         return $data[$translated];
-//     }
-//     return $translated;
-// }
-
-// add_filter('gettext', 'change_translate_text', 20);
 
 function change_translate_text($translated)
 {
     $lang = dgw_get_lang();
-
     $languages = ($lang === 'cn') ? 'zh_TW' : 'vi_VN';
 
     if (is_admin()) {
@@ -157,7 +118,6 @@ function change_translate_text($translated)
 
     return $translated;
 }
-
 add_filter('gettext', 'change_translate_text', 20);
 
 /* =======================================  
@@ -165,7 +125,6 @@ add_filter('gettext', 'change_translate_text', 20);
   ======================================= */
 
 add_action('after_setup_theme', 'blankslate_setup');
-
 function blankslate_setup()
 {
     load_theme_textdomain('blankslate', get_template_directory() . '/languages');
@@ -181,7 +140,6 @@ function blankslate_setup()
 }
 
 add_action('wp_enqueue_scripts', 'blankslate_load_scripts');
-
 function blankslate_load_scripts()
 {
     wp_enqueue_style('blankslate-style', get_stylesheet_uri());

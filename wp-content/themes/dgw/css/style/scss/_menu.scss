@@ -1,3 +1,6 @@
+@use "define" as *;
+@use "responsive" as *;
+
 $MenuTextColor: rgb(52, 114, 133);
 // $MenuTextHoverColor: #0665ad;
 $bgHoverColor: rgba(231, 231, 231, 0.9);
@@ -280,6 +283,6 @@ html[lang="zh-TW"] .has-sub::after {
     @include HasSub(90deg, 1px);
 }
 
-html[lang="en-US"] .has-sub::after {
+html[lang="vi-VN"] .has-sub::after {
     @include HasSub(90deg, 1px);
 }

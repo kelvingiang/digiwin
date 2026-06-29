@@ -3,7 +3,9 @@
     if (have_comments()) :
         global $comments_by_type;
         $comments_by_type = separate_comments($comments);
+
         if (! empty($comments_by_type['comment'])) :
+
     ?>
             <section id="comments-list" class="comments">
                 <h3 class="comments-title"><?php comments_number(__('No comments yet'), __('1 comment'),  '% ' . __('comments')); ?></h3>
@@ -38,7 +40,19 @@
         endif;
     endif;
     if (comments_open()) {
+        $current_user = get_current_custom_user(); // 確保在這裡調用函數，讓 $model_download 可用
+        // Chuẩn bị biến dữ liệu
+        $default_name  = '';
+        $default_email = '';
+        $is_readonly   = '';
 
+        if ($current_user) {
+            $default_name  = $current_user->username ?? '';
+            $default_email = $current_user->email ?? '';
+
+            // (Tùy chọn) Thêm thuộc tính readonly để user không tự sửa được tên/email nếu đã đăng nhập
+            $is_readonly   = 'readonly style="background-color: #f5f5f5;"';
+        }
         // 產生隨機混合題（加減乘）
         $a = rand(1, 10);
         $b = rand(1, 10);
@@ -73,11 +87,11 @@
         $fields = array(
             'author' => '<div class="form-row">
                     <label for="author"> ' . __('Your Name', 'dgw') . ' <span class="required">*</span></label>
-                    <input id="author" name="author" type="text" value="" size="30" required />
+                    <input id="author" name="author" type="text" value="' . $default_name . '"   size="30" ' . $is_readonly . ' required />
                  </div>',
             'email' => '<div class="form-row">
                     <label for="email">' . __('Your E-mail', 'dgw') . ' <span class="required">*</span></label>
-                    <input id="email" name="email" type="email" value="" size="30" required />
+                    <input id="email" name="email" type="email" value="' . $default_email . '" size="30" ' . $is_readonly . ' required />
                  </div>',
         );
 
@@ -88,8 +102,9 @@
                   </div>
                   
                   <div class="form-row-math">
-                  <label for="math_answer">' . __('Perform Calculations', 'dgw') . ' : <strong>' . $question . '</strong> = </label>
-                  <input id="math_answer" name="math_answer" type="text"  maxlength="4" required />
+                  <div style="font-weight: bold;">' . __('Perform Calculations', 'dgw') . '</div>
+                  <div><label for="math_answer"> ' . $question . ' = </label>
+                  <input id="math_answer" name="math_answer" type="text" style="margin-left:10px;"  maxlength="4" required /></div>
                   <span id="math-check-msg" style="margin-left:10px;"></span>
                   </div>
                   ';
@@ -133,7 +148,7 @@
         let math_ok = false; // ← 全域變數，用來控制能否提交
 
         // 🔍 監聽輸入欄位
-        $(document).on("keyup", "#math_answer", function() {
+        jQuery(document).on("keyup", "#math_answer", function() {
 
             var answer = $(this).val().trim();
 
@@ -173,10 +188,8 @@
 
         });
 
-
-
         // ⛔ 阻止提交（核心）
-        $(document).on("submit", "#commentform", function(e) {
+        jQuery(document).on("submit", "#commentform", function(e) {
             let correctAnswer = '<?php echo __('The calculation problem is incorrect. Please enter the correct answer!', 'dgw') ?>'
             if (!math_ok) {
                 e.preventDefault();
@@ -184,7 +197,28 @@
                 jQuery('#math_answer').focus().val('');
                 return false;
             }
+            let $submitBtn = jQuery(this).find('input[type="submit"], button[type="submit"]');
 
+            // Đo kích thước hiện tại trước khi đổi chữ để nút không bị co giãn
+            let btnWidth = $submitBtn.outerWidth();
+            let btnHeight = $submitBtn.outerHeight();
+
+            // 3. Khóa nút, khóa kích thước cố định và làm mờ
+            $submitBtn.prop('disabled', true).css({
+                'opacity': '0.7',
+                'cursor': 'wait',
+                'height': btnHeight + 'px'
+            })
+            $submitBtn.html('<span class="my-download-spinner"></span>');
+
+            // 4. Chỉ thay đổi chữ
+            let loadingText = '<?php echo __('Submitting...', 'dgw') ?>';
+
+            if ($submitBtn.is('input')) {
+                $submitBtn.val(loadingText);
+            } else {
+                $submitBtn.text(loadingText);
+            }
             // 正確 → 允許提交
             return true;
         });

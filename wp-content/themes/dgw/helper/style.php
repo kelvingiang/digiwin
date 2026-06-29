@@ -3,35 +3,47 @@
 function style_header_scripts()
 {
         if ($GLOBALS['pagenow'] != 'wp-login.php' && !is_admin()) {
-                //======SLICK=================================================
-                wp_register_style('slick-theme-css', get_template_directory_uri() . '/js/slick/slick-theme.css', array(), '1.0', 'all');
-                wp_enqueue_style('slick-theme-css');
+                // Chỉ load slider/carousel khi KHÔNG phải trang member
+                if (!is_page('member')) {
+                        //======SLICK=================================================
+                        wp_register_style('slick-theme-css', get_template_directory_uri() . '/js/slick/slick-theme.css', array(), '1.0', 'all');
+                        wp_enqueue_style('slick-theme-css');
 
-                wp_register_script('slick-js', get_template_directory_uri() . '/js/slick/slick.min.js', array('jquery'), '1.0.0'); // Custom scripts
-                wp_enqueue_script('slick-js');
+                        wp_register_script('slick-js', get_template_directory_uri() . '/js/slick/slick.min.js', array('jquery'), '1.0.0'); // Custom scripts
+                        wp_enqueue_script('slick-js');
 
-                //==== SLIDER ============================================
-                wp_register_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.css', array(), '1.0', 'all');
-                wp_enqueue_style('owl-css');
+                        //==== SLIDER ============================================
+                        wp_register_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.css', array(), '1.0', 'all');
+                        wp_enqueue_style('owl-css');
 
-                wp_register_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', array(), '1.0', 'all');
-                wp_enqueue_style('owl.theme.default-css');
+                        wp_register_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', array(), '1.0', 'all');
+                        wp_enqueue_style('owl.theme.default-css');
 
-                wp_register_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.js', array('jquery'), '1.0.0'); // Custom scripts
-                wp_enqueue_script('owl.carousel-js');
+                        wp_register_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.js', array('jquery'), '1.0.0'); // Custom scripts
+                        wp_enqueue_script('owl.carousel-js');
 
-                //==== MULTY SLIDER============================================
-                wp_register_style('flexisel-style', get_template_directory_uri() . '/js/slider-multi/flexisel.css', array(), '1.0', 'all');
-                wp_enqueue_style('flexisel-style');
+                        //==== MULTY SLIDER============================================
+                        wp_register_style('flexisel-style', get_template_directory_uri() . '/js/slider-multi/flexisel.css', array(), '1.0', 'all');
+                        wp_enqueue_style('flexisel-style');
 
-                wp_register_script('flexisel-js', get_template_directory_uri() . '/js/slider-multi/jquery.flexisel.js', array('jquery'), '1.0.0'); // Custom scripts
-                wp_enqueue_script('flexisel-js');
+                        wp_register_script('flexisel-js', get_template_directory_uri() . '/js/slider-multi/jquery.flexisel.js', array('jquery'), '1.0.0'); // Custom scripts
+                        wp_enqueue_script('flexisel-js');
 
-                wp_register_script('jcarousel-js', get_template_directory_uri() . '/js/jquery.jcarousellite-1.0.1.js', array('jquery'), '1.0.0'); // Custom scripts
-                wp_enqueue_script('jcarousel-js');
-
+                        wp_register_script('jcarousel-js', get_template_directory_uri() . '/js/jquery.jcarousellite-1.0.1.js', array('jquery'), '1.0.0'); // Custom scripts
+                        wp_enqueue_script('jcarousel-js');
+                }
                 //====== MY STYLE ==================================================================
-                wp_register_style('my-main-css', get_template_directory_uri() . '/css/style/main.min.css', array(), '1.0', 'all');
+                // Lấy timestamp của file CSS để tự động cập nhật version, tránh cache trình duyệt
+                $css_file_path = get_template_directory() . '/css/style/main.min.css';
+                $css_version = file_exists($css_file_path) ? filemtime($css_file_path) : '1.0';
+
+                wp_register_style(
+                        'my-main-css',
+                        get_template_directory_uri() . '/css/style/main.min.css',
+                        array(),
+                        $css_version,
+                        'all'
+                );
                 wp_enqueue_style('my-main-css');
         } else {
 

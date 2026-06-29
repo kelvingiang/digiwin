@@ -25,19 +25,24 @@
                            width="150"
                            height="42" />
                    </div>
+
                    <div class="foot-slogan">
                        DIGITAL TRANSFORMATION PARTNER
                    </div>
+
                    <h3><?php _e('Office In VietNam') ?> </h3>
                    <ul class='footer-list'>
-                       <li><label><?php echo get_post_meta(1, '_info_address_' . $lang, true) ?></label>
+                       <li>
+                           <label>
+                               <?php echo get_post_meta(1, '_info_address_' . $lang, true) ?>
+                           </label>
                        </li>
                    </ul>
                    <div class="prize-link">
                        <?php
                         // Giá trị mặc định
                         $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin'; // fallback link
-                        $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download'; 
+                        $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download';
 
                         $allowed_langs = ['vn', 'cn'];
                         $lang = isset($_COOKIE['site_lang']) ? $_COOKIE['site_lang'] : '';
@@ -59,8 +64,8 @@
                            </svg>
                            <?php _e('Awards & Certificates') ?>
                        </a>
-
                    </div>
+
                    <div class="download-link">
                        <label class="download-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z" />
@@ -89,6 +94,7 @@
                                <?php _e('System Administration (ERP)') ?>
                            </a>
                        </li>
+
                        <li>
                            <a href="<?php echo WP_HOME . '/solution/cate/54/tag/' ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -97,6 +103,7 @@
                                <?php _e('Production Management (MES)') ?>
                            </a>
                        </li>
+
                        <li>
                            <a href="<?php echo WP_HOME . '/solutions/he-thong-logistics-thong-minh/' ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -105,6 +112,7 @@
                                <?php _e('Smart Warehouse (WMS)') ?>
                            </a>
                        </li>
+
                        <li>
                            <a href="<?php echo WP_HOME . '/solutions/nganh-cao-su-nhua/' ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -113,6 +121,7 @@
                                <?php _e('Digital Transformation in the Plastics Industry') ?>
                            </a>
                        </li>
+
                        <li>
                            <a href="<?php echo WP_HOME . '/cases/' ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -158,7 +167,7 @@
 
                        <li>
                            <div>
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M320.2 112C435 112.1 528 205.2 528 320C528 342.1 524.6 363.4 518.2 383.4C516.2 383.8 514.1 384 512 384L509.3 384C500.8 384 492.7 380.6 486.7 374.6L457.4 345.3C451.4 339.3 448 331.2 448 322.7L448 272C448 263.2 455.2 256 464 256C472.8 256 480 248.8 480 240C480 231.2 472.8 224 464 224L440 224C426.7 224 416 234.7 416 248C416 261.3 405.3 272 392 272L336 272C327.2 272 320 279.2 320 288C320 296.8 312.8 304 304 304L278.6 304C266.1 304 256 293.9 256 281.4C256 275.4 258.4 269.6 262.6 265.4L332.7 195.3C334.8 193.2 336 190.3 336 187.3C336 181.1 330.9 176 324.7 176L310.6 176C298.1 176 288 165.9 288 153.4C288 147.4 290.4 141.6 294.6 137.4L317.7 114.3C318.5 113.5 319.3 112.8 320.2 112.1zM502.4 420.1C469.6 479.7 408.5 521.5 337.2 527.3C336.5 525 336.1 522.5 336.1 520C336.1 506.7 325.4 496 312.1 496L285.4 496C276.9 496 268.8 492.6 262.8 486.6L233.5 457.3C227.5 451.3 224.1 443.2 224.1 434.7L224.1 368C224.1 350.3 238.4 336 256.1 336L354.8 336C363.3 336 371.4 339.4 377.4 345.4L406.7 374.7C412.7 380.7 420.8 384.1 429.3 384.1L434.8 384.1C443.3 384.1 451.4 387.5 457.4 393.5L473.4 409.5C477.6 413.7 483.4 416.1 489.4 416.1C494.2 416.1 498.7 417.6 502.4 420.2zM320 576L346.2 574.7C337.6 575.6 328.9 576 320 576zM346.2 574.7C475.3 561.6 576 452.6 576 320C576 178.6 461.4 64 320 64L320 64C178.6 64 64 178.6 64 320C64 447.5 157.2 553.3 279.3 572.8C292.5 574.9 306.1 576 320 576zM251.3 187.3L219.3 219.3C213.1 225.5 202.9 225.5 196.7 219.3C190.5 213.1 190.5 202.9 196.7 196.7L228.7 164.7C234.9 158.5 245.1 158.5 251.3 164.7C257.5 170.9 257.5 181.1 251.3 187.3z" />
                                </svg>
                            </div>
@@ -199,11 +208,8 @@
                                    <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96zM165 266.2L231.5 266.2L231.5 480L165 480L165 266.2zM236.7 198.5C236.7 219.8 219.5 237 198.2 237C176.9 237 159.7 219.8 159.7 198.5C159.7 177.2 176.9 160 198.2 160C219.5 160 236.7 177.2 236.7 198.5zM413.9 480L413.9 376C413.9 351.2 413.4 319.3 379.4 319.3C344.8 319.3 339.5 346.3 339.5 374.2L339.5 480L273.1 480L273.1 266.2L336.8 266.2L336.8 295.4L337.7 295.4C346.6 278.6 368.3 260.9 400.6 260.9C467.8 260.9 480.3 305.2 480.3 362.8L480.3 480L413.9 480z" />
                                </svg></a>
                        </li>
-
-
                    </ul>
                </div>
-
            </div>
 
 
@@ -234,8 +240,12 @@
            <div class="copy-right">
                <div>&copy; 2026 DIGIWIN Vietnam. All rights reserved</div>
 
-               <div><a class="foot-link" href="https://www.digiwin.com.vn/digiwinasean_privacy-policy/">Chính Sách Bảo Mật | Điều Kiện Sử Dụng </a></div>
+               <div>
+                   <a class="foot-link"
+                       href="<?php echo WP_HOME . '/digiwinasean_privacy-policy/' ?>">
+                       Chính Sách Bảo Mật | Điều Kiện Sử Dụng
+                   </a>
+               </div>
            </div>
        </footer>
    <?php } ?>
-   <!-- </div> -->
