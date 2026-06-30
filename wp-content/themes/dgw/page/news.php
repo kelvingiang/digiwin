@@ -1,7 +1,7 @@
-<?php /*  Template Name: News Page */ ?>
+﻿<?php /*  Template Name: News Page */ ?>
 <?php get_header(); ?>
 <div>
-  <?php pageImg($post->ID); ?>
+  <?php pageImg(get_the_ID()); ?>
 </div>
 <div style="height: 3rem;"></div>
 <div class="container-fluid">
@@ -50,39 +50,64 @@
 
 <script>
     jQuery(document).ready(function() {
-        jQuery('#load-more').click(function() {
+        var isLoading = false;
+        var hasMore = true;
 
-            var lastID = jQuery(".data-list > div:last-child").attr("data-id");
-            var post = 'post';
-            var count = '<?php echo get_option('more_load'); ?>';
-            var cate = 'news';
+        jQuery('#load-more').hide();
 
-            jQuery.ajax({
-                url: '<?php echo get_template_directory_uri() . '/ajax/load-more-post.php' ?>', // lay doi tuong chuyen sang dang array
-                type: 'post', //                data: $(this).serialize(),
-                data: {
-                    lastID: lastID,
-                    post: post,
-                    cate: cate,
-                    count: count,
-                },
-                dataType: 'json',
-                success: function(data) { // set ket qua tra ve  data tra ve co thanh phan status va message
-                    if (data.status === 'done') {
-                        jQuery(".data-list").append(data.html);
-                        var $target = jQuery('html,body');
-                        $target.animate({
-                            scrollTop: $target.height()
-                        }, 2000);
-                    } else if (data.status === 'empty') {
-                        jQuery("#load-more").hide();
+        function loadMoreCases() {
+            if (isLoading || !hasMore) return;
+
+            var lastItem = jQuery(".data-list > div:last-child");
+            if (lastItem.length === 0) return;
+
+            var scrollBottom = jQuery(window).scrollTop() + jQuery(window).height();
+            var lastItemBottom = lastItem.offset().top + lastItem.outerHeight();
+
+            if (scrollBottom >= lastItemBottom - 50) {
+                isLoading = true;
+
+                var lastID = lastItem.attr("data-id");
+                var post = 'post';
+                var count = '<?php echo get_option('more_load'); ?>';
+                var cate = 'news';
+
+                jQuery.ajax({
+                    url: '<?php echo admin_url("admin-ajax.php"); ?>',
+                    type: 'post',
+                    data: {
+                        action: 'load_more_post',
+                        lastID: lastID,
+                        post: post,
+                        cate: cate,
+                        count: count,
+                    },
+                    dataType: 'json',
+                    beforeSend: function() {
+                        var spinner = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite; display: inline-block;"><style>@keyframes spin { 100% { transform: rotate(360deg); } }</style><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>';
+                        jQuery('#load-more').show().html('<p style="text-align:center; margin:10px 0;">' + spinner + '</p>');
+                    },
+                    success: function(data) {
+                        if (data.status === 'done') {
+                            jQuery(".data-list").append(data.html);
+                            isLoading = false;
+                            jQuery('#load-more').hide();
+                        } else if (data.status === 'empty') {
+                            hasMore = false;
+                            jQuery("#load-more").hide();
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        isLoading = false;
+                        jQuery('#load-more').hide();
                     }
-                },
-                error: function(xhr) {
-                    console.log(xhr.reponseText);
-                    //console.log(data.status);
-                }
-            });
+                });
+            }
+        }
+
+        jQuery(window).scroll(function() {
+            loadMoreCases();
         });
     });
 </script>

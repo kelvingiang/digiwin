@@ -22,115 +22,207 @@
     }
 }
 
+// [2026-06-30]: Thiết kế lại section Business sang dạng Modern Image Zoom & Glow
 #business-home {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 20px;
-    margin: 0.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin: 2rem auto;
+    padding: 0 15px;
+    max-width: 1800px;
 
     @include Respond(md) {
         grid-template-columns: 1fr 1fr;
+        gap: 25px;
     }
     @include Respond(sm) {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
+
     .item {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        margin: 0.1rem;
-        padding-bottom: 8px;
-        border-radius: 0.3rem;
+        background-color: #fff;
+        border-radius: 16px;
         overflow: hidden;
-        border: 1px solid #fff;
-        transition: transform 0.3s ease-in-out;
-        font-size: 1.2rem;
-        border: 1px solid rgba(231, 231, 231, 0.788);
+        border: 1px solid rgba(231, 231, 231, 0.8);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 
         .item-img {
+            position: relative;
+            overflow: hidden; // Rất quan trọng để ảnh không tràn khi zoom
+
+            // Lớp phủ Gradient mờ ảo
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 50%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 1;
+            }
+
             img {
                 aspect-ratio: 4/3 !important;
                 width: 100% !important;
                 height: auto !important;
+                object-fit: cover;
+                transition: transform 0.7s ease; // Chuyển động zoom mượt
             }
         }
+
         .item-content {
-            font-weight: bold;
-            margin-top: 1rem;
-            color: $color_blue_link;
+            padding: 1.5rem 1rem;
+            color: #333;
             text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s ease;
+
+            h3 {
+                margin: 0;
+                font-size: 1.15rem;
+                font-weight: 700;
+            }
         }
+
         &:hover {
-            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3); /* h-shadow, v-shadow, blur, color with transparency */
-            transform: scale(1.02); /* Scales the div to 110% of its original size */
+            transform: translateY(-8px); // Thẻ nổi lên
+            border-color: $color_blue_link; // Viền sáng màu xanh
+            box-shadow: 0 15px 35px rgba(84, 145, 224, 0.25); // Bóng đổ tỏa sáng Glow
+
+            .item-img {
+                &::after {
+                    opacity: 1; // Hiện lớp gradient
+                }
+
+                img {
+                    transform: scale(1.12); // Zoom ảnh bên trong
+                }
+            }
+
             .item-content {
-                color: $color_blue_link_hover;
+                color: $color_blue_link;
+                h3 {
+                    color: $color_blue_link;
+                }
             }
         }
     }
 }
 
+// [2026-06-30]: Thiết kế section Industry - Glassmorphism + Circle Image Overlap
 #industry-home {
-    // display: grid;
-    // grid-template-columns: 1fr 1fr 1fr;
-    // gap: 2px;
-    background-color: rgba(224, 222, 222, 0.8);
-    padding: 0.5rem 0rem;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%); // Nền xám/xanh nhạt tổng thể
+    padding: 4rem 15px 3rem 15px; // Top padding cao hơn để bù cho khoảng nổi của ảnh
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    align-items: stretch; // ⭐ 讓 grid 自動撐到最高 item 的高度
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1500px;
+    border-radius: 24px; // Bo góc mảng lớn nếu muốn
 
     @include Respond(md) {
         grid-template-columns: 1fr 1fr;
-        padding: 1rem 0rem;
+        gap: 50px 20px; // Tăng gap dọc để thẻ không đè lên nhau vì có margin-top âm
         > :nth-child(3) {
             grid-column: 1 / -1;
             justify-self: center;
-            width: 50%;
+            width: calc(50% - 10px);
         }
     }
     @include Respond(sm) {
         grid-template-columns: 1fr;
+        gap: 50px 20px;
+        > :nth-child(3) {
+            width: 100%;
+        }
     }
+
     .item {
         text-align: center;
-        transition: all 1s linear;
-        font-size: 1.2rem;
-
+        margin-top: 40px; // Đẩy thẻ xuống để nhường chỗ cho ảnh nổi lên
+        background: rgba(255, 255, 255, 0.45); // Kính mờ
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05); // Bóng đổ kính
+        transition: all 0.4s ease;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
 
-        @include Respond(md) {
-            font-size: 1.1rem;
+        a {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
-        @include Respond(sm) {
-            font-size: 1.2rem;
-            width: 100%;
-            margin: 1rem 0rem;
-        }
+
         .item-img {
-            overflow: hidden;
-            // height: 400px;
-            clip-path: circle(38%);
-            align-items: center;
-            justify-content: center;
+            width: 230px;
+            height: 230px;
+            margin: -50px auto 10px auto; // Ảnh trồi lên 50px khỏi mép trên của thẻ
+            border-radius: 50%;
+            border: 6px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden; // Cắt ảnh thành hình tròn
+            position: relative;
+            background-color: #fff;
+            transition: all 0.4s ease;
+
             img {
-                transition: all 1s;
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: cover;
+                transition: transform 0.6s ease;
             }
         }
+
         .item-content {
-            font-weight: bold;
-            color: $color_blue_link;
-        }
-        &:hover {
-            img {
-                transform: scale(1.2);
+            padding: 0.5rem 1.5rem 2rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            h3 {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: #333;
+                transition: color 0.3s ease;
             }
-            .item-content {
-                color: $color_blue_link_hover;
+        }
+
+        &:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.85); // Sáng lên khi hover
+            border-color: #ffffff;
+            box-shadow: 0 15px 40px rgba(31, 38, 135, 0.1);
+
+            .item-img {
+                box-shadow: 0 15px 30px rgba(84, 145, 224, 0.3); // Phát sáng màu xanh dương nhạt
+                border-color: #ffffff;
+                transform: translateY(-5px);
+            }
+
+            .item-img img {
+                transform: scale(1.15); // Zoom nhẹ
+            }
+
+            .item-content h3 {
+                color: $color_blue_link;
             }
         }
     }
@@ -280,24 +372,36 @@
     }
 }
 
+// [2026-06-30]: Redesign giao diện trang chủ mục Tin tức theo hướng hiện đại, bóng bẩy (Glassmorphism, animations)
 #news-home {
+    margin: 2rem auto 4rem;
+    max-width: 1800px;
+    padding: 0 15px;
+
     .news-home-title {
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+
         div {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 20%;
             cursor: pointer;
-            padding: 1rem 0.3rem;
-            color: rgb(119, 117, 117);
-            //  border-bottom: 2px solid #000;
-            border-radius: 5px 5px 0 0;
+            padding: 0.8rem 1.5rem;
+            color: #666;
+            background-color: transparent;
+            border-radius: 13px; // Pill shape
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
             h3 {
-                font-size: 1.3rem;
+                font-size: 1.1rem;
+                margin: 0;
+                font-weight: 500;
                 @include Respond(lg) {
                     font-size: 1rem;
                 }
@@ -305,83 +409,165 @@
                     font-size: 0.9rem;
                 }
                 @include Respond(sm) {
-                    font-size: 0.7rem;
+                    font-size: 0.8rem;
                 }
             }
+
             &:hover {
+                background-color: rgba(84, 145, 224, 0.1);
                 h3 {
                     color: $color_blue_link;
-                    font-weight: bold;
                 }
             }
         }
         .title-select {
-            color: $color_blue_link;
-            background-color: rgb(238, 238, 238);
+            background-color: $color_blue_link;
+            box-shadow: 0 4px 15px rgba(84, 145, 224, 0.4);
+            color: #fff;
+
             h3 {
                 font-weight: bold;
+                color: #fff !important;
+            }
+
+            &:hover {
+                background-color: darken($color_blue_link, 10%);
+                h3 {
+                    color: #fff;
+                }
             }
         }
     }
+
     .news-home-content {
         > div {
             display: none;
         }
         .content-select {
-            padding: 1rem 2rem 3rem 1rem;
-            background-color: rgb(238, 238, 238);
             display: block;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 2rem 2.5rem 4rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); // Soft shadow
             position: relative;
+            animation: fadeUpNews 0.4s ease forwards;
+            @include Respond(sm) {
+                padding: 2rem 0.2rem 4rem;
+            }
+            @include Respond(md) {
+                padding: 2rem 1rem 4rem;
+            }
             .content-list {
                 .item {
                     display: flex;
                     flex-direction: row;
                     justify-content: space-between;
-                    padding: 0.5rem 2rem;
-                    border-bottom: 1px dotted #7c7c7c;
-                    font-size: 1.2rem;
-                    font-weight: bold;
+                    align-items: center;
+                    padding: 1.2rem 1.5rem;
+                    margin-bottom: 10px;
+                    border-radius: 10px;
+                    border: 1px solid transparent;
+                    background-color: #f9fbfd;
+                    transition: all 0.3s ease;
                     cursor: pointer;
-                    color: #05526e;
+
+                    div:first-child {
+                        color: #05526e;
+                        font-size: 1.15rem;
+                        font-weight: 600;
+                        flex: 1;
+                        transition: color 0.3s ease;
+                    }
 
                     div:last-child {
-                        color: #2e2e2e !important;
-                        font-size: 0.8rem;
-                        font-weight: 500;
-                        margin-top: 0.5rem;
+                        // background-color: rgba(84, 145, 224, 0.1);
+                        color: #999 !important;
+                        padding: 0.4rem 1rem;
+                        border-radius: 20px;
+                        font-size: 0.85rem;
+                        font-weight: bold;
+                        margin-left: 1rem;
+                        white-space: nowrap;
+                        @include Respond(md) {
+                            display: none;
+                        }
                     }
 
                     &:hover {
+                        background-color: #fff;
+                        border-color: rgba(84, 145, 224, 0.3);
+                        box-shadow: 0 5px 15px rgba(84, 145, 224, 0.15);
+                        transform: translateY(-2px);
+
                         div:first-child {
-                            color: #333;
+                            color: $color_blue_link;
                         }
-                        background-color: rgb(241, 241, 241);
                     }
                 }
             }
             .content-more {
                 position: absolute;
-                right: 3.5rem;
-                bottom: 0.8rem;
+                right: 2.5rem;
+                bottom: 1.2rem;
                 font-size: 1rem;
                 font-weight: bold;
+                color: $color_blue_link;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.3s ease;
+
+                i {
+                    transition: transform 0.3s ease;
+                }
+
+                &:hover {
+                    color: darken($color_blue_link, 15%);
+                    i {
+                        transform: translateX(5px);
+                    }
+                }
             }
         }
     }
 }
 
+@keyframes fadeUpNews {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// [2026-06-30]: Tối ưu giao diện Logo Khách hàng/Đối tác theo kiểu Card & Grayscale to Color
 .case-logo {
     display: flex;
     flex-direction: row;
-    justify-content: left;
+    justify-content: center;
     flex-wrap: wrap;
+    margin: 2rem auto;
+    padding: 0 10px;
+    max-width: 1800px;
+
+    // HIỆU ỨNG FOCUS: Khi di chuột vào khu vực grid, tất cả card mờ đi đôi chút
+    &:hover {
+        .case-logo-card {
+            opacity: 0.5;
+            filter: grayscale(80%);
+            transform: scale(0.95);
+        }
+    }
+
     &-item {
         width: 12.5%;
+        padding: 2px; // Thay cho margin/gap để lưới đều nhau
         display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-        padding: 0.5rem;
+        position: relative; // Để z-index hoạt động khi hover
+
         @include Respond(lg) {
             width: 20%;
         }
@@ -391,15 +577,145 @@
         @include Respond(sm) {
             width: 33.33%;
         }
+
+        // KHI HOVER VÀO TỪNG ITEM CỤ THỂ
         &:hover {
-            img {
-                transform: scale(1.05);
+            z-index: 10;
+
+            .case-logo-card {
+                opacity: 1 !important;
+                filter: grayscale(0%) !important;
+                border-color: $color_blue_link;
+                box-shadow: 0 15px 35px rgba(84, 145, 224, 0.2);
+                transform: scale(1.15) translateY(-8px) !important;
+
+                img {
+                    transform: scale(1.05);
+                }
+
+                // Hiệu ứng tia sáng lướt qua (Shine sweep)
+                &::after {
+                    left: 200%;
+                    transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+                }
             }
         }
+    }
+
+    &-card {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding: 1.2rem;
+        background-color: #ffffff;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        position: relative;
+        overflow: hidden; // Để che tia sáng bên ngoài thẻ
+
+        // Lớp giả tạo tia sáng (Shine)
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            z-index: 2;
+        }
+
         img {
-            transition: all 0.3s;
             width: 100% !important;
             height: auto !important;
+            transition: all 0.4s ease;
+            object-fit: contain;
+            position: relative;
+            z-index: 1;
+        }
+    }
+}
+
+// [2026-06-30]: Tối ưu CSS cho khối Thống kê con số (Animated Counter)
+.home-count-section {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    // background: transparent;
+    padding: 2rem 15px;
+    margin: 0rem auto 2rem;
+    color: #fff;
+    // border-radius: 20px;
+    // max-width: 1600px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    
+    .count-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        @include Respond(md) {
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+    }
+    
+    .count-item {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.3s ease;
+        
+        .count-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            svg { width: 35px; height: 35px; fill: #48cae4; }
+        }
+        
+        .count-number-wrapper {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            .count-number {
+                font-size: 4rem;
+                font-weight: 800;
+                color: #90e0ef;
+                line-height: 1;
+                font-variant-numeric: tabular-nums;
+            }
+            .count-plus {
+                font-size: 3rem;
+                font-weight: bold;
+                color: #00b4d8;
+                margin-left: 5px;
+            }
+        }
+        
+        .count-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+        
+        &:hover {
+            transform: translateY(-10px);
+            .count-icon { background-color: rgba(255,255,255,0.2); }
         }
     }
 }

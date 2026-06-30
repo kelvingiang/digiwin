@@ -1,10 +1,10 @@
-<?php /*  Template Name: About Page */ ?>
+﻿<?php /*  Template Name: About Page */ ?>
 <?php get_header();
 get_template_part('templates/template', 'header'); 
 $lang = dgw_get_lang();
 ?>
 <div>
-    <?php pageImg($post->ID); ?>
+    <?php pageImg(get_the_ID()); ?>
 </div>
 <div class="container-fluid">
     <div class="row margin-top">

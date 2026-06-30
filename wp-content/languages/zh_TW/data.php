@@ -163,7 +163,10 @@ function getTranslate()
         "Other"                  => "其他",
         "I agree with Digiwin's privacy policy" => "我同意 Digiwin 的隱私政策",
         "privacy policy" => "隱私政策",
-        "Login-Register" => "登入 - 註冊"
+        "Login-Register" => "登入 - 註冊",
+        'Years of experience'=> '年資',
+        'Projects & Clients'=> '成功案例',
+        'Product Solutions'=> '產品方案'
     );
     return array_merge($data);
 }

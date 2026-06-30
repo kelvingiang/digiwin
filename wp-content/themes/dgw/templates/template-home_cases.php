@@ -1,5 +1,5 @@
 <h2 class="h2-home-title"><?php _e('Enterprise model success case') ?></h2>
-<div id="casestudies-slider">
+<div id="casestudies-slider" style="background-color:transparent;">
     <div class="owl-carousel owl-theme">
         <?php
         $wp_query = getCustomPostAtHome('casestudies', -1);
@@ -7,7 +7,7 @@
         if ($wp_query->have_posts()) :
             while ($wp_query->have_posts()) :
                 $wp_query->the_post();
-                $thumb_id = get_post_thumbnail_id($post->ID);
+                $thumb_id = get_post_thumbnail_id(get_the_ID());
 
                 // Lấy URL theo từng size
                 $url_desktop = wp_get_attachment_image_src($thumb_id, 'medium');   // Desktop

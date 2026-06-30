@@ -108,7 +108,7 @@ class Controller_Member
         }
 
         require_once(DIR_MODEL . 'model-download.php');
-        require_once(get_template_directory() . '/inc/code/function-member-dictionary.php');
+        require_once(get_template_directory() . '/inc/code/code-member-dictionary.php');
 
         $exporter = new Model_Download();
         $data = $exporter->get_export_data();

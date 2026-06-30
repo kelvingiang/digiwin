@@ -1,69 +1,169 @@
+// [2026-06-30]: Thiết kế lại Menu Mobile (Modern Side Drawer)
 @use "define" as *;
 @use "responsive" as *;
 
-$menu_mobile_color: rgba(194, 18, 18, 0.76);
+$menu_mobile_color: $color_blue_link; // Dùng màu xanh chuẩn của Digiwin thay vì màu đỏ
+$menu_bg: rgba(255, 255, 255, 0.95);
+
 .menu-mobile {
-    display: none;
-    background-color: aqua;
-    width: 100%;
+    display: none; // Mặc định ẩn trên desktop
     position: fixed;
-    top: 27px;
-    right: 2px;
-    z-index: 100000000002;
-      @include Respond(md) {
-        display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0; // Tránh block click khi chưa mở
+    z-index: 999999;
+
+    @include Respond(md) {
+        display: block; // Hiện trên mobile/tablet
     }
+
+    // Icon Hamburger (Mở menu)
     .menu-mobile-icon {
-        position: absolute;
-        right: 3px;
-        top: 15px;
-        z-index: 1000000002;
+        position: fixed;
+        right: 15px;
+        top: 50px;
+        z-index: 1000000;
         cursor: pointer;
-        font-size: 1.5rem;
-        @include Respond(md) {
-            font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        background-color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        &:active {
+            transform: scale(0.9);
         }
-        &:hover {
-            color: $menu_mobile_color;
-        }
-        .svg-menu-icon{
+
+        .svg-menu-icon {
             fill: $menu_mobile_color;
             width: 20px;
-            background-color: #fff;
-
+            height: 20px;
+            transition: fill 0.3s ease;
         }
-        
     }
+
+    // Lớp phủ mờ (Overlay)
+    .menu-mobile-overlay {
+        position: fixed;
+        top: 0px;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+        z-index: 999998;
+    }
+
+    // Khu vực Panel Menu (Trượt từ phải sang)
     .menu-mobile-ui {
-        display: none;
-        position: absolute;
-        right: 0px;
-        top: 15px;
-        background-color: rgb(255, 255, 255);
-        border-radius: 0.2rem 0 0 0.2rem;
-        border-bottom: 1px solid rgb(161, 161, 161);
-        border-top: 1px solid rgb(161, 161, 161);
-        border-left: 1px solid rgb(161, 161, 161);
-        width: 150px;
-        .menu-mobile-item {
-            transition-duration: 1s;
-            border-bottom: 1px dotted #999;
+        position: fixed;
+        top: 48px;
+        right: 0;
+        width: 80%;
+        max-width: 320px;
+        height: 100vh;
+        background: $menu_bg;
+        backdrop-filter: blur(10px);
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+        z-index: 999999;
+        transform: translateX(100%); // Ẩn bên phải màn hình
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        display: flex;
+        flex-direction: column;
+
+        .menu-mobile-header {
             display: flex;
-            &:hover {
-                background-color: $menu_mobile_color;
-                a {
-                    color: #fff;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+            .menu-title {
+                font-size: 1.2rem;
+                font-weight: 800;
+                color: #333;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .menu-mobile-close {
+                cursor: pointer;
+                width: 35px;
+                height: 35px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.05);
+                transition: background-color 0.3s ease;
+
+                svg {
+                    width: 18px;
+                    height: 18px;
+                    fill: #666;
+                }
+
+                &:active {
+                    background-color: rgba(0, 0, 0, 0.1);
                 }
             }
-            a {
-                font-weight: bold;
-                font-size: 1rem;
-                display: block;
-                color: $menu_mobile_color;
-                padding: 0.5rem 1rem;
-                width: 100%;
-                transition-duration: 1s;
+        }
+
+        .menu-mobile-content {
+            padding: 15px 0;
+            overflow-y: auto; // Cho phép cuộn nếu menu quá dài
+            flex-grow: 1;
+
+            .menu-mobile-item {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+                
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                a {
+                    display: block;
+                    padding: 16px 25px;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    color: #444;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+
+                    &:active, &:focus {
+                        background-color: rgba(84, 145, 224, 0.08);
+                        color: $menu_mobile_color;
+                        padding-left: 30px; // Hiệu ứng thò thụt nhẹ khi chạm
+                    }
+                }
             }
+        }
+    }
+
+    // Trạng thái mở (Active State)
+    &.is-open {
+        height: 100vh; // Mở rộng vùng chứa để nhận click vào overlay
+
+        .menu-mobile-icon {
+            opacity: 0; // Ẩn icon Hamburger đi
+            pointer-events: none;
+        }
+
+        .menu-mobile-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-mobile-ui {
+            transform: translateX(0); // Trượt menu ra
         }
     }
 }

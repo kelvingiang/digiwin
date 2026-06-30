@@ -27,18 +27,138 @@ html[lang="vi-VN"] body {
     font-family: "Noto Sans", Arial, Helvetica, sans-serif
 }
 
+// Bổ sung thêm 2 tam giác vào thẻ html để có tổng cộng 4 hình
+// Bổ sung thêm 2 tam giác vào thẻ html để có tổng cộng 4 hình
+html {
+    &::before {
+        content: '';
+        position: fixed;
+        top: 20vh;
+        right: 0;
+        width: 25px; // Kích thước cực nhỏ
+        height: 25px;
+        background-color: rgba(150, 150, 150, 0.4); // Xám
+        clip-path: polygon(100% 0, 100% 100%, 0 50%); // Chỉ sang trái
+        z-index: -2;
+        pointer-events: none;
+        animation: randomFlyRight 11s linear infinite; // Dùng các số nguyên tố (11,13,17,19) để tạo độ lệch pha (random) hoàn hảo
+        animation-delay: 2s;
+    }
+    &::after {
+        content: '';
+        position: fixed;
+        bottom: 15vh;
+        left: 0;
+        width: 35px;
+        height: 35px;
+        background-color: rgba(150, 150, 150, 0.3); // Xám
+        clip-path: polygon(0 0, 0 100%, 100% 50%); // Chỉ sang phải
+        z-index: -2;
+        pointer-events: none;
+        animation: randomFlyLeft 13s linear infinite;
+        animation-delay: 5s;
+    }
+}
+
+// [2026-06-30]: Tối ưu Background Body - Dotted Grid, Gradient & Random Moving Triangles
 body {
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    padding: 0; /* Đã reset ở trên nhưng viết lại cho chắc */
+    padding: 0;
     margin: 0;
-    min-height: 100vh; /* Đảm bảo body luôn phủ kín màn hình */
-    background-color: white; /* Đổi màu này nếu bạn muốn nền trắng thay vì đỏ */
+    min-height: 100vh;
+    // Dotted Grid kết hợp với Gradient chuyển sắc nhẹ nhàng
+    background-color: #f8fafc;
+    background-image: 
+        radial-gradient(rgba(0, 0, 0, 0.06) 1.5px, transparent 1.5px), // Lớp lưới chấm bi trên cùng
+        linear-gradient(135deg, rgba(84, 145, 224, 0.08) 0%, rgba(248, 250, 252, 0.8) 50%, rgba(144, 238, 144, 0.06) 100%); // Lớp gradient chuyển sắc chìm bên dưới
+    background-size: 30px 30px, 100% 100%;
+    background-attachment: fixed; // Giữ gradient cố định khi cuộn trang
+    position: relative;
+    overflow-x: hidden; // Ngăn thanh cuộn ngang
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    // Tam giác bên TRÁI
+    &::before {
+        content: '';
+        position: fixed;
+        top: 60vh;
+        left: 0; 
+        width: 20px; // Rất nhỏ
+        height: 20px;
+        background-color: rgba(150, 150, 150, 0.5); // Xám đậm hơn chút cho rõ
+        clip-path: polygon(0 0, 0 100%, 100% 50%); 
+        z-index: -1;
+        pointer-events: none;
+        animation: randomFlyLeft 17s linear infinite;
+        animation-delay: 1s;
+    }
+
+    // Tam giác bên PHẢI
+    &::after {
+        content: '';
+        position: fixed;
+        bottom: 40vh;
+        right: 0;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(150, 150, 150, 0.35); // Xám
+        clip-path: polygon(100% 0, 100% 100%, 0 50%); 
+        z-index: -1;
+        pointer-events: none;
+        animation: randomFlyRight 19s linear infinite;
+        animation-delay: 8s;
+    }
+}
+
+// Hiệu ứng xuất hiện ngẫu nhiên và bay xa cho tam giác bên TRÁI
+@keyframes randomFlyLeft {
+    0%, 20% {
+        transform: translate(-50px, 0) rotate(0deg);
+        opacity: 0; // Ẩn hoàn toàn trong 20% thời gian đầu
+    }
+    25% {
+        opacity: 0.8; // Bất ngờ hiện ra
+    }
+    50% {
+        transform: translate(180px, -40px) rotate(60deg); // Bay sâu vào trong 180px
+        opacity: 1;
+    }
+    75% {
+        opacity: 0; // Bắt đầu mờ dần và biến mất
+        transform: translate(250px, 50px) rotate(120deg);
+    }
+    100% {
+        transform: translate(-50px, 0) rotate(0deg);
+        opacity: 0;
+    }
+}
+
+// Hiệu ứng xuất hiện ngẫu nhiên và bay xa cho tam giác bên PHẢI
+@keyframes randomFlyRight {
+    0%, 30% {
+        transform: translate(50px, 0) rotate(0deg);
+        opacity: 0; // Ẩn lâu hơn (30% thời gian)
+    }
+    35% {
+        opacity: 0.8;
+    }
+    60% {
+        transform: translate(-180px, 50px) rotate(-70deg); // Bay sâu vào trong -180px
+        opacity: 1;
+    }
+    85% {
+        opacity: 0;
+        transform: translate(-280px, -30px) rotate(-140deg);
+    }
+    100% {
+        transform: translate(50px, 0) rotate(0deg);
+        opacity: 0;
+    }
 }
 
 body:focus-within {
@@ -296,4 +416,10 @@ hr.style-two {
     font-size: 1rem;
     color: rgb(173, 1, 1);
     font-weight: bold;
+}
+
+// [2026-06-30]: Thêm khoảng cách 2 bên cho nội dung các page
+.container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
 }

@@ -118,7 +118,7 @@ function MenuMobile($arr, $item_link = 'menu-mobile-item-link')
 //====== SAP LAI ARRAY THEO THU TU GIAM DAN AP DUNG CATEGORY =================
 function cmp($a, $b)
 {
-    return strcmp($b['order'], $a['order']);
+    return strcmp((string)($b['order'] ?? ''), (string)($a['order'] ?? ''));
 }
 
 //==== GET PARAM TREN URL============================================
@@ -196,8 +196,8 @@ function toBack($num)
 
     add_action('login_head', 'custom_login_logo');
 // } else {
-    // require_once DIR_HELPER . 'code/function-add-media.php';
-    // require_once DIR_HELPER . 'code/function-upload-file.php';
+    // require_once DIR_HELPER . 'code/code-add-media.php';
+    // require_once DIR_HELPER . 'code/code-upload-file.php';
 // }
 
 // ====================FUNCTION SEO=========================================================== 

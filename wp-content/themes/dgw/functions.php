@@ -26,15 +26,6 @@ require_once(DIR_CLASS . 'rewrite.class.php');
 new Rewrite_Url();
 
 
-$shortcode_path = get_template_directory() . '/shortcode/';
-
-if ( is_dir( $shortcode_path ) ) {
-    foreach ( glob( $shortcode_path . "*.php" ) as $filename ) {
-        require_once $filename;
-    }
-}
-
-
 add_action('init', function () {
     if (isset($_GET['mail_test'])) {
         $ok = wp_mail(

@@ -6,7 +6,7 @@
     if ($wp_query->have_posts()) :
         while ($wp_query->have_posts()) :
             $wp_query->the_post();
-            $thumb_id = get_post_thumbnail_id($post->ID);
+            $thumb_id = get_post_thumbnail_id(get_the_ID());
             $url_desktop = wp_get_attachment_image_src($thumb_id, 'medium');   // Desktop
             $url_mobile  = wp_get_attachment_image_src($thumb_id, 'thumbnail');  // Mobile
     ?>

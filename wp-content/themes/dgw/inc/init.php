@@ -23,3 +23,8 @@ if (wp_doing_ajax()) {
         require_once $file;
     }
 }
+
+// ===== SHORTCODE =====
+foreach (glob(__DIR__ . '/shortcode/*.php') as $file) {
+    require_once $file;
+}

@@ -163,7 +163,10 @@ function getTranslate()
         "Other"                  => "Khác",
         "I agree with Digiwin's privacy policy" => "Tôi đồng ý với chính sách bảo mật của Digiwin",
         "privacy policy" => "Chính sách bảo mật",
-        "Login-Register" => "Đăng nhập - Đăng ký"
+        "Login-Register" => "Đăng nhập - Đăng ký",
+        'Years of experience'=> 'Năm Kinh Nghiệm',
+        'Projects & Clients'=> 'Khách Hàng & Dự Án',
+        'Product Solutions'=> 'Giải Pháp Chuyên Sâu'
     );
     return array_merge($data);
 }

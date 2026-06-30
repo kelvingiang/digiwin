@@ -58,9 +58,10 @@ jQuery(document).ready(function() {
         var slug = '<?php echo $param['name'] ?>';
         // var count = jQuery("#member-list > div").length;
         jQuery.ajax({
-            url: '<?php echo get_template_directory_uri() . '/ajax/load-more-in-group.php' ?>', // lay doi tuong chuyen sang dang array
+            url: '<?php echo admin_url("admin-ajax.php"); ?>', // lay doi tuong chuyen sang dang array
             type: 'post', //                data: $(this).serialize(),
             data: {
+                action: 'load_more_in_group',
                 lastID: lastID,
                 cate: cate,
                 slug: slug,

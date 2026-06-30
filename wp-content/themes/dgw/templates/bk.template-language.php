@@ -9,10 +9,11 @@ function changeLanguage(el) {
     var type = jQuery(el).attr('data-type');
     console.log(type);
     jQuery.ajax({
-        url: '<?php echo get_template_directory_uri() . '/ajax/change_language.php' ?>',
+        url: '<?php echo admin_url("admin-ajax.php"); ?>',
         dataType: 'json',
         type: 'post',
         data: {
+            action: 'change_language',
             type: type
         },
         success: function(res) {

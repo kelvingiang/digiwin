@@ -1,23 +1,49 @@
+<!-- [2026-06-30]: Thiết kế lại Menu Mobile (Modern Side Drawer) -->
 <div class="menu-mobile">
+    <!-- Overlay mờ khi mở menu -->
+    <div class="menu-mobile-overlay"></div>
+
+    <!-- Icon Hamburger (Mở) -->
     <div class="menu-mobile-icon">
-        <svg class="svg-menu-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 640 640">
-            <path d="M104 112C90.7 112 80 122.7 80 136L80 184C80 197.3 90.7 208 104 208L152 208C165.3 208 176 197.3 176 184L176 136C176 122.7 165.3 112 152 112L104 112zM256 128C238.3 128 224 142.3 224 160C224 177.7 238.3 192 256 192L544 192C561.7 192 576 177.7 576 160C576 142.3 561.7 128 544 128L256 128zM256 288C238.3 288 224 302.3 224 320C224 337.7 238.3 352 256 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L256 288zM256 448C238.3 448 224 462.3 224 480C224 497.7 238.3 512 256 512L544 512C561.7 512 576 497.7 576 480C576 462.3 561.7 448 544 448L256 448zM80 296L80 344C80 357.3 90.7 368 104 368L152 368C165.3 368 176 357.3 176 344L176 296C176 282.7 165.3 272 152 272L104 272C90.7 272 80 282.7 80 296zM104 432C90.7 432 80 442.7 80 456L80 504C80 517.3 90.7 528 104 528L152 528C165.3 528 176 517.3 176 504L176 456C176 442.7 165.3 432 152 432L104 432z" />
+        <svg class="svg-menu-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/>
         </svg>
     </div>
+
+    <!-- Khu vực Menu Panel (Trượt ra) -->
     <div class="menu-mobile-ui">
-        <?php foreach (menu_mobile_list() as $key => $val) { ?>
-            <div class="menu-mobile-item">
-                <a href="<?php echo home_url($key) ?>"> <?php _e($val); ?></a>
+        <div class="menu-mobile-header">
+            <span class="menu-title">Menu</span>
+            <!-- Icon Đóng (X) -->
+            <div class="menu-mobile-close">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                    <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/>
+                </svg>
             </div>
-        <?php } ?>
+        </div>
+        
+        <div class="menu-mobile-content">
+            <?php foreach (menu_mobile_list() as $key => $val) { ?>
+                <div class="menu-mobile-item">
+                    <a href="<?php echo home_url($key) ?>"><?php _e($val); ?></a>
+                </div>
+            <?php } ?>
+        </div>
     </div>
 </div>
 <script>
-    jQuery(document).ready(function() {
-        jQuery('.menu-mobile-icon').click(function() {
-            jQuery('.menu-mobile-ui').toggle(300);
+    // [2026-06-30]: JS xử lý bật tắt Menu (Dùng Class thay vì toggle inline)
+    jQuery(document).ready(function($) {
+        // Mở menu
+        $('.menu-mobile-icon').click(function() {
+            $('.menu-mobile').addClass('is-open');
+            $('body').css('overflow', 'hidden'); // Ngăn cuộn trang
+        });
+
+        // Đóng menu khi bấm X hoặc Overlay
+        $('.menu-mobile-close, .menu-mobile-overlay').click(function() {
+            $('.menu-mobile').removeClass('is-open');
+            $('body').css('overflow', ''); // Trả lại cuộn trang
         });
     });
 </script>

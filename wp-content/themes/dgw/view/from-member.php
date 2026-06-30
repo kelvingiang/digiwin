@@ -1,6 +1,6 @@
 <?php
 require_once(DIR_MODEL . 'model-download-function.php');
-require_once(get_template_directory() . '/inc/code/function-member-dictionary.php');
+require_once(get_template_directory() . '/inc/code/code-member-dictionary.php');
 if (!empty(getParams('id'))) {
     $model = new Model_Download_Function();
     $data = $model->get_user_by_id(getParams('id'));

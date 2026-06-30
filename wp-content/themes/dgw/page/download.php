@@ -2,7 +2,7 @@
 <?php get_header(); ?>
 
 <div>
-  <?php pageImg($post->ID); ?>
+  <?php pageImg(get_the_ID()); ?>
 </div>
 
 <div class="container-fluid">

@@ -10,7 +10,7 @@
             // echo '<pre>'; print_r($value); echo '</pre>';
     ?>
             <div class="case-logo-item">
-                <a href='<?php echo $value['link'] ?>'>
+                <a href='<?php echo $value['link'] ?>' class="case-logo-card">
                     <?php
                     // Tạo đường dẫn vật lý đến file ảnh trên server
                     $image_path = DIR_IMAGES . 'logo/' . $value['img'];
