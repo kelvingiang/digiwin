@@ -113,8 +113,8 @@ add_filter('gettext', 'change_translate_text', 20);
   FUNCTION OF THIS TEMPLATE
   ======================================= */
 
-add_action('after_setup_theme', 'blankslate_setup');
-function blankslate_setup()
+add_action('after_setup_theme', 'dgw_setup');
+function dgw_setup()
 {
     load_theme_textdomain('blankslate', get_template_directory() . '/languages');
     add_theme_support('title-tag');
@@ -128,16 +128,16 @@ function blankslate_setup()
     register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'blankslate')));
 }
 
-add_action('wp_enqueue_scripts', 'blankslate_load_scripts');
-function blankslate_load_scripts()
+add_action('wp_enqueue_scripts', 'dgw_load_scripts');
+function dgw_load_scripts()
 {
     wp_enqueue_style('blankslate-style', get_stylesheet_uri());
     wp_enqueue_script('jquery');
 }
 
-add_action('wp_footer', 'blankslate_footer_scripts');
+add_action('wp_footer', 'dgw_footer_scripts');
 
-function blankslate_footer_scripts()
+function dgw_footer_scripts()
 {
 ?>
     <script>
@@ -163,17 +163,17 @@ function blankslate_footer_scripts()
 <?php
 }
 
-add_filter('document_title_separator', 'blankslate_document_title_separator');
+add_filter('document_title_separator', 'dgw_document_title_separator');
 
-function blankslate_document_title_separator($sep)
+function dgw_document_title_separator($sep)
 {
     $sep = '|';
     return $sep;
 }
 
-add_filter('the_title', 'blankslate_title');
+add_filter('the_title', 'dgw_title');
 
-function blankslate_title($title)
+function dgw_title($title)
 {
     if ($title == '') {
         return '...';
@@ -182,18 +182,18 @@ function blankslate_title($title)
     }
 }
 
-add_filter('the_content_more_link', 'blankslate_read_more_link');
+add_filter('the_content_more_link', 'dgw_read_more_link');
 
-function blankslate_read_more_link()
+function dgw_read_more_link()
 {
     if (!is_admin()) {
         return ' <a href="' . esc_url(get_permalink()) . '" class="more-link">...</a>';
     }
 }
 
-add_filter('excerpt_more', 'blankslate_excerpt_read_more_link');
+add_filter('excerpt_more', 'dgw_excerpt_read_more_link');
 
-function blankslate_excerpt_read_more_link($more)
+function dgw_excerpt_read_more_link($more)
 {
     if (!is_admin()) {
         global $post;
@@ -201,17 +201,17 @@ function blankslate_excerpt_read_more_link($more)
     }
 }
 
-add_filter('intermediate_image_sizes_advanced', 'blankslate_image_insert_override');
+add_filter('intermediate_image_sizes_advanced', 'dgw_image_insert_override');
 
-function blankslate_image_insert_override($sizes)
+function dgw_image_insert_override($sizes)
 {
     unset($sizes['medium_large']);
     return $sizes;
 }
 
-add_action('widgets_init', 'blankslate_widgets_init');
+add_action('widgets_init', 'dgw_widgets_init');
 
-function blankslate_widgets_init()
+function dgw_widgets_init()
 {
     register_sidebar(array(
         'name' => esc_html__('Sidebar Widget Area', 'blankslate'),
@@ -223,34 +223,34 @@ function blankslate_widgets_init()
     ));
 }
 
-add_action('wp_head', 'blankslate_pingback_header');
+add_action('wp_head', 'dgw_pingback_header');
 
-function blankslate_pingback_header()
+function dgw_pingback_header()
 {
     if (is_singular() && pings_open()) {
         printf('<link rel="pingback" href="%s" />' . "\n", esc_url(get_bloginfo('pingback_url')));
     }
 }
 
-add_action('comment_form_before', 'blankslate_enqueue_comment_reply_script');
+add_action('comment_form_before', 'dgw_enqueue_comment_reply_script');
 
-function blankslate_enqueue_comment_reply_script()
+function dgw_enqueue_comment_reply_script()
 {
     if (get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
 }
 
-function blankslate_custom_pings($comment)
+function dgw_custom_pings($comment)
 {
 ?>
     <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>"><?php echo comment_author_link(); ?></li>
 <?php
 }
 
-add_filter('get_comments_number', 'blankslate_comment_count', 0);
+add_filter('get_comments_number', 'dgw_comment_count', 0);
 
-function blankslate_comment_count($count)
+function dgw_comment_count($count)
 {
     if (!is_admin()) {
         global $id;

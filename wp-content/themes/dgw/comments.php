@@ -33,7 +33,7 @@
             <section id="trackbacks-list" class="comments">
                 <h3 class="comments-title"><?php echo '<span class="ping-count">' . esc_html($ping_count) . '</span> ' . esc_html(_nx('Trackback or Pingback', 'Trackbacks and Pingbacks', $ping_count, 'comments count', 'blankslate')); ?></h3>
                 <ul>
-                    <?php wp_list_comments('type=pings&callback=blankslate_custom_pings'); ?>
+                    <?php wp_list_comments('type=pings&callback=dgw_custom_pings'); ?>
                 </ul>
             </section>
     <?php
