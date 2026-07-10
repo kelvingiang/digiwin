@@ -77,8 +77,8 @@ class Tags_Casestudies
     public function save_option($term_id)
     {
         $arr = array(
-            'cate_solution_cn' => $_POST['cate_cn'],
-            'cate_solution_order' => $_POST['cate_order'],
+            'cate_solution_cn' => sanitize_text_field(wp_unslash($_POST['cate_cn'])),
+            'cate_solution_order' => sanitize_text_field(wp_unslash($_POST['cate_order'])),
         );
         $option_name = $this->prefix_name . $term_id;
         $option_value = $arr;

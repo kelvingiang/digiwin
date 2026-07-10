@@ -112,32 +112,32 @@ class Metabox_Resources {
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP 
         if (!empty($_POST['resource-name-cn'])) {
-            $wpdb->update($wpdb->posts, array('post_title' => $_POST['resource-name-cn']), array('ID' => $post_id));
-            update_post_meta($post_id, '_resource_name_cn', $_POST['resource-name-cn']);
+            $wpdb->update($wpdb->posts, array('post_title' => sanitize_text_field(wp_unslash($_POST['resource-name-cn']))), array('ID' => $post_id));
+            update_post_meta($post_id, '_resource_name_cn', sanitize_text_field(wp_unslash($_POST['resource-name-cn'])));
         }
 
         if (!empty($_POST['resource-content-cn'])) {
-            update_post_meta($post_id, '_resource_content_cn', $_POST['resource-content-cn']);
+            update_post_meta($post_id, '_resource_content_cn', sanitize_text_field(wp_unslash($_POST['resource-content-cn'])));
         }
 
 
 
         if (!empty($_POST['resource-name-vn'])) {
-            update_post_meta($post_id, '_resource_name_vn', $_POST['resource-name-vn']);
+            update_post_meta($post_id, '_resource_name_vn', sanitize_text_field(wp_unslash($_POST['resource-name-vn'])));
         }
 
         if (!empty($_POST['resource-content-cn'])) {
-            update_post_meta($post_id, '_resource_content_vn', $_POST['resource-content-vn']);
+            update_post_meta($post_id, '_resource_content_vn', sanitize_text_field(wp_unslash($_POST['resource-content-vn'])));
         }
 
 
 
         if (!empty($_POST['resource-name-en'])) {
-            update_post_meta($post_id, '_resource_name_en', $_POST['resource-name-en']);
+            update_post_meta($post_id, '_resource_name_en', sanitize_text_field(wp_unslash($_POST['resource-name-en'])));
         }
 
         if (!empty($_POST['resource-content-en'])) {
-            update_post_meta($post_id, '_resource_content_en', $_POST['resource-content-en']);
+            update_post_meta($post_id, '_resource_content_en', sanitize_text_field(wp_unslash($_POST['resource-content-en'])));
         }
     }
 

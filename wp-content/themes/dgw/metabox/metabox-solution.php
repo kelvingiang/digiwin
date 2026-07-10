@@ -56,15 +56,15 @@ class Metabox_Solution {
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP
         if (!empty($_POST['txt-value'])) {
-            update_post_meta($post_id, '_solution_value', $_POST['txt-value']);
+            update_post_meta($post_id, '_solution_value', sanitize_text_field(wp_unslash($_POST['txt-value'])));
         }
 
         if (!empty($_POST['txt-features'])) {
-            update_post_meta($post_id, '_solution_features', $_POST['txt-features']);
+            update_post_meta($post_id, '_solution_features', sanitize_text_field(wp_unslash($_POST['txt-features'])));
         }
 
         if (!empty($_POST['txt-service'])) {
-            update_post_meta($post_id, '_solution_service', $_POST['txt-service']);
+            update_post_meta($post_id, '_solution_service', sanitize_text_field(wp_unslash($_POST['txt-service'])));
         }
     }
 

@@ -36,7 +36,7 @@ class Metabox_Download {
     public function save($post_id) {
 
         global $wpdb;
-        // $wpdb->update($wpdb->posts, array('post_title' => $_POST['txt-name-cn']), array('ID' => $post_id));
+        // $wpdb->update($wpdb->posts, array('post_title' => sanitize_text_field(wp_unslash($_POST['txt-name-cn']))), array('ID' => $post_id));
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP
         $old_file = get_post_meta($post_id, '_download_file', true);

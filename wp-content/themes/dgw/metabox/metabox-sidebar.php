@@ -64,7 +64,7 @@ class Metabox_SideBar
 
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP 
 
-        $chk = $_POST['ckd-sidebar'] == 'on' ? "1" : "0";
+        $chk = sanitize_text_field(wp_unslash($_POST['ckd-sidebar'])) == 'on' ? "1" : "0";
         update_post_meta($post_id, '_metabox_sidebar', $chk);
     }
 }

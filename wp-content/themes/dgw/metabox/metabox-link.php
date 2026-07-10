@@ -43,7 +43,7 @@ class Metabox_Link
     {
 
         if (!empty($_POST['txt-link'])) {
-            update_post_meta($post_id, '_metabox_link', $_POST['txt-link']);
+            update_post_meta($post_id, '_metabox_link', sanitize_text_field(wp_unslash($_POST['txt-link'])));
         }
     }
 }

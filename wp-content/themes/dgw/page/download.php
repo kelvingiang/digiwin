@@ -16,7 +16,11 @@
         $param = $wp->query_vars;
         $arr = array(
           'post_type' => 'downloads',
-          'posts_per_page' => -1,
+          // [2026-07-08] - @author: Kelvin - Tối ưu truy vấn: Giới hạn 50 tài liệu, tắt đếm tổng trang tránh nặng server
+          'posts_per_page' => 50,
+          'no_found_rows' => true,
+          'update_post_meta_cache' => false,
+          'update_post_term_cache' => false,
           'orderby' => 'meta_value_num',
           'order' => 'DESC',
           'meta_key' => '_metabox_order',

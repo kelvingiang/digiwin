@@ -92,8 +92,8 @@ class Tags_Advertising
     public function save_option($term_id)
     {
         $arr = array(
-            'cate_advertising_cn' => $_POST['cate_cn'],
-            'cate_advertising_order' => $_POST['cate_order'],
+            'cate_advertising_cn' => sanitize_text_field(wp_unslash($_POST['cate_cn'])),
+            'cate_advertising_order' => sanitize_text_field(wp_unslash($_POST['cate_order'])),
         );
         $option_name = $this->prefix_name . $term_id;
         $option_value = $arr;

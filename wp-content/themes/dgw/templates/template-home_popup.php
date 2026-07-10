@@ -53,14 +53,26 @@ if (!empty($data)) :
         </div>
     </div>
     <script>
-        jQuery(document).ready(function() {
-            jQuery(".dgw-popup-close, .dgw-popup").on("click", function() {
-                jQuery(this).closest(".dgw-popup").css("display", "none");
-                document.body.style.overflowY = "auto";
-            });
+        // [2026-07-08] - @author: Kelvin - Dùng sessionStorage để chỉ hiện popup 1 lần trên mỗi tab
+        if (sessionStorage.getItem('dgwPopupShown')) {
+            document.querySelector(".dgw-popup").style.display = "none";
+        } else {
+            sessionStorage.setItem('dgwPopupShown', 'true');
+            document.body.style.overflowY = "hidden";
+            document.body.style.overflowX = "hidden";
+        }
 
+        jQuery(document).ready(function() {
+            jQuery(".dgw-popup-close, .dgw-popup").on("click", function(e) {
+                // Tránh lỗi khi click vào chính nội dung ảnh bên trong (nếu có thẻ con)
+                if (e.target !== this && !jQuery(this).hasClass('dgw-popup-close')) {
+                    if (jQuery(e.target).closest('.popup-link').length) return; 
+                }
+                
+                jQuery(".dgw-popup").css("display", "none");
+                document.body.style.overflowY = "auto";
+                document.body.style.overflowX = "auto";
+            });
         });
-        document.body.style.overflowY = "hidden";
-        document.body.style.overflowX = "hidden";
     </script>
 <?php endif ?>

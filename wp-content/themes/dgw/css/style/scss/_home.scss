@@ -8,6 +8,7 @@
     text-align: center;
     width: 100%;
     margin-top: 4.5rem;
+    
     @include Respond(lg) {
         //color: yellow;
         font-size: 1.5rem;
@@ -126,11 +127,14 @@
     background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%); // Nền xám/xanh nhạt tổng thể
     padding: 4rem 15px 3rem 15px; // Top padding cao hơn để bù cho khoảng nổi của ảnh
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
+    // display: grid;
+    // grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     max-width: 1500px;
-    border-radius: 24px; // Bo góc mảng lớn nếu muốn
+    border-radius: 24px; // Bo góc mảng lớn nếu muốn    ji
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
     @include Respond(md) {
         grid-template-columns: 1fr 1fr;
@@ -151,7 +155,7 @@
 
     .item {
         text-align: center;
-        margin-top: 40px; // Đẩy thẻ xuống để nhường chỗ cho ảnh nổi lên
+        margin: 38px 0px; // Đẩy thẻ xuống để nhường chỗ cho ảnh nổi lên
         background: rgba(255, 255, 255, 0.45); // Kính mờ
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -162,6 +166,8 @@
         cursor: pointer;
         display: flex;
         flex-direction: column;
+         flex-basis: calc((100% - 60px) / 3);// 3 cột với gap 20px
+       // flex-basis: calc((100% - 80px) / 4); // 4 cột với gap 20px
 
         a {
             display: flex;
@@ -654,8 +660,8 @@
     color: #fff;
     // border-radius: 20px;
     // max-width: 1600px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+
     .count-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -665,57 +671,87 @@
             gap: 40px;
         }
     }
-    
+
     .count-item {
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        transition: transform 0.3s ease;
-        
-        .count-icon {
-            width: 70px;
-            height: 70px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
+        justify-content: center;
+        transition:
+            box-shadow 2s cubic-bezier(0.25, 0.8, 0.25, 1),
+            transform 2s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+        a {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
-            svg { width: 35px; height: 35px; fill: #48cae4; }
-        }
-        
-        .count-number-wrapper {
-            display: flex;
-            align-items: baseline;
-            justify-content: center;
-            .count-number {
-                font-size: 4rem;
-                font-weight: 800;
-                color: #90e0ef;
-                line-height: 1;
-                font-variant-numeric: tabular-nums;
+            height: 100%;
+            width: 100%;
+            text-decoration: none;
+            transition: transform 2s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+            .count-icon {
+                width: 70px;
+                height: 70px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 20px;
+                transition:
+                    transform 1s cubic-bezier(0.25, 0.8, 0.25, 1),
+                    background-color 2s ease;
+
+                svg {
+                    width: 35px;
+                    height: 35px;
+                    fill: #48cae4;
+                }
             }
-            .count-plus {
-                font-size: 3rem;
-                font-weight: bold;
+
+            .count-number-wrapper {
+                display: flex;
+                align-items: baseline;
+                justify-content: center;
+                .count-number {
+                    font-size: 4rem;
+                    font-weight: 800;
+                    color: #90e0ef;
+                    line-height: 1;
+                    font-variant-numeric: tabular-nums;
+                }
+                .count-plus {
+                    font-size: 3rem;
+                    font-weight: bold;
+                    color: #00b4d8;
+                    margin-left: 5px;
+                }
+            }
+
+            .count-label {
+                font-size: 1.2rem;
+                font-weight: 500;
+                margin-top: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                opacity: 0.8;
                 color: #00b4d8;
-                margin-left: 5px;
+            }
+
+            &:hover {
+                .count-icon {
+                    background-color: rgba(255, 255, 255, 0.2);
+                    transform: scale(1.15);
+                }
             }
         }
-        
-        .count-label {
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
-        }
-        
+
         &:hover {
-            transform: translateY(-10px);
-            .count-icon { background-color: rgba(255,255,255,0.2); }
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
     }
 }

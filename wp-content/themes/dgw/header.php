@@ -8,17 +8,8 @@
     <meta name="google-site-verification" content="8Cqw_SSKDqlxTUmeaXPfqLLvUEKhzxeq33PG33Ln6O4" />
 
     <?php
-    // Chỉ chạy đoạn này nếu Rank Math KHÔNG tự in description qua wp_head
-    if (!defined('RANK_MATH_VERSION')) :
+    // Meta description được sinh bởi dgw_seo_meta_tags() trong helper/function.php
     ?>
-        <?php if (is_single() || is_page()) : ?>
-            <meta name="description" content="<?php echo wp_strip_all_tags(get_the_excerpt()); ?>" />
-        <?php elseif (is_category() || is_tag() || is_archive()) : ?>
-            <meta name="description" content="<?php echo strip_tags(term_description()); ?>" />
-        <?php endif; ?>
-    <?php endif; ?>
-
-
 
     <link rel="icon" type="image/x-icon" href="<?php echo esc_url(get_template_directory_uri()); ?>/images/icons/favicon.ico">
     <link rel="apple-touch-icon"

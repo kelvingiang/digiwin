@@ -2,7 +2,7 @@
 <div id="industry-home">
     <?php
     $stt = 1;
-    $wp_query = getCustomPostAtHome('industries', 3);
+    $wp_query = getCustomPostAtHome('industries', 8);
 
     if ($wp_query->have_posts()) :
         while ($wp_query->have_posts()) :
@@ -33,7 +33,7 @@
                                 <img
                                     alt="<?php the_title_attribute(); ?>"
                                     src="<?php echo esc_url($url_desktop[0]); ?>"
-                                    fetchpriority="high"
+                                    loading="lazy"
                                     width="<?php echo $url_desktop[1]; ?>"
                                     height="<?php echo $url_desktop[2]; ?>" />
                             </picture>

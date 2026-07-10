@@ -68,13 +68,13 @@ class Metabox_Seo {
         }
         if (is_admin()) {
             if (!empty($_POST['txt_title'])) {
-                update_post_meta($post_id, '_seo_title', $_POST['txt_title']);
+                update_post_meta($post_id, '_seo_title', sanitize_text_field(wp_unslash($_POST['txt_title'])));
             }
             if (!empty($_POST['txt_key'])) {
-                update_post_meta($post_id, '_seo_key', $_POST['txt_key']);
+                update_post_meta($post_id, '_seo_key', sanitize_text_field(wp_unslash($_POST['txt_key'])));
             }
             if (!empty($_POST['txt_description'])) {
-                update_post_meta($post_id, '_seo_description', $_POST['txt_description']);
+                update_post_meta($post_id, '_seo_description', sanitize_text_field(wp_unslash($_POST['txt_description'])));
             }
         }
     }

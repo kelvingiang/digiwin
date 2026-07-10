@@ -153,7 +153,7 @@ function handle_member_login()
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
 
     $email    = sanitize_email($_POST['email']);
-    $password = $_POST['password'];
+    $password = sanitize_text_field(wp_unslash($_POST['password']));
 
     if (empty($email) || empty($password)) {
         wp_send_json_error(['message' => $msg['empty']]);
@@ -218,7 +218,7 @@ function handle_member_login()
 //     $msg = get_member_messages($_POST['lang'] ?? 'vi');
 //     // ===== PHẦN BỊ THIẾU — xác thực email + password =====
 //     $email    = sanitize_email($_POST['email']);
-//     $password = $_POST['password'];
+//     $password = sanitize_text_field(wp_unslash($_POST['password']));
 
 //     // Kiểm tra rỗng
 //     if (empty($email) || empty($password)) {
@@ -293,7 +293,7 @@ function handle_member_register()
     $registration_data = [
         'username'   => sanitize_text_field($_POST['username']),
         'email'      => sanitize_email($_POST['email']),
-        'password'   => $_POST['password'], // 注意：這裡先拿原始值進行長度檢查，Model 層會加密
+        'password'   => sanitize_text_field(wp_unslash($_POST['password'])), // 注意：這裡先拿原始值進行長度檢查，Model 層會加密
         'company'    => sanitize_text_field($_POST['company']),
         'phone'      => sanitize_text_field($_POST['phone']),
         'tax'        => sanitize_text_field($_POST['tax']),
@@ -513,9 +513,9 @@ function handle_change_password()
     }
 
     // 3. 接收前端傳來的密碼
-    $current = $_POST['current'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm'] ?? '';
+    $current = sanitize_text_field(wp_unslash($_POST['current'])) ?? '';
+    $password = sanitize_text_field(wp_unslash($_POST['password'])) ?? '';
+    $confirm = sanitize_text_field(wp_unslash($_POST['confirm'])) ?? '';
 
     if (empty($password) || empty($confirm) || empty($current)) {
         wp_send_json_error(array('message' => $msg['password_wrong']));
@@ -567,9 +567,9 @@ function handle_change_password()
 //     }
 
 //     // 3. 接收前端傳來的密碼
-//     $current = $_POST['current'] ?? '';
-//     $password = $_POST['password'] ?? '';
-//     $confirm = $_POST['confirm'] ?? '';
+//     $current = sanitize_text_field(wp_unslash($_POST['current'])) ?? '';
+//     $password = sanitize_text_field(wp_unslash($_POST['password'])) ?? '';
+//     $confirm = sanitize_text_field(wp_unslash($_POST['confirm'])) ?? '';
 
 //     if (empty($password) || empty($confirm) || empty($current)) {
 //         wp_send_json_error(array('message' => $msg['password_wrong']));
@@ -619,10 +619,10 @@ function handle_reset_password()
         wp_send_json_error(array('message' => $msg['failure']), 403);
     }
     // 3. 接收前端傳來的密碼
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm'] ?? '';
-    $key = $_POST['key'] ?? '';
-    $email = $_POST['email'] ?? '';
+    $password = sanitize_text_field(wp_unslash($_POST['password'])) ?? '';
+    $confirm = sanitize_text_field(wp_unslash($_POST['confirm'])) ?? '';
+    $key = sanitize_text_field(wp_unslash($_POST['key'])) ?? '';
+    $email = sanitize_text_field(wp_unslash($_POST['email'])) ?? '';
 
     if (empty($password) || empty($confirm) || empty($key) || empty($email)) {
         wp_send_json_error(array('message' => $msg['empty']));
@@ -892,9 +892,9 @@ function ajax_admin_handle_client_password()
         wp_send_json_error(['message' => '您沒有權限執行此操作。']);
     }
 
-    $email  = $_POST['email'] ?? '';
-    $name   = $_POST['name'] ?? '';
-    $password = $_POST['password'] ?? '';
+    $email  = sanitize_text_field(wp_unslash($_POST['email'])) ?? '';
+    $name   = sanitize_text_field(wp_unslash($_POST['name'])) ?? '';
+    $password = sanitize_text_field(wp_unslash($_POST['password'])) ?? '';
 
     if (!empty($email) && !empty($password)) {
 

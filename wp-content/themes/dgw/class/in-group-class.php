@@ -8,7 +8,10 @@ class In_Group_Class
         global $wp_query;
         $args = array(
             'post_type' => 'product',
-            'posts_per_page' => -1,
+            // [2026-07-08] - @author: Kelvin - Giới hạn hiển thị sản phẩm thay vì -1, tối ưu TTFB
+            'posts_per_page' => 20,
+            'no_found_rows' => true,
+            'update_post_term_cache' => false,
             'order' => 'DESC',
             'orderby' => 'meta_value',
             'meta_key' => '_metabox_order',

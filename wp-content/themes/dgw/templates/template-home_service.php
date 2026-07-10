@@ -16,9 +16,9 @@
                 </div>
                 <div class="service-item-img">
                     <?php if (has_post_thumbnail()) { ?>
-                        <img class="llimg" fetchpriority="high" src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
+                        <img class="llimg" loading="lazy" src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" />
                     <?php } else { ?>
-                        <img class="llimg" fetchpriority="high" src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
+                        <img class="llimg" loading="lazy" src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
                     <?php } ?>
                     <a class="service-item-link" href='<?php echo get_the_permalink(); ?>'>
                         <div class="service-item-content">

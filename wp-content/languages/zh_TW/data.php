@@ -61,7 +61,7 @@ function getTranslate()
         'Zalo OA Community' => '越南鼎捷 Zalo OA',
         'Scan to join Zalo OA & get the latest industry reports' => '掃碼關注 Zalo OA, 獲取最新行業報告',
         'Free Resources for Businesses' => '企業專用免費資源',
-        'Download 2026 Digital Transformation Whitepaper' => '下載 2026 數位轉型白皮書',
+        'Download 2026 Digital Transformation Whitepaper' => '下載 99 通報_企業財務合規全面解讀',
         'Solutions & Industries' => '解決方案與產業',
         'System Administration (ERP)' => '系統管理 (ERP)',
         'Production Management (MES)' => '生產管理 (MES)',

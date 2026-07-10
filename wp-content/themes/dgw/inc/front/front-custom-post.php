@@ -43,7 +43,7 @@ function getCustomsPost($postType, $postCount)
                             alt="<?php the_title_attribute(); ?>"
                             src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
                             srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            fetchpriority="high"
+                            loading="lazy"
                             width="410"
                             height="270" />
                     <?php endif ?>
@@ -110,7 +110,7 @@ function getCustomsPostByCate($postType, $cate, $postCount, $taxonomy)
                             src="<?php echo esc_url($url[0]) ?>"
                             srcset="<?php echo esc_attr($srcset) ?>"
                             sizes="(max-width: 400px) 100vw, 300px"
-                            fetchpriority="high"
+                            loading="lazy"
                             width="<?php echo esc_attr($url[1]); ?>"
                             height="<?php echo ($url[2]); ?>" />
                     <?php } else { ?>
@@ -118,7 +118,7 @@ function getCustomsPostByCate($postType, $cate, $postCount, $taxonomy)
                             alt="<?php the_title_attribute(); ?>"
                             src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
                             srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            fetchpriority="high"
+                            loading="lazy"
                             width="410"
                             height="270" />
                     <?php } ?>
@@ -145,7 +145,8 @@ function getCustomsPostCate($param)
     $arr = array();
     $argsCate = array(
         'type' => 'post',
-        'posts_per_page' => -1,
+        // [2026-07-08] - @author: Kelvin - Sửa cấu hình get_categories: 'posts_per_page' không hợp lệ, dùng 'number'
+        'number' => 100,
         'taxonomy' => 'casestudies_category',
         'hide_empty' => 0,
         'parent' => $param['cate'],

@@ -48,11 +48,11 @@ class Metabox_Web_FreeBook {
     public function save($post_id) {
 
         if (!empty($_POST['txt-web'])) {
-            update_post_meta($post_id, '_metabox_web', $_POST['txt-web']);
+            update_post_meta($post_id, '_metabox_web', sanitize_text_field(wp_unslash($_POST['txt-web'])));
         }
 
         if (!empty($_POST['txt-freebook'])) {
-            update_post_meta($post_id, '_metabox_freebook', $_POST['txt-freebook']);
+            update_post_meta($post_id, '_metabox_freebook', sanitize_text_field(wp_unslash($_POST['txt-freebook'])));
         }
     }
 

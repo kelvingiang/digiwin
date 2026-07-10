@@ -66,7 +66,7 @@ class Metabox_Language
         //            return$post_id;
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP
         if (isset($_POST['radio-lang'])) {
-            update_post_meta($post_id, '_metabox_langguage', $_POST['radio-lang']);
+            update_post_meta($post_id, '_metabox_langguage', sanitize_text_field(wp_unslash($_POST['radio-lang'])));
         }
     }
 }

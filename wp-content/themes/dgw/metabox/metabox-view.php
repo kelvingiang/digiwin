@@ -60,15 +60,15 @@ class Metabox_View
     public function save($post_id)
     {
         if (!empty($_POST['txt-view'])) {
-            update_post_meta($post_id, '_metabox_view', $_POST['txt-view']);
+            update_post_meta($post_id, '_metabox_view', sanitize_text_field(wp_unslash($_POST['txt-view'])));
         }
 
         if (!empty($_POST['txt-like'])) {
-            update_post_meta($post_id, '_metabox_like', $_POST['txt-like']);
+            update_post_meta($post_id, '_metabox_like', sanitize_text_field(wp_unslash($_POST['txt-like'])));
         }
 
         // if (!empty($_POST['txt-comment'])) {
-        //     update_post_meta($post_id, '_metabox_comment', $_POST['txt-comment']);
+        //     update_post_meta($post_id, '_metabox_comment', sanitize_text_field(wp_unslash($_POST['txt-comment'])));
         // }
     }
 }

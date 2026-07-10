@@ -5,7 +5,8 @@ function getCategories($cate)
     $arr = array();
     $argsCate = array(
         'type' => 'post',
-        'posts_per_page' => -1,
+        // [2026-07-08] - @author: Kelvin - Thay -1 bằng số lượng cụ thể cho get_categories
+        'number' => 100,
         'taxonomy' => $cate,
         'hide_empty' => 0,
         'parent' => 0,
@@ -36,7 +37,8 @@ function getAllCategories($cate, $parent, $page)
     $lang = dgw_get_lang();
     $argsCate = array(
         'type' => 'post',
-        'posts_per_page' => -1,
+        // [2026-07-08] - @author: Kelvin - Thay -1 bằng số lượng cụ thể cho get_categories
+        'number' => 100,
         'taxonomy' => $cate,
         'hide_empty' => 0,
         'parent' => $parent,

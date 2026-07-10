@@ -18,7 +18,7 @@
            <div class="footer-space">
                <div>
                    <div>
-                       <img class="company-logo"
+                       <img class="company-logo" loading="lazy"
                            title="digiwin company"
                            alt="digiwin company"
                            src="<?php echo PART_IMAGES . 'logo-white-Digiwin.png' ?>"
@@ -185,7 +185,7 @@
                    <ul class='footer-list'>
                        <li>
                            <a href="https://zalo.me/digiwinsoftvietnam" target="_blank">
-                               <img title="digiwin zalo" alt="digiwin zalo" width="100" height="100" src="<?php echo PART_IMAGES . 'zalo-qrcode.jpg'; ?>" />
+                               <img title="digiwin zalo" alt="digiwin zalo" width="100" height="100" loading="lazy" src="<?php echo PART_IMAGES . 'zalo-qrcode.jpg'; ?>" />
                            </a>
                        </li>
                        <li class="zalo-text">
@@ -215,24 +215,24 @@
 
            <div class="footer-icon">
                <div>
-                   <img title="reddot winner" alt="reddot winner" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-1.png' ?>" />
+                   <img title="reddot winner" alt="reddot winner" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-1.png' ?>" />
                    <label> REDDOT WINNER </label>
                </div>
                <div>
-                   <img title="cmmi" alt="cmmi" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-2.png' ?>" />
+                   <img title="cmmi" alt="cmmi" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-2.png' ?>" />
                    <label> CMMI <br><i> Level 4 </i></label>
                </div>
                <div>
-                   <img title="muse design" alt="muse design" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
+                   <img title="muse design" alt="muse design" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
                    <label> MUSE DESIGN <br><i> Awards </i></label>
                    </a>
                </div>
                <div>
-                   <img title="Control Engineering" alt="Control Engineering" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />
+                   <img title="Control Engineering" alt="Control Engineering" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />
                    <label> CONTROL ENGINEERING <br> <i>Product of the Year</i> </label>
                </div>
                <div>
-                   <img title="isrs" alt="isrs" width="30" height="35" src="<?php echo  PART_IMAGES . 'foot-icon-5.png' ?>" />
+                   <img title="isrs" alt="isrs" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-5.png' ?>" />
                    <label> ISRS <br> <i>Reporting Standards</i> </label>
                </div>
            </div>

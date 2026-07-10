@@ -1,7 +1,11 @@
 <?php
 $args = array(
     'post_type' => 'slider',
-    'posts_per_page' => -1,
+    // [2026-07-08] - @author: Kelvin - Tối ưu truy vấn: Giới hạn 10 ảnh thay vì -1, tắt đếm tổng trang
+    'posts_per_page' => 10,
+    'no_found_rows' => true,
+    'update_post_meta_cache' => false,
+    'update_post_term_cache' => false,
     'orderby' => 'meta_value',
     'order' => 'DESC',
     'meta_key' => '_metabox_order',

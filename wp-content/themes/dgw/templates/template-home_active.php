@@ -10,9 +10,9 @@
 
                 <div class="active-item-img">
                     <?php if (has_post_thumbnail()) { ?>
-                        <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" fetchpriority="high" />
+                        <img src="<?php the_post_thumbnail_url() ?>" srcset="<?php the_post_thumbnail_url() ?>" loading="lazy" />
                     <?php } else { ?>
-                        <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" fetchpriority="high" />
+                        <img src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" loading="lazy" />
                     <?php } ?>
                 </div>
 

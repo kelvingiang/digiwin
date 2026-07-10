@@ -33,7 +33,7 @@
                                 <img
                                     alt="<?php the_title_attribute(); ?>"
                                     src="<?php echo esc_url($url_desktop[0]); ?>"
-                                    fetchpriority="high"
+                                    loading="lazy"
                                     width="<?php echo $url_desktop[1]; ?>"
                                     height="<?php echo $url_desktop[2]; ?>" />
                             </picture>
@@ -41,7 +41,7 @@
                         <?php } else { ?>
                             <img alt="<?php echo get_the_title(); ?>"
                                 src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                                fetchpriority="high"
+                                loading="lazy"
                                 width="410"
                                 height="270" />
                         <?php } ?>
