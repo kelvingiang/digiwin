@@ -18,7 +18,7 @@ define('DIR_LANGUAGES', THEME_URL . DS . 'languages' . DS);
 define('PART_IMAGES', THEME_PART . '/images/');
 define('PART_ICON', PART_IMAGES . '/icons/');
 define('PART_FILE', THEME_PART . '/file/');
-define('PART_CLASS', THEME_PART . '/class/');
+
 
 
 /** SMTP 配置 (為了增強 Email 發送可靠性) */

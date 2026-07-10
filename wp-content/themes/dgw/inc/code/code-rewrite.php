@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Rewrite URL Rules
+ * [2026-07-10] - @author: Kelvin
+ * Cấu hình custom rewrite rules cho WordPress routing.
+ * Được load tự động qua glob() trong inc/init.php
+ */
 class Rewrite_Url
 {
 
@@ -48,3 +54,6 @@ class Rewrite_Url
         return $vars;
     }
 }
+
+// [2026-07-10] - Khởi tạo class Rewrite_Url để đăng ký rewrite rules
+new Rewrite_Url();

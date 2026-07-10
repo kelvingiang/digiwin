@@ -22,8 +22,6 @@ require_once(DIR_HELPER . 'style.php');
 require_once(DIR_HELPER . 'function.php');
 require_once(DIR_HELPER . 'require.php');
 
-require_once(DIR_CLASS . 'rewrite.class.php');
-new Rewrite_Url();
 
 
 add_action('init', function () {
