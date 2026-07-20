@@ -70,9 +70,9 @@ class Model_Member extends WP_List_Table {
 
     private function table_data() {
         global $wpdb;
-// LAY GIA TRI SAP XEP DU LIEU TREN COT
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+        // LAY GIA TRI SAP XEP DU LIEU TREN COT - Fix lỗi Undefined array key
+        $orderby = !empty($_GET['orderby']) ? sanitize_sql_orderby($_GET['orderby']) : 'ID';
+        $order = !empty($_GET['order']) ? sanitize_key($_GET['order']) : 'DESC';
         $sql = 'SELECT m.* FROM ' . $this->table . ' AS m  ';
         $whereArr = array();  // TAO MANG WHERE ============
 

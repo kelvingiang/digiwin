@@ -331,15 +331,15 @@ jQuery(document).on("click", "#btn-register", function () {
 
   // Cấu hình thông báo chung cho tiếng Việt và tiếng Trung (Phồn thể)
   const uiText = {
-    vn: { 
-      loading: "Đang xử lý...", 
+    vn: {
+      loading: "Đang xử lý...",
       original: "Đăng ký",
-      emptyMsg: "Vui lòng điền đầy đủ thông tin." 
+      emptyMsg: "Vui lòng điền đầy đủ thông tin."
     },
-    cn: { 
-      loading: "處理中...", 
+    cn: {
+      loading: "處理中...",
       original: "註冊",
-      emptyMsg: "請填寫完整資訊。" 
+      emptyMsg: "請填寫完整資訊。"
     },
   };
   const langSet = uiText[sendLang];
@@ -374,13 +374,20 @@ jQuery(document).on("click", "#btn-register", function () {
     } else {
       $input.css("border-color", "");
       requestData[field.key] = val;
+
+      // --- 20-07-2026 BẮT ĐẦU CHỈNH SỬA  ---
+      // Nếu là thẻ select, lấy thêm thuộc tính data_content gửi lên server
+      if ($input.is("select")) {
+        requestData[field.key + "_label"] = $input.find("option:selected").attr("data-content") || val;
+      }
+      // --- KẾT THÚC CHỈNH SỬA ---
     }
   });
 
   // 2. Nếu có bất kỳ ô nào trống, báo lỗi chung và DỪNG
   if (hasEmptyField) {
     jQuery("#register-msg").css("color", "red").text(langSet.emptyMsg);
-    return; 
+    return;
   }
 
   // Clear message lỗi cũ nếu có
@@ -397,9 +404,9 @@ jQuery(document).on("click", "#btn-register", function () {
     success: function (res) {
       if (res.success) {
         jQuery("#register-msg").css("color", "green").text(res.data.message);
-        
-        formFields.forEach(function(field) {
-            jQuery(field.id).val("");
+
+        formFields.forEach(function (field) {
+          jQuery(field.id).val("");
         });
 
         setTimeout(function () {
@@ -418,6 +425,13 @@ jQuery(document).on("click", "#btn-register", function () {
           .text(langSet.original);
       }
     },
+    error: function () {
+      jQuery("#register-msg").css("color", "red").text("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.");
+      $this
+        .prop("disabled", false)
+        .removeClass("is-loading")
+        .text(langSet.original);
+    }
   });
 });
 // ===== HIỆN POPUP =====

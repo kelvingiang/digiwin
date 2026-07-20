@@ -18,6 +18,7 @@ function get_member_messages($lang = 'vi')
             'success_change_info'  => "Thông tin đã được cập nhật",
             'success_register' => "Đăng ký thành công, vui lòng kiểm tra email để kích hoạt tài khoản",
             'mail_sent'       => "Hãy kiểm tra email (có hiệu lực trong 24H)",
+            'not_send'        => "Không thể gửi email, vui lòng thử lại sau",
             'failure'         => "Xác thực bảo mật thất bại",
             'error_system'    => "Lỗi hệ thống, vui lòng thử lại",
             'login_req'       => "Vui lòng đăng nhập trước"
@@ -38,6 +39,7 @@ function get_member_messages($lang = 'vi')
             'success_change_info'  => "資訊已成功更新",
             'success_register' => "註冊成功，請前往信箱點擊啟動連結",
             'mail_sent'       => "請檢查 E-mail，將在24小時後失效",
+            'not_send'        => "無法發送電子郵件，請稍後重試",
             'failure'         => "安全驗證失敗",
             'error_system'    => "系統錯誤，請稍後重試",
             'login_req'       => "請先登入"
@@ -340,17 +342,23 @@ function handle_member_register()
     $result = get_model()->insert_registration_data($registration_data);
     if ($result) {
         // [24/06/2026] - Ghi thông tin đăng ký vào Google Sheets (Sheet2) sau khi lưu DB thành công
+        // ---20-07-2026  BẮT ĐẦU CHỈNH SỬA: Lấy label thay vì value ---
+        $position_label   = isset($_POST['position_label']) ? sanitize_text_field($_POST['position_label']) : $registration_data['position'];
+        $industry_label   = isset($_POST['industry_label']) ? sanitize_text_field($_POST['industry_label']) : $registration_data['industry'];
+        $department_label = isset($_POST['department_label']) ? sanitize_text_field($_POST['department_label']) : $registration_data['department'];
+        // --- KẾT THÚC CHỈNH SỬA ---
+
         $data_for_sheet = [
             'sheet'  => 'Sheet2',
             'values' => [
                 $registration_data['username'],
-                $registration_data['position'],
+                $position_label, // <-- Dùng label
                 $registration_data['email'],
                 $registration_data['company'],
                 "'" . $registration_data['phone'], // Thêm dấu nháy đơn để Google Sheets giữ nguyên dạng chuỗi (không mất số 0)
                 "'" . $registration_data['tax'],   // Thêm dấu nháy đơn để Google Sheets giữ nguyên dạng chuỗi
-                $registration_data['industry'],
-                $registration_data['department'],
+                $industry_label, // <-- Dùng label
+                $department_label, // <-- Dùng label
                 date('d-M-y H:i:s')
             ]
         ];
@@ -413,14 +421,15 @@ function handle_member_register()
                  ";
 
         // ==================== 修復 5: 添加詳細的調試日誌 ====================
-        $log_message = "[" . date('Y-m-d H:i:s') . "] Forgot Password Attempt\n";
+        $log_message = "[" . date('Y-m-d H:i:s') . "] Register Attempt\n";
         $log_message .= "Email: " . $registration_data['email'] . "\n";
         $log_message .= "Username: " . (isset($registration_data['username']) ? $registration_data['username'] : 'N/A') . "\n";
+        $log_message .= "Activation Link: " . $reset_url . "\n";
         $log_message .= "From: " . $from_email . "\n";
         $log_message .= "Headers: " . print_r($headers, true) . "\n";
 
         // 使用WordPress的debug.log或自訂日誌檔案
-        error_log($log_message, 3, WP_CONTENT_DIR . '/forgot-password.log');
+        error_log($log_message, 3, WP_CONTENT_DIR . '/register-mail.log');
 
         // ==================== 修復 6: 發送郵件並捕獲詳細錯誤 ====================
         $sent = wp_mail(

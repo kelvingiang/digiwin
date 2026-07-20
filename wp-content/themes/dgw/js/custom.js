@@ -30,6 +30,11 @@ function formatNumber(val) {
   return val;
 }
 
+// 2026-07-13: Xóa role="presentation" dư thừa từ Owl Carousel để fix lỗi A11y
+jQuery(window).on('load', function() {
+    jQuery('.owl-prev, .owl-next').removeAttr('role');
+});
+
 jQuery(document).ready(function () {
   jQuery("h1.entry-title").css("display", "none");
 

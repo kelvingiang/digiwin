@@ -1540,20 +1540,27 @@ hr.style-two {
   }
 }
 .dgw-popup-space .dgw-popup-close {
-  color: rgb(253, 253, 253);
-  opacity: 0.3;
+  color: rgb(253, 1, 1);
+  opacity: 1;
   position: absolute;
   top: 5px;
   right: 5px;
   font-size: 1.2rem;
   cursor: pointer;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
 }
 .dgw-popup-space .dgw-popup-close svg {
-  width: 25px;
-  fill: #fff;
+  width: 24px;
+  fill: #9b0202;
 }
 .dgw-popup-space .dgw-popup-close:hover {
   opacity: 1;
+}
+.dgw-popup-space .dgw-popup-close:hover svg {
+  fill: #000;
 }
 
 .menu-main {

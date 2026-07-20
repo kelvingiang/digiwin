@@ -29,8 +29,8 @@ define('SMTP_PORT', 465);
 define('SMTP_SECURE', 'ssl');                 
 define('SMTP_AUTH', true);                    
 define('SMTP_USERNAME', 'digiwin.asean@gmail.com'); 
-define('SMTP_PASSWORD', 'kmtgtlxtmdpqojyc'); 
-define('SMTP_FROM_EMAIL', '  ');
+define('SMTP_PASSWORD', 'dzklgituqxvbqotl'); 
+define('SMTP_FROM_EMAIL', 'digiwin.asean@gmail.com');
 define('SMTP_FROM_NAME', 'Digiwin vietnam'); 
 
 // define('SMTP_USERNAME', 'kelvinctcvn@gmail.com'); 

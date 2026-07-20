@@ -192,7 +192,9 @@ class Controller_Member
             $filename = "members_export_" . date("Y-m-d") . ".xlsx";
 
             // Xóa bỏ mọi output đã được tạo trước đó để tránh file excel bị lỗi hỏng
-            if (ob_get_length()) ob_clean();
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
 
             // Set headers for file download
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

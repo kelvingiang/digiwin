@@ -78,8 +78,9 @@ class Model_Pop_up extends WP_List_Table
     {
         global $wpdb;
         // LAY GIA TRI SAP XEP DU LIEU TREN COT
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+        // [13/07/2026] Fix: Thay thế cách lấy biến $_GET kết hợp kiểm tra !empty() để tránh lỗi "Undefined array key" khi key không tồn tại trên PHP 8+.
+        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
         $sql = 'SELECT m.* FROM ' . $this->table . ' AS m  ';
         $whereArr = array();  // TAO MANG WHERE ============
 

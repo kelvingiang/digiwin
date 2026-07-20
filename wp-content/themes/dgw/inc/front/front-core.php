@@ -181,7 +181,7 @@ function dgw_render_auth_form_full(string $prefix = 'reg-', string $button_text 
                     $options = $field['options'] ?? [];
                     foreach ($options as $opt_value => $opt_label) {
                         $is_selected = selected($val, $opt_value, false);
-                        echo '<option value="' . esc_attr($opt_value) . '" ' . $is_selected . '>' . esc_html($opt_label) . '</option>';
+                        echo '<option data-content="' . esc_attr($opt_label) . '" value="' . esc_attr($opt_value) . '" ' . $is_selected . '>' . esc_html($opt_label) . '</option>';
                     }
                     ?>
                 </select>

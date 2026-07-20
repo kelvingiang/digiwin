@@ -35,7 +35,7 @@ $wp_query = new WP_Query($args);
             <?php if ($wp_query->have_posts()) : ?>
                 <?php $stt = 1 ?>
                 <?php while ($wp_query->have_posts()) : $wp_query->the_post(); ?>
-                    <?php $url = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'large'); ?>
+                    <?php $url = wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), 'large'); ?>
                     <div class="carousel-item <?php echo $stt == 1 ? 'active' : '' ?>" data-interval="10000">
                         <?php if (has_post_thumbnail()) {
                             the_post_thumbnail('large', array(

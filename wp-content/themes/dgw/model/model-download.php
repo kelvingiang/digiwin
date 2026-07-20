@@ -85,10 +85,11 @@ class Model_Download extends WP_List_Table
     private function table_data()
     {
         global $wpdb;
-
-        // LAY GIA TRI SAP XEP DU LIEU TREN COT
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+ 
+        // [13/07/2026] Fix: Thay thế cách lấy biến $_GET trực tiếp bằng hàm getParams() để an toàn hơn
+        // và tránh lỗi "Undefined array key" trên PHP 8+.
+        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
 
         // 基本 SELECT 與 JOIN
         $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
@@ -144,8 +145,12 @@ class Model_Download extends WP_List_Table
         global $wpdb;
 
         // This is almost the same as table_data(), but without pagination.
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+
+            $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
+        
+        // $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
+        // $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
 
         $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
             FROM {$this->table} AS m 
