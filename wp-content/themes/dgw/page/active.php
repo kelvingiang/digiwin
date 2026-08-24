@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: Actives Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Actives Page
+ * Description: Custom template for Actives Page
+ */
+get_header(); ?>
 
 <div>
     <?php pageImg(get_the_ID()); ?>

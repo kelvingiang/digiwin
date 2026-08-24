@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: About Page */ ?>
-<?php get_header();
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: About Page
+ * Description: Custom template for About Page
+ */
+get_header();
 get_template_part('templates/template', 'header'); 
 $lang = dgw_get_lang();
 ?>

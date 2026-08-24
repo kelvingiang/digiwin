@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: News Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: News Page
+ * Description: Custom template for News Page
+ */
+get_header(); ?>
 <div>
   <?php pageImg(get_the_ID()); ?>
 </div>

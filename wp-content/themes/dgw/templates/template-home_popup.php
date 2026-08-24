@@ -6,7 +6,7 @@ $data = $model->getActive();
 if (!empty($data)) :
     $lang = dgw_get_lang();
 ?>
-    <div class="dgw-popup">
+    <div class="dgw-popup" style="display: none;">
         <div class="dgw-popup-space">
             <div class="dgw-popup-close">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -54,9 +54,8 @@ if (!empty($data)) :
     </div>
     <script>
         // [2026-07-08] - @author: Kelvin - Dùng sessionStorage để chỉ hiện popup 1 lần trên mỗi tab
-        if (sessionStorage.getItem('dgwPopupShown')) {
-            document.querySelector(".dgw-popup").style.display = "none";
-        } else {
+        if (!sessionStorage.getItem('dgwPopupShown')) {
+            document.querySelector(".dgw-popup").style.display = "";
             sessionStorage.setItem('dgwPopupShown', 'true');
             document.body.style.overflowY = "hidden";
             document.body.style.overflowX = "hidden";

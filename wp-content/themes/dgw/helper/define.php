@@ -25,13 +25,13 @@ define('PART_FILE', THEME_PART . '/file/');
 define('SMTP_HOST', 'smtp.gmail.com');  // 
 // define('SMTP_PORT', 587);                     
 // define('SMTP_SECURE', 'tls');                 
-define('SMTP_PORT', 465);                     
-define('SMTP_SECURE', 'ssl');                 
-define('SMTP_AUTH', true);                    
-define('SMTP_USERNAME', 'digiwin.asean@gmail.com'); 
-define('SMTP_PASSWORD', 'dzklgituqxvbqotl'); 
+define('SMTP_PORT', 465);
+define('SMTP_SECURE', 'ssl');
+define('SMTP_AUTH', true);
+define('SMTP_USERNAME', 'digiwin.asean@gmail.com');
+define('SMTP_PASSWORD', 'dzklgituqxvbqotl');
 define('SMTP_FROM_EMAIL', 'digiwin.asean@gmail.com');
-define('SMTP_FROM_NAME', 'Digiwin vietnam'); 
+define('SMTP_FROM_NAME', 'Digiwin vietnam');
 
 // define('SMTP_USERNAME', 'kelvinctcvn@gmail.com'); 
 // define('SMTP_PASSWORD', 'yidgmjjlepprajbn'); 
@@ -47,10 +47,10 @@ define('SMTP_FROM_NAME', 'Digiwin vietnam');
 // define('SMTP_FROM_EMAIL', 'marketing_vn@digiwin.com');
 // define('SMTP_FROM_NAME', 'Digiwin vietnam');
 
-if ($_SERVER['HTTP_HOST'] === 'localhost') {
-    define('WP_HOME', 'http://localhost/digiwin');
-    define('WP_SITEURL', 'http://localhost/digiwin');
-} else {
-    define('WP_HOME', 'https://www.digiwin.com.vn');
-    define('WP_SITEURL', 'https://www.digiwin.com.vn');
-}
+// if ($_SERVER['HTTP_HOST'] === 'localhost') {
+    // define('WP_HOME', 'http://digiwin.test');
+    // define('WP_SITEURL', 'http://digiwin.test');
+// } else {
+//     define('WP_HOME', 'https://www.digiwin.com.vn');
+//     define('WP_SITEURL', 'https://www.digiwin.com.vn');
+// }

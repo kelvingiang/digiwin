@@ -56,8 +56,7 @@ add_action('init', function () {
             'site_lang',
             $lang,
             time() + YEAR_IN_SECONDS,
-            COOKIEPATH,
-            COOKIE_DOMAIN
+            '/'
         );
 
         $_COOKIE['site_lang'] = $lang;

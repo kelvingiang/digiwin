@@ -158,9 +158,7 @@ function change_languages()
             'site_lang',
             $lang,
             time() + YEAR_IN_SECONDS,
-            COOKIEPATH,
-            COOKIE_DOMAIN,
-            is_ssl() // 根據是否為 HTTPS 自動設定 Secure 屬性
+            '/'
         );
 
         // 確保當前請求也能讀取到

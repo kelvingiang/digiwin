@@ -1,5 +1,10 @@
-<?php /*  Template Name: Member Page */ ?>
-<?php get_header();
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Member Page
+ * Description: Custom template for Member Page
+ */
+get_header();
 get_template_part('templates/template', 'header');
 
 $data = null;

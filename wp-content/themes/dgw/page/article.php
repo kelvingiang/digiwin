@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: Article Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Article Page
+ * Description: Custom template for Article Page
+ */
+ get_header(); ?>
 <div>
     <?php pageImg(get_the_ID()); ?>
 </div>

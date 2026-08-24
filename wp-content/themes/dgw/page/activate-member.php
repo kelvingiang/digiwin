@@ -1,5 +1,9 @@
-<?php /* Template Name: Activate Member Page */ ?>
 <?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Activate Member Page
+ * Description: Custom template for Activate Member Page
+ */
 get_header();
 get_template_part('templates/template', 'header');
 

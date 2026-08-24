@@ -181,7 +181,7 @@ function sync_to_google_sheets($data)
 {
     // [24/06/2026] - Hỗ trợ nhận param 'sheet' để tự động ghi vào sheet mong muốn thay vì fix cứng Sheet1
     $spreadsheetId = '11XOFnz7wWw1L3GKLKNtmrnwQu5uY-YusMKXu9L6SFkI';
-    $sheet_name = isset($data['sheet']) ? $data['sheet'] : 'Sheet1';
+    $sheet_name = isset($data['sheet']) ? $data['sheet'] : 'acList';
     // Nếu có truyền 'values' thì dùng trực tiếp mảng đó, ngược lại dùng cấu trúc mặc định 5 cột
     if (isset($data['values']) && is_array($data['values'])) {
         $values = [$data['values']];

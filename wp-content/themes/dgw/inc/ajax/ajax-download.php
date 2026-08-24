@@ -94,7 +94,7 @@ function my_download_file()
     // [24/06/2026] - Chỉ định rõ tên sheet (sheet1) cần ghi dữ liệu vào Google Sheets 
     // 1. Chuẩn bị dữ liệu theo đúng định dạng hàm sync_to_google_sheets yêu cầu
     $data_for_sheet = [
-        "sheet"    => "Sheet1",          // Tên sheet cần ghi dữ liệu vào (viết hoa chữ S)
+        "sheet"    => "acList",          // Tên sheet cần ghi dữ liệu vào (viết hoa chữ S)
         "title"    => $post_title,       // Cột A: Tên tài liệu
         "file"     => $post_source,      // Cột B: Link tài liệu gốc
         "name"     => $user->username,   // Cột C: Tên người dùng
@@ -341,7 +341,7 @@ function handle_member_register()
     $registration_data['active_code'] = hash('sha256', $plain_token);
     $result = get_model()->insert_registration_data($registration_data);
     if ($result) {
-        // [24/06/2026] - Ghi thông tin đăng ký vào Google Sheets (Sheet2) sau khi lưu DB thành công
+        // [24/06/2026] - Ghi thông tin đăng ký vào Google Sheets (registerList) sau khi lưu DB thành công
         // ---20-07-2026  BẮT ĐẦU CHỈNH SỬA: Lấy label thay vì value ---
         $position_label   = isset($_POST['position_label']) ? sanitize_text_field($_POST['position_label']) : $registration_data['position'];
         $industry_label   = isset($_POST['industry_label']) ? sanitize_text_field($_POST['industry_label']) : $registration_data['industry'];
@@ -349,7 +349,7 @@ function handle_member_register()
         // --- KẾT THÚC CHỈNH SỬA ---
 
         $data_for_sheet = [
-            'sheet'  => 'Sheet2',
+            'sheet'  => 'registerList', // Tên sheet cần ghi dữ liệu vào (viết hoa chữ S)
             'values' => [
                 $registration_data['username'],
                 $position_label, // <-- Dùng label

@@ -1,5 +1,10 @@
-<?php /*  Template Name: landing Page */ ?>
-<?php get_header();
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: landing Page
+ * Description: Custom template for landing Page
+ */
+get_header();
 get_template_part('templates/template', 'header'); ?>
 
 <script src="https://www.digiwin.com.vn/wp-content/themes/dgw/js/divi/landing.js?ver=1.0" defer></script>

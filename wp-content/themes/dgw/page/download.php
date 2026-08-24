@@ -1,5 +1,10 @@
-<?php /*  Template Name: Download Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Download Page
+ * Description: Custom template for Download Page
+ */
+get_header(); ?>
 
 <div>
   <?php pageImg(get_the_ID()); ?>

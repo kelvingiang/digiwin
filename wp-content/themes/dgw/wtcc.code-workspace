@@ -1,13 +1,10 @@
 {
-    "folders": [
-		{
-			"path": "../../../../wtcc"
-		},
+	"folders": [
 		{
 			"path": "../../.."
 		}
 	],
-    "settings": {
-        "git.ignoreLimitWarning": true
-    }
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
 }

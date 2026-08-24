@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: Services Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Services Page
+ * Description: Custom template for Services Page
+ */
+get_header(); ?>
 
 <div>
     <?php pageImg(get_the_ID()); ?>

@@ -19,8 +19,7 @@ function dgw_ajax_change_languages_handler() {
             'site_lang',
             $lang,
             time() + YEAR_IN_SECONDS,
-            COOKIEPATH,
-            COOKIE_DOMAIN
+            '/'
         );
 
         // 讓當次 request 立即可讀

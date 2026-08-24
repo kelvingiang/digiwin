@@ -1,5 +1,10 @@
-﻿<?php /*  Template Name: Solutions Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Solutions Page
+ * Description: Custom template for Solutions Page
+ */
+get_header(); ?>
 
 <div>
     <?php pageImg(get_the_ID()); ?>

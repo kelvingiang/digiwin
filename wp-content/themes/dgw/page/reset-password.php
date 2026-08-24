@@ -1,9 +1,13 @@
-<?php /*  Template Name: Reset Password Page */
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Reset Password Page
+ * Description: Custom template for Reset Password Page
+ */
 
 use phpseclib3\File\ASN1\Maps\Time;
 
-?>
-<?php get_header();
+get_header();
 get_template_part('templates/template', 'header');
 
 $email = isset($_GET['email']) ? sanitize_email($_GET['email']) : '';

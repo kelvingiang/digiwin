@@ -66,9 +66,7 @@ if (!empty($_COOKIE['custom_session'])) {
             },
             success: function(res) {
                 if (res.status === 'ok') {
-                    //window.location.reload(); // 或者跳轉回首頁：'<?php //echo home_url(); 
-                                                            ?>'
-                    window.location = '<?php echo home_url(); ?>'
+                    window.location = '<?php echo home_url(); ?>';
                 }
             },
             error: function(err) {
