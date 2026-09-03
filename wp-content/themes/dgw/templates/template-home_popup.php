@@ -54,9 +54,9 @@ if (!empty($data)) :
     </div>
     <script>
         // [2026-07-08] - @author: Kelvin - Dùng sessionStorage để chỉ hiện popup 1 lần trên mỗi tab
+        // [2026-09-03] - Update: Chỉ lưu trạng thái tắt khi người dùng thực sự click đóng
         if (!sessionStorage.getItem('dgwPopupShown')) {
             document.querySelector(".dgw-popup").style.display = "";
-            sessionStorage.setItem('dgwPopupShown', 'true');
             document.body.style.overflowY = "hidden";
             document.body.style.overflowX = "hidden";
         }
@@ -71,6 +71,9 @@ if (!empty($data)) :
                 jQuery(".dgw-popup").css("display", "none");
                 document.body.style.overflowY = "auto";
                 document.body.style.overflowX = "auto";
+
+                // Lưu trạng thái đã đóng để không hiện lại trong tab này
+                sessionStorage.setItem('dgwPopupShown', 'true');
             });
         });
     </script>
