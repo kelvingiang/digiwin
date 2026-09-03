@@ -393,6 +393,14 @@ jQuery(document).on("click", "#btn-register", function () {
   // Clear message lỗi cũ nếu có
   jQuery("#register-msg").text("");
 
+  // Kiểm tra Cloudflare Turnstile
+  const turnstileResponse = jQuery('[name="cf-turnstile-response"]').val();
+  if (!turnstileResponse) {
+    jQuery("#register-msg").css("color", "red").text(sendLang === "vn" ? "Vui lòng xác nhận bạn không phải là người máy (Captcha)." : "請驗證您不是機器人 (Captcha)。");
+    return;
+  }
+  requestData['cf-turnstile-response'] = turnstileResponse;
+
   // 3. Vô hiệu hóa button để tránh spam request
   $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
 
@@ -424,6 +432,11 @@ jQuery(document).on("click", "#btn-register", function () {
           .removeClass("is-loading")
           .text(langSet.original);
       }
+      
+      // Reset Turnstile widget so user can try again if failed
+      if (typeof turnstile !== 'undefined') {
+          turnstile.reset();
+      }
     },
     error: function () {
       jQuery("#register-msg").css("color", "red").text("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.");
@@ -431,6 +444,10 @@ jQuery(document).on("click", "#btn-register", function () {
         .prop("disabled", false)
         .removeClass("is-loading")
         .text(langSet.original);
+        
+      if (typeof turnstile !== 'undefined') {
+          turnstile.reset();
+      }
     }
   });
 });

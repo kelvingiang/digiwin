@@ -289,21 +289,60 @@ function handle_member_register()
 {
     check_ajax_referer('my_nonce', 'nonce');
     $msg = get_member_messages($_POST['lang'] ?? 'vi');
+    
+    // 0. Xác thực Cloudflare Turnstile
+    $turnstile_response = isset($_POST['cf-turnstile-response']) ? $_POST['cf-turnstile-response'] : '';
+    if (empty($turnstile_response)) {
+        wp_send_json_error(['message' => 'Vui lòng xác nhận bạn không phải là người máy (Captcha).']);
+        return;
+    }
+
+    // TODO: Thay thế Secret Key thật khi đưa lên Production
+    $secret_key = '0x4AAAAAAEe5gomLwgyfkEkqWzPX0q3BMEY'; // Real secret key
+    $verify_url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+    
+    $response = wp_remote_post($verify_url, [
+        'body' => [
+            'secret'   => $secret_key,
+            'response' => $turnstile_response,
+            'remoteip' => $_SERVER['REMOTE_ADDR']
+        ]
+    ]);
+
+    if (is_wp_error($response)) {
+        wp_send_json_error(['message' => 'Lỗi kết nối máy chủ xác thực Captcha.']);
+        return;
+    }
+
+    $body = wp_remote_retrieve_body($response);
+    $result = json_decode($body);
+
+    if (!$result->success) {
+        wp_send_json_error(['message' => 'Xác thực Captcha thất bại.']);
+        return;
+    }
 
     //--------------------------------------------------------------------
-    // 1. 接收並清洗數據
+    // 1. 接收並清洗數據 (Thêm wp_unslash để tránh bị lưu dấu \ vào database do wp_magic_quotes)
     $registration_data = [
-        'username'   => sanitize_text_field($_POST['username']),
-        'email'      => sanitize_email($_POST['email']),
-        'password'   => sanitize_text_field(wp_unslash($_POST['password'])), // 注意：這裡先拿原始值進行長度檢查，Model 層會加密
-        'company'    => sanitize_text_field($_POST['company']),
-        'phone'      => sanitize_text_field($_POST['phone']),
-        'tax'        => sanitize_text_field($_POST['tax']),
-        'industry'   => sanitize_text_field($_POST['industry']),
-        'department' => sanitize_text_field($_POST['department']),
-        'position'   => sanitize_text_field($_POST['position']),
-        'language'   => sanitize_text_field($_POST['lang']),
+        'username'   => sanitize_text_field(wp_unslash($_POST['username'] ?? '')),
+        'email'      => sanitize_email(wp_unslash($_POST['email'] ?? '')),
+        'password'   => sanitize_text_field(wp_unslash($_POST['password'] ?? '')), // 注意：這裡先拿原始值進行長度檢查，Model 層會加密
+        'company'    => sanitize_text_field(wp_unslash($_POST['company'] ?? '')),
+        'phone'      => sanitize_text_field(wp_unslash($_POST['phone'] ?? '')),
+        'tax'        => sanitize_text_field(wp_unslash($_POST['tax'] ?? '')),
+        'industry'   => sanitize_text_field(wp_unslash($_POST['industry'] ?? '')),
+        'department' => sanitize_text_field(wp_unslash($_POST['department'] ?? '')),
+        'position'   => sanitize_text_field(wp_unslash($_POST['position'] ?? '')),
+        'language'   => sanitize_text_field(wp_unslash($_POST['lang'] ?? '')),
     ];
+
+    // Kiểm tra và chặn các payload nghi ngờ là SQL Injection / XSS
+    $suspicious_pattern = '/(\bOR\b|\bAND\b|=|<|>|--|;)/i';
+    if (preg_match($suspicious_pattern, $registration_data['username']) || preg_match($suspicious_pattern, $registration_data['company'])) {
+        wp_send_json_error(['message' => $msg['failure']]);
+        return;
+    }
 
     // 檢查必填項 (修正了你原代碼中的括號語法錯誤)
     if (!is_email($registration_data['email'])) {

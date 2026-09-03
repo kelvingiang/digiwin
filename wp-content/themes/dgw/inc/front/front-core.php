@@ -212,6 +212,12 @@ function dgw_render_auth_form_full(string $prefix = 'reg-', string $button_text 
                 target="_blank"><?php echo __('privacy policy', 'dgw'); ?></a>
         </div>
     </div>
+    <?php if ($prefix === 'reg-') : ?>
+        <div class="turnstile-container" style="margin-bottom: 15px; display: flex; justify-content: flex-start;">
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAEe5ghYmyH3wpgix" data-theme="light"></div>
+        </div>
+    <?php endif; ?>
     <div class="btn-space">
         <button id="btn-register" class="btn-my-style">
             <?php echo esc_html($button_text); ?>
