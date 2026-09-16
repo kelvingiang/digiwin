@@ -19,6 +19,8 @@ switch ($footer) {
 
 get_template_part('templates/template', 'home-side-right');
 
+get_template_part('templates/template', 'main_mobile');
+
 wp_footer(); ?>
 
 <!-- them zalo chat -->

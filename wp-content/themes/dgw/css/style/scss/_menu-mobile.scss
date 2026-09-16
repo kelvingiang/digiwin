@@ -1,169 +1,305 @@
-// [2026-06-30]: Thiết kế lại Menu Mobile (Modern Side Drawer)
+// [2026-09-16]: Cập nhật Menu Mobile (Premium Design, BEM, Glassmorphism, Micro-animations)
 @use "define" as *;
 @use "responsive" as *;
 
-$menu_mobile_color: $color_blue_link; // Dùng màu xanh chuẩn của Digiwin thay vì màu đỏ
-$menu_bg: rgba(255, 255, 255, 0.95);
+$menu_mobile_color: $color_blue_link;
+$menu_bg: rgba(255, 255, 255, 0.85); // Glassmorphism base
 
 .menu-mobile {
-    display: none; // Mặc định ẩn trên desktop
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 0; // Tránh block click khi chưa mở
-    z-index: 999999;
+    height: 0;
+    z-index: 2147483647 !important;
 
     @include Respond(md) {
-        display: block; // Hiện trên mobile/tablet
+        display: block;
     }
 
-    // Icon Hamburger (Mở menu)
-    .menu-mobile-icon {
+    &__icon {
         position: fixed;
         right: 15px;
         top: 50px;
         z-index: 1000000;
         cursor: pointer;
-        width: 40px;
-        height: 40px;
-        background-color: #fff;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #ffffff, #f0f4f8);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
 
-        &:active {
-            transform: scale(0.9);
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
-        .svg-menu-icon {
+        &:active {
+            transform: scale(0.95);
+        }
+
+        .menu-mobile__svg-icon {
             fill: $menu_mobile_color;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             transition: fill 0.3s ease;
         }
     }
 
-    // Lớp phủ mờ (Overlay)
-    .menu-mobile-overlay {
+    &__overlay {
         position: fixed;
-        top: 0px;
+        top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(4px);
+        background-color: rgba(15, 23, 42, 0.5); // Darker and more premium overlay
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.4s ease, visibility 0.4s ease;
         z-index: 999998;
     }
 
-    // Khu vực Panel Menu (Trượt từ phải sang)
-    .menu-mobile-ui {
+    &__ui {
         position: fixed;
-        top: 48px;
-        right: 0;
-        width: 80%;
-        max-width: 320px;
+        top: 0; // Cover full height including top
+        left: 0;
+        right: auto;
+        width: 85%;
+        max-width: 340px;
         height: 100vh;
         background: $menu_bg;
-        backdrop-filter: blur(10px);
-        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
         z-index: 999999;
-        transform: translateX(100%); // Ẩn bên phải màn hình
-        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         display: flex;
         flex-direction: column;
+        border-right: 1px solid rgba(255, 255, 255, 0.4);
+    }
 
-        .menu-mobile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 25px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 25px 25px 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.4));
+    }
 
-            .menu-title {
-                font-size: 1.2rem;
-                font-weight: 800;
-                color: #333;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
+    &__title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #1a202c; // Darker slate
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        background: linear-gradient(135deg, $menu_mobile_color, #2b6cb0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-            .menu-mobile-close {
-                cursor: pointer;
-                width: 35px;
-                height: 35px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                background-color: rgba(0, 0, 0, 0.05);
-                transition: background-color 0.3s ease;
+    &__close {
+        cursor: pointer;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: #f1f5f9;
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 2px 5px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
 
-                svg {
-                    width: 18px;
-                    height: 18px;
-                    fill: #666;
-                }
-
-                &:active {
-                    background-color: rgba(0, 0, 0, 0.1);
-                }
-            }
+        svg {
+            width: 18px;
+            height: 18px;
+            fill: #475569;
         }
 
-        .menu-mobile-content {
-            padding: 15px 0;
-            overflow-y: auto; // Cho phép cuộn nếu menu quá dài
-            flex-grow: 1;
+        &:hover {
+            background-color: #e2e8f0;
+            transform: rotate(90deg);
+        }
 
-            .menu-mobile-item {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-                
-                &:last-child {
-                    border-bottom: none;
-                }
+        &:active {
+            transform: scale(0.9) rotate(90deg);
+        }
+    }
 
-                a {
-                    display: block;
-                    padding: 16px 25px;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    color: #444;
-                    text-decoration: none;
-                    transition: all 0.3s ease;
+    &__content {
+        padding: 10px 20px 30px;
+        overflow-y: auto;
+        flex-grow: 1;
+        
+        /* Custom scrollbar for mobile menu */
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+    }
 
-                    &:active, &:focus {
-                        background-color: rgba(84, 145, 224, 0.08);
-                        color: $menu_mobile_color;
-                        padding-left: 30px; // Hiệu ứng thò thụt nhẹ khi chạm
-                    }
-                }
+    &__item {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+        margin-bottom: 4px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &__item-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 12px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.6);
+            transform: translateX(4px);
+        }
+    }
+
+    &__link {
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: #2d3748 !important;
+        text-decoration: none !important;
+        flex-grow: 1;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block;
+        cursor: pointer;
+        outline: none;
+        background: transparent !important;
+        transition: color 0.3s ease;
+
+        &::after,
+        &::before {
+            display: none !important;
+        }
+
+        &:hover {
+            color: $menu_mobile_color !important;
+        }
+    }
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background-color: #f8fafc;
+        color: #64748b;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease, color 0.3s ease;
+        margin-left: 12px;
+
+        svg {
+            fill: currentColor;
+            width: 14px;
+            height: 14px;
+        }
+
+        &--active {
+            transform: rotate(180deg);
+            background: linear-gradient(135deg, $menu_mobile_color, #3182ce);
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+        }
+    }
+
+    &__sub {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        margin: 4px 0 16px 0;
+        padding: 8px 0;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    &__sub-link {
+        display: block;
+        padding: 14px 16px 14px 24px !important;
+        font-size: 15px !important;
+        font-weight: 600;
+        color: #4a5568 !important;
+        text-decoration: none !important;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin: 4px 12px !important;
+        border-radius: 8px;
+        background-color: transparent;
+        border-bottom: 1px solid rgba(0,0,0,0.03);
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &:hover,
+        &:active {
+            color: $menu_mobile_color !important;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding-left: 28px !important;
+            transform: translateX(4px);
+
+            &::before {
+                width: 4px;
+                height: 16px; // Morphing into a vertical pill shape
+                border-radius: 4px;
+                background-color: $menu_mobile_color;
+                left: 10px;
             }
         }
     }
 
-    // Trạng thái mở (Active State)
-    &.is-open {
-        height: 100vh; // Mở rộng vùng chứa để nhận click vào overlay
+    // Active State Modifier
+    &--open {
+        height: 100vh;
 
-        .menu-mobile-icon {
-            opacity: 0; // Ẩn icon Hamburger đi
+        .menu-mobile__icon {
+            opacity: 0;
             pointer-events: none;
+            transform: scale(0.5);
         }
 
-        .menu-mobile-overlay {
+        .menu-mobile__overlay {
             opacity: 1;
             visibility: visible;
         }
 
-        .menu-mobile-ui {
-            transform: translateX(0); // Trượt menu ra
+        .menu-mobile__ui {
+            transform: translateX(0);
         }
     }
 }

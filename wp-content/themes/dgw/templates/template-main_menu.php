@@ -22,8 +22,7 @@
             $className = $val_main['name'];
         ?>
             <div class='<?php echo $val_main['class'] ?>' data-name='<?php echo $classData ?>'>
-                <?php if (isset($val_main['sub'])) :
-                ?>
+                <?php if (isset($val_main['sub'])) : ?>
                     <label class='menu-main-item-link has-sub'>
                         <?php _e($className); ?>
                     </label>

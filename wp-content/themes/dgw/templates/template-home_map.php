@@ -1,8 +1,6 @@
  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAV4v2qSBuCA1Rn7NPd09exwP4smcjW_g&callback=initMap" type="text/javascript">
  </script>
- <!--<script type="text/javascript" 
-        src="http://maps.googleapis.com/maps/api/js?sensor=false&language=en">
-</script>-->
+
  <script type="text/javascript">
      var map;
 
@@ -37,5 +35,4 @@
  width: 100%; 
  margin: 0 auto ; 
  margin: 10px 0 ;  ">
-
  </div>
