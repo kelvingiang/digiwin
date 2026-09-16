@@ -31,7 +31,6 @@
                         <?php _e($className, 'dgw'); ?>
                     </a>
                 <?php endif ?>
-                <div class='menu-main-item-bg'></div>
 
                 <!--=========== PHAN MENU SUB =============== -->
                 <?php if (isset($val_main['sub'])) : ?>
@@ -40,7 +39,6 @@
                             <div class=' <?php echo $val_sub['class'] ?> '>
                                 <a href="<?php echo home_url($key_main) . '/cate/' . $val_sub['ID'] . '/tag/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
                                     <?php _e($val_sub['name']) ?></a>
-                                <div class='menu-main-sub-1-item-bg'></div>
                             </div>
                         <?php endforeach ?>
                     </div>
@@ -87,8 +85,6 @@
                     </a>
                 <?php endif ?>
 
-                <div class='menu-main-item-bg'></div>
-
                 <!--=========== PHAN MENU SUB =============== -->
                 <?php if (isset($val_main['sub'])) : ?>
                     <div class=' <?php echo $val_main['subClass'] ?>'>
@@ -96,7 +92,6 @@
                             <div class=' <?php echo $val_sub['class'] ?> '>
                                 <a href="<?php echo home_url($key_main) . '/cate/' . $val_sub['ID'] . '/tag/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
                                     <?php _e($val_sub['name']) ?></a>
-                                <div class='menu-main-sub-1-item-bg'></div>
                             </div>
                         <?php endforeach ?>
                     </div>

@@ -1583,7 +1583,7 @@ hr.style-two {
   z-index: 100003;
 }
 .menu-main-item label {
-  padding: 0rem;
+  cursor: pointer;
 }
 @media (max-width: 1199.98px) {
   .menu-main-item {
@@ -1600,33 +1600,27 @@ hr.style-two {
   z-index: 20;
   transition: all 1s;
   white-space: nowrap;
+  position: relative;
+  transition: color 0.3s ease;
+  /* Hiệu ứng thanh chạy bên dưới (Running bar) */
 }
-.menu-main-item-bg {
-  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,c3d6e5+24,ffffff+50,c3d3e0+79,c9dae8+100 */
-  background: rgb(208, 228, 247);
-  /* Old browsers */
-  /* FF3.6-15 */
-  /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom, rgba(231, 231, 231, 0.9) 0%, rgba(231, 231, 231, 0.9) 100%);
-  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0)";
-  /* IE6-9 */
-  height: 100%;
-  width: 1px;
+.menu-main-item-link::before {
+  content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 12;
-  transition: all 1.5s;
-  opacity: 0;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #00AFF0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-in-out;
 }
 .menu-main-item:last-child {
   border-radius: 0 0.4rem 0.4rem 0;
-  overflow: hidden;
 }
 .menu-main-item:first-child {
   border-radius: 0.4rem 0 0 0.4rem;
-  overflow: hidden;
 }
 .menu-main-item .has-sub:after {
   content: "❯";
@@ -1634,18 +1628,18 @@ hr.style-two {
   display: inline-block;
   transform: rotate(90deg);
 }
-.menu-main-item:hover .menu-main-item-bg {
-  left: 0;
-  width: 100%;
-  opacity: 1;
-}
 .menu-main-item:hover .menu-main-item-link {
   color: #00AFF0;
+}
+.menu-main-item:hover .menu-main-item-link::before {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 .menu-main-item:hover .menu-main-sub-1 {
   pointer-events: auto;
   opacity: 1;
-  margin-top: 0.6rem;
+  visibility: visible;
+  transform: translateY(0);
 }
 .menu-main .active > a,
 .menu-main .active > label {
@@ -1654,104 +1648,112 @@ hr.style-two {
 .menu-main .menu-main-sub-1 {
   pointer-events: none;
   opacity: 0;
+  visibility: hidden;
   position: absolute;
-  margin-top: -30px;
-  margin-left: -18px;
-  transition: all 1s;
-  padding: 2px;
+  top: 100%;
+  left: 0;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transform: translateY(5px);
   white-space: nowrap;
   z-index: 100001;
+  /* Modern Corporate UI Design */
+  background-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Đổ bóng sâu nhưng mềm mại hơn */
+  border-radius: 6px; /* Bo góc nhẹ */
+  border-top: 3px solid #00AFF0; /* Dải màu nhấn thương hiệu ở trên cùng */
+  min-width: 220px; /* Rộng hơn một chút để thoáng chữ */
+  padding: 8px; /* Đổi thành padding đều các cạnh để item bên trong tạo thành dạng nút lơ lửng */
+  /* Cầu nối vô hình chống mất hover */
+}
+.menu-main .menu-main-sub-1::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+  background: transparent;
 }
 .menu-main .menu-main-sub-1-item {
   position: relative;
-  height: 50px;
-  line-height: 50px;
-  background-color: rgba(231, 231, 231, 0.9);
-  border-bottom: 1px solid #fff;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  border-radius: 6px; /* Bo góc từng mục để giống như một button lơ lửng */
+  margin: 2px 0; /* Cấp một chút khoảng cách siêu nhỏ giữa các mục */
 }
 .menu-main .menu-main-sub-1-item-link {
-  position: relative;
-  padding: 0rem 1.5rem;
-  cursor: pointer;
-  color: #013142;
-  font-size: 1.1rem;
-  font-weight: bold;
-  z-index: 20;
-  transition: all 1s;
+  display: block;
+  padding: 10px 16px; /* Padding vừa đủ tạo khối */
+  color: #444; /* Màu chữ dịu hơn đen tuyền */
+  font-size: 0.95rem;
+  font-weight: 600; /* In đậm theo yêu cầu */
+  text-decoration: none;
+  transition: all 0.2s ease;
+  /* Đường kẻ ngang nhạt phân cách */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
-.menu-main .menu-main-sub-1-item-bg {
-  height: 100%;
-  width: 1px;
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 12;
-  transition: all 1.5s;
-  opacity: 0;
+.menu-main .menu-main-sub-1-item:last-child .menu-main-sub-1-item-link {
+  border-bottom: none; /* Bỏ kẻ ngang ở item cuối cùng */
 }
 .menu-main .menu-main-sub-1-item .has-sub {
-  display: inline-flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   color: #00384e !important;
-  font-size: 3rem !important;
 }
 .menu-main .menu-main-sub-1-item .has-sub svg {
-  width: 14px; /* 設定 SVG 的寬度 */
-  height: auto; /* 保持比例 */
-  fill: #333; /* 設定顏色 */
-  transition: fill 0.3s; /* (選填) 增加顏色變換的過渡動畫 */
+  width: 14px;
+  height: auto;
+  fill: #333;
+  transition: fill 0.2s ease;
 }
-.menu-main .menu-main-sub-1-item:hover .menu-main-sub-1-item-bg {
-  width: 95%;
-  opacity: 1;
+.menu-main .menu-main-sub-1-item:hover {
+  background-color: #f0f4f8; /* Nền xanh pastel đậm hơn xíu để rõ khối button */
 }
 .menu-main .menu-main-sub-1-item:hover .menu-main-sub-1-item-link {
   color: #00AFF0;
+  padding-left: 22px; /* Hiệu ứng lùi chữ nhẹ (indent) khi hover */
+}
+.menu-main .menu-main-sub-1-item:hover .has-sub svg {
+  fill: #00AFF0;
 }
 .menu-main .menu-main-sub-1-item:hover .menu-main-sub-2 {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
   left: 100%;
+  transform: translateY(0);
 }
 .menu-main .menu-main-sub-2 {
   pointer-events: none;
   opacity: 0;
-  position: relative;
-  left: 0%;
-  top: -51px;
-  height: 50px;
-  transition: all 1s;
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 100002;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
 }
 .menu-main .menu-main-sub-2-item {
   position: relative;
-  background-color: rgba(231, 231, 231, 0.9);
-  border-bottom: 1px solid #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 .menu-main .menu-main-sub-2-item-link {
-  position: relative;
-  padding: 0rem 2rem;
-  cursor: pointer;
-  color: #013142;
-  font-size: 1rem;
-  font-weight: bold;
-  z-index: 20;
-  transition: all 1s;
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
-.menu-main .menu-main-sub-2-item-bg {
-  height: 100%;
-  width: 1px;
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 12;
-  transition: all 1.5s;
-  opacity: 0;
+.menu-main .menu-main-sub-2-item:last-child .menu-main-sub-2-item-link {
+  border-bottom: none;
 }
-.menu-main .menu-main-sub-2-item:hover .menu-main-sub-2-item-bg {
-  width: 95%;
-  opacity: 1;
+.menu-main .menu-main-sub-2-item:hover {
+  background-color: #f7f9fc;
 }
 .menu-main .menu-main-sub-2-item:hover .menu-main-sub-2-item-link {
   color: #00AFF0;
@@ -1759,46 +1761,39 @@ hr.style-two {
 .menu-main .menu-main-sub-2-item:hover .menu-main-sub-3 {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
   left: 100%;
 }
 .menu-main .menu-main-sub-3 {
   pointer-events: none;
   opacity: 0;
+  visibility: hidden;
   position: absolute;
-  width: 100%;
-  top: 0px;
-  left: 0%;
-  transition: all 1s;
+  top: 0;
+  left: 100%;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 100003;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
 }
 .menu-main .menu-main-sub-3-item {
   position: relative;
-  background-color: rgba(98, 199, 239, 0.9);
-  border-bottom: 1px solid #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 .menu-main .menu-main-sub-3-item-link {
-  position: relative;
-  padding: 0rem 2.5rem;
-  cursor: pointer;
-  color: #013142;
-  font-size: 1rem;
-  font-weight: bold;
-  z-index: 20;
-  transition: all 1s;
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
 }
-.menu-main .menu-main-sub-3-item-bg {
-  height: 100%;
-  width: 1px;
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 12;
-  transition: all 1.5s;
-  opacity: 0;
+.menu-main .menu-main-sub-3-item:last-child .menu-main-sub-3-item-link {
+  border-bottom: none;
 }
-.menu-main .menu-main-sub-3-item:hover .menu-main-sub-3-item-bg {
-  width: 95%;
-  opacity: 1;
+.menu-main .menu-main-sub-3-item:hover {
+  background-color: #f7f9fc;
 }
 .menu-main .menu-main-sub-3-item:hover .menu-main-sub-3-item-link {
   color: #00AFF0;
@@ -1806,14 +1801,14 @@ hr.style-two {
 
 html[lang=zh-TW] .has-sub::after {
   content: "❯";
-  margin-left: 1px;
+  margin-left: 3px;
   display: inline-block;
   transform: rotate(90deg);
 }
 
 html[lang=vi-VN] .has-sub::after {
   content: "❯";
-  margin-left: 1px;
+  margin-left: 3px;
   display: inline-block;
   transform: rotate(90deg);
 }
@@ -2273,11 +2268,11 @@ html[lang=vi-VN] .has-sub::after {
 
 .menu-sub {
   display: flex;
-  flex-direction: row;
-  flex-flow: row wrap;
-  justify-content: center;
+  flex-wrap: wrap; /* Tối ưu lại cấu trúc flex, xoá flex-direction thừa */
+  justify-content: flex-start; /* Chuyển sang căn trái để đồng bộ với F-pattern */
   margin-bottom: 1rem;
-  margin-top: 0.5rem;
+  margin-top: calc(0.5rem + 5px); /* Đã cách thêm 5px ở phía trên theo yêu cầu */
+  padding-top: 5px; /* Thêm padding nhẹ để tách khỏi đường kẻ */
   border-top: 1px solid #f1f1f1;
 }
 .menu-sub h2 {
@@ -2286,6 +2281,8 @@ html[lang=vi-VN] .has-sub::after {
   display: block;
   font-size: 1.1rem;
   color: #013142;
+  margin: 0;
+  transition: color 0.3s ease;
 }
 @media (max-width: 991.98px) {
   .menu-sub h2 {
@@ -2293,21 +2290,43 @@ html[lang=vi-VN] .has-sub::after {
   }
 }
 .menu-sub .no-link {
-  color: #f1f1f1;
   cursor: default;
 }
 .menu-sub .no-link h2 {
-  color: #666;
+  color: #00aff0;
 }
-.menu-sub a h2:hover {
+.menu-sub .no-link a {
+  pointer-events: none; /* Vô hiệu hoá hover nếu không có link */
+}
+.menu-sub a {
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  /* Hiệu ứng thanh chạy bên dưới (Running bar) giống hệt Main Menu */
+}
+.menu-sub a::before {
+  content: "";
+  position: absolute;
+  bottom: 2px; /* Khoảng cách nhỏ dưới viền chữ */
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #00AFF0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-in-out;
+}
+.menu-sub a:hover h2 {
   color: #00AFF0;
+}
+.menu-sub a:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 .menu-sub-item {
   cursor: pointer;
-  padding: 1px 3px;
-  height: 50px;
+  padding: 4px 8px; /* Dùng padding để linh hoạt chiều cao, không fix height cứng 50px nữa */
   transition: all 0.1s;
-  border-top: 0.15rem solid transparent;
 }
 
 .side-list {

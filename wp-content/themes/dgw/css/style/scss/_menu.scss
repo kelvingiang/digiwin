@@ -105,12 +105,11 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
     &-item {
         position: relative;
         float: left;
-        // @include MenuBGColor;
         padding: 0.7rem 1rem;
         z-index: 100003;
-        // border: 0.1rem solid #fff;
+        
         label {
-            padding: 0rem;
+            cursor: pointer;
         }
         @include Respond(lg) {
             padding: 0.5rem 0.6rem;
@@ -118,22 +117,29 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
         &-link {
             @include MenuLink(relative, 1.1rem, 1rem, 0.5rem);
             white-space: nowrap;
+            position: relative;
+            transition: color 0.3s ease;
+            
+            /* Hiệu ứng thanh chạy bên dưới (Running bar) */
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: $Color_main_menu_link_hover;
+                transform: scaleX(0);
+                transform-origin: right;
+                transition: transform 0.3s ease-in-out;
+            }
         }
-        &-bg {
-            @include MenuBG;
-        }
-        // .has-sub {
-        //     &:after {
-        //             @include HasSub(90deg, -2px);
-        //     }
-        // }
+        
         &:last-child {
             border-radius: 0 0.4rem 0.4rem 0;
-            overflow: hidden;
         }
         &:first-child {
             border-radius: 0.4rem 0 0 0.4rem;
-            overflow: hidden;
         }
         .has-sub {
             &:after {
@@ -141,17 +147,18 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
             }
         }
         &:hover {
-            .menu-main-item-bg {
-                @include BGMouseOn();
-            }
             .menu-main-item-link {
                 color: $Color_main_menu_link_hover;
-                // color: $Color_main_menu_link_ho;
+                &::before {
+                    transform: scaleX(1);
+                    transform-origin: left;
+                }
             }
             .menu-main-sub-1 {
                 pointer-events: auto;
                 opacity: 1;
-                margin-top: 0.6rem;
+                visibility: visible;
+                transform: translateY(0);
             }
         }
     }
@@ -165,51 +172,88 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
     .menu-main-sub-1 {
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         position: absolute;
-        margin-top: -30px;
-        margin-left: -18px;
-        transition: all 1s;
-        padding: 2px;
+        top: 100%;
+        left: 0;
+        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+        transform: translateY(5px);
         white-space: nowrap;
         z-index: 100001;
+        
+        /* Modern Corporate UI Design */
+        background-color: #ffffff;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); /* Đổ bóng sâu nhưng mềm mại hơn */
+        border-radius: 6px; /* Bo góc nhẹ */
+        border-top: 3px solid $Color_main_menu_link_hover; /* Dải màu nhấn thương hiệu ở trên cùng */
+        min-width: 220px; /* Rộng hơn một chút để thoáng chữ */
+        padding: 8px; /* Đổi thành padding đều các cạnh để item bên trong tạo thành dạng nút lơ lửng */
+        
+        /* Cầu nối vô hình chống mất hover */
+        &::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: transparent;
+        }
+
         &-item {
             position: relative;
-            height: 50px;
-            line-height: 50px;
-            background-color: $bgHoverColor;
-            border-bottom: 1px solid #fff;
             cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            border-radius: 6px; /* Bo góc từng mục để giống như một button lơ lửng */
+            margin: 2px 0; /* Cấp một chút khoảng cách siêu nhỏ giữa các mục */
+            
             &-link {
-                @include MenuLink(relative, 1.1rem, 0rem, 1.5rem);
+                display: block;
+                padding: 10px 16px; /* Padding vừa đủ tạo khối */
+                color: #444; /* Màu chữ dịu hơn đen tuyền */
+                font-size: 0.95rem;
+                font-weight: 600; /* In đậm theo yêu cầu */
+                text-decoration: none;
+                transition: all 0.2s ease;
+                
+                /* Đường kẻ ngang nhạt phân cách */
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             }
-            &-bg {
-                @include MenuBGSub;
+            
+            &:last-child .menu-main-sub-1-item-link {
+                border-bottom: none; /* Bỏ kẻ ngang ở item cuối cùng */
             }
+
             .has-sub {
-                display: inline-flex;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 color: #00384e !important;
-                font-size: 3rem !important;
+                
                 svg {
-                    width: 14px; /* 設定 SVG 的寬度 */
-                    height: auto; /* 保持比例 */
-                    fill: #333; /* 設定顏色 */
-                    transition: fill 0.3s; /* (選填) 增加顏色變換的過渡動畫 */
+                    width: 14px;
+                    height: auto;
+                    fill: #333;
+                    transition: fill 0.2s ease;
                 }
-                // &:after {
-                //     @include HasSub(0deg, 20px);
-                // }
             }
+            
             &:hover {
-                .menu-main-sub-1-item-bg {
-                    @include BGMouseOnSub();
-                }
+                background-color: #f0f4f8; /* Nền xanh pastel đậm hơn xíu để rõ khối button */
+                
                 .menu-main-sub-1-item-link {
                     color: $Color_main_menu_link_hover;
+                    padding-left: 22px; /* Hiệu ứng lùi chữ nhẹ (indent) khi hover */
+                }
+                .has-sub svg {
+                    fill: $Color_main_menu_link_hover;
                 }
                 .menu-main-sub-2 {
                     opacity: 1;
                     pointer-events: auto;
+                    visibility: visible;
                     left: 100%;
+                    transform: translateY(0);
                 }
             }
         }
@@ -218,31 +262,43 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
     .menu-main-sub-2 {
         pointer-events: none;
         opacity: 0;
-        position: relative;
-        left: 0%;
-        top: -51px;
-        height: 50px;
-        transition: all 1s;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 100002;
+        background-color: #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        min-width: 200px;
+        
         &-item {
             position: relative;
-            background-color: $bgHoverColor;
-            border-bottom: 1px solid #fff;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            
             &-link {
-                @include MenuLink(relative, 1rem, 0rem, 2rem);
+                display: block;
+                padding: 12px 20px;
+                color: #333;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             }
-            &-bg {
-                @include MenuBGSub;
+            
+            &:last-child .menu-main-sub-2-item-link {
+                border-bottom: none;
             }
+            
             &:hover {
-                .menu-main-sub-2-item-bg {
-                    @include BGMouseOnSub();
-                }
+                background-color: #f7f9fc;
+                
                 .menu-main-sub-2-item-link {
                     color: $Color_main_menu_link_hover;
                 }
                 .menu-main-sub-3 {
                     opacity: 1;
                     pointer-events: auto;
+                    visibility: visible;
                     left: 100%;
                 }
             }
@@ -252,25 +308,36 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
     .menu-main-sub-3 {
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         position: absolute;
-        width: 100%;
-        top: 0px;
-        left: 0%;
-        transition: all 1s;
+        top: 0;
+        left: 100%;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 100003;
+        background-color: #ffffff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        min-width: 200px;
+        
         &-item {
             position: relative;
-            background-color: rgba(98, 199, 239, 0.9);
-            border-bottom: 1px solid #fff;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            
             &-link {
-                @include MenuLink(relative, 1rem, 0rem, 2.5rem);
+                display: block;
+                padding: 12px 20px;
+                color: #333;
+                text-decoration: none;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             }
-            &-bg {
-                @include MenuBGSub;
+            
+            &:last-child .menu-main-sub-3-item-link {
+                border-bottom: none;
             }
+            
             &:hover {
-                .menu-main-sub-3-item-bg {
-                    @include BGMouseOnSub();
-                }
+                background-color: #f7f9fc;
+                
                 .menu-main-sub-3-item-link {
                     color: $Color_main_menu_link_hover;
                 }
@@ -280,9 +347,9 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
 }
 
 html[lang="zh-TW"] .has-sub::after {
-    @include HasSub(90deg, 1px);
+    @include HasSub(90deg, 3px);
 }
 
 html[lang="vi-VN"] .has-sub::after {
-    @include HasSub(90deg, 1px);
+    @include HasSub(90deg, 3px);
 }
