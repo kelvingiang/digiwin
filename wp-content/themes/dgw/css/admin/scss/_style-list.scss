@@ -32,12 +32,13 @@ $table_header_text: #555555;
 }
 
 .column-cb {
-    width: 2% !important;
+    width: 2.2em !important;
 }
 
+// [2026-10-05] - @author: Kelvin - Cho Title tự co giãn lấp đầy không gian còn lại
 .column-title,
 .column-primary {
-    width: 40%;
+    width: auto !important;
 }
 
 .column-author {
@@ -45,22 +46,29 @@ $table_header_text: #555555;
     text-align: center;
 }
 
-.column-language,
-.column-home {
-    width: 50px;
+.column-category,
+.column-categories {
+    width: 140px !important;
     text-align: center;
 }
+
+// [2026-10-05] - @author: Kelvin - Định kích thước gọn cho các cột meta để nằm sát nhau ở mép phải
+.column-home {
+    width: 60px !important;
+    text-align: center;
+}
+
+.column-language {
+    width: 75px !important;
+    text-align: center;
+}
+
 .column-order {
-    width: 100px !important;
+    width: 90px !important;
+    text-align: center;
     a {
         margin: auto;
     }
-}
-
-.column-category,
-.column-categories {
-    width: 150px !important;
-    text-align: center;
 }
 
 .column-img {
@@ -79,10 +87,11 @@ $table_header_text: #555555;
 .column-status {
     width: 70px;
 }
+
+// [2026-10-05] - @author: Kelvin - Bỏ float: right để create-date không bị tách rời xa các cột khác
 .column-create-date,
 .column-date {
-    width: 100px !important;
-    float: right;
+    width: 110px !important;
     text-align: center;
 }
 
@@ -96,7 +105,6 @@ $table_header_text: #555555;
     width: 100px !important;
 }
 
-.column-order,
 .column-posts {
     width: 60px;
     text-align: center;

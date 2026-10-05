@@ -187,6 +187,34 @@ add_action('login_head', 'custom_login_logo');
 add_filter('document_title_parts', 'dgw_seo_document_title_parts');
 add_action('wp_head', 'dgw_seo_meta_tags');
 
+/**
+ * [02/10/2026] - Lay doi tuong WP_Term an toan theo slug hoac term_id
+ * Tranh loi WP_Error khi truyen slug vao get_category(intval($cate)).
+ */
+function dgw_get_category_by_param($cate)
+{
+    if (empty($cate)) {
+        return null;
+    }
+
+    if (is_numeric($cate)) {
+        $term = get_term((int) $cate);
+        return ($term instanceof WP_Term) ? $term : null;
+    }
+
+    $slug = sanitize_title((string) $cate);
+    $taxonomies = array('solutions_category', 'casestudies_category', 'resources_category', 'services_category', 'category');
+
+    foreach ($taxonomies as $taxonomy) {
+        $term = get_term_by('slug', $slug, $taxonomy);
+        if ($term instanceof WP_Term) {
+            return $term;
+        }
+    }
+
+    return null;
+}
+
 function dgw_seo_document_title_parts($title_parts)
 {
     $site_name = get_option('company_name_vn') ?: get_bloginfo('name');
@@ -202,8 +230,8 @@ function dgw_seo_document_title_parts($title_parts)
         if (empty($cate) && empty($sp)) {
             $title = trim('Digiwin ' . $page_name);
         } elseif (!empty($cate)) {
-            $cate_obj = get_category(intval($cate));
-            if ($cate_obj) {
+            $cate_obj = dgw_get_category_by_param($cate);
+            if ($cate_obj instanceof WP_Term) {
                 $title = $cate_obj->name . ' Digiwin';
             }
         } elseif (!empty($sp)) {
@@ -256,8 +284,8 @@ function dgw_seo_meta_tags()
             $description = $site_description;
             $keywords = trim($page_name . ', ' . $site_name, ', ');
         } elseif (!empty($cate)) {
-            $cate_obj = get_category(intval($cate));
-            $category_name = $cate_obj ? $cate_obj->name : '';
+            $cate_obj = dgw_get_category_by_param($cate);
+            $category_name = ($cate_obj instanceof WP_Term) ? $cate_obj->name : '';
             $description = 'beautiful, luggage, ' . $site_description . ' - ' . $category_name;
             $keywords = trim('beautiful, luggage, ' . $page_name . ', ' . $site_name . ', ' . $category_name, ', ');
         } elseif (!empty($sp)) {

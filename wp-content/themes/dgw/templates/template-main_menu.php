@@ -37,7 +37,7 @@
                     <div class=' <?php echo $val_main['subClass'] ?>'>
                         <?php foreach ($val_main['sub'] as $key_sub => $val_sub) : ?>
                             <div class=' <?php echo $val_sub['class'] ?> '>
-                                <a href="<?php echo home_url($key_main) . '/cate/' . $val_sub['ID'] . '/tag/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
+                                <a href="<?php echo home_url($key_main) . '/cate/' . (!empty($val_sub['slug']) ? $val_sub['slug'] : $val_sub['ID']) . '/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
                                     <?php _e($val_sub['name']) ?></a>
                             </div>
                         <?php endforeach ?>
@@ -90,7 +90,7 @@
                     <div class=' <?php echo $val_main['subClass'] ?>'>
                         <?php foreach ($val_main['sub'] as $key_sub => $val_sub) : ?>
                             <div class=' <?php echo $val_sub['class'] ?> '>
-                                <a href="<?php echo home_url($key_main) . '/cate/' . $val_sub['ID'] . '/tag/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
+                                <a href="<?php echo home_url($key_main) . '/cate/' . (!empty($val_sub['slug']) ? $val_sub['slug'] : $val_sub['ID']) . '/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
                                     <?php _e($val_sub['name']) ?></a>
                             </div>
                         <?php endforeach ?>

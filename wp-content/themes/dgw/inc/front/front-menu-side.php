@@ -13,7 +13,7 @@ function menuSide($cate, $page)
             $sub = getAllCategories($cate, $val['ID'], $page);
             echo "<div class='item has-sub'>";
             echo "<div class='menu-side-main'>";
-            echo "<a id='" . $val['ID'] . "'  class='menu-side-main-link' href='" . home_url($val['page'] . '/cate/' .  $val['ID'] . '/tag/') . "'>" . $val['name'];
+            echo "<a id='" . $val['ID'] . "'  class='menu-side-main-link' href='" . home_url($val['page'] . '/cate/' .  (!empty($val['slug']) ? $val['slug'] : $val['ID']) . '/') . "'>" . $val['name'];
             if (!empty($sub)) {
                 echo "<i style=' margin-left: 1rem' class='fas fa-angle-down'></i>";
             }

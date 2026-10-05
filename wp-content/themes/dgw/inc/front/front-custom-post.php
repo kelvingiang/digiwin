@@ -76,7 +76,7 @@ function getCustomsPostByCate($postType, $cate, $postCount, $taxonomy)
         'tax_query' => array(
             array(
                 'taxonomy' => $taxonomy,   // taxonomy name
-                'field' => 'term_id',  // term_id, slug or name
+                'field' => is_numeric($cate) ? 'term_id' : 'slug', // [02/10/2026] Ho tro ca slug va term_id
                 'terms' => $cate, // term id, term slug or term name
             )
         ),
@@ -250,7 +250,7 @@ function getCustomPostAtSideCate($postType, $postCount, $taxonomy, $cate)
         'tax_query' => array(
             array(
                 'taxonomy' => $taxonomy,   // taxonomy name
-                'field' => 'term_id',  // term_id, slug or name
+                'field' => is_numeric($cate) ? 'term_id' : 'slug', // [02/10/2026] Ho tro ca slug va term_id
                 'terms' => $cate, // term id, term slug or term name
             )
         ),

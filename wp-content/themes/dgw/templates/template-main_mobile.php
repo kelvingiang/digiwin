@@ -44,7 +44,7 @@
                     <?php if ($has_sub) : ?>
                         <div class="menu-mobile__sub" style="display: none;">
                             <?php foreach ($item['sub'] as $sub_item) : ?>
-                                <a href="<?php echo esc_url(home_url($key) . '/cate/' . $sub_item['ID'] . '/tag/'); ?>" class="menu-mobile__sub-link">
+                                <a href="<?php echo esc_url(home_url($key) . '/cate/' . (!empty($sub_item['slug']) ? $sub_item['slug'] : $sub_item['ID']) . '/'); ?>" class="menu-mobile__sub-link">
                                     <?php echo esc_html($sub_item['name']); ?>
                                 </a>
                             <?php endforeach; ?>

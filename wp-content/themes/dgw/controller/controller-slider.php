@@ -1,86 +1,119 @@
 <?php
+declare(strict_types=1);
+
+// [2026-10-05] - @author: Kelvin - Quản lý CPT Slider và chuẩn hóa Admin Columns theo chuẩn WordPress OOP & Security
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 class Controller_Slider
 {
-
+    /**
+     * [2026-10-05] - @author: Kelvin - Khởi tạo hooks cho CPT Slider và bảng quản trị WP-Admin
+     */
     public function __construct()
     {
-        add_action('init', array($this, 'register_custom_post'));
-        add_action('manage_edit-slider_columns', array($this, 'manage_columns'));
-        add_action('manage_slider_posts_custom_column', array($this, 'render_columns'));
+        // 1. Đăng ký CPT Slider
+        add_action('init', [$this, 'register_custom_post']);
 
-        add_filter('manage_edit-slider_sortable_columns', array($this, 'sortable_views_column'));
-        add_filter('request', array($this, 'sort_views_column'));
+        // 2. Tùy biến bảng dữ liệu trong WP-Admin (chỉ chạy trong admin để tối ưu hiệu năng)
+        if (is_admin()) {
+            add_filter('manage_edit-slider_columns', [$this, 'manage_columns']);
+            add_action('manage_slider_posts_custom_column', [$this, 'render_columns'], 10, 2);
+            add_filter('manage_edit-slider_sortable_columns', [$this, 'sortable_views_column']);
+            add_filter('request', [$this, 'sort_views_column']);
+        }
     }
 
-    public function register_custom_post()
+    /**
+     * [2026-10-05] - @author: Kelvin - Đăng ký Custom Post Type Slider (1300 x 430)
+     */
+    public function register_custom_post(): void
     {
-        $labels = array(
-            'name' => __('Slider') . '1300 x 430',
-            'singular_name' => __('Slider'),
-            'add_new' => __('Add New'),
-            'add_new_item' => __('Add Item'),
-            'edit_item' => __('Edit'),
-            'new_item' => __('Add Item'),
-            'all_items' => __('All Item'),
-            'view_item' => __('View Item'),
-            'search_items' => __('Search'),
-            'not_found' => __('No slides found.'),
-            'not_found_in_trash' => __('No found in Trash.'),
-            'parent_item_colon' => '',
-            'menu_name' => __('Slider')
-        );
-        $args = array(
-            'labels' => $labels,
-            'public' => true,
+        $labels = [
+            'name'               => __('Slider', 'dgw') . ' 1300 x 430',
+            'singular_name'      => __('Slider', 'dgw'),
+            'add_new'            => __('Add New', 'dgw'),
+            'add_new_item'       => __('Add Item', 'dgw'),
+            'edit_item'          => __('Edit', 'dgw'),
+            'new_item'           => __('Add Item', 'dgw'),
+            'all_items'          => __('All Items', 'dgw'),
+            'view_item'          => __('View Item', 'dgw'),
+            'search_items'       => __('Search', 'dgw'),
+            'not_found'          => __('No slides found.', 'dgw'),
+            'not_found_in_trash' => __('No found in Trash.', 'dgw'),
+            'parent_item_colon'  => '',
+            'menu_name'          => __('Slider', 'dgw'),
+        ];
+
+        $args = [
+            'labels'              => $labels,
+            'public'              => true,
             'exclude_from_search' => true,
-            'publicly_queryable' => true,
-            'show_ui' => true,
-            'show_in_menu' => TRUE,
-            'menu_icon' => PART_ICON . 'icon-link.png',
-            'query_var' => true,
-            'rewrite' => true,
-            'capability_type' => 'post',
-            'has_archive' => true,
-            'hierarchical' => false,
-            'menu_position' => 6,
-            'supports' => array('title', 'thumbnail', 'editor'),
-        );
+            'publicly_queryable'  => true,
+            'show_ui'             => true,
+            'show_in_menu'        => true,
+            'menu_icon'           => PART_ICON . 'icon-link.png',
+            'query_var'           => true,
+            'rewrite'             => ['slug' => 'slider', 'with_front' => false],
+            'capability_type'     => 'post',
+            'has_archive'         => true,
+            'hierarchical'        => false,
+            'menu_position'       => 6,
+            'supports'            => ['title', 'thumbnail', 'editor'],
+        ];
+
         register_post_type('slider', $args);
     }
 
-    //==== QUAN LY COT HIEN THI TRON BANG   
-    public function manage_columns($columns)
+    /**
+     * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết Slider
+     */
+    public function manage_columns(array $columns): array
     {
-        unset($columns['home']); // an cot ngay mac dinh
-        unset($columns['categories']); // an cot ngay mac dinh
-        //==== THEM COT VA BAN
+        unset(
+            $columns['home'],
+            $columns['categories'],
+            $columns['comments']
+        );
+
+        $columns['order']       = __('Show Order', 'dgw');
+        $columns['create-date'] = __('Create Date', 'dgw');
+
         return $columns;
     }
 
-    //==== HIEN THI NOI DUNG TRONG COT
-    public function render_columns($columns)
+    /**
+     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột cho Slider
+     */
+    public function render_columns(string $column, int $post_id): void
     {
-        global $post;
+        // Các cột chung (order, create-date) đã được Custom_post_RenderCols xử lý toàn cục
     }
 
-    //====== SAP SEP THEO TRINH TU
-    public function sortable_views_column($col)
+    /**
+     * [2026-10-05] - @author: Kelvin - Thiết lập các cột cho phép sắp xếp
+     */
+    public function sortable_views_column(array $columns): array
     {
-        $col['order'] = 'order';
-        $col['create-date'] = 'create-date';
-        return $col;
+        $columns['order']       = 'order';
+        $columns['create-date'] = 'date';
+        return $columns;
     }
 
-    public function sort_views_column($vars)
+    /**
+     * [2026-10-05] - @author: Kelvin - Tối ưu query sắp xếp thứ tự theo số (meta_value_num)
+     */
+    public function sort_views_column(array $vars): array
     {
-        if (isset($vars['orderby']) && 'order' == $vars['orderby']) {
+        if (isset($vars['orderby']) && 'order' === $vars['orderby']) {
             $vars = array_merge(
                 $vars,
-                array(
-                    'meta_key' => '_metabox_order', //Custom field key
-                    'orderby' => '_metabox_order' //Custom field value (number)
-                )
+                [
+                    'meta_key' => '_metabox_order',
+                    'orderby'  => 'meta_value_num',
+                ]
             );
         }
         return $vars;

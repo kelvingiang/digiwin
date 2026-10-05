@@ -1,11 +1,14 @@
 <?php
+/**
+ * [02/10/2026] - Bổ sung slug vào danh sách category trả về
+ * Mục đích: Cho phép tạo đường dẫn thân thiện SEO (VD: /cate/tiptop/tag/ thay vì /cate/25/tag/).
+ */
 
 function getCategories($cate)
 {
     $arr = array();
     $argsCate = array(
         'type' => 'post',
-        // [2026-07-08] - @author: Kelvin - Thay -1 bằng số lượng cụ thể cho get_categories
         'number' => 100,
         'taxonomy' => $cate,
         'hide_empty' => 0,
@@ -18,9 +21,10 @@ function getCategories($cate)
             $option = get_option("option_" . $cate . "_" . $value->term_id . "");
             $arr[$value->term_id] = array(
                 'ID' => $value->term_id,
-                'name' => $option['cate_' . dgw_get_lang()],
+                'slug' => $value->slug, // [02/10/2026] Bổ sung slug
+                'name' => $option['cate_' . dgw_get_lang()] ?? $value->name,
                 'class' => 'menu-main-sub-1-item',
-                'order' => $option['cate_order'],
+                'order' => $option['cate_order'] ?? 0,
                 'sub' => '',
             );
         }
@@ -37,7 +41,6 @@ function getAllCategories($cate, $parent, $page)
     $lang = dgw_get_lang();
     $argsCate = array(
         'type' => 'post',
-        // [2026-07-08] - @author: Kelvin - Thay -1 bằng số lượng cụ thể cho get_categories
         'number' => 100,
         'taxonomy' => $cate,
         'hide_empty' => 0,
@@ -51,9 +54,10 @@ function getAllCategories($cate, $parent, $page)
             $option = get_option("option_" . $cate . "_" . $value->term_id . "");
             $arr[$value->term_id] = array(
                 'ID' => $value->term_id,
-                'name' => $option['cate_' . dgw_get_lang()],
+                'slug' => $value->slug, // [02/10/2026] Bổ sung slug
+                'name' => $option['cate_' . dgw_get_lang()] ?? $value->name,
                 'class' => "",
-                'order' => $option['cate_order'],
+                'order' => $option['cate_order'] ?? 0,
                 'page' => $page,
                 'sub' => '',
             );

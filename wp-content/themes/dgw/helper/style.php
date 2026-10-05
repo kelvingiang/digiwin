@@ -35,10 +35,12 @@ function dgw_frontend_scripts()
 }
 add_action('wp_enqueue_scripts', 'dgw_frontend_scripts');
 
-// 2. ADMIN SCRIPTS & STYLES (Dùng đúng hook admin_enqueue_scripts)
 function dgw_admin_scripts()
 {
-    wp_enqueue_style('admin-style', get_template_directory_uri() . '/css/admin/admin-style.css', array(), '1.0', 'all');
+    // [2026-10-05] - @author: Kelvin - Thêm filemtime tự động cập nhật version CSS tránh cache trình duyệt trong WP-Admin
+    $admin_css_path = get_template_directory() . '/css/admin/admin-style.css';
+    $admin_css_ver  = file_exists($admin_css_path) ? (string) filemtime($admin_css_path) : '1.0';
+    wp_enqueue_style('admin-style', get_template_directory_uri() . '/css/admin/admin-style.css', array(), $admin_css_ver, 'all');
     
     // Nếu không phải là admin tối cao (ID = 1), add file CSS hạn chế quyền
     if (get_current_user_id() != 1) {

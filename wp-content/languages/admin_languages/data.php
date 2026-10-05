@@ -86,7 +86,8 @@ function getTranslate()
         'Join Digiwin' => '加入鼎捷',
         'Show in Sidebar' => "顯示在右列",
         'Like' => '讚',
-        'View - Like - Comment' => '檢視 - 讚 - 留言'
+        'View - Like - Comment' => '檢視 - 讚 - 留言',
+        'All Items' => '所有項目'
     );
     return array_merge($data);
 }

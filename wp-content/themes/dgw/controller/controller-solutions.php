@@ -1,118 +1,152 @@
 <?php
+declare(strict_types=1);
+
+// [2026-10-05] - @author: Kelvin - Quản lý CPT Solutions và chuẩn hóa Admin Columns theo chuẩn WordPress OOP & Security
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 class Controller_Solutions
 {
-
+    /**
+     * [2026-10-05] - @author: Kelvin - Khởi tạo hooks cho CPT Solutions và bảng quản trị WP-Admin
+     */
     public function __construct()
     {
-        add_action('init', array($this, 'register_custom_post'));
-        add_action('manage_edit-solutions_columns', array($this, 'manage_columns'));
-        add_action('manage_solutions_posts_custom_column', array($this, 'render_columns'));
+        // 1. Đăng ký CPT Solutions
+        add_action('init', [$this, 'register_custom_post']);
 
-        add_filter('manage_edit-solutions_sortable_columns', array($this, 'sortable_views_column'));
-        add_filter('request', array($this, 'sort_views_column'));
+        // 2. Tùy biến bảng dữ liệu trong WP-Admin (chỉ chạy trong admin để tối ưu hiệu năng)
+        if (is_admin()) {
+            add_filter('manage_edit-solutions_columns', [$this, 'manage_columns']);
+            add_action('manage_solutions_posts_custom_column', [$this, 'render_columns'], 10, 2);
+            add_filter('manage_edit-solutions_sortable_columns', [$this, 'sortable_views_column']);
+            add_filter('request', [$this, 'sort_views_column']);
+        }
     }
 
-    public function register_custom_post()
+    /**
+     * [2026-10-05] - @author: Kelvin - Đăng ký Custom Post Type Solutions
+     */
+    public function register_custom_post(): void
     {
-        $labels = array(
-            'name' => __('Solutions'),
-            'singular_name' => __('Solutions'),
-            'add_new' => __('Add New'),
-            'add_new_item' => __('Add Item'),
-            'edit_item' => __('Edit'),
-            'new_item' => __('Add Item'),
-            'all_items' => __('All Item'),
-            'view_item' => __('View Item'),
-            'search_items' => __('Search'),
-            'not_found' => __('No slides found.'),
-            'not_found_in_trash' => __('No found in Trash.'),
-            'parent_item_colon' => '',
-            'menu_name' => __('Solutions')
-        );
-        $args = array(
-            'labels' => $labels,
-            'public' => true,
+        $labels = [
+            'name'               => __('Solutions', 'dgw'),
+            'singular_name'      => __('Solutions', 'dgw'),
+            'add_new'            => __('Add New', 'dgw'),
+            'add_new_item'       => __('Add Item', 'dgw'),
+            'edit_item'          => __('Edit', 'dgw'),
+            'new_item'           => __('Add Item', 'dgw'),
+            'all_items'          => __('All Items', 'dgw'),
+            'view_item'          => __('View Item', 'dgw'),
+            'search_items'       => __('Search', 'dgw'),
+            'not_found'          => __('No slides found.', 'dgw'),
+            'not_found_in_trash' => __('No found in Trash.', 'dgw'),
+            'parent_item_colon'  => '',
+            'menu_name'          => __('Solutions', 'dgw'),
+        ];
+
+        $args = [
+            'labels'              => $labels,
+            'public'              => true,
             'exclude_from_search' => true,
-            'publicly_queryable' => true,
-            'show_ui' => true,
-            'show_in_menu' => TRUE,
-            'menu_icon' => PART_ICON . 'icon-link.png',
-            'query_var' => true,
-            'rewrite' => true,
-            'capability_type' => 'post',
-            'has_archive' => true,
-            'hierarchical' => false,
-            'menu_position' => 4,
-            'supports' => array('title', 'thumbnail', 'editor', 'comments'),
-        );
+            'publicly_queryable'  => true,
+            'show_ui'             => true,
+            'show_in_menu'        => true,
+            'menu_icon'           => PART_ICON . 'icon-link.png',
+            'query_var'           => true,
+            'rewrite'             => ['slug' => 'solutions', 'with_front' => false],
+            'capability_type'     => 'post',
+            'has_archive'         => true,
+            'hierarchical'        => false,
+            'menu_position'       => 4,
+            'supports'            => ['title', 'thumbnail', 'editor', 'comments'],
+        ];
+
         register_post_type('solutions', $args);
     }
 
-    //==== QUAN LY COT HIEN THI TRON BANG   
-    public function manage_columns($columns)
+    /**
+     * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết Solutions
+     */
+    public function manage_columns(array $columns): array
     {
-        unset($columns['create-date']); // an cot ngay mac dinh
-        unset($columns['categories']);
-        unset($columns['home']);
-        unset($columns['language']);
-        unset($columns['order']);
-        //==== THEM COT VA BAN
-        $columns['category'] = __('Category');
-        $columns['home'] = __('首頁');
-        $columns['language'] = __('Language');
-        $columns['order'] = __('Show Order');
-        $columns['create-date'] = __('Create Date');
+        unset(
+            $columns['date'],
+            $columns['categories'],
+            $columns['comments'],
+            // $columns['author'],
+            $columns['home'],
+            $columns['language'],
+            $columns['order'],
+            $columns['create-date']
+        );
+
+        // Đặt Category ngay sau Title, sau đó là các cột chung nằm sát bên phải
+        $columns['category']    = __('Category', 'dgw');
+        $columns['home']        = __('首頁', 'dgw');
+        $columns['language']    = __('Language', 'dgw');
+        $columns['order']       = __('Show Order', 'dgw');
+        $columns['create-date'] = __('Create Date', 'dgw');
+
         return $columns;
     }
 
-    //==== HIEN THI NOI DUNG TRONG COT
-    public function render_columns($columns)
+    /**
+     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột Category cho Solutions an toàn
+     */
+    public function render_columns(string $column, int $post_id): void
     {
-        global $post;
-        switch ($columns) {
-
+        switch ($column) {
             case 'category':
-                $terms = wp_get_post_terms($post->ID, 'solutions_category');
-                if (count($terms) > 0) {
-                    foreach ($terms as $key => $term) {
-                        echo '<a href=' . custom_redirect($term->slug) . '&' . $term->taxonomy . '=' . $term->slug . '>' . $term->name . '</a></br>';
+                $terms = wp_get_post_terms($post_id, 'solutions_category');
+                if (!empty($terms) && !is_wp_error($terms)) {
+                    $links = [];
+                    foreach ($terms as $term) {
+                        $term_link = add_query_arg([
+                            'post_type'     => 'solutions',
+                            $term->taxonomy => $term->slug,
+                        ], admin_url('edit.php'));
+
+                        $links[] = sprintf(
+                            '<a href="%s">%s</a>',
+                            esc_url($term_link),
+                            esc_html($term->name)
+                        );
                     }
+                    echo implode('<br>', $links);
+                } else {
+                    echo '—';
                 }
                 break;
         }
     }
 
-    //====== SAP SEP THEO TRINH TU
-    public function sortable_views_column($col)
+    /**
+     * [2026-10-05] - @author: Kelvin - Thiết lập các cột cho phép sắp xếp
+     */
+    public function sortable_views_column(array $columns): array
     {
-        $col['order'] = 'order';
-        $col['create-date'] = 'create-date';
-        return $col;
+        $columns['order']       = 'order';
+        $columns['create-date'] = 'date';
+        return $columns;
     }
 
-    public function sort_views_column($vars)
+    /**
+     * [2026-10-05] - @author: Kelvin - Tối ưu query sắp xếp thứ tự theo số (meta_value_num)
+     */
+    public function sort_views_column(array $vars): array
     {
-        if (isset($vars['orderby']) && 'order' == $vars['orderby']) {
+        if (isset($vars['orderby']) && 'order' === $vars['orderby']) {
             $vars = array_merge(
                 $vars,
-                array(
-                    'meta_key' => '_metabox_order', //Custom field key
-                    'orderby' => 'meta_value_num' //Custom field value (number)
-                )
+                [
+                    'meta_key' => '_metabox_order',
+                    'orderby'  => 'meta_value_num',
+                ]
             );
         }
-
-        // if (isset($vars['orderby']) && 'language' == $vars['orderby']) {
-        //     $vars = array_merge(
-        //         $vars,
-        //         array(
-        //             'meta_key' => '_metabox_language', //Custom field key
-        //             'orderby' => 'meta_value' //Custom field value (number)
-        //         )
-        //     );
-        // }
-
         return $vars;
     }
 }

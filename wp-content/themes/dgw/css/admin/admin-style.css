@@ -29,12 +29,12 @@
 }
 
 .column-cb {
-  width: 2% !important;
+  width: 2.2em !important;
 }
 
 .column-title,
 .column-primary {
-  width: 40%;
+  width: auto !important;
 }
 
 .column-author {
@@ -42,23 +42,28 @@
   text-align: center;
 }
 
-.column-language,
+.column-category,
+.column-categories {
+  width: 140px !important;
+  text-align: center;
+}
+
 .column-home {
-  width: 50px;
+  width: 60px !important;
+  text-align: center;
+}
+
+.column-language {
+  width: 75px !important;
   text-align: center;
 }
 
 .column-order {
-  width: 100px !important;
+  width: 90px !important;
+  text-align: center;
 }
 .column-order a {
   margin: auto;
-}
-
-.column-category,
-.column-categories {
-  width: 150px !important;
-  text-align: center;
 }
 
 .column-img {
@@ -80,8 +85,7 @@
 
 .column-create-date,
 .column-date {
-  width: 100px !important;
-  float: right;
+  width: 110px !important;
   text-align: center;
 }
 
@@ -94,7 +98,6 @@
   width: 100px !important;
 }
 
-.column-order,
 .column-posts {
   width: 60px;
   text-align: center;
