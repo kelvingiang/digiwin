@@ -20,7 +20,7 @@
                         <div class="single-space-content">
                             <?php the_content(); ?>
                         </div>
-                        <?php get_template_part('templates/template', 'view_like'); ?>
+                        <?php get_template_part('templates/view-like'); ?>
                     </div>
             <?php
                 endwhile;
@@ -32,9 +32,9 @@
             ?>
         </div>
         <div class="single-sidebar">
-            <?php get_template_part('templates/template', 'side_active'); ?>
-            <?php get_template_part('templates/template', 'side_cases');  ?>
-            <?php get_template_part('templates/template', 'side_articles'); ?>
+            <?php get_template_part('templates/side-active'); ?>
+            <?php get_template_part('templates/side-cases');  ?>
+            <?php get_template_part('templates/side-articles'); ?>
         </div>
     </div>
 </div>

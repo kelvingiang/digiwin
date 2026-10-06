@@ -52,8 +52,8 @@ get_header(); ?>
             </div>
         </div>
         <div>
-            <?php get_template_part('templates/template', 'side_cases');  ?>
-            <?php get_template_part('templates/template', 'side_articles');  ?>
+            <?php get_template_part('templates/side-cases');  ?>
+            <?php get_template_part('templates/side-articles');  ?>
         </div>
     </div>
 </div>

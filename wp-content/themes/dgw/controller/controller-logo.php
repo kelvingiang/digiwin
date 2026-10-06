@@ -107,7 +107,8 @@ class Controller_logo
                 toBack(1);
             }
         }
-        require_once(DIR_VIEW . 'from-logo.php');
+        // [2026-10-05] - @author: Kelvin - Sua loi chinh ta from -> form
+        require_once(DIR_VIEW . 'form-logo.php');
     }
 
     public function deleteAction()

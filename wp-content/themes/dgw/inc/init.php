@@ -1,5 +1,11 @@
 <?php
 
+// ===== SERVICES =====
+// [2026-10-05] - @author: Kelvin - Tự động nạp các Services tích hợp bên thứ ba (Google Sheets, Lark, Mailer...)
+foreach (glob(__DIR__ . '/services/*.php') as $file) {
+    require_once $file;
+}
+
 // ===== CORE =====
 foreach (glob(__DIR__ . '/code/*.php') as $file) {
     require_once $file;

@@ -53,7 +53,7 @@
         </div>
 
         <div>
-            <?php get_template_part('templates/template', 'side_active');  ?>
+            <?php get_template_part('templates/side-active');  ?>
         </div>
     </div>
 </div>

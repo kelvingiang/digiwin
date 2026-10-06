@@ -14,12 +14,12 @@ switch ($footer) {
   case 'contact-vn':
   case 'join-digiwin':
   case 'partner':
-    get_template_part('templates/template', 'footer');
+    get_template_part('templates/footer');
 }
 
-get_template_part('templates/template', 'home-side-right');
+get_template_part('templates/home-side-right');
 
-get_template_part('templates/template', 'main_mobile');
+get_template_part('templates/main-mobile');
 
 wp_footer(); ?>
 

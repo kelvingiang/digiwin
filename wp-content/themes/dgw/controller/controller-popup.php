@@ -181,7 +181,8 @@ class Controller_Popup
                 toBack(1);
             }
         }
-        require_once(DIR_VIEW . 'from-pop-up.php');
+        // [2026-10-05] - @author: Kelvin - Sua loi chinh ta from -> form
+        require_once(DIR_VIEW . 'form-pop-up.php');
     }
 
     public function deleteAction()

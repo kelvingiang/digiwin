@@ -8,7 +8,7 @@
 use phpseclib3\File\ASN1\Maps\Time;
 
 get_header();
-get_template_part('templates/template', 'header');
+get_template_part('templates/header');
 
 $email = isset($_GET['email']) ? sanitize_email($_GET['email']) : '';
 $token = isset($_GET['key']) ? sanitize_text_field($_GET['key']) : '';
@@ -93,8 +93,8 @@ if ($email && $token) {
             <?php endif; ?>
         </main>
         <aside class="dgw-active-sidebar">
-            <?php get_template_part('templates/template', 'side_cases'); ?>
-            <?php get_template_part('templates/template', 'side_active'); ?>
+            <?php get_template_part('templates/side-cases'); ?>
+            <?php get_template_part('templates/side-active'); ?>
         </aside>
     </div>
 </div>
@@ -144,5 +144,5 @@ if ($email && $token) {
     });
 </script>
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer(); ?>

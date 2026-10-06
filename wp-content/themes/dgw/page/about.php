@@ -5,7 +5,7 @@
  * Description: Custom template for About Page
  */
 get_header();
-get_template_part('templates/template', 'header'); 
+get_template_part('templates/header'); 
 $lang = dgw_get_lang();
 ?>
 <div>
@@ -44,7 +44,7 @@ $lang = dgw_get_lang();
                         </label><?php echo get_post_meta(1, '_info_address_' . $lang, true) ?></div>
                 </div>
                 <div style="padding: 0.1rem; ">
-                    <?php get_template_part('templates/template', 'googlemap')
+                    <?php get_template_part('templates/googlemap')
           ?>
                 </div>
             </div>
@@ -52,13 +52,13 @@ $lang = dgw_get_lang();
 
         <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
             <div class="">
-                <?php get_template_part('templates/template', 'side_cases'); ?>
-                <?php //get_template_part('templates/template', 'side_active'); 
+                <?php get_template_part('templates/side-cases'); ?>
+                <?php //get_template_part('templates/side-active'); 
         ?>
             </div>
         </div>
     </div>
 </div>
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer(); ?>

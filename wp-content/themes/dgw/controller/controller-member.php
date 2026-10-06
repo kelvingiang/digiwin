@@ -81,9 +81,8 @@ class Controller_Member
 
     public function editAction()
     {
-        if (isPost()) {
-        }
-        require_once(DIR_VIEW . 'from-member.php');
+        // [2026-10-05] - @author: Kelvin - Sua loi chinh ta from -> form
+        require_once(DIR_VIEW . 'form-member.php');
     }
 
     public function trashAction()

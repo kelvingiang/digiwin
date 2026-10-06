@@ -69,6 +69,6 @@
         case 'join-digiwin':
         case 'partner':
             // case 'test':
-            get_template_part('templates/template', 'header');
+            get_template_part('templates/header');
     }
     ?>

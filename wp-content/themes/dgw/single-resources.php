@@ -31,7 +31,7 @@ $source = get_post_meta($post_id, '_metabox_source', true);
                             </a>
                         <?php endif; ?>
                     </div>
-                    <?php get_template_part('templates/template', 'view_like'); ?>
+                    <?php get_template_part('templates/view-like'); ?>
                 </div>
         <?php
             endwhile;

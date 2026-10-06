@@ -1,374 +1,164 @@
 <?php
-function getCustomsPost($postType, $postCount)
-{
-    $arr = array(
-        'post_type' => $postType,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
+declare(strict_types=1);
 
-        // get cac bai trong category
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-    $custom_query = new WP_Query($arr);
+// [2026-10-05] - @author: Kelvin - Refactor tầng Controller/Presenter cho Custom Posts theo chuẩn MVC tách biệt Model và View
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+require_once DIR_MODEL . 'model-custom-post.php';
+
+/**
+ * [2026-10-05] - @author: Kelvin - Điều phối lặp dữ liệu WP_Query và render từng thẻ qua View Component
+ */
+function renderCustomPostList(WP_Query $custom_query): void
+{
+    if (!$custom_query->have_posts()) {
+        return;
+    }
+
     $stt = 1;
-    if ($custom_query->have_posts()) :
-        while ($custom_query->have_posts()) :
-            $custom_query->the_post();
-            $thumb_id = get_post_thumbnail_id(get_the_ID());
-            $url_data = wp_get_attachment_image_src($thumb_id, 'medium');
-            $srcset = wp_get_attachment_image_srcset($thumb_id, 'medium');
-?>
-            <div class="item" data-id="<?php echo  esc_attr($stt) ?>"
-                data-link="<?php echo esc_url(get_the_permalink()); ?>"
-                data-post="<?php echo esc_attr(get_the_ID()); ?>">
-                <div>
-                    <?php if (has_post_thumbnail()) : ?>
-                        <img class="item-img"
-                            alt="<?php the_title_attribute(); ?>"
-                            src="<?php echo esc_url($url_data[0]) ?>"
-                            srcset="<?php echo esc_attr($srcset) ?>"
-                            fetchpriority="high"
-                            width="<?php echo esc_attr($url_data[1]); ?>"
-                            height="<?php echo esc_attr($url_data[2]); ?>" />
-                    <?php else : ?>
-                        <img class="item-img"
-                            alt="<?php the_title_attribute(); ?>"
-                            src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            loading="lazy"
-                            width="410"
-                            height="270" />
-                    <?php endif ?>
-                    <?php
-                    get_template_part('templates/template', 'view_comment');
-                    ?>
-                </div>
+    while ($custom_query->have_posts()) {
+        $custom_query->the_post();
 
-                <div class="item-title">
-                    <h3><?php the_title() ?></h3>
-                </div>
-            </div>
-        <?php
-            $stt++;
-        endwhile;
-        // 必須加上這一行，重置全域 $post 變數
-        wp_reset_postdata();
-    endif;
+        // Nạp View Template Component độc lập
+        get_template_part('templates/post-item', null, ['stt' => $stt]);
+
+        $stt++;
+    }
+
+    wp_reset_postdata();
 }
 
-function getCustomsPostByCate($postType, $cate, $postCount, $taxonomy)
+/**
+ * [2026-10-05] - @author: Kelvin - Controller: Lấy bài viết Custom Post Type và render View
+ */
+function getCustomsPost(string $postType, $postCount): void
 {
-    $arr = array(
-        'post_type' => $postType,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-        // get cac bai trong category
-        'tax_query' => array(
-            array(
-                'taxonomy' => $taxonomy,   // taxonomy name
-                'field' => is_numeric($cate) ? 'term_id' : 'slug', // [02/10/2026] Ho tro ca slug va term_id
-                'terms' => $cate, // term id, term slug or term name
-            )
-        ),
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-    $custom_query = new WP_Query($arr);
-
-    //return $wp_query;
-    if ($custom_query->have_posts()) :
-        $stt = 1;
-        while ($custom_query->have_posts()) :
-            $custom_query->the_post();
-            $thumb_id = get_post_thumbnail_id(get_the_ID());
-            $url = wp_get_attachment_image_src($thumb_id, 'medium');
-            $srcset = wp_get_attachment_image_srcset($thumb_id, 'medium');
-        ?>
-            <div class="item" data-id="<?php echo  esc_attr($stt) ?>"
-                data-link="<?php echo esc_url(get_the_permalink()); ?>"
-                data-post="<?php echo esc_attr(get_the_ID()); ?>">
-                <div>
-                    <?php if (has_post_thumbnail()) { ?>
-                        <img class="item-img"
-                            alt="<?php the_title_attribute(); ?>"
-                            src="<?php echo esc_url($url[0]) ?>"
-                            srcset="<?php echo esc_attr($srcset) ?>"
-                            sizes="(max-width: 400px) 100vw, 300px"
-                            loading="lazy"
-                            width="<?php echo esc_attr($url[1]); ?>"
-                            height="<?php echo ($url[2]); ?>" />
-                    <?php } else { ?>
-                        <img class="item-img"
-                            alt="<?php the_title_attribute(); ?>"
-                            src="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>"
-                            loading="lazy"
-                            width="410"
-                            height="270" />
-                    <?php } ?>
-
-                    <?php
-                    get_template_part('templates/template', 'view_comment');
-                    ?>
-                </div>
-
-                <div class="item-title">
-                    <h3><?php the_title() ?></h3>
-                </div>
-            </div>
-    <?php
-            $stt++;
-        endwhile;
-        // 必須加上這一行，重置全域 $post 變數
-        wp_reset_postdata();
-    endif;
+    $query = Model_Custom_Post::get_posts($postType, (int) $postCount);
+    renderCustomPostList($query);
 }
 
-function getCustomsPostCate($param)
+/**
+ * [2026-10-05] - @author: Kelvin - Controller: Lấy bài viết Custom Post Type theo Category và render View
+ */
+function getCustomsPostByCate(string $postType, $cate, $postCount, string $taxonomy): void
 {
-    $arr = array();
-    $argsCate = array(
-        'type' => 'post',
-        // [2026-07-08] - @author: Kelvin - Sửa cấu hình get_categories: 'posts_per_page' không hợp lệ, dùng 'number'
-        'number' => 100,
-        'taxonomy' => 'casestudies_category',
+    $query = Model_Custom_Post::get_posts_by_cate($postType, $cate, (int) $postCount, $taxonomy);
+    renderCustomPostList($query);
+}
+
+/**
+ * [2026-10-05] - @author: Kelvin - Render menu danh mục con của Case Studies với Late Escaping
+ */
+function getCustomsPostCate(array $param): void
+{
+    $arr = [];
+    $parent_id = isset($param['cate']) ? (int) $param['cate'] : 0;
+
+    $categories = get_categories([
+        'type'       => 'post',
+        'number'     => 100,
+        'taxonomy'   => 'casestudies_category',
         'hide_empty' => 0,
-        'parent' => $param['cate'],
-    );
-    $categories = get_categories($argsCate);
+        'parent'     => $parent_id,
+    ]);
 
-    if ($categories) {
-        foreach ($categories as $key => $value) {
-            $option = get_option("option_casestudies_category_$value->term_id");
-            $arr[$value->term_id] = array(
-                'ID' => $value->term_id,
-                'name' => $option['cate_' . dgw_get_lang()],
+    if (!empty($categories) && !is_wp_error($categories)) {
+        $lang = dgw_get_lang();
+        foreach ($categories as $value) {
+            $option = get_option("option_casestudies_category_{$value->term_id}");
+            $name   = isset($option['cate_' . $lang]) ? $option['cate_' . $lang] : $value->name;
+            $order  = isset($option['cate_order']) ? $option['cate_order'] : 0;
+
+            $arr[$value->term_id] = [
+                'ID'    => $value->term_id,
+                'name'  => $name,
                 'class' => 'menu-main-sub-1-item',
-                'order' => $option['cate_order'],
-                'sub' => '',
-            );
+                'order' => $order,
+                'sub'   => '',
+            ];
         }
     }
+
+    if (empty($arr)) {
+        return;
+    }
+
+    $current_tag = isset($param['tag']) ? (string) $param['tag'] : '';
+    $pagename    = isset($param['pagename']) ? (string) $param['pagename'] : '';
+    $cate_val    = isset($param['cate']) ? (string) $param['cate'] : '';
     ?>
     <nav class="menu-cate-list">
-        <?php foreach ($arr as $key => $val) { ?>
-            <div class="<?php echo $param['tag'] == $key ? 'menu-cate-list-active' : '' ?>">
-                <?php if ($param['tag'] == $key) { ?>
-                    <label><?php echo $val['name']; ?></label>
-                <?php } else { ?>
-                    <a href="<?php echo home_url($param['pagename']) . '/cate/' .  $param['cate'] . '/tag/' . $val['ID'] ?>">
-                        <?php echo $val['name']; ?>
+        <?php foreach ($arr as $key => $val): ?>
+            <?php $is_active = ($current_tag === (string) $key); ?>
+            <div class="<?php echo $is_active ? 'menu-cate-list-active' : ''; ?>">
+                <?php if ($is_active): ?>
+                    <label><?php echo esc_html((string) $val['name']); ?></label>
+                <?php else: ?>
+                    <a href="<?php echo esc_url(home_url($pagename . '/cate/' . $cate_val . '/tag/' . $val['ID'])); ?>">
+                        <?php echo esc_html((string) $val['name']); ?>
                     </a>
-                <?php } ?>
+                <?php endif; ?>
             </div>
-        <?php } ?>
+        <?php endforeach; ?>
     </nav>
-<?php
+    <?php
 }
 
-function getCustomPostAtHome($postType, $postCount)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn bài viết trang chủ sang Model
+ */
+function getCustomPostAtHome(string $postType, $postCount): WP_Query
 {
-    $arr = array(
-        'post_type' => $postType,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-
-        // get cac bai trong category
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-
-            array(
-                'key'       => '_metabox_home',
-                'value'     =>  '1',
-                'compare'   => '=',
-            ),
-
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_posts_at_home($postType, (int) $postCount);
 }
 
-function getCustomPostCateAtHome($postType, $cateSlug, $postCount)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn bài viết category trang chủ sang Model
+ */
+function getCustomPostCateAtHome(string $postType, string $cateSlug, $postCount): WP_Query
 {
-    $arr = array(
-        'post_type' => $postType,
-        'resources_category' => $cateSlug,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-
-        // get cac bai trong category
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_posts_cate_at_home($postType, $cateSlug, (int) $postCount);
 }
 
-
-function getCustomPostAtSideCate($postType, $postCount, $taxonomy, $cate)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn bài viết sidebar theo category sang Model
+ */
+function getCustomPostAtSideCate(string $postType, $postCount, string $taxonomy, $cate): WP_Query
 {
-    $arr = array(
-        'post_type' => $postType,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-
-        // get cac bai trong category
-        'tax_query' => array(
-            array(
-                'taxonomy' => $taxonomy,   // taxonomy name
-                'field' => is_numeric($cate) ? 'term_id' : 'slug', // [02/10/2026] Ho tro ca slug va term_id
-                'terms' => $cate, // term id, term slug or term name
-            )
-        ),
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     => dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_posts_at_side_cate($postType, (int) $postCount, $taxonomy, $cate);
 }
 
-function getCustomPostAtSide($postType, $postCount)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn bài viết sidebar sang Model
+ */
+function getCustomPostAtSide(string $postType, $postCount): WP_Query
 {
-    $arr = array(
-        'post_type' => $postType,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_posts_at_side($postType, (int) $postCount);
 }
 
-function getCustomPostShowSidebar($postType)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn bài viết hiển thị sidebar sang Model
+ */
+function getCustomPostShowSidebar(string $postType): WP_Query
 {
-    $arr = array(
-        'post_type' => $postType,
-        // 'posts_per_page' => $postCount,
-        // 'orderby' => 'meta_value_num',
-        // 'order' => 'DESC',
-        // 'meta_key' => '_metabox_order',
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-
-            array(
-                'key'       => '_metabox_sidebar',
-                'value'     =>  '1',
-                'compare'   => '=',
-            ),
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_posts_show_sidebar($postType);
 }
 
-function getPostCategory($cate, $postCount)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn post category sang Model
+ */
+function getPostCategory(string $cate, $postCount): WP_Query
 {
-    $arr = array(
-        'post_type' => 'post',
-        'category_name' => $cate,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-        // get cac bai trong category
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_post_category($cate, (int) $postCount);
 }
 
-function getPostCategoryAtHome($cate, $postCount)
+/**
+ * [2026-10-05] - @author: Kelvin - Delegate truy vấn post category ở trang chủ sang Model
+ */
+function getPostCategoryAtHome(string $cate, $postCount): WP_Query
 {
-    $arr = array(
-        'post_type' => 'post',
-        'category_name' => $cate,
-        'posts_per_page' => $postCount,
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-        'meta_key' => '_metabox_order',
-        // get cac bai trong category
-
-        'meta_query'    => array(
-            array(
-                'key'       => '_metabox_langguage',
-                'value'     =>  dgw_get_lang(),
-                'compare'   => '=',
-            ),
-
-            array(
-                'key'       => '_metabox_home',
-                'value'     =>  '1',
-                'compare'   => '=',
-            ),
-
-        ),
-    );
-
-    $query = new WP_Query($arr);
-    return $query;
+    return Model_Custom_Post::get_post_category_at_home($cate, (int) $postCount);
 }

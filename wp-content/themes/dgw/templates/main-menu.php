@@ -47,7 +47,7 @@
         <?php endforeach ?>
     </nav>
     <div>
-        <?php get_template_part('templates/template', 'languages') ?>
+        <?php get_template_part('templates/languages') ?>
     </div>
 </div>
 <!-- //======================================================================= -->
@@ -102,7 +102,7 @@
         <?php } ?>
     </nav>
     <div>
-        <?php get_template_part('templates/template', 'languages') ?>
+        <?php get_template_part('templates/languages') ?>
     </div>
 
 </div>

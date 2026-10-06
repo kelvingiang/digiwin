@@ -2,6 +2,18 @@
 // dua toan bo cac function vao file nay de giam do phuc tap cua file functions.php
 require_once get_template_directory() . '/inc/init.php';
 
+/**
+ * [2026-10-05] - @author: Kelvin - Fallback tuong thich nguoc cho cac loi goi get_template_part('templates/template', $name)
+ * Tu dong dieu huong sang template moi trong thu muc templates/ theo chuan kebab-case
+ */
+add_action('get_template_part_templates/template', function ($slug, $name = null, $args = []) {
+    if (empty($name)) {
+        return;
+    }
+    $cleanName = str_replace('_', '-', $name);
+    get_template_part('templates/' . $cleanName, null, $args);
+}, 10, 3);
+
 
 // [2026-07-09] - Refactor dgw_get_lang and locale mapping for AJAX/get/cookie consistency
 function dgw_get_lang()

@@ -86,7 +86,7 @@ function ajax_load_more_posts()
             }
             // 取得 template part 的輸出（用 buffer 捕獲）
             ob_start();
-            get_template_part('templates/template', 'view_comment');
+            get_template_part('templates/view-comment');
             $comment_html = ob_get_clean();
             $html .= $comment_html;
             $html .= "</div>";

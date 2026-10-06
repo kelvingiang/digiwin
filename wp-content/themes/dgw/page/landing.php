@@ -5,7 +5,7 @@
  * Description: Custom template for landing Page
  */
 get_header();
-get_template_part('templates/template', 'header'); ?>
+get_template_part('templates/header'); ?>
 
 <script src="https://www.digiwin.com.vn/wp-content/themes/dgw/js/divi/landing.js?ver=1.0" defer></script>
 <link rel="stylesheet" href="https://www.digiwin.com.vn/wp-content/themes/dgw/js/divi/landing-style.css?ver=1.0">
@@ -183,5 +183,5 @@ get_template_part('templates/template', 'header'); ?>
 
 
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer(); ?>

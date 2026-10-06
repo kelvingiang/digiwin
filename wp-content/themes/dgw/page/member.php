@@ -5,7 +5,7 @@
  * Description: Custom template for Member Page
  */
 get_header();
-get_template_part('templates/template', 'header');
+get_template_part('templates/header');
 
 $data = null;
 if (!empty($_COOKIE['custom_session'])) {
@@ -307,5 +307,5 @@ if (!empty($_COOKIE['custom_session'])) {
 
 
     <?php
-    get_template_part('templates/template', 'footer');
+    get_template_part('templates/footer');
     get_footer(); ?>

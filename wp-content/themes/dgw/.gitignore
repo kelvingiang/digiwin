@@ -1,0 +1,32 @@
+# ==============================================================================
+# [2026-10-05] - @author: Kelvin - Gitignore rules for DGW Theme
+# Ngan chan commit thong tin nhay cam (credentials, configs, logs)
+# ==============================================================================
+
+# Sensitive configs & Environment files
+wp-config.php
+.env
+.env.*
+!.env.example
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Dependencies & Build artifacts (if applicable)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

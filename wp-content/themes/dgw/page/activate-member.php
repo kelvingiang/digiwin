@@ -5,7 +5,7 @@
  * Description: Custom template for Activate Member Page
  */
 get_header();
-get_template_part('templates/template', 'header');
+get_template_part('templates/header');
 
 // Sử dụng filter_input để đảm bảo an toàn dữ liệu đầu vào (PHP 8.2)
 $email = sanitize_email(wp_unslash($_GET['email'] ?? ''));
@@ -76,8 +76,8 @@ if ($email && $token) {
         </main>
 
         <aside class="dgw-active-sidebar">
-            <?php get_template_part('templates/template', 'side_cases'); ?>
-            <?php get_template_part('templates/template', 'side_active'); ?>
+            <?php get_template_part('templates/side-cases'); ?>
+            <?php get_template_part('templates/side-active'); ?>
         </aside>
     </div>
 </div>
@@ -135,6 +135,6 @@ if ($email && $token) {
 </script>
 
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer();
 ?>

@@ -16,7 +16,7 @@
                                     <img class="item-img" src="<?php echo PART_IMAGES . 'no-image.jpg' ?>" srcset="<?php echo PART_IMAGES . 'no-image.jpg' ?>" />
                                 <?php } ?>
                                 <?php
-                                get_template_part('templates/template', 'view_comment');
+                                get_template_part('templates/view-comment');
                                 ?>
                             </div>
                             <div class="item-title">

@@ -5,13 +5,13 @@
     <?php echo get_bloginfo('name') . ' - ' . get_bloginfo('description'); ?>
 </h1>
 
-<?php get_template_part('templates/template', 'home_popup'); ?>
+<?php get_template_part('templates/home-popup'); ?>
 <div class="index-space">
     <!-- [2026-06-30]: Tối ưu Semantic HTML (Dùng thẻ section và aria-label thay cho div vô danh) -->
     <section aria-label="Hero Slider" style="position: relative;">
         <?php
         if (!is_single()) {
-             get_template_part('templates/template', 'slider_owl');
+             get_template_part('templates/slider-owl');
         }
         ?>
     </section>
@@ -20,27 +20,27 @@
 
     <!-- [2026-06-30]: Thêm khối Thống kê con số -->
     <section aria-label="Our Achievements">
-        <?php get_template_part('templates/template', 'home_count'); ?>
+        <?php get_template_part('templates/home-count'); ?>
     </section>
 
     <section aria-label="Business Focus">
-        <?php get_template_part('templates/template', 'home_business'); ?>
+        <?php get_template_part('templates/home-business'); ?>
     </section>
 
     <section aria-label="Industries">
-        <?php get_template_part('templates/template', 'home_industry'); ?>
+        <?php get_template_part('templates/home-industry'); ?>
     </section>
 
     <section aria-label="Success Cases">
-        <?php get_template_part('templates/template', 'home_cases'); ?>
+        <?php get_template_part('templates/home-cases'); ?>
     </section>
         <!-- [2026-06-30]: Chuyển phần Logo Khách hàng lên đầu để tăng độ uy tín (Social Proof) -->
     <section aria-label="Partners and Clients">
-        <?php get_template_part('templates/template', 'home_cases-logo'); ?>
+        <?php get_template_part('templates/home-cases-logo'); ?>
     </section>
 
     <section aria-label="Latest News">
-        <?php get_template_part('templates/template', 'home_news'); ?>
+        <?php get_template_part('templates/home-news'); ?>
     </section>
 </div>
 

@@ -11,7 +11,7 @@
                         <div class="single-space-content">
                             <?php the_content(); ?>
                         </div>
-                        <?php get_template_part('templates/template', 'view_like'); ?>
+                        <?php get_template_part('templates/view-like'); ?>
                     </div>
             <?php
                 endwhile;
