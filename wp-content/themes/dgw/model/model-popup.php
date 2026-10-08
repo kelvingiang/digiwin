@@ -50,11 +50,11 @@ class Model_Pop_up extends WP_List_Table
     {
         $arr = array(
             'cb' => '<input type="checkbox" />',
-            'title' => __('票提'),
-            'status' => __('狀態'),
-            'img' => __('圖片'),
-            'link' => __('連接'),
-            'date' => __('Create Date'),
+            'title' => __('Title', 'dgw'),
+            'status' => __('Status', 'dgw'),
+            'img' => __('Image', 'dgw'),
+            'link' => __('Link', 'dgw'),
+            'date' => __('Create Date', 'dgw'),
         );
         return $arr;
     }
@@ -149,17 +149,17 @@ class Model_Pop_up extends WP_List_Table
         //All link
         $class = ($current == 'all' ? ' class="current"' : '');
         $all_url = remove_query_arg('customvar');
-        $views['all'] = "<strong>" . __('All') . " (" . $this->total_list() . ")</strong>";
+        $views['all'] = "<strong>" . __('All', 'dgw') . " (" . $this->total_list() . ")</strong>";
 
         //Foo link
         $foo_url = add_query_arg('customvar', 'published');
         $class = ($current == 'foo' ? ' class="current"' : '');
-        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published') . " (" . $this->total_publish() . ")</a>";
+        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published', 'dgw') . " (" . $this->total_publish() . ")</a>";
 
         //Bar link
         $bar_url = add_query_arg('customvar', 'trash');
         $class = ($current == 'bar' ? ' class="current"' : '');
-        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash') . "(" . $this->total_trash() . ")</a>";
+        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash', 'dgw') . "(" . $this->total_trash() . ")</a>";
 
         return $views;
     }
@@ -169,12 +169,12 @@ class Model_Pop_up extends WP_List_Table
     {
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => __('Restore'),
-                'delete' => __('Delete Permanently')
+                'restore' => __('Restore', 'dgw'),
+                'delete' => __('Delete Permanently', 'dgw')
             );
         } else {
             $actions = array(
-                'trash' => __('Trash'),
+                'trash' => __('Trash', 'dgw'),
             );
         }
         return $actions;
@@ -196,28 +196,28 @@ class Model_Pop_up extends WP_List_Table
 
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => '<a href="?page=' . $page . '&action=restore&id=' . $item['ID'] . '">' . __('Restore') . '</a>',
-                'delete' => '<a href="?page=' . $page . '&action=delete&id=' . $item['ID'] . '">' . __('Delete Permanently') . '</a>',
+                'restore' => '<a href="?page=' . $page . '&action=restore&id=' . $item['ID'] . '">' . __('Restore', 'dgw') . '</a>',
+                'delete' => '<a href="?page=' . $page . '&action=delete&id=' . $item['ID'] . '">' . __('Delete Permanently', 'dgw') . '</a>',
             );
         } else {
             // echo $item['status'];
             if ($item['status'] == '0' || $item['status'] == 0) {
                 $actions = array(
                     'active' => '<a href="?page=' . $page . '&action=active&id=' . $item['ID'] . '">啟用</a>',
-                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit') . '</a>',
-                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash') . '</a>',
+                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit', 'dgw') . '</a>',
+                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash', 'dgw') . '</a>',
                 );
             } elseif ($item['status'] == '1' || $item['status'] == 1) {
                 $actions = array(
                     'passive' => '<a href="?page=' . $page . '&action=passive&id=' . $item['ID'] . '">停止</a>',
-                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit') . '</a>',
-                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash') . '</a>',
+                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit', 'dgw') . '</a>',
+                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash', 'dgw') . '</a>',
                 );
             } else {
                 // 添加 else 條件，處理其他 status 值
                 $actions = array(
-                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit') . '</a>',
-                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash') . '</a>',
+                    'edit' => '<a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . '">' . __('Edit', 'dgw') . '</a>',
+                    'trash' => '<a href="?page=' . $page . '&action=trash&id=' . $item['ID'] . '">' . __('Trash', 'dgw') . '</a>',
                 );
             }
         }

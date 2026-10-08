@@ -8,8 +8,8 @@ function member_forgot_password_form()
         <div class="dwf-container">
             <span class="dwf-close">&times;</span>
             <div class="dwf-header">
-                <h3><?php _e('Forget Password') ?></h3>
-                <p><?php _e('Enter your email address to reset your password') ?></p>
+                <h3><?php __('Forget Password', 'dgw') ?></h3>
+                <p><?php __('Enter your email address to reset your password', 'dgw') ?></p>
             </div>
             <form id="forgot_password_form_ajax" class="dwf-form">
                 <div class="one-columns">
@@ -20,7 +20,7 @@ function member_forgot_password_form()
 
                 <?php wp_nonce_field('ajax_forgot_nonce', 'forgot_nonce'); ?>
                 <div class="btn-space">
-                    <button type="submit" id="btn-submit-forgot" class="btn-my-style"><?php _e('Submit Email') ?></button>
+                    <button type="submit" id="btn-submit-forgot" class="btn-my-style"><?php __('Submit Email', 'dgw') ?></button>
                 </div>
                 <div id="forgot-password-msg" class="msg"></div>
             </form>
@@ -43,30 +43,30 @@ function member_login_register_form()
             <div class="popup-logo"></div>
 
             <div id="tab-buttons">
-                <button class="tab-btn active" data-tab="login"><?php _e('Login', 'dgw') ?></button>
-                <button class="tab-btn" data-tab="register"><?php _e('Register', 'dgw') ?></button>
+                <button class="tab-btn active" data-tab="login"><?php __('Login', 'dgw') ?></button>
+                <button class="tab-btn" data-tab="register"><?php __('Register', 'dgw') ?></button>
             </div>
 
             <div id="tab-login" class="tab-content tab-login">
                 <div class="one-columns">
                     <div class="row-cell">
-                        <label><?php _e('E-mail') ?></label>
+                        <label><?php __('E-mail', 'dgw') ?></label>
                         <input type="email" id="login-email" placeholder="example@email.com" />
                     </div>
                 </div>
                 <div class="one-columns">
                     <div class="row-cell">
-                        <label><?php _e('Password', 'dgw') ?></label>
+                        <label><?php __('Password', 'dgw') ?></label>
                         <input type="password" id="login-password" placeholder="••••••••" />
                     </div>
                 </div>
 
                 <div class="btn-two-columns">
                     <div class="btn-space">
-                        <button id="btn-login" class="btn-my-style"><?php _e('Login', 'dgw') ?></button>
+                        <button id="btn-login" class="btn-my-style"><?php __('Login', 'dgw') ?></button>
                     </div>
                     <div class="btn-space">
-                        <button id="btn-forget-password" class="btn-my-style btn-password"><?php _e('Forget Password', 'dgw') ?></button>
+                        <button id="btn-forget-password" class="btn-my-style btn-password"><?php __('Forget Password', 'dgw') ?></button>
                     </div>
                 </div>
                 <p id="login-msg" class="msg"></p>

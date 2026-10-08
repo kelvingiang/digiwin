@@ -13,7 +13,7 @@
     <div class="page-col">
         <div>
             <div class="page-title">
-                <h1><?php // _e('News') 
+                <h1><?php // __('News', 'dgw') 
                     ?> </h1>
             </div>
 

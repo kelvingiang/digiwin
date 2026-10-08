@@ -13,8 +13,8 @@ class Controller_Member
     public function create()
     {
         // THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
-        $page_title = __('資料下載'); // TIEU DE CUA TRANG
-        $menu_title = __('資料下載');  // TEN HIEN TRONG MENU
+        $page_title = __('Download Data', 'dgw'); // TIEU DE CUA TRANG
+        $menu_title = __('Download Data', 'dgw');  // TEN HIEN TRONG MENU
         // CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
         $capability = 'manage_categories'; // QUYEN TRUY CAP DE THAY MENU NAY
         $menu_slug = 'member_page'; // TEN slug TEN DUY NHAT KO DC TRUNG VOI TRANG KHAC GAN TREN THANH DIA CHI OF MENU

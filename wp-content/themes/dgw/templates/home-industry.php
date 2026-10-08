@@ -1,4 +1,4 @@
-<h2 class="h2-home-title"><?php _e('Specialize in the industry') ?></h2>
+<h2 class="h2-home-title"><?php echo __('Specialize in the industry', 'dgw') ?></h2>
 <div id="industry-home">
     <?php
     $stt = 1;

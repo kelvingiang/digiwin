@@ -12,7 +12,7 @@ class Metabox_Link
     public function create()
     {
         $id = 'admin-metabox-link';
-        $title = __('Link');
+        $title = __('Link', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('slider',));
     }

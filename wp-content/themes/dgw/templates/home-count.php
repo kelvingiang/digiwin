@@ -1,4 +1,9 @@
 <!-- [2026-06-30]: Thêm khối Thống kê con số (Animated Counter) -->
+<?php
+$count_year = get_post_meta('1', '_info_years_experience', true);
+$count_project = get_post_meta('1', '_info_project_clients', true);
+$count_solution = get_post_meta('1', '_info_product_solution', true);
+?>
 <div class="home-count-section">
     <div class="container mx-auto">
         <div class="count-grid">
@@ -13,11 +18,11 @@
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="43">0</span>
+                        <span class="count-number" data-target="<?php echo $count_year; ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
                     <div class="count-label">
-                        <?php _e('Years of experience', 'dgw'); ?>
+                        <?php echo __('Years of experience', 'dgw'); ?>
                     </div>
                 </a>
             </div>
@@ -33,10 +38,10 @@
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="600">0</span>
+                        <span class="count-number" data-target="<?php echo $count_project ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
-                    <div class="count-label"><?php _e('Projects & Clients', 'dgw'); ?></div>
+                    <div class="count-label"><?php echo __('Projects & Clients', 'dgw'); ?></div>
                 </a>
             </div>
 
@@ -50,10 +55,10 @@
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="10">0</span>
+                        <span class="count-number" data-target="<?php echo $count_solution ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
-                    <div class="count-label"><?php _e('Product Solutions', 'dgw'); ?></div>
+                    <div class="count-label"><?php echo __('Product Solutions', 'dgw'); ?></div>
                 </a>
             </div>
 

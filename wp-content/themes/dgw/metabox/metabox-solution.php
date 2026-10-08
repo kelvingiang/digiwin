@@ -9,7 +9,7 @@ class Metabox_Solution {
 
     public function create() {
         $id = 'admin-metabox-solution';
-        $title = __('Solutions');
+        $title = __('Solutions', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('solutions',));
     }
@@ -23,7 +23,7 @@ class Metabox_Solution {
         <div>
             <div class="row-one-column">
                 <div class="cell-title">
-                    <label><?php _e('Solution Value') ?></label>
+                    <label><?php __('Solution Value', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <?php wp_editor(get_post_meta($post->ID, '_solution_value', true), 'txt-value', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -31,7 +31,7 @@ class Metabox_Solution {
             </div>
             <div class="row-one-column">
                 <div class="cell-title">
-                    <label><?php _e('Solution Features') ?></label>
+                    <label><?php __('Solution Features', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <?php wp_editor(get_post_meta($post->ID, '_solution_features', true), 'txt-features', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -39,7 +39,7 @@ class Metabox_Solution {
             </div>
             <div class="row-one-column">
                 <div class="cell-title">
-                    <label><?php _e('Advisory Services') ?></label>
+                    <label><?php __('Advisory Services', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <?php wp_editor(get_post_meta($post->ID, '_solution_service', true), 'txt-service', array('wpautop' => false, 'editor_height' => '300px')) ?>

@@ -12,8 +12,8 @@ class Controller_Member_Download_Report
     public function Create()
     {
         $parent_slug = 'member_page';
-        $page_title = __('下載統計');
-        $menu_title = __('下載統計');
+        $page_title = __('Download Statistics', 'dgw');
+        $menu_title = __('Download Statistics', 'dgw');
         $capability = 'manage_categories';
         $menu_slug = 'member_download_report';
         add_submenu_page($parent_slug, $page_title, $menu_title, $capability, $menu_slug, array($this, 'dispatchActive'));

@@ -85,7 +85,7 @@ class Controller_Case_Studies
 
         // Đặt Category ngay sau Title, sau đó là các cột chung nằm sát bên phải
         $columns['category']    = __('Category', 'dgw');
-        $columns['home']        = __('首頁', 'dgw');
+        $columns['home']        = __('Home Page', 'dgw');
         $columns['language']    = __('Language', 'dgw');
         $columns['order']       = __('Show Order', 'dgw');
         $columns['create-date'] = __('Create Date', 'dgw');

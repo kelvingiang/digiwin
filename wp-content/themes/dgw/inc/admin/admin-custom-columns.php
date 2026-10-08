@@ -8,12 +8,12 @@ function set_custom_edit_columns($columns)
     unset($columns['comments']);
     unset($columns['date']);
 
-    $columns['author'] = __('Author');
-    $columns['categories'] = __('分類');
-    $columns['home'] = __('首頁');
-    $columns['language'] = __('Language');
-    $columns['order'] = __('Show Order');
-    $columns['create-date'] = __('創建日期');
+    $columns['author'] = __('Author', 'dgw');
+    $columns['categories'] = __('Category',  'dgw');
+    $columns['home'] = __('Home Page', 'dgw');
+    $columns['language'] = __('Language', 'dgw');
+    $columns['order'] = __('Show Order' , 'dgw');
+    $columns['create-date'] = __('Create Date', 'dgw' );
     return $columns;
 }
 

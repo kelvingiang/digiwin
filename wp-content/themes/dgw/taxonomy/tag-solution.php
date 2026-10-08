@@ -23,17 +23,17 @@ class Tags_solution
     public function create()
     {
         $labels = array(
-            'name' => __('Product'),
-            'singular_name' => __('Product'),
-            'search_items' => __('Search Categories'),
-            'all_items' => __('Categories'),
-            'parent_item' => __('Parent Class'),
-            'parent_item_colon' => __('Parent Class'),
-            'edit_item' => __('Edit'),
-            'update_item' => __('Update'),
-            'add_new_item' => __('Add New'),
-            'new_item_name' => __('Add New'),
-            'menu_name' => __('Product')
+            'name' => __('Product', 'dgw'),
+            'singular_name' => __('Product', 'dgw'),
+            'search_items' => __('Search Categories', 'dgw'),
+            'all_items' => __('Categories', 'dgw'),
+            'parent_item' => __('Parent Class', 'dgw'),
+            'parent_item_colon' => __('Parent Class', 'dgw'),
+            'edit_item' => __('Edit', 'dgw'),
+            'update_item' => __('Update', 'dgw'),
+            'add_new_item' => __('Add New', 'dgw'),
+            'new_item_name' => __('Add New', 'dgw'),
+            'menu_name' => __('Product', 'dgw')
         );
 
         register_taxonomy('solutions_tags', 'solutions', array(
@@ -53,7 +53,7 @@ class Tags_solution
     {
 ?>
         <div class="form-field">
-            <label for="cate_order"><?php _e('Show Order') ?></label>
+            <label for="cate_order"><?php __('Show Order', 'dgw') ?></label>
             <input type="text" name="cate_order" id="cate_order" value="" />
         </div>
 
@@ -68,7 +68,7 @@ class Tags_solution
         <input type="hidden" name="cate_cn" id="cate_cn" value="<?php echo $arr_value['cate_advertising_cn']; ?>" />
 
         <tr class="form-field">
-            <th scope="row" valign="top"> <label for="cate_en"> <?php _e('Show Order666') ?></label> </th>
+            <th scope="row" valign="top"> <label for="cate_en"> <?php __('Show Order', 'dgw') ?></label> </th>
             <td> <input type="text" name="cate_order" id="cate_order" value="<?php echo $arr_value['cate_advertising_order']; ?>" /></td>
         </tr>
 <?php
@@ -95,10 +95,10 @@ class Tags_solution
     {
         $new_columns = array(
             'cb' => '<input type="checkbox" />',
-            'name' => __('Name'),
-            'order' => __('Show Order'),
-            'slug' => __('Slug'),
-            'posts' => __('Count')
+            'name' => __('Name', 'dgw'),
+            'order' => __('Show Order', 'dgw'),
+            'slug' => __('Slug', 'dgw'),
+            'posts' => __('Count', 'dgw')
         );
 
         return $new_columns;

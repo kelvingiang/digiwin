@@ -22,9 +22,15 @@ function menu_home_list()
 }
 
 // 2026-09-15 - @author: Kelvin - Thêm static memoization cache, chuẩn hóa key 'join-digiwin' dùng chung cho Desktop & Mobile
+/**
+ * 2026-10-06 | Gia Minh
+ * Menu chính hỗ trợ đa ngôn ngữ chuẩn gettext i18n và cache tối ưu hiệu suất
+ *
+ * @return array
+ */
 function menu_main_list()
 {
-    $lang = dgw_get_lang();
+    $lang = function_exists('dgw_get_lang') ? dgw_get_lang() : get_locale();
     static $menu_cache = array();
 
     if (isset($menu_cache[$lang])) {
@@ -36,48 +42,48 @@ function menu_main_list()
 
     $arr = array(
         $about_slug => array(
-            'name'  => "about",
+            'name'  => __('About Digiwin', 'dgw'),
             'class' => 'menu-main-item',
             'data'  => $about_slug,
         ),
         'cases' => array(
-            'name'  => "cases",
+            'name'  => __('Case Studies', 'dgw'),
             'class' => 'menu-main-item',
-            'data'  => "cases",
+            'data'  => 'cases',
         ),
         'solution' => array(
-            'name'     => "solution",
+            'name'     => __('Solutions', 'dgw'),
             'class'    => 'menu-main-item',
-            'data'     => "solution",
+            'data'     => 'solution',
             'subClass' => 'menu-main-sub-1',
-            'sub'      => getCategories('solutions_category'),
+            'sub'      => function_exists('getCategories') ? getCategories('solutions_category') : array(),
         ),
         'resource' => array(
-            'name'     => "resource",
+            'name'     => __('Resources', 'dgw'),
             'class'    => 'menu-main-item',
-            'data'     => "resource",
+            'data'     => 'resource',
             'subClass' => 'menu-main-sub-1',
-            'sub'      => getCategories('resources_category'),
+            'sub'      => function_exists('getCategories') ? getCategories('resources_category') : array(),
         ),
         'activities' => array(
-            'name'     => "active",
+            'name'     => __('Activities', 'dgw'),
             'class'    => 'menu-main-item',
             'data'     => 'activities',
             'subClass' => 'menu-main-sub-1',
-            'sub'      => getCategories('active_category'),
+            'sub'      => function_exists('getCategories') ? getCategories('active_category') : array(),
         ),
         'join-digiwin' => array(
-            'name'  => "join",
+            'name'  => __('Join Digiwin', 'dgw'),
             'class' => 'menu-main-item',
-            'data'  => "join-digiwin",
+            'data'  => 'join-digiwin',
         ),
         'partner' => array(
-            'name'  => "distribution",
+            'name'  => __('Partners', 'dgw'),
             'class' => 'menu-main-item',
-            'data'  => "partner",
+            'data'  => 'partner',
         ),
         $contact_slug => array(
-            'name'  => "contact",
+            'name'  => __('Contact Us', 'dgw'),
             'class' => 'menu-main-item',
             'data'  => $contact_slug,
         ),

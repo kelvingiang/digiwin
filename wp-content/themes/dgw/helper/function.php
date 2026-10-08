@@ -48,11 +48,29 @@ function dgw_get_lang()
     return $default;
 }
 
-add_filter('locale', function ($locale) {
+/**
+ * [2026-10-07] - Thiết lập cấu hình ngôn ngữ hệ thống:
+ * - Backend (WP-Admin): Cố định duy nhất 1 ngôn ngữ là Tiếng Trung (zh_TW), không bị ảnh hưởng bởi Frontend.
+ * - Frontend: Áp dụng cơ chế đa ngôn ngữ (Việt - Trung) dựa trên cookie site_lang / URL param.
+ */
+add_filter('admin_locale', function () {
+    return 'zh_TW';
+});
+
+add_filter('determine_locale', function ($locale) {
     if (is_admin() && !wp_doing_ajax()) {
-        return $locale;
+        return 'zh_TW';
+    }
+    return $locale;
+});
+
+add_filter('locale', function ($locale) {
+    // 1. Phía Backend Admin: Cố định 100% tiếng Trung
+    if (is_admin() && !wp_doing_ajax()) {
+        return 'zh_TW';
     }
 
+    // 2. Phía Frontend: Chuyển đổi linh hoạt giữa Tiếng Trung và Tiếng Việt
     $lang = dgw_get_lang();
     if ($lang === 'cn') {
         return 'zh_TW';
@@ -84,7 +102,7 @@ add_action('add_meta_boxes', function () {
         // 加到右側欄
         add_meta_box(
             'commentstatusdiv',
-            __('討論'),
+            __('Discuss', 'dgw'),
             'post_comment_status_meta_box',
             $pt,
             'side',

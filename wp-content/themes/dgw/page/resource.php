@@ -10,7 +10,7 @@ get_header(); ?>
     <?php pageImg(get_the_ID()); ?>
 </div>
 <div class="page-title-h1">
-    <h1><?php echo __('resource') ?></h1> 
+    <h1><?php echo __('resource', 'dgw') ?></h1> 
 </div>
 <div class="menu-sub">
     <?php

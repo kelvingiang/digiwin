@@ -32,7 +32,7 @@ class Metabox_Seo {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label style="font-size: 13px"><?php _e('Title SEO') ?> </label> 
+                    <label style="font-size: 13px"><?php __('Title SEO', 'dgw') ?> </label> 
                 </div>
                 <div class="cell-text">
                     <input type="text" id="txt_title" name="txt_title" class="my-input" value="<?php echo $seo_title ?>" />
@@ -43,7 +43,7 @@ class Metabox_Seo {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label style="font-size: 13px"><?php _e('Key SEO') ?> </label> 
+                    <label style="font-size: 13px"><?php __('Key SEO', 'dgw') ?> </label> 
                 </div>
                 <div class="cell-text">
                     <input type="text" id="txt_key" name="txt_key" class="my-input" value="<?php echo $seo_key ?>" />
@@ -53,7 +53,7 @@ class Metabox_Seo {
 
         <div class="row-one-column">
             <div class="cell-title">
-                <label style="font-size: 13px"><?php _e('Description SEO') ?> </label> 
+                <label style="font-size: 13px"><?php __('Description SEO', 'dgw') ?> </label> 
             </div>
             <div class="cell-text">
                 <textarea id="txt_description" name="txt_description" rows="3" cols="117%" maxlength="80"><?php echo $seo_description ?></textarea>

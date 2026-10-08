@@ -1,0 +1,1432 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: DGW\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-07 07:11+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.8.9; wp-6.9; php-8.2.33\n"
+"X-Domain: dgw"
+
+#: nav-below.php:2
+#, php-format
+msgid "%s older"
+msgstr ""
+
+#: attachment.php:9
+#, php-format
+msgid "%s Return to "
+msgstr ""
+
+#: comments.php:11
+msgid "1 comment"
+msgstr ""
+
+#: inc/front/front-menu.php:45
+msgid "About Digiwin"
+msgstr ""
+
+#. Name of the template
+#: page/about.php:2
+msgid "About Page"
+msgstr ""
+
+#: page/activate-member.php:115
+msgid "Account activated successfully!"
+msgstr ""
+
+#: page/activate-member.php:35
+msgid "Account does not exist"
+msgstr ""
+
+#: page/activate-member.php:58
+msgid "Account verification is in progress, please wait..."
+msgstr ""
+
+#. Name of the template
+#: page/activate-member.php:2
+msgid "Activate Member Page"
+msgstr ""
+
+#: controller/controller-active.php:35 controller/controller-active.php:36
+#: controller/controller-active.php:47 metabox/metabox-active.php:12
+#: inc/front/front-menu.php:19
+msgid "Active"
+msgstr ""
+
+#: single-active.php:3 page/active.php:13
+msgid "active"
+msgstr ""
+
+#: metabox/metabox-active.php:45 metabox/metabox-active.php:68
+#: metabox/metabox-active.php:91
+msgid "Active Content"
+msgstr ""
+
+#: metabox/metabox-active.php:35 metabox/metabox-active.php:58
+#: metabox/metabox-active.php:81
+msgid "Active Name"
+msgstr ""
+
+#. Name of the template
+#: page/active.php:2
+msgid "Actives Page"
+msgstr ""
+
+#: inc/front/front-menu.php:69
+msgid "Activities"
+msgstr ""
+
+#: controller/controller-active.php:38 controller/controller-active.php:40
+#: controller/controller-case-studies.php:38
+#: controller/controller-case-studies.php:40
+#: controller/controller-industries.php:38
+#: controller/controller-industries.php:40 controller/controller-join-us.php:38
+#: controller/controller-join-us.php:40 controller/controller-resources.php:38
+#: controller/controller-resources.php:40 controller/controller-services.php:38
+#: controller/controller-services.php:40 controller/controller-slider.php:38
+#: controller/controller-slider.php:40 controller/controller-solutions.php:38
+#: controller/controller-solutions.php:40 view/view-logo.php:9
+#: view/view-member.php:8 view/view-pop-up.php:9
+msgid "Add Item"
+msgstr ""
+
+#: controller/controller-active.php:37
+#: controller/controller-case-studies.php:37
+#: controller/controller-industries.php:37 controller/controller-join-us.php:37
+#: controller/controller-resources.php:37 controller/controller-services.php:37
+#: controller/controller-slider.php:37 controller/controller-solutions.php:37
+#: taxonomy/tag-advertising.php:34 taxonomy/tag-advertising.php:35
+#: taxonomy/tag-casestudies.php:34 taxonomy/tag-casestudies.php:35
+#: taxonomy/tag-solution.php:34 taxonomy/tag-solution.php:35
+#: taxonomy/taxonomy-active.php:35 taxonomy/taxonomy-active.php:36
+#: taxonomy/taxonomy-advertising.php:31 taxonomy/taxonomy-advertising.php:32
+#: taxonomy/taxonomy-casestudies.php:34 taxonomy/taxonomy-casestudies.php:35
+#: taxonomy/taxonomy-industries.php:34 taxonomy/taxonomy-industries.php:35
+#: taxonomy/taxonomy-joinus.php:35 taxonomy/taxonomy-joinus.php:36
+#: taxonomy/taxonomy-resource.php:35 taxonomy/taxonomy-resource.php:36
+#: taxonomy/taxonomy-services.php:36 taxonomy/taxonomy-services.php:37
+#: taxonomy/taxonomy-solution.php:105 taxonomy/taxonomy-solution.php:106
+msgid "Add New"
+msgstr ""
+
+#: inc/code/code-add-media.php:10
+msgid "Add Product Images"
+msgstr ""
+
+#: page/about.php:43 view/view-information.php:47 view/view-information.php:101
+msgid "Address"
+msgstr ""
+
+#: metabox/metabox-solution.php:42
+msgid "Advisory Services"
+msgstr ""
+
+#: model/bk_model-member.php:139 model/model-download.php:221
+#: model/model-logo.php:149 model/model-popup.php:152
+msgid "All"
+msgstr ""
+
+#: controller/controller-active.php:41
+#: controller/controller-case-studies.php:41
+#: controller/controller-industries.php:41 controller/controller-join-us.php:41
+#: controller/controller-resources.php:41 controller/controller-services.php:41
+#: controller/controller-slider.php:41 controller/controller-solutions.php:41
+msgid "All Items"
+msgstr ""
+
+#: taxonomy/taxonomy-advertising.php:23 taxonomy/taxonomy-advertising.php:24
+#: taxonomy/taxonomy-advertising.php:33
+msgid "Area"
+msgstr ""
+
+#. Name of the template
+#: page/article.php:2
+msgid "Article Page"
+msgstr ""
+
+#: inc/front/front-menu.php:112
+msgid "Assistant"
+msgstr ""
+
+#: inc/front/front-menu.php:155
+msgid "Associations"
+msgstr ""
+
+#: inc/admin/admin-custom-columns.php:11
+msgid "Author"
+msgstr ""
+
+#: inc/front/front-menu.php:140
+msgid "Automotive Parts"
+msgstr ""
+
+#: templates/footer.php:65
+msgid "Awards & Certificates"
+msgstr ""
+
+#: inc/front/front-menu.php:181
+msgid "Board of Directors"
+msgstr ""
+
+#: comments.php:139
+msgid "Cancel"
+msgstr ""
+
+#: page/reset-password.php:83
+msgid "Cannot Reset Password"
+msgstr ""
+
+#: model/bk_model-member.php:52
+msgid "Career"
+msgstr ""
+
+#: controller/controller-case-studies.php:35
+#: controller/controller-case-studies.php:36
+#: controller/controller-case-studies.php:47 templates/footer.php:130
+#: inc/front/front-menu.php:50
+msgid "Case Studies"
+msgstr ""
+
+#: single-casestudies.php:4 page/case.php:12 templates/side-cases.php:2
+msgid "cases"
+msgstr ""
+
+#. Name of the template
+#: page/case.php:2
+msgid "Cases Page"
+msgstr ""
+
+#: entry-footer.php:2 taxonomy/tag-advertising.php:29
+#: taxonomy/tag-casestudies.php:29 taxonomy/tag-solution.php:29
+#: taxonomy/taxonomy-active.php:30 taxonomy/taxonomy-advertising.php:26
+#: taxonomy/taxonomy-casestudies.php:29 taxonomy/taxonomy-industries.php:29
+#: taxonomy/taxonomy-joinus.php:30 taxonomy/taxonomy-resource.php:30
+#: taxonomy/taxonomy-services.php:31 taxonomy/taxonomy-solution.php:100
+msgid "Categories"
+msgstr ""
+
+#: controller/controller-active.php:87
+#: controller/controller-case-studies.php:87
+#: controller/controller-join-us.php:87 controller/controller-resources.php:87
+#: controller/controller-services.php:87 controller/controller-solutions.php:87
+#: taxonomy/taxonomy-active.php:27 taxonomy/taxonomy-active.php:28
+#: taxonomy/taxonomy-active.php:37 taxonomy/taxonomy-casestudies.php:26
+#: taxonomy/taxonomy-casestudies.php:27 taxonomy/taxonomy-casestudies.php:36
+#: taxonomy/taxonomy-industries.php:26 taxonomy/taxonomy-industries.php:27
+#: taxonomy/taxonomy-industries.php:36 taxonomy/taxonomy-joinus.php:27
+#: taxonomy/taxonomy-joinus.php:28 taxonomy/taxonomy-joinus.php:37
+#: taxonomy/taxonomy-resource.php:27 taxonomy/taxonomy-resource.php:28
+#: taxonomy/taxonomy-resource.php:37 taxonomy/taxonomy-services.php:28
+#: taxonomy/taxonomy-services.php:29 taxonomy/taxonomy-services.php:38
+#: taxonomy/taxonomy-solution.php:97 taxonomy/taxonomy-solution.php:98
+#: taxonomy/taxonomy-solution.php:107 inc/admin/admin-custom-columns.php:12
+msgid "Category"
+msgstr ""
+
+#: inc/front/front-menu.php:105
+msgid "CEO"
+msgstr ""
+
+#: page/member.php:174
+msgid "Change Information"
+msgstr ""
+
+#: page/member.php:99
+msgid "Change Password"
+msgstr ""
+
+#: inc/front/front-menu.php:151
+msgid "Chemicals"
+msgstr ""
+
+#: metabox/bk-metabox-resources.php:27 metabox/bk-metabox-resources.php:35
+#: metabox/bk-metabox-resources.php:45 metabox/metabox-active.php:27
+#: metabox/metabox-active.php:35 metabox/metabox-active.php:45
+#: metabox/metabox-language.php:35 metabox/metabox-service.php:27
+#: metabox/metabox-service.php:35 metabox/metabox-service.php:45
+#: view/view-information.php:32 view/view-information.php:39
+#: view/view-information.php:47 view/view-information.php:58
+#: view/view-information.php:69 view/view-information.php:80
+msgid "Chinese"
+msgstr ""
+
+#: view/form-pop-up.php:81
+msgid "Chinese Article - ID (CN)"
+msgstr ""
+
+#: view/form-pop-up.php:110
+msgid "Chinese Horizontal Image (CN)"
+msgstr ""
+
+#: view/form-pop-up.php:72
+msgid "Chinese Link (CN)"
+msgstr ""
+
+#: view/form-pop-up.php:124
+msgid "Chinese Vertical Image (CN)"
+msgstr ""
+
+#: templates/home-news.php:14
+msgid "Classic Case"
+msgstr ""
+
+#: templates/home-news.php:11
+msgid "Column Article"
+msgstr ""
+
+#: comments.php:100
+msgid "Comment Content"
+msgstr ""
+
+#: comments.php:11 entry-footer.php:4
+msgid "Comments"
+msgstr ""
+
+#: comments.php:34
+msgctxt "comments count"
+msgid "Trackback or Pingback"
+msgid_plural "Trackbacks and Pingbacks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: model/bk_model-member.php:49
+msgid "Company "
+msgstr ""
+
+#: controller/controller-information.php:14
+#: controller/controller-information.php:15
+msgid "Company Information"
+msgstr ""
+
+#: view/view-information.php:80 view/view-information.php:134
+msgid "Company Location"
+msgstr ""
+
+#: model/model-download.php:62 model/model-logo.php:53 page/member.php:133
+#: view/form-logo.php:21 view/view-information.php:39
+#: view/view-information.php:93 view/view-member-download.php:44
+#: inc/front/front-core.php:119
+msgid "Company Name"
+msgstr ""
+
+#: view/view-information.php:69 view/view-information.php:123
+msgid "Company Operating"
+msgstr ""
+
+#: view/view-information.php:58 view/view-information.php:112
+msgid "Company Summary"
+msgstr ""
+
+#: page/member.php:93 page/reset-password.php:63
+msgid "Confirm Password"
+msgstr ""
+
+#: inc/front/front-menu.php:115
+msgid "Consultant"
+msgstr ""
+
+#: templates/footer.php:138
+msgid "contact"
+msgstr ""
+
+#: model/model-download.php:63
+msgid "Contact Number"
+msgstr ""
+
+#: inc/front/front-menu.php:86
+msgid "Contact Us"
+msgstr ""
+
+#: templates/home-business.php:1
+msgid "Corporate management focus"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:116 taxonomy/tag-casestudies.php:101
+#: taxonomy/tag-solution.php:101 taxonomy/taxonomy-advertising.php:108
+#: taxonomy/taxonomy-casestudies.php:138 taxonomy/taxonomy-industries.php:138
+#: inc/admin/admin-add-post-tag-field.php:106
+#: inc/admin/admin-add-post-taxonomy-field.php:111
+msgid "Count"
+msgstr ""
+
+#: controller/controller-active.php:91
+#: controller/controller-case-studies.php:91
+#: controller/controller-industries.php:83 controller/controller-join-us.php:90
+#: controller/controller-resources.php:91 controller/controller-services.php:91
+#: controller/controller-slider.php:82 controller/controller-solutions.php:91
+#: model/bk_model-member.php:53 model/model-download.php:65
+#: model/model-logo.php:56 model/model-popup.php:57
+#: inc/admin/admin-custom-columns.php:16
+msgid "Create Date"
+msgstr ""
+
+#: page/member.php:83
+msgid "Current Password"
+msgstr ""
+
+#: controller/controller-logo.php:16 controller/controller-logo.php:17
+msgid "Customer Trademark"
+msgstr ""
+
+#: view/view-logo.php:11 view/view-member.php:10 view/view-pop-up.php:11
+msgid "Data Adjustment succeeded"
+msgstr ""
+
+#: metabox/metabox-downloads.php:12
+msgid "Data Download"
+msgstr ""
+
+#: model/bk_model-member.php:159 model/bk_model-member.php:183
+#: model/model-download.php:242 model/model-download.php:266
+#: model/model-logo.php:170 model/model-logo.php:196 model/model-popup.php:173
+#: model/model-popup.php:200
+msgid "Delete Permanently"
+msgstr ""
+
+#: page/member.php:158 inc/front/front-core.php:130
+msgid "Department"
+msgstr ""
+
+#: inc/front/front-menu.php:110
+msgid "Deputy Director"
+msgstr ""
+
+#: inc/front/front-menu.php:108
+msgid "Deputy General Director"
+msgstr ""
+
+#: model/bk_model-member.php:50
+msgid "Description"
+msgstr ""
+
+#: metabox/metabox-seo.php:56
+msgid "Description SEO"
+msgstr ""
+
+#. Name of the theme
+msgid "DGW"
+msgstr ""
+
+#: templates/footer.php:121
+msgid "Digital Transformation in the Plastics Industry"
+msgstr ""
+
+#. Author of the theme
+msgid "Digiwin"
+msgstr ""
+
+#: inc/front/front-menu.php:109
+msgid "Director"
+msgstr ""
+
+#: helper/function.php:87
+msgid "Discuss"
+msgstr ""
+
+#: page/partner.php:13
+msgid "distribution"
+msgstr ""
+
+#: templates/footer.php:80
+msgid "Download 2026 Digital Transformation Whitepaper"
+msgstr ""
+
+#: model/model-download.php:64 view/view-member-download.php:17
+msgid "Download Count"
+msgstr ""
+
+#: controller/controller-member.php:16 controller/controller-member.php:17
+msgid "Download Data"
+msgstr ""
+
+#: view/view-member-download.php:47
+msgid "Download Date"
+msgstr ""
+
+#: single-resources.php:30
+msgid "Download File digiwin"
+msgstr ""
+
+#. Name of the template
+#: page/download.php:2
+msgid "Download Page"
+msgstr ""
+
+#: view/view-member-download.php:35
+msgid "Download Report"
+msgstr ""
+
+#: controller/controller-member-download.php:15
+#: controller/controller-member-download.php:16
+#: view/view-member-download.php:10
+msgid "Download Statistics"
+msgstr ""
+
+#: model/model-download.php:60 page/member.php:40 view/view-information.php:22
+#: view/view-member-download.php:45 inc/front/front-core.php:114
+#: inc/shortcode/shortcode-member.php:53
+msgid "E-mail"
+msgstr ""
+
+#: controller/controller-active.php:39
+#: controller/controller-case-studies.php:39
+#: controller/controller-industries.php:39 controller/controller-join-us.php:39
+#: controller/controller-resources.php:39 controller/controller-services.php:39
+#: controller/controller-slider.php:39 controller/controller-solutions.php:39
+#: model/bk_model-member.php:187 model/model-download.php:270
+#: model/model-logo.php:200 model/model-popup.php:207 model/model-popup.php:213
+#: model/model-popup.php:219 taxonomy/tag-advertising.php:32
+#: taxonomy/tag-casestudies.php:32 taxonomy/tag-solution.php:32
+#: taxonomy/taxonomy-active.php:33 taxonomy/taxonomy-advertising.php:29
+#: taxonomy/taxonomy-casestudies.php:32 taxonomy/taxonomy-industries.php:32
+#: taxonomy/taxonomy-joinus.php:33 taxonomy/taxonomy-resource.php:33
+#: taxonomy/taxonomy-services.php:34 taxonomy/taxonomy-solution.php:103
+msgid "Edit"
+msgstr ""
+
+#: inc/front/front-menu.php:143
+msgid "Electronic Parts"
+msgstr ""
+
+#: metabox/bk-metabox-resources.php:29 metabox/bk-metabox-resources.php:81
+#: metabox/bk-metabox-resources.php:91 metabox/metabox-active.php:29
+#: metabox/metabox-active.php:81 metabox/metabox-active.php:91
+#: metabox/metabox-language.php:43 metabox/metabox-service.php:29
+#: metabox/metabox-service.php:81 metabox/metabox-service.php:91
+#: taxonomy/taxonomy-active.php:60 taxonomy/taxonomy-active.php:105
+#: taxonomy/taxonomy-active.php:133 taxonomy/taxonomy-casestudies.php:61
+#: taxonomy/taxonomy-casestudies.php:93 taxonomy/taxonomy-casestudies.php:135
+#: taxonomy/taxonomy-industries.php:61 taxonomy/taxonomy-industries.php:93
+#: taxonomy/taxonomy-industries.php:135 taxonomy/taxonomy-joinus.php:60
+#: taxonomy/taxonomy-joinus.php:113 taxonomy/taxonomy-joinus.php:141
+#: taxonomy/taxonomy-resource.php:60 taxonomy/taxonomy-resource.php:107
+#: taxonomy/taxonomy-resource.php:135 taxonomy/taxonomy-services.php:62
+#: taxonomy/taxonomy-services.php:113 taxonomy/taxonomy-services.php:140
+#: taxonomy/taxonomy-solution.php:33 taxonomy/taxonomy-solution.php:132
+#: taxonomy/taxonomy-solution.php:160 inc/admin/admin-add-post-tag-field.php:14
+#: inc/admin/admin-add-post-tag-field.php:47
+#: inc/admin/admin-add-post-tag-field.php:104
+#: inc/admin/admin-add-post-taxonomy-field.php:13
+#: inc/admin/admin-add-post-taxonomy-field.php:50
+#: inc/admin/admin-add-post-taxonomy-field.php:109
+msgid "English"
+msgstr ""
+
+#: inc/shortcode/shortcode-member.php:12
+msgid "Enter your email address to reset your password"
+msgstr ""
+
+#: templates/home-cases.php:1
+msgid "Enterprise model success case"
+msgstr ""
+
+#: view/view-member-download.php:36 view/view-member.php:15
+msgid "Export Excel file"
+msgstr ""
+
+#: inc/front/front-menu.php:145
+msgid "F&B"
+msgstr ""
+
+#: page/activate-member.php:120
+msgid "Failed to activate account"
+msgstr ""
+
+#: view/view-information.php:14
+msgid "Fax"
+msgstr ""
+
+#: inc/front/front-menu.php:188
+msgid "Finance and Accounting"
+msgstr ""
+
+#: view/view-setting.php:8
+msgid "First load"
+msgstr ""
+
+#: page/member.php:57 inc/shortcode/shortcode-member.php:11
+#: inc/shortcode/shortcode-member.php:69
+msgid "Forget Password"
+msgstr ""
+
+#: metabox/metabox-web.php:36
+msgid "Free Book"
+msgstr ""
+
+#: templates/footer.php:72
+msgid "Free Resources for Businesses"
+msgstr ""
+
+#: model/model-download.php:61 page/member.php:107
+#: view/view-member-download.php:43 inc/front/front-core.php:120
+msgid "Full Name"
+msgstr ""
+
+#: inc/front/front-menu.php:107
+msgid "General Director"
+msgstr ""
+
+#: page/activate-member.php:67
+msgid "Go to member page"
+msgstr ""
+
+#: metabox/metabox-source.php:15
+msgid "Google Drive file download link"
+msgstr ""
+
+#: controller/controller-active.php:88
+#: controller/controller-case-studies.php:88
+#: controller/controller-resources.php:88 controller/controller-services.php:88
+#: controller/controller-solutions.php:88 inc/admin/admin-custom-columns.php:13
+msgid "Home Page"
+msgstr ""
+
+#: inc/front/front-menu.php:191
+msgid "HR"
+msgstr ""
+
+#. URI of the theme
+#. Author URI of the theme
+msgid "https://digiwin.com.vn/"
+msgstr ""
+
+#: inc/front/front-core.php:208
+msgid "I agree with Digiwin's privacy policy"
+msgstr ""
+
+#: model/model-popup.php:55
+msgid "Image"
+msgstr ""
+
+#: inc/front/front-menu.php:192
+msgid "Import and Export"
+msgstr ""
+
+#: controller/controller-industries.php:35
+#: controller/controller-industries.php:36
+#: controller/controller-industries.php:47 metabox/metabox-industries.php:15
+#: inc/front/front-menu.php:16
+msgid "Industries"
+msgstr ""
+
+#: page/member.php:144 inc/front/front-core.php:128
+msgid "Industry"
+msgstr ""
+
+#. Name of the template
+#: page/industry.php:2
+msgid "Industry Page"
+msgstr ""
+
+#: templates/home-news.php:17
+msgid "Information Request"
+msgstr ""
+
+#: page/activate-member.php:38
+msgid "Invalid request"
+msgstr ""
+
+#: page/reset-password.php:41
+msgid "Invalid request."
+msgstr ""
+
+#: page/activate-member.php:32 page/reset-password.php:32
+msgid "Invalid verification code"
+msgstr ""
+
+#: inc/front/front-menu.php:185
+msgid "Inventory"
+msgstr ""
+
+#: inc/front/front-menu.php:153
+msgid "IoT / Automation"
+msgstr ""
+
+#: inc/front/front-menu.php:154 inc/front/front-menu.php:190
+msgid "IT"
+msgstr ""
+
+#: page/join.php:13
+msgid "join"
+msgstr ""
+
+#: controller/controller-join-us.php:35 controller/controller-join-us.php:36
+#: controller/controller-join-us.php:47 inc/front/front-menu.php:76
+msgid "Join Digiwin"
+msgstr ""
+
+#. Name of the template
+#: page/join.php:2
+msgid "Join Digiwin Page"
+msgstr ""
+
+#: metabox/metabox-seo.php:46
+msgid "Key SEO"
+msgstr ""
+
+#. Name of the template
+#: page/landing.php:2
+msgid "landing Page"
+msgstr ""
+
+#: controller/controller-active.php:89
+#: controller/controller-case-studies.php:89
+#: controller/controller-join-us.php:88 controller/controller-resources.php:89
+#: controller/controller-services.php:89 controller/controller-solutions.php:89
+#: metabox/metabox-language.php:15 taxonomy/tag-advertising.php:26
+#: taxonomy/tag-advertising.php:27 taxonomy/tag-advertising.php:36
+#: inc/admin/admin-custom-columns.php:14
+msgid "Language"
+msgstr ""
+
+#: templates/home-news.php:5
+msgid "Latest Event"
+msgstr ""
+
+#: templates/home-news.php:1
+msgid "Latest News"
+msgstr ""
+
+#: metabox/metabox-view.php:15 metabox/metabox-view.php:38
+msgid "Like"
+msgstr ""
+
+#: metabox/metabox-link.php:15 model/model-logo.php:55 model/model-popup.php:56
+#: view/form-logo.php:34
+msgid "Link"
+msgstr ""
+
+#: page/about.php:31
+msgid "Location"
+msgstr ""
+
+#: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:46
+#: inc/shortcode/shortcode-member.php:66
+msgid "Login"
+msgstr ""
+
+#: templates/languages.php:20
+msgid "Login-Register"
+msgstr ""
+
+#: page/member.php:77
+msgid "Logout"
+msgstr ""
+
+#: inc/front/front-menu.php:152
+msgid "Machinery Manufacturing"
+msgstr ""
+
+#: functions.php:100
+msgid "Main Menu"
+msgstr ""
+
+#: metabox/metabox-industries.php:30
+msgid "Management Challenges"
+msgstr ""
+
+#: inc/front/front-menu.php:113
+msgid "Manager"
+msgstr ""
+
+#: inc/front/front-menu.php:189
+msgid "Marketing"
+msgstr ""
+
+#: page/member.php:25
+msgid "member login and register"
+msgstr ""
+
+#. Name of the template
+#: page/member.php:2
+msgid "Member Page"
+msgstr ""
+
+#: inc/front/front-menu.php:139
+msgid "Metal Processing"
+msgstr ""
+
+#: view/view-setting.php:20
+msgid "More loading"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:113 taxonomy/tag-casestudies.php:98
+#: taxonomy/tag-solution.php:98 taxonomy/taxonomy-active.php:57
+#: taxonomy/taxonomy-active.php:101 taxonomy/taxonomy-active.php:105
+#: taxonomy/taxonomy-active.php:129 taxonomy/taxonomy-active.php:133
+#: taxonomy/taxonomy-advertising.php:105 taxonomy/taxonomy-casestudies.php:57
+#: taxonomy/taxonomy-casestudies.php:61 taxonomy/taxonomy-casestudies.php:89
+#: taxonomy/taxonomy-casestudies.php:93 taxonomy/taxonomy-casestudies.php:132
+#: taxonomy/taxonomy-industries.php:57 taxonomy/taxonomy-industries.php:61
+#: taxonomy/taxonomy-industries.php:89 taxonomy/taxonomy-industries.php:93
+#: taxonomy/taxonomy-industries.php:132 taxonomy/taxonomy-joinus.php:57
+#: taxonomy/taxonomy-joinus.php:109 taxonomy/taxonomy-joinus.php:113
+#: taxonomy/taxonomy-joinus.php:137 taxonomy/taxonomy-joinus.php:141
+#: taxonomy/taxonomy-resource.php:57 taxonomy/taxonomy-resource.php:103
+#: taxonomy/taxonomy-resource.php:107 taxonomy/taxonomy-resource.php:131
+#: taxonomy/taxonomy-resource.php:135 taxonomy/taxonomy-services.php:59
+#: taxonomy/taxonomy-services.php:109 taxonomy/taxonomy-services.php:113
+#: taxonomy/taxonomy-services.php:136 taxonomy/taxonomy-services.php:140
+#: taxonomy/taxonomy-solution.php:30 taxonomy/taxonomy-solution.php:128
+#: taxonomy/taxonomy-solution.php:132 taxonomy/taxonomy-solution.php:156
+#: taxonomy/taxonomy-solution.php:160 inc/admin/admin-add-post-tag-field.php:9
+#: inc/admin/admin-add-post-tag-field.php:14
+#: inc/admin/admin-add-post-tag-field.php:38
+#: inc/admin/admin-add-post-tag-field.php:47
+#: inc/admin/admin-add-post-tag-field.php:100
+#: inc/admin/admin-add-post-taxonomy-field.php:8
+#: inc/admin/admin-add-post-taxonomy-field.php:13
+#: inc/admin/admin-add-post-taxonomy-field.php:41
+#: inc/admin/admin-add-post-taxonomy-field.php:50
+#: inc/admin/admin-add-post-taxonomy-field.php:105
+msgid "Name"
+msgstr ""
+
+#: page/member.php:88 page/reset-password.php:52
+msgid "New Password"
+msgstr ""
+
+#: nav-below.php:3
+#, php-format
+msgid "newer %s"
+msgstr ""
+
+#: templates/home-news.php:8
+msgid "News Center"
+msgstr ""
+
+#. Name of the template
+#: page/news.php:2
+msgid "News Page"
+msgstr ""
+
+#: comments.php:11
+msgid "No Comments Yet"
+msgstr ""
+
+#: controller/controller-active.php:45
+#: controller/controller-case-studies.php:45
+#: controller/controller-industries.php:45 controller/controller-join-us.php:45
+#: controller/controller-resources.php:45 controller/controller-services.php:45
+#: controller/controller-slider.php:45 controller/controller-solutions.php:45
+msgid "No found in Trash."
+msgstr ""
+
+#: controller/controller-active.php:44
+#: controller/controller-case-studies.php:44
+#: controller/controller-industries.php:44 controller/controller-join-us.php:44
+#: controller/controller-resources.php:44 controller/controller-services.php:44
+#: controller/controller-slider.php:44 controller/controller-solutions.php:44
+msgid "No slides found."
+msgstr ""
+
+#: search.php:14
+msgid "Nothing Found"
+msgstr ""
+
+#: templates/footer.php:33
+msgid "Office In VietNam"
+msgstr ""
+
+#: view/form-pop-up.php:55
+msgid "Open a New Tab"
+msgstr ""
+
+#: page/about.php:26
+msgid "Operating"
+msgstr ""
+
+#: inc/front/front-menu.php:158 inc/front/front-menu.php:193
+msgid "Other"
+msgstr ""
+
+#: inc/front/front-menu.php:157
+msgid "Other Manufacturing"
+msgstr ""
+
+#: inc/front/front-menu.php:148
+msgid "Packaging"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:30 taxonomy/tag-advertising.php:31
+#: taxonomy/tag-casestudies.php:30 taxonomy/tag-casestudies.php:31
+#: taxonomy/tag-solution.php:30 taxonomy/tag-solution.php:31
+#: taxonomy/taxonomy-active.php:31 taxonomy/taxonomy-active.php:32
+#: taxonomy/taxonomy-advertising.php:27 taxonomy/taxonomy-advertising.php:28
+#: taxonomy/taxonomy-casestudies.php:30 taxonomy/taxonomy-casestudies.php:31
+#: taxonomy/taxonomy-industries.php:30 taxonomy/taxonomy-industries.php:31
+#: taxonomy/taxonomy-joinus.php:31 taxonomy/taxonomy-joinus.php:32
+#: taxonomy/taxonomy-resource.php:31 taxonomy/taxonomy-resource.php:32
+#: taxonomy/taxonomy-services.php:32 taxonomy/taxonomy-services.php:33
+#: taxonomy/taxonomy-solution.php:101 taxonomy/taxonomy-solution.php:102
+msgid "Parent Class"
+msgstr ""
+
+#. Name of the template
+#: page/partner.php:2
+msgid "Partner Page"
+msgstr ""
+
+#: inc/front/front-menu.php:81
+msgid "Partners"
+msgstr ""
+
+#: page/member.php:47 inc/front/front-core.php:115
+#: inc/shortcode/shortcode-member.php:59
+msgid "Password"
+msgstr ""
+
+#: comments.php:105
+msgid "Perform Calculations"
+msgstr ""
+
+#: inc/front/front-menu.php:150
+msgid "Pharmaceuticals"
+msgstr ""
+
+#: page/about.php:41 page/member.php:126 view/view-information.php:6
+#: inc/front/front-core.php:125
+msgid "Phone"
+msgstr ""
+
+#: inc/front/front-menu.php:141
+msgid "Plastic Injection"
+msgstr ""
+
+#: comments.php:116
+msgid "Please share your opinions"
+msgstr ""
+
+#: controller/controller-popup.php:66 controller/controller-popup.php:67
+msgid "Pop-up"
+msgstr ""
+
+#: page/member.php:111 inc/front/front-core.php:123
+msgid "Position"
+msgstr ""
+
+#: inc/front/front-menu.php:104
+msgid "President"
+msgstr ""
+
+#: inc/front/front-core.php:212
+msgid "privacy policy"
+msgstr ""
+
+#: taxonomy/tag-casestudies.php:26 taxonomy/tag-casestudies.php:27
+#: taxonomy/tag-casestudies.php:36 taxonomy/tag-solution.php:26
+#: taxonomy/tag-solution.php:27 taxonomy/tag-solution.php:36
+msgid "Product"
+msgstr ""
+
+#: templates/home-count.php:56
+msgid "Product Solutions"
+msgstr ""
+
+#: inc/front/front-menu.php:186
+msgid "Production"
+msgstr ""
+
+#: templates/footer.php:103
+msgid "Production Management (MES)"
+msgstr ""
+
+#: templates/home-count.php:39
+msgid "Projects & Clients"
+msgstr ""
+
+#: model/bk_model-member.php:144 model/model-download.php:226
+#: model/model-logo.php:154 model/model-popup.php:157
+msgid "Published"
+msgstr ""
+
+#: inc/front/front-menu.php:184
+msgid "Purchasing"
+msgstr ""
+
+#: inc/front/front-menu.php:187
+msgid "Quality Control"
+msgstr ""
+
+#: taxonomy/taxonomy-active.php:62 taxonomy/taxonomy-joinus.php:62
+#: taxonomy/taxonomy-resource.php:62 taxonomy/taxonomy-services.php:64
+#: taxonomy/taxonomy-solution.php:35
+msgid "Quantity"
+msgstr ""
+
+#: inc/front/front-menu.php:182
+msgid "R&D"
+msgstr ""
+
+#: templates/home-news.php:45 templates/home-news.php:71
+#: templates/home-news.php:97 templates/home-news.php:123
+#: templates/home-news.php:151
+msgid "Read More"
+msgstr ""
+
+#: page/member.php:33 inc/front/front-core.php:145
+#: inc/shortcode/shortcode-member.php:47
+msgid "Register"
+msgstr ""
+
+#: view/view-member.php:14
+msgid "Registered List"
+msgstr ""
+
+#: inc/code/code-custom-comment.php:22
+msgid "Reply"
+msgstr ""
+
+#: comments.php:140
+msgid "Reply to"
+msgstr ""
+
+#: page/reset-password.php:90
+msgid "Request a new code"
+msgstr ""
+
+#. Name of the template
+#: page/reset-password.php:2
+msgid "Reset Password Page"
+msgstr ""
+
+#: single-resources.php:9 page/resource.php:13
+msgid "resource"
+msgstr ""
+
+#: metabox/bk-metabox-resources.php:45 metabox/bk-metabox-resources.php:68
+#: metabox/bk-metabox-resources.php:91
+msgid "Resource Content"
+msgstr ""
+
+#: view/view-member-download.php:16 view/view-member-download.php:46
+msgid "Resource Name"
+msgstr ""
+
+#: metabox/bk-metabox-resources.php:35 metabox/bk-metabox-resources.php:58
+#: metabox/bk-metabox-resources.php:81
+msgid "Resource Title"
+msgstr ""
+
+#: controller/controller-resources.php:35
+#: controller/controller-resources.php:36
+#: controller/controller-resources.php:47 metabox/bk-metabox-resources.php:12
+#: inc/front/front-menu.php:62
+msgid "Resources"
+msgstr ""
+
+#. Name of the template
+#: page/resource.php:2
+msgid "Resources Page"
+msgstr ""
+
+#: model/bk_model-member.php:158 model/bk_model-member.php:182
+#: model/model-download.php:241 model/model-download.php:265
+#: model/model-logo.php:169 model/model-logo.php:195 model/model-popup.php:172
+#: model/model-popup.php:199
+msgid "Restore"
+msgstr ""
+
+#: attachment.php:9
+#, php-format
+msgid "Return to %s"
+msgstr ""
+
+#: inc/front/front-menu.php:142
+msgid "Rubber"
+msgstr ""
+
+#: inc/front/front-menu.php:183
+msgid "Sales"
+msgstr ""
+
+#: templates/footer.php:192
+msgid "Scan to join Zalo OA & get the latest industry reports"
+msgstr ""
+
+#: controller/controller-active.php:43
+#: controller/controller-case-studies.php:43
+#: controller/controller-industries.php:43 controller/controller-join-us.php:43
+#: controller/controller-resources.php:43 controller/controller-services.php:43
+#: controller/controller-slider.php:43 controller/controller-solutions.php:43
+#: view/view-logo.php:22 view/view-member.php:19 view/view-pop-up.php:22
+msgid "Search"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:28 taxonomy/tag-casestudies.php:28
+#: taxonomy/tag-solution.php:28 taxonomy/taxonomy-active.php:29
+#: taxonomy/taxonomy-advertising.php:25 taxonomy/taxonomy-casestudies.php:28
+#: taxonomy/taxonomy-industries.php:28 taxonomy/taxonomy-joinus.php:29
+#: taxonomy/taxonomy-resource.php:29 taxonomy/taxonomy-services.php:30
+#: taxonomy/taxonomy-solution.php:99
+msgid "Search Categories"
+msgstr ""
+
+#: search.php:5
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: inc/front/front-menu.php:111
+msgid "Secretary"
+msgstr ""
+
+#: page/member.php:161 inc/front/front-core.php:109
+msgid "Select Department"
+msgstr ""
+
+#: page/member.php:147 inc/front/front-core.php:104
+msgid "Select Industry"
+msgstr ""
+
+#: page/member.php:114 inc/front/front-core.php:99
+msgid "Select Position"
+msgstr ""
+
+#: page/activate-member.php:124
+msgid "Server connection error"
+msgstr ""
+
+#: inc/front/front-menu.php:18
+msgid "Service"
+msgstr ""
+
+#: metabox/metabox-service.php:45 metabox/metabox-service.php:68
+#: metabox/metabox-service.php:91
+msgid "Service Content"
+msgstr ""
+
+#: metabox/metabox-service.php:35 metabox/metabox-service.php:58
+#: metabox/metabox-service.php:81
+msgid "Service Name"
+msgstr ""
+
+#: controller/controller-services.php:35 controller/controller-services.php:36
+#: controller/controller-services.php:47 metabox/metabox-service.php:12
+#: inc/front/front-menu.php:156
+msgid "Services"
+msgstr ""
+
+#. Name of the template
+#: page/service.php:2
+msgid "Services Page"
+msgstr ""
+
+#: inc/front/front-menu.php:147
+msgid "Shoes and Leather"
+msgstr ""
+
+#: metabox/metabox-home.php:15 metabox/metabox-home.php:42
+msgid "Show In Home Page"
+msgstr ""
+
+#: metabox/metabox-sidebar.php:15 metabox/metabox-sidebar.php:41
+msgid "Show in Sidebar"
+msgstr ""
+
+#: controller/controller-active.php:90
+#: controller/controller-case-studies.php:90
+#: controller/controller-industries.php:82 controller/controller-join-us.php:89
+#: controller/controller-resources.php:90 controller/controller-services.php:90
+#: controller/controller-slider.php:81 controller/controller-solutions.php:90
+#: metabox/metabox-order.php:15 taxonomy/tag-advertising.php:56
+#: taxonomy/tag-advertising.php:80 taxonomy/tag-advertising.php:114
+#: taxonomy/tag-casestudies.php:56 taxonomy/tag-casestudies.php:71
+#: taxonomy/tag-casestudies.php:99 taxonomy/tag-solution.php:56
+#: taxonomy/tag-solution.php:71 taxonomy/tag-solution.php:99
+#: taxonomy/taxonomy-active.php:61 taxonomy/taxonomy-active.php:109
+#: taxonomy/taxonomy-active.php:137 taxonomy/taxonomy-advertising.php:52
+#: taxonomy/taxonomy-advertising.php:75 taxonomy/taxonomy-advertising.php:106
+#: taxonomy/taxonomy-casestudies.php:65 taxonomy/taxonomy-casestudies.php:97
+#: taxonomy/taxonomy-casestudies.php:136 taxonomy/taxonomy-industries.php:65
+#: taxonomy/taxonomy-industries.php:97 taxonomy/taxonomy-industries.php:136
+#: taxonomy/taxonomy-joinus.php:61 taxonomy/taxonomy-joinus.php:117
+#: taxonomy/taxonomy-joinus.php:145 taxonomy/taxonomy-resource.php:61
+#: taxonomy/taxonomy-resource.php:111 taxonomy/taxonomy-resource.php:139
+#: taxonomy/taxonomy-services.php:63 taxonomy/taxonomy-services.php:117
+#: taxonomy/taxonomy-services.php:144 taxonomy/taxonomy-solution.php:34
+#: taxonomy/taxonomy-solution.php:136 taxonomy/taxonomy-solution.php:164
+#: inc/admin/admin-add-post-tag-field.php:18
+#: inc/admin/admin-add-post-tag-field.php:55
+#: inc/admin/admin-add-post-tag-field.php:105
+#: inc/admin/admin-add-post-taxonomy-field.php:17
+#: inc/admin/admin-add-post-taxonomy-field.php:58
+#: inc/admin/admin-add-post-taxonomy-field.php:110
+#: inc/admin/admin-custom-columns.php:15
+msgid "Show Order"
+msgstr ""
+
+#: functions.php:189
+msgid "Sidebar Widget Area"
+msgstr ""
+
+#: controller/controller-slider.php:35 controller/controller-slider.php:36
+#: controller/controller-slider.php:47
+msgid "Slider"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:115 taxonomy/tag-casestudies.php:100
+#: taxonomy/tag-solution.php:100 taxonomy/taxonomy-active.php:58
+#: taxonomy/taxonomy-advertising.php:107 taxonomy/taxonomy-casestudies.php:137
+#: taxonomy/taxonomy-industries.php:137 taxonomy/taxonomy-joinus.php:58
+#: taxonomy/taxonomy-resource.php:58 taxonomy/taxonomy-services.php:60
+#: taxonomy/taxonomy-solution.php:31 inc/admin/admin-add-post-tag-field.php:101
+#: inc/admin/admin-add-post-taxonomy-field.php:106
+msgid "Slug"
+msgstr ""
+
+#: templates/footer.php:112
+msgid "Smart Warehouse (WMS)"
+msgstr ""
+
+#: model/bk_model-member.php:51
+msgid "Softwear"
+msgstr ""
+
+#: metabox/metabox-industries.php:39
+msgid "Solution"
+msgstr ""
+
+#: single-solutions.php:6 page/solution.php:13
+msgid "solution"
+msgstr ""
+
+#: metabox/metabox-solution.php:34
+msgid "Solution Features"
+msgstr ""
+
+#: metabox/metabox-solution.php:26
+msgid "Solution Value"
+msgstr ""
+
+#: controller/controller-solutions.php:35
+#: controller/controller-solutions.php:36
+#: controller/controller-solutions.php:47 metabox/metabox-solution.php:12
+#: inc/front/front-menu.php:17 inc/front/front-menu.php:55
+msgid "Solutions"
+msgstr ""
+
+#: templates/footer.php:87
+msgid "Solutions & Industries"
+msgstr ""
+
+#. Name of the template
+#: page/solution.php:2
+msgid "Solutions Page"
+msgstr ""
+
+#: search.php:17
+msgid "Sorry, nothing matched your search. Please try again."
+msgstr ""
+
+#: templates/home-industry.php:1
+msgid "Specialize in the industry"
+msgstr ""
+
+#: inc/front/front-menu.php:116
+msgid "Staff"
+msgstr ""
+
+#: model/model-popup.php:54
+msgid "Status"
+msgstr ""
+
+#: view/form-logo.php:63 view/view-information.php:145 view/view-setting.php:36
+msgid "Submit"
+msgstr ""
+
+#: comments.php:119
+msgid "Submit Comment"
+msgstr ""
+
+#: page/reset-password.php:74 inc/shortcode/shortcode-member.php:23
+msgid "Submit Email"
+msgstr ""
+
+#: comments.php:215
+msgid "Submitting..."
+msgstr ""
+
+#: templates/footer.php:94
+msgid "System Administration (ERP)"
+msgstr ""
+
+#: page/member.php:137 inc/front/front-core.php:126
+msgid "Tax Number"
+msgstr ""
+
+#: inc/front/front-menu.php:114
+msgid "Team Leader"
+msgstr ""
+
+#: inc/front/front-menu.php:146
+msgid "Textiles and Garments"
+msgstr ""
+
+#: comments.php:193
+msgid "The calculation problem is incorrect. Please enter the correct answer!"
+msgstr ""
+
+#: metabox/metabox-order.php:42
+msgid "The larger the number will show in front"
+msgstr ""
+
+#: page/reset-password.php:30
+msgid "The link has expired. Please request a new code"
+msgstr ""
+
+#: page/reset-password.php:38
+msgid "The user does not exist."
+msgstr ""
+
+#. Description of the theme
+msgid "Theme DGW tùy biến chuẩn i18n và tối ưu hiệu suất."
+msgstr ""
+
+#: page/activate-member.php:65
+msgid "This account has already been activated"
+msgstr ""
+
+#: model/model-popup.php:53 view/form-pop-up.php:43
+msgid "Title"
+msgstr ""
+
+#: metabox/metabox-seo.php:35
+msgid "Title SEO"
+msgstr ""
+
+#: model/model-logo.php:54 view/form-logo.php:48
+msgid "Trademark"
+msgstr ""
+
+#. Name of the template
+#: page/translate.php:2
+msgid "translate Page"
+msgstr ""
+
+#: model/bk_model-member.php:149 model/bk_model-member.php:163
+#: model/bk_model-member.php:188 model/model-download.php:231
+#: model/model-download.php:246 model/model-download.php:271
+#: model/model-logo.php:159 model/model-logo.php:174 model/model-logo.php:201
+#: model/model-popup.php:162 model/model-popup.php:177
+#: model/model-popup.php:208 model/model-popup.php:214
+#: model/model-popup.php:220
+msgid "Trash"
+msgstr ""
+
+#: taxonomy/tag-advertising.php:33 taxonomy/tag-casestudies.php:33
+#: taxonomy/tag-solution.php:33 taxonomy/taxonomy-active.php:34
+#: taxonomy/taxonomy-advertising.php:30 taxonomy/taxonomy-casestudies.php:33
+#: taxonomy/taxonomy-industries.php:33 taxonomy/taxonomy-joinus.php:34
+#: taxonomy/taxonomy-resource.php:34 taxonomy/taxonomy-services.php:35
+#: taxonomy/taxonomy-solution.php:104
+msgid "Update"
+msgstr ""
+
+#: metabox/metabox-downloads.php:27
+msgid "Upload File"
+msgstr ""
+
+#: inc/front/front-menu.php:106
+msgid "Vice President"
+msgstr ""
+
+#: metabox/bk-metabox-resources.php:28 metabox/bk-metabox-resources.php:58
+#: metabox/bk-metabox-resources.php:68 metabox/metabox-active.php:28
+#: metabox/metabox-active.php:58 metabox/metabox-active.php:68
+#: metabox/metabox-language.php:39 metabox/metabox-service.php:28
+#: metabox/metabox-service.php:58 metabox/metabox-service.php:68
+#: taxonomy/taxonomy-active.php:59 taxonomy/taxonomy-active.php:101
+#: taxonomy/taxonomy-active.php:129 taxonomy/taxonomy-casestudies.php:57
+#: taxonomy/taxonomy-casestudies.php:89 taxonomy/taxonomy-casestudies.php:134
+#: taxonomy/taxonomy-industries.php:57 taxonomy/taxonomy-industries.php:89
+#: taxonomy/taxonomy-industries.php:134 taxonomy/taxonomy-joinus.php:59
+#: taxonomy/taxonomy-joinus.php:109 taxonomy/taxonomy-joinus.php:137
+#: taxonomy/taxonomy-resource.php:59 taxonomy/taxonomy-resource.php:103
+#: taxonomy/taxonomy-resource.php:131 taxonomy/taxonomy-services.php:61
+#: taxonomy/taxonomy-services.php:109 taxonomy/taxonomy-services.php:136
+#: taxonomy/taxonomy-solution.php:32 taxonomy/taxonomy-solution.php:128
+#: taxonomy/taxonomy-solution.php:156 view/view-information.php:33
+#: view/view-information.php:93 view/view-information.php:101
+#: view/view-information.php:112 view/view-information.php:123
+#: view/view-information.php:134 inc/admin/admin-add-post-tag-field.php:9
+#: inc/admin/admin-add-post-tag-field.php:38
+#: inc/admin/admin-add-post-tag-field.php:103
+#: inc/admin/admin-add-post-taxonomy-field.php:8
+#: inc/admin/admin-add-post-taxonomy-field.php:41
+#: inc/admin/admin-add-post-taxonomy-field.php:108
+msgid "Vietnamese"
+msgstr ""
+
+#: view/form-pop-up.php:99
+msgid "Vietnamese Article - ID (VN)"
+msgstr ""
+
+#: view/form-pop-up.php:138
+msgid "Vietnamese Horizontal Image (VN)"
+msgstr ""
+
+#: view/form-pop-up.php:90
+msgid "Vietnamese Link (VN)"
+msgstr ""
+
+#: view/form-pop-up.php:152
+msgid "Vietnamese Vertical Image (VN)"
+msgstr ""
+
+#: metabox/metabox-view.php:15 metabox/metabox-view.php:29
+msgid "View"
+msgstr ""
+
+#: controller/controller-active.php:42
+#: controller/controller-case-studies.php:42
+#: controller/controller-industries.php:42 controller/controller-join-us.php:42
+#: controller/controller-resources.php:42 controller/controller-services.php:42
+#: controller/controller-slider.php:42 controller/controller-solutions.php:42
+msgid "View Item"
+msgstr ""
+
+#: metabox/metabox-web.php:25
+msgid "Web Site"
+msgstr ""
+
+#: metabox/metabox-web.php:12
+msgid "Web Site And FreeBook"
+msgstr ""
+
+#: controller/controller-setting.php:17 controller/controller-setting.php:18
+msgid "Website Settings"
+msgstr ""
+
+#: inc/front/front-menu.php:149
+msgid "Wires and Fiber Optics"
+msgstr ""
+
+#: inc/front/front-menu.php:144
+msgid "Wooden Furniture"
+msgstr ""
+
+#: templates/home-count.php:20
+msgid "Years of experience"
+msgstr ""
+
+#: comments.php:93
+msgid "Your E-mail"
+msgstr ""
+
+#: comments.php:89
+msgid "Your Name"
+msgstr ""
+
+#: templates/footer.php:184
+msgid "Zalo OA Community"
+msgstr ""

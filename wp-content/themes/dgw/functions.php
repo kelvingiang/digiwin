@@ -77,37 +77,6 @@ add_action('init', function () {
     unregister_post_type('project');
 }, 1000);
 
-/* ==============================================================
-  THAY DOI FILE DATA NGON NGU THEO SESSION LANGGUAGE
-  =============================================================== */
-
-function change_translate_text($translated)
-{
-    $lang = dgw_get_lang();
-    $languages = ($lang === 'cn') ? 'zh_TW' : 'vi_VN';
-
-    if (is_admin()) {
-        $file = dirname(dirname(dirname(__FILE__))) . "/languages/admin_languages/data.php";
-    } else {
-        $file = dirname(dirname(dirname(__FILE__))) . "/languages/{$languages}/data.php";
-    }
-
-    if (file_exists($file)) {
-        include_once $file;
-
-        if (function_exists('getTranslate')) {
-            $data = getTranslate();
-
-            if (isset($data[$translated])) {
-                return $data[$translated];
-            }
-        }
-    }
-
-    return $translated;
-}
-add_filter('gettext', 'change_translate_text', 20);
-
 /* =======================================  
   FUNCTION OF THIS TEMPLATE
   ======================================= */
@@ -115,7 +84,11 @@ add_filter('gettext', 'change_translate_text', 20);
 add_action('after_setup_theme', 'dgw_setup');
 function dgw_setup()
 {
-    load_theme_textdomain('blankslate', get_template_directory() . '/languages');
+    /**
+     * [2026-10-06] - Load textdomain chuẩn WordPress cho theme DGW từ thư mục languages/
+     * Loại bỏ cơ chế filter gettext cũ để tối ưu hiệu năng và tương thích với Loco Translate / file .pot, .mo, .po
+     */
+    load_theme_textdomain('dgw', get_template_directory() . '/languages');
     add_theme_support('title-tag');
     add_theme_support('automatic-feed-links');
     add_theme_support('post-thumbnails');
@@ -124,7 +97,7 @@ function dgw_setup()
     if (!isset($content_width)) {
         $content_width = 1920;
     }
-    register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'blankslate')));
+    register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'dgw')));
 }
 
 add_action('wp_enqueue_scripts', 'dgw_load_scripts');
@@ -213,7 +186,7 @@ add_action('widgets_init', 'dgw_widgets_init');
 function dgw_widgets_init()
 {
     register_sidebar(array(
-        'name' => esc_html__('Sidebar Widget Area', 'blankslate'),
+        'name' => esc_html__('Sidebar Widget Area', 'dgw'),
         'id' => 'primary-widget-area',
         'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
         'after_widget' => '</li>',

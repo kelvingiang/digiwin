@@ -49,7 +49,7 @@ if ($email && $token) {
                 <div class="reset-password-form">
                     <div class="one-columns">
                         <div class="row-cell">
-                            <label><?php _e('New Password') ?></label>
+                            <label><?php __('New Password', 'dgw') ?></label>
                             <input type="password"
                                 id="new-password"
                                 placeholder="***********"
@@ -60,7 +60,7 @@ if ($email && $token) {
 
                     <div class="one-columns">
                         <div class="row-cell">
-                            <label class="title"><?php _e('Confirm Password') ?></label>
+                            <label class="title"><?php __('Confirm Password', 'dgw') ?></label>
                             <input type="password"
                                 id="confirm-password"
                                 placeholder="***********"
@@ -71,7 +71,7 @@ if ($email && $token) {
 
                     <div class="btn-space">
                         <button id="btn-reset-password" class="btn-my-style">
-                            <?php _e('Submit Email') ?>
+                            <?php __('Submit Email', 'dgw') ?>
                         </button>
                         <p id="change-password-msg" class="msg"></p>
                     </div>
@@ -80,14 +80,14 @@ if ($email && $token) {
             <?php else : ?>
                 <!-- TRƯỜNG HỢP 2: TOKEN SAI HOẶC HẾT HẠN -> ẨN FORM & HIỆN LỖI -->
                 <div class="dgw-error-box">
-                    <h3><?php _e('Cannot Reset Password', 'dgw'); ?></h3>
+                    <h3><?php __('Cannot Reset Password', 'dgw'); ?></h3>
                     <p style="color: #c53030; font-weight: 500; margin: 0;">
                         <?php echo esc_html($error_message); ?>
                     </p>
                     <!-- Bạn có thể thêm 1 nút "Yêu cầu lại" dẫn về trang Quên mật khẩu ở đây -->
                     <a href="<?php echo home_url('/member'); ?>" class="btn-my-style"
                         style="margin-top: 38px; display: inline-block;">
-                        <?php _e('Request a new code', 'dgw'); ?>
+                        <?php __('Request a new code', 'dgw'); ?>
                     </a>
                 </div>
             <?php endif; ?>

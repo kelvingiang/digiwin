@@ -7,7 +7,7 @@ function add_wp_media($item)
     <div class="row">
         <div id="wp-txt_note-media-buttons" class="wp-media-buttons">
             <button id="insert-media-button_my" class="button insert-media add_media " type="button" data-editor="content">
-                <span class="wp-media-buttons-icon"></span> <?php _e('Add Product Images') ?>
+                <span class="wp-media-buttons-icon"></span> <?php __('Add Product Images', 'dgw') ?>
             </button>
         </div>
         <div><input type="hidden" id="hidden_img" name="hidden_img" value="<?php echo $item ?>" /></div>

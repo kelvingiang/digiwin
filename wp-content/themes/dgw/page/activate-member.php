@@ -55,16 +55,16 @@ if ($email && $token) {
                     <div class="dgw-loading-state">
                         <div class="dgw-loader"></div>
                         <h2 id="dgw-status-msg">
-                            <?php _e('Account verification is in progress, please wait...', 'dgw'); ?>
+                            <?php __('Account verification is in progress, please wait...', 'dgw'); ?>
                         </h2>
                     </div>
                 </div>
             <?php else : ?>
                 <?php if ($is_valid && $user_data && (int)$user_data->status !== 0) : ?>
                     <div class="dgw-status-box">
-                        <p class="msg msg--info"><?php _e('This account has already been activated', 'dgw'); ?></p>
+                        <p class="msg msg--info"><?php __('This account has already been activated', 'dgw'); ?></p>
                         <a href="<?php echo esc_url(home_url('/member/')); ?>" class="btn-dgw">
-                            <?php _e('Go to member page', 'dgw'); ?>
+                            <?php __('Go to member page', 'dgw'); ?>
                         </a>
                     </div>
                 <?php else : ?>
@@ -112,16 +112,16 @@ if ($email && $token) {
                     },
                     success: (res) => {
                         if (res.success) {
-                            msgBox.innerHTML = `<span class="txt-success"><?php _e('Account activated successfully!', 'dgw'); ?></span>`;
+                            msgBox.innerHTML = `<span class="txt-success"><?php __('Account activated successfully!', 'dgw'); ?></span>`;
                             setTimeout(() => {
                                 window.location.href = config.redirect;
                             }, 3000);
                         } else {
-                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php _e('Failed to activate account', 'dgw'); ?>'}</span>`;
+                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php __('Failed to activate account', 'dgw'); ?>'}</span>`;
                         }
                     },
                     error: () => {
-                        msgBox.innerHTML = `<span class="txt-error"><?php _e('Server connection error', 'dgw'); ?></span>`;
+                        msgBox.innerHTML = `<span class="txt-error"><?php __('Server connection error', 'dgw'); ?></span>`;
                     }
                 });
             };

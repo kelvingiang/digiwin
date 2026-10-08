@@ -32,7 +32,7 @@
     </section>
 
     <section aria-label="Success Cases">
-        <?php get_template_part('templates/home-cases'); ?>
+        <?php  get_template_part('templates/home-cases'); ?>
     </section>
         <!-- [2026-06-30]: Chuyển phần Logo Khách hàng lên đầu để tăng độ uy tín (Social Proof) -->
     <section aria-label="Partners and Clients">

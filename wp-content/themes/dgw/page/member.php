@@ -22,39 +22,39 @@ if (!empty($_COOKIE['custom_session'])) {
 
 ?>
 <div class="page-title-h1">
-    <h1><?php echo __('member login and register') ?></h1> 
+    <h1><?php echo __('member login and register', 'dgw') ?></h1> 
 </div>
 
 <div class="member-space">
     <!-- 未登入 -->
     <div id="ui-login-form" style="display:none">
         <div id="tab-buttons">
-            <div class="tab-btn active" data-tab="login"><?php _e('Login', 'dgw') ?></div>
-            <div class="tab-btn" data-tab="register"><?php _e('Register', 'dgw') ?></div>
+            <div class="tab-btn active" data-tab="login"><?php __('Login', 'dgw') ?></div>
+            <div class="tab-btn" data-tab="register"><?php __('Register', 'dgw') ?></div>
         </div>
 
         <div id="tab-login" class="tab-content tab-login" data-page="member">
 
             <div class="one-columns">
                 <div class="row-cell">
-                    <label for="login-email" ><?php _e('E-mail') ?></label>
+                    <label for="login-email" ><?php __('E-mail', 'dgw') ?></label>
                     <input type="email" id="login-email" placeholder="example@email.com" />
                 </div>
             </div>
 
             <div class="one-columns">
                 <div class="row-cell">
-                    <label for="login-password"><?php _e('Password', 'dgw') ?></label>
+                    <label for="login-password"><?php __('Password', 'dgw') ?></label>
                     <input type="password" id="login-password" placeholder="••••••••" />
                 </div>
             </div>
 
             <div class="btn-two-columns">
                 <div class="btn-space">
-                    <button id="btn-login" class="btn-my-style"><?php _e('Login', 'dgw') ?></button>
+                    <button id="btn-login" class="btn-my-style"><?php __('Login', 'dgw') ?></button>
                 </div>
                 <div class="btn-space">
-                    <button id="btn-forget-password" class="btn-my-style btn-password"><?php _e('Forget Password', 'dgw') ?></button>
+                    <button id="btn-forget-password" class="btn-my-style btn-password"><?php __('Forget Password', 'dgw') ?></button>
                 </div>
             </div>
 
@@ -74,29 +74,29 @@ if (!empty($_COOKIE['custom_session'])) {
         <div class="logout-space">
             <label for="btn-logout"><?php echo $data->email; ?></label>
             <button id="btn-logout" class="btn-logout">
-                <?php _e('Logout', 'dgw') ?>
+                <?php __('Logout', 'dgw') ?>
             </button>
         </div>
         <div class="three-columns">
 
             <div class="row-cell">
-                <label for="current-password"><?php _e('Current Password', 'dgw'); ?></label>
+                <label for="current-password"><?php __('Current Password', 'dgw'); ?></label>
                 <input type="password" id="current-password" placeholder="********" />
             </div>
 
             <div class="row-cell">
-                <label for="chang-password"><?php _e('New Password', 'dgw'); ?></label>
+                <label for="chang-password"><?php __('New Password', 'dgw'); ?></label>
                 <input type="password" id="chang-password" placeholder="********" />
             </div>
 
             <div class="row-cell">
-                <label for="chang-confirm-password"><?php _e('Confirm Password', 'dgw'); ?></label>
+                <label for="chang-confirm-password"><?php __('Confirm Password', 'dgw'); ?></label>
                 <input type="password" id="chang-confirm-password" placeholder="********" />
             </div>
         </div>
 
         <div class="btn-space">
-            <button id="btn-change-password" class="btn-my-style"><?php _e('Change Password', 'dgw'); ?></button>
+            <button id="btn-change-password" class="btn-my-style"><?php __('Change Password', 'dgw'); ?></button>
             <p id="change-password-msg" class="msg"></p>
         </div>
 
@@ -104,14 +104,14 @@ if (!empty($_COOKIE['custom_session'])) {
 
         <div class="three-columns">
             <div class="row-cell">
-                <label for="chang-username"><?php _e('Full Name', 'dgw') ?></label>
+                <label for="chang-username"><?php __('Full Name', 'dgw') ?></label>
                 <input type="text" id="chang-username" value="<?php echo $data->username; ?>" />
             </div>
             <div class="row-cell">
-                <label for="chang-position"><?php _e('Position', 'dgw') ?></label>
+                <label for="chang-position"><?php __('Position', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-position" value="<?php echo $data->position; ?>" /> -->
                 <select id="chang-position">
-                    <option value=""><?php _e('Select Position', 'dgw') ?></option>
+                    <option value=""><?php __('Select Position', 'dgw') ?></option>
                     <?php
                     $positions = member_position_list();
                     foreach ($positions as $key => $value) {
@@ -123,28 +123,28 @@ if (!empty($_COOKIE['custom_session'])) {
 
             </div>
             <div class="row-cell">
-                <label for="chang-phone"><?php _e('Phone', 'dgw') ?></label>
+                <label for="chang-phone"><?php __('Phone', 'dgw') ?></label>
                 <input type="text" id="chang-phone" class="type-phone-more" maxlength="15" value="<?php echo $data->phone; ?>" />
             </div>
         </div>
 
         <div class="two-columns">
             <div class="row-cell">
-                <label for="chang-company"><?php _e('Company Name', 'dgw') ?></label>
+                <label for="chang-company"><?php __('Company Name', 'dgw') ?></label>
                 <input type="text" id="chang-company" value="<?php echo $data->company; ?>" />
             </div>
             <div class="row-cell">
-                <label for="chang-tax"><?php _e('Tax Number', 'dgw') ?></label>
+                <label for="chang-tax"><?php __('Tax Number', 'dgw') ?></label>
                 <input type="text" id="chang-tax" class="type-number" maxlength="13" value="<?php echo $data->tax; ?>" />
             </div>
         </div>
 
         <div class="two-columns">
             <div class="row-cell">
-                <label for="chang-industry"><?php _e('Industry', 'dgw') ?></label>
+                <label for="chang-industry"><?php __('Industry', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-industry" value="<?php echo $data->industry; ?>" /> -->
                 <select id="chang-industry">
-                    <option value=""><?php _e('Select Industry', 'dgw') ?></option>
+                    <option value=""><?php __('Select Industry', 'dgw') ?></option>
                     <?php
                     $industries = industry_sector_list();
                     foreach ($industries as $key => $value) {
@@ -155,10 +155,10 @@ if (!empty($_COOKIE['custom_session'])) {
                 </select>
             </div>
             <div class="row-cell">
-                <label for="chang-department"><?php _e('Department', 'dgw') ?></label>
+                <label for="chang-department"><?php __('Department', 'dgw') ?></label>
                 <!-- <input type="text" id="chang-department" value="<?php echo $data->department; ?>" /> -->
                 <select id="chang-department">
-                    <option value=""><?php _e('Select Department', 'dgw') ?></option>
+                    <option value=""><?php __('Select Department', 'dgw') ?></option>
                     <?php
                     $departments = department_list();
                     foreach ($departments as $key => $value) {
@@ -171,7 +171,7 @@ if (!empty($_COOKIE['custom_session'])) {
         </div>
 
         <div class="btn-space">
-            <button id="btn-change-info" class="btn-my-style"><?php _e('Change Information', 'dgw') ?></button>
+            <button id="btn-change-info" class="btn-my-style"><?php __('Change Information', 'dgw') ?></button>
             <p id="change-info-msg" class="msg"></p>
         </div>
 

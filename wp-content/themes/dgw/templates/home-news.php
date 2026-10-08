@@ -1,20 +1,20 @@
-<h2 class="h2-home-title"><?php _e('Latest News') ?></h2>
+<h2 class="h2-home-title"><?php echo __('Latest News', 'dgw') ?></h2>
 <div id="news-home">
     <div class="news-home-title">
         <div class="title-event title-select" onclick=" ChangSelect('.title-event', '.content-event')">
-            <h3><?php _e('Latest Event') ?></h3>
+            <h3><?php echo __('Latest Event', 'dgw') ?></h3>
         </div>
         <div class="title-news" onclick="ChangSelect('.title-news', '.content-news')">
-            <h3><?php _e('News Center') ?></h3>
+            <h3><?php echo __('News Center', 'dgw') ?></h3>
         </div>
         <div class="title-article" onclick="ChangSelect('.title-article', '.content-article')">
-            <h3><?php _e('Column Article') ?></h3>
+            <h3><?php echo __('Column Article', 'dgw') ?></h3>
         </div>
         <div class="title-cases" onclick="ChangSelect('.title-cases', '.content-cases')">
-            <h3><?php _e('Classic Case') ?></h3>
+            <h3><?php echo __('Classic Case', 'dgw') ?></h3>
         </div>
         <div class="title-download" onclick="ChangSelect('.title-download', '.content-download')">
-            <h3><?php _e('Information Request') ?></h3>
+            <h3><?php echo __('Information Request', 'dgw') ?></h3>
         </div>
     </div>
 
@@ -42,7 +42,7 @@
                 ?>
             </div>
             <a class="content-more my-link" href="<?php echo home_url('activities') ?>">
-                <i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?></a>
+                <i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
         </div>
 
         <div class="content-news">
@@ -68,7 +68,7 @@
                 ?>
             </div>
             <!-- 69 is category ID -->
-            <a class="content-more my-link" href="<?php echo home_url('resource/cate/69/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('resource/cate/69/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
         </div>
 
         <div class="content-article">
@@ -94,7 +94,7 @@
                 ?>
             </div>
             <!-- 70 is category ID -->
-            <a class="content-more my-link" href="<?php echo home_url('resource/cate/105/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('resource/cate/105/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
 
         </div>
 
@@ -120,7 +120,7 @@
              
                 ?>
             </div>
-            <a class="content-more my-link" href="<?php echo home_url('cases') ?>"><i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('cases') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
 
         </div>
 
@@ -148,7 +148,7 @@
             </div>
             <!-- 104 is category ID -->
             <a class="content-more my-link" href="<?php echo home_url('resource/cate/104/tag/') ?>">
-                <i class="fas fa-chevron-circle-right"></i> <?php _e('Read More') ?>
+                <i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?>
             </a>
         </div>
     </div>

@@ -12,7 +12,7 @@ class Metabox_source
     public function create()
     {
         $id = 'admin-metabox-source';
-        $title = __('Google Drive file download link');
+        $title = __('Google Drive file download link', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('resources',));
     }

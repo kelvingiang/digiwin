@@ -1,55 +1,67 @@
 <?php
 require_once(DIR_MODEL . 'model-logo-function.php');
+$data = array();
 if (!empty(getParams('id'))) {
     $model = new Model_Logo_Function();
     $data = $model->getItem(getParams('id'));
-    $company =  $data['company'] ?? null;
-    $link =  $data['link'] ?? null;
 }
+$ID      =  $data['ID'] ?? null;
+$img      =  $data['img'] ?? null;
+$company =  $data['company'] ?? null;
+$link    =  $data['link'] ?? null;
 ?>
 <form name="f1" id="f1" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="hid-id" id="hid-id" value="<?php echo $data['ID'] ?>" />
-    <input type="hidden" name="hid-img" id="hid-img" value="<?php echo $data['img'] ?>" />
-    <div>
+    <input type="hidden" name="hid-id" id="hid-id" value="<?php echo $ID ?>" />
+    <input type="hidden" name="hid-img" id="hid-img" value="<?php echo $img ?>" />
+    <div style="margin-top:1rem">
         <div class="row-two-column">
 
             <div class="col">
                 <div class="cell-title">
-                    <label> 公司名稱 </label>
+                    <label> <?php echo __('Company Name', 'dgw') ?> </label>
                 </div>
                 <div class="cell-text">
-                    <input type="text" name="txt-company" id="txt-company" class="my-input" value="<?php echo $company ?>" required />
+                    <input type="text" name="txt-company"
+                        id="txt-company"
+                        class="my-input"
+                        value="<?php echo $company ?>"
+                        required />
                 </div>
             </div>
 
             <div class="col">
                 <div class="cell-title">
-                    <label> 文件連接 </label>
+                    <label> <?php echo __('Link', 'dgw') ?> </label>
                 </div>
                 <div class="cell-text">
-                    <input type="text" name="txt-link" id="txt-link" class="my-input" value="<?php echo $link ?>" />
+                    <input type="text" name="txt-link"
+                        id="txt-link"
+                        class="my-input"
+                        value="<?php echo $link ?>" />
                 </div>
             </div>
         </div>
 
-        <div class="row-four-column" style="height: 250px;">
+        <div class="row-four-column" style="height: 250px; margin-top:2rem">
             <div class="col">
                 <div class="cell-title">
-                    <label>商標 <i class="error"> <?php echo getParams('e') ?> </i></label>
+                    <label><?php echo __('Trademark', 'dgw') ?> <i class="error"> <?php echo getParams('e') ?> </i></label>
                 </div>
                 <div class="cell-text">
                     <input type="file" name="file-logo" id="file-logo" accept="image/*" class="my-input" />
                 </div>
             </div>
             <div class="col">
-                <div id="show-img" style=" background-image: url('<?php echo PART_IMAGES . 'logo/' . $data['img'] ?>');">
+                <div id="show-img" style=" background-image: url('<?php echo PART_IMAGES . 'logo/' . $img ?>');">
                 </div>
             </div>
             <div class="col"></div>
         </div>
-         
+
         <div class="button-row">
-            <button type="submit" name="btn-save" id="btn-save" class="button button-primary button-large"> 發佈</button>
+            <button type="submit" name="btn-save" id="btn-save" class="button button-primary button-large">
+                <?php echo __('Submit', 'dgw') ?>
+            </button>
         </div>
     </div>
 </form>

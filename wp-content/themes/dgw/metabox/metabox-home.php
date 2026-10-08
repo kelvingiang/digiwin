@@ -12,7 +12,7 @@ class Metabox_Home
     public function create()
     {
         $id = 'admin-metabox-home';
-        $title = __('Show In Home Page');
+        $title = __('Show In Home Page', 'dgw');
         $callback = array($this, 'display');
         $screens =  array('post', 'resources', 'solutions', 'casestudies', 'active', 'services', 'industries');
         foreach ($screens as $screen) {
@@ -39,7 +39,7 @@ class Metabox_Home
             <div class="col">
                 <div class="title-cell">
                     <input type="checkbox" id="ckd-show" name="ckd-show" <?php checked($checked, 1); ?> />
-                    <label style="margin-right: 15px"><?php echo __('Show In Home Page'); ?></label>
+                    <label style="margin-right: 15px"><?php echo __('Show In Home Page', 'dgw'); ?></label>
                 </div>
             </div>
         </div>

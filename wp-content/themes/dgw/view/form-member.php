@@ -29,6 +29,11 @@ if (!empty(getParams('id'))) {
 ?>
 
 <div style="margin-top: 3rem;">
+    <div>
+        <h2>
+            <?php echo __('Download Data','dgw') ?>
+        </h2>
+    </div>
     <div class="row-four-column">
 
         <div class="col">

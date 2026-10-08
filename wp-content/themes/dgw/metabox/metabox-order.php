@@ -12,7 +12,7 @@ class Metabox_Order
     public function create()
     {
         $id = 'admin-metabox-order';
-        $title = __('Show Order');
+        $title = __('Show Order', 'dgw');
         $callback = array($this, 'display');
         $screens  = array('post', 'slider', 'joinus', 'solutions', 'services', 'industries', 'active', 'resources', 'downloads', 'casestudies', 'advertising'); // CAC POST VA CUSTOMER POST CHO PHEP METABOX NAY HIEN THI
         foreach ($screens as $screen) {
@@ -39,7 +39,7 @@ class Metabox_Order
         <div class="row-four-column">
             <div class="col">
                 <div class="cell-text">
-                    <input type="text" id="metabox-order" name="metabox-order" class='type-number my-input' maxlength='5' placeholder=' <?php _e('The larger the number will show in front') ?>' value="<?php echo get_post_meta($post->ID, '_metabox_order', true); ?>" />
+                    <input type="text" id="metabox-order" name="metabox-order" class='type-number my-input' maxlength='5' placeholder=' <?php __('The larger the number will show in front', 'dgw') ?>' value="<?php echo get_post_meta($post->ID, '_metabox_order', true); ?>" />
                 </div>
             </div>
         </div>

@@ -46,11 +46,11 @@ class Model_Member extends WP_List_Table {
     public function get_columns() {
         $arr = array(
             'cb' => '<input type="checkbox" />',
-            'company' => __('Company '),
-            'description' => __('Description'),
-            'use_soft' => __('Softwear'),
-            'career' => __('Career'),
-            'create_date' => __('Create Date'),
+            'company' => __('Company ', 'dgw'),
+            'description' => __('Description', 'dgw'),
+            'use_soft' => __('Softwear', 'dgw'),
+            'career' => __('Career', 'dgw'),
+            'create_date' => __('Create Date', 'dgw'),
         );
         return $arr;
     }
@@ -136,17 +136,17 @@ class Model_Member extends WP_List_Table {
 //All link
         $class = ($current == 'all' ? ' class="current"' : '');
         $all_url = remove_query_arg('customvar');
-        $views['all'] = "<strong>" . __('All') . " (" . $this->total_list() . ")</strong>";
+        $views['all'] = "<strong>" . __('All', 'dgw') . " (" . $this->total_list() . ")</strong>";
 
 //Foo link
         $foo_url = add_query_arg('customvar', 'published');
         $class = ($current == 'foo' ? ' class="current"' : '');
-        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published') . " (" . $this->total_publish() . ")</a>";
+        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published', 'dgw') . " (" . $this->total_publish() . ")</a>";
 
 //Bar link
         $bar_url = add_query_arg('customvar', 'trash');
         $class = ($current == 'bar' ? ' class="current"' : '');
-        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash') . "(" . $this->total_trash() . ")</a>";
+        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash', 'dgw') . "(" . $this->total_trash() . ")</a>";
 
         return $views;
     }
@@ -155,12 +155,12 @@ class Model_Member extends WP_List_Table {
     public function get_bulk_actions() {
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => __('Restore'),
-                'delete' => __('Delete Permanently')
+                'restore' => __('Restore', 'dgw'),
+                'delete' => __('Delete Permanently', 'dgw')
             );
         } else {
             $actions = array(
-                'trash' => __('Trash'),
+                'trash' => __('Trash', 'dgw'),
             );
         }
         return $actions;
@@ -179,13 +179,13 @@ class Model_Member extends WP_List_Table {
 
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore') . '</a>',
-                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently') . ' </a>',
+                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore', 'dgw') . '</a>',
+                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently', 'dgw') . ' </a>',
             );
         } else {
             $actions = array(
-                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit') . '</a>',
-                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash') . '</a>',
+                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit', 'dgw') . '</a>',
+                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash', 'dgw') . '</a>',
             );
         }
         $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['company'] . '</a> </strong>' . $this->row_actions($actions);

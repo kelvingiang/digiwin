@@ -12,7 +12,7 @@ class Metabox_Industries
     public function create()
     {
         $id = 'admin-metabox-service';
-        $title = __('Industries');
+        $title = __('Industries', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('industries',));
     }
@@ -27,7 +27,7 @@ class Metabox_Industries
         <div class="clear"></div>
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('管理挑戰') ?></label>
+                <label><?php __('Management Challenges', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <?php wp_editor(get_post_meta($post->ID, '_industry_challenge', true), 'txt-challenge', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -36,7 +36,7 @@ class Metabox_Industries
 
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('解決方案') ?></label>
+                <label><?php __('Solution', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <?php wp_editor(get_post_meta($post->ID, '_industry_solution', true), 'txt-solution', array('wpautop' => false, 'editor_height' => '300px')) ?>

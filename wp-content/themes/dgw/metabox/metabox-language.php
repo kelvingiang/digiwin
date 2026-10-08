@@ -12,7 +12,7 @@ class Metabox_Language
     public function create()
     {
         $id = 'admin-metabox-langguage';
-        $title = __('Langguage');
+        $title = __('Language', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('post', 'joinus', 'solutions', 'services', 'industries', 'active', 'casestudies', 'resources', 'downloads', 'advertising', 'slider'));
     }
@@ -26,22 +26,22 @@ class Metabox_Language
         <div class="meta-row-two">
             <div class="col">
                 <!-- <div class="cell-title">
-                    <label style="margin-right: 15px"><?php //echo __('Choice Language'); ?></label>
+                    <label style="margin-right: 15px"><?php //echo __('Choice Language', 'dgw'); ?></label>
                 </div> -->
                 <div class="cell-text radio-space">
                     <?php $check = get_post_meta($post->ID, '_metabox_langguage', TRUE) ?>
                     <div>
                         <input type="radio" id="radio-cn" name="radio-lang" value="cn" <?php echo $check == 'cn' ? 'checked' : '' ?> checked />
-                        <label><?php _e('Chinese') ?></label>
+                        <label><?php echo  __('Chinese', 'dgw') ?></label>
                     </div>
                     <div>
                         <input type="radio" id="radio-vn" name="radio-lang" value="vn" <?php echo $check == 'vn' ? 'checked' : '' ?> />
-                        <label><?php _e('Vietnamese') ?></label>
+                        <label><?php echo __('Vietnamese', 'dgw') ?></label>
                     </div>
-                    <div>
+                    <!-- <div>
                         <input type="radio" id="radio-en" name="radio-lang" value="en" <?php echo $check == 'en' ? 'checked' : '' ?> />
-                        <label><?php _e('English') ?></label>
-                    </div>
+                        <label><?php //__('English', 'dgw') ?></label>
+                    </div> -->
                 </div>
             </div>
         </div>

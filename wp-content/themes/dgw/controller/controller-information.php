@@ -1,22 +1,25 @@
 <?php
 
-class Controller_Company_Information {
+class Controller_Company_Information
+{
 
     private $model;
 
-    public function __construct() {
+    public function __construct()
+    {
         add_action('admin_menu', array($this, 'create'));
         //  $this->model = new Model_Member_Function();
     }
 
-    public function create() {
-// THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
-        $page_title = __('Company Information'); // TIEU DE CUA TRANG
-        $menu_title = __('Company Information');  // TEN HIEN TRONG MENU
-// CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
+    public function create()
+    {
+        // THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
+        $page_title = __('Company Information', 'dgw'); // TIEU DE CUA TRANG
+        $menu_title = __('Company Information', 'dgw');  // TEN HIEN TRONG MENU
+        // CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
         $capability = 'manage_categories'; // QUYEN TRUY CAP DE THAY MENU NAY
         $menu_slug = 'information_page'; // TEN slug TEN DUY NHAT KO DC TRUNG VOI TRANG KHAC GAN TREN THANH DIA CHI OF MENU
-// THAM SO THU 5 GOI DEN HAM HIEN THI GIAO DIEN TRONG MENU
+        // THAM SO THU 5 GOI DEN HAM HIEN THI GIAO DIEN TRONG MENU
         $icon = PART_ICON . 'icon-setting.png';  // THAM SO THU 6 LA LINK DEN ICON DAI DIEN
         $position = 2; // VI TRI HIEN THI TRONG MENU
 
@@ -25,17 +28,19 @@ class Controller_Company_Information {
 
     /* PHAN DIEN HUONG CHO  CAC ACTION ============================ */
 
-    public function dispatchActive() {
+    public function dispatchActive()
+    {
 
         $action = getParams('action');
         switch ($action) {
-            default :
+            default:
                 $this->displayPage();
                 break;
         }
     }
 
-    public function createUrl() {
+    public function createUrl()
+    {
         echo $url = 'admin.php?page=' . getParams('page');
 
         if (getParams('filter_category') != '0') {
@@ -48,7 +53,8 @@ class Controller_Company_Information {
         return $url;
     }
 
-    public function displayPage() {
+    public function displayPage()
+    {
         if (getParams('action') == -1) {
             $url = $this->createUrl();
             wp_redirect($url);
@@ -58,6 +64,10 @@ class Controller_Company_Information {
             update_post_meta(1, '_info_phone', $_POST['txt-phone']);
             update_post_meta(1, '_info_fax', $_POST['txt-fax']);
             update_post_meta(1, '_info_email', $_POST['txt-email']);
+
+            update_post_meta(1, '_info_years_experience', $_POST['txt-years-experience']);
+            update_post_meta(1, '_info_project_clients', $_POST['txt-project-clients']);
+            update_post_meta(1, '_info_product_solution', $_POST['txt-product-solution']);
 
             update_post_meta(1, '_info_name_cn', $_POST['txt-name-cn']);
             update_post_meta(1, '_info_address_cn', $_POST['txt-address-cn']);
@@ -71,13 +81,12 @@ class Controller_Company_Information {
             update_post_meta(1, '_info_operating_vn', $_POST['txt-operating-vn']);
             update_post_meta(1, '_info_location_vn', $_POST['txt-location-vn']);
 
-            update_post_meta(1, '_info_name_en', $_POST['txt-name-en']);
-            update_post_meta(1, '_info_address_en', $_POST['txt-address-en']);
-            update_post_meta(1, '_info_summary_en', $_POST['txt-summary-en']);
-            update_post_meta(1, '_info_operating_en', $_POST['txt-operating-en']);
-            update_post_meta(1, '_info_location_en', $_POST['txt-location-en']);
+            // update_post_meta(1, '_info_name_en', $_POST['txt-name-en']);
+            // update_post_meta(1, '_info_address_en', $_POST['txt-address-en']);
+            // update_post_meta(1, '_info_summary_en', $_POST['txt-summary-en']);
+            // update_post_meta(1, '_info_operating_en', $_POST['txt-operating-en']);
+            // update_post_meta(1, '_info_location_en', $_POST['txt-location-en']);
         }
-        require_once (DIR_VIEW . 'view-information.php');
+        require_once(DIR_VIEW . 'view-information.php');
     }
-
 }

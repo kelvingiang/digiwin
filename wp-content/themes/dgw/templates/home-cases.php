@@ -1,4 +1,4 @@
-<h2 class="h2-home-title"><?php _e('Enterprise model success case') ?></h2>
+<h2 class="h2-home-title"><?php echo __('Enterprise model success case', 'dgw') ?></h2>
 <div id="casestudies-slider" style="background-color:transparent;">
     <div class="owl-carousel owl-theme">
         <?php

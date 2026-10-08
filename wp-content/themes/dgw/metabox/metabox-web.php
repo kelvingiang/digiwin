@@ -9,7 +9,7 @@ class Metabox_Web_FreeBook {
 
     public function create() {
         $id = 'admin-metabox-web';
-        $title = __('Web Site And FreeBook');
+        $title = __('Web Site And FreeBook', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('advertising',));
     }
@@ -22,7 +22,7 @@ class Metabox_Web_FreeBook {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('Web Site') ?></label>
+                    <label><?php __('Web Site', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-web" id="txt-web" class="my-input"
@@ -33,7 +33,7 @@ class Metabox_Web_FreeBook {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('Free Book') ?></label>
+                    <label><?php __('Free Book', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-freebook" id="txt-freebook" class="my-input"

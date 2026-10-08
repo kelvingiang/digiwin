@@ -1,4 +1,4 @@
-<!-- <h2 class="h2-home-title"><?php //_e('Enterprise model success case') 
+<!-- <h2 class="h2-home-title"><?php //__('Enterprise model success case', 'dgw') 
                                 ?>22</h2> -->
 <div class="case-logo">
     <?php

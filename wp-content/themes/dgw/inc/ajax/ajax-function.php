@@ -141,35 +141,7 @@ function plus_one_like()
     ));
 }
 
-// 註冊 AJAX 動作 (登入者與訪客皆可使用)
-add_action('wp_ajax_change_languages', 'change_languages');
-add_action('wp_ajax_nopriv_change_languages', 'change_languages');
-
-function change_languages()
-{
-    $response = ['status' => 'error'];
-
-    if (!empty($_POST['type'])) {
-        // 邏輯判斷
-        $lang = ($_POST['type'] === 'cn') ? 'cn' : 'vn';
-
-        // 設定 Cookie (使用 WordPress 內建常數)
-        setcookie(
-            'site_lang',
-            $lang,
-            time() + YEAR_IN_SECONDS,
-            '/'
-        );
-
-        // 確保當前請求也能讀取到
-        $_COOKIE['site_lang'] = $lang;
-
-        $response = ['status' => 'ok', 'current_lang' => $lang];
-    }
-
-    // 發送 JSON 並結束執行
-    wp_send_json($response);
-}
+// [2026-10-06] - Đã chuyển chức năng change_languages AJAX sang file inc/ajax/ajax-language.php để quản lý tập trung và tránh trùng lặp hook.
 
 // AJAX 驗證混合題
 add_action('wp_ajax_check_math_captcha', 'check_math_captcha');

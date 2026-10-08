@@ -30,7 +30,7 @@
                        DIGITAL TRANSFORMATION PARTNER
                    </div>
 
-                   <h3><?php _e('Office In VietNam') ?> </h3>
+                   <h3><?php echo __('Office In VietNam', 'dgw') ?> </h3>
                    <ul class='footer-list'>
                        <li>
                            <label>
@@ -62,14 +62,14 @@
                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:20px; height:20px">
                                <path d="M341.9 38.1C328.5 29.9 311.6 29.9 298.2 38.1C273.8 53 258.7 57 230.1 56.4C214.4 56 199.8 64.5 192.2 78.3C178.5 103.4 167.4 114.5 142.3 128.2C128.5 135.7 120.1 150.4 120.4 166.1C121.1 194.7 117 209.8 102.1 234.2C93.9 247.6 93.9 264.5 102.1 277.9C117 302.3 121 317.4 120.4 346C120 361.7 128.5 376.3 142.3 383.9C164.4 396 175.6 406 187.4 425.4L138.7 522.5C132.8 534.4 137.6 548.8 149.4 554.7L235.4 597.7C246.9 603.4 260.9 599.1 267.1 587.9L319.9 492.8L372.7 587.9C378.9 599.1 392.9 603.5 404.4 597.7L490.4 554.7C502.3 548.8 507.1 534.4 501.1 522.5L452.5 425.3C464.2 405.9 475.5 395.9 497.6 383.8C511.4 376.3 519.8 361.6 519.5 345.9C518.8 317.3 522.9 302.2 537.8 277.8C546 264.4 546 247.5 537.8 234.1C522.9 209.7 518.9 194.6 519.5 166C519.9 150.3 511.4 135.7 497.6 128.1C472.5 114.4 461.4 103.3 447.7 78.2C440.2 64.4 425.5 56 409.8 56.3C381.2 57 366.1 52.9 341.7 38zM320 160C373 160 416 203 416 256C416 309 373 352 320 352C267 352 224 309 224 256C224 203 267 160 320 160z" />
                            </svg>
-                           <?php _e('Awards & Certificates') ?>
+                           <?php echo __('Awards & Certificates', 'dgw') ?>
                        </a>
                    </div>
 
                    <div class="download-link">
                        <label class="download-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z" />
-                           </svg><?php _e('Free Resources for Businesses') ?>
+                           </svg><?php echo __('Free Resources for Businesses', 'dgw') ?>
                        </label>
 
                        <a href="<?php echo $link_download ?>">
@@ -77,21 +77,21 @@
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:20px; height:20px">
                                    <path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L208 576L208 464C208 428.7 236.7 400 272 400L448 400L448 234.5C448 217.5 441.3 201.2 429.3 189.2L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM272 444C261 444 252 453 252 464L252 592C252 603 261 612 272 612C283 612 292 603 292 592L292 564L304 564C337.1 564 364 537.1 364 504C364 470.9 337.1 444 304 444L272 444zM304 524L292 524L292 484L304 484C315 484 324 493 324 504C324 515 315 524 304 524zM400 444C389 444 380 453 380 464L380 592C380 603 389 612 400 612L432 612C460.7 612 484 588.7 484 560L484 496C484 467.3 460.7 444 432 444L400 444zM420 572L420 484L432 484C438.6 484 444 489.4 444 496L444 560C444 566.6 438.6 572 432 572L420 572zM508 464L508 592C508 603 517 612 528 612C539 612 548 603 548 592L548 548L576 548C587 548 596 539 596 528C596 517 587 508 576 508L548 508L548 484L576 484C587 484 596 475 596 464C596 453 587 444 576 444L528 444C517 444 508 453 508 464z" />
                                </svg>
-                               <?php _e('Download 2026 Digital Transformation Whitepaper') ?>
+                               <?php echo __('Download 2026 Digital Transformation Whitepaper', 'dgw') ?>
                            </div>
                        </a>
                    </div>
                </div>
 
                <div>
-                   <h3 class="h3-title dot-title"><?php _e('Solutions & Industries') ?> </h3>
+                   <h3 class="h3-title dot-title"><?php __('Solutions & Industries', 'dgw') ?> </h3>
                    <ul class='footer-list article-link'>
                        <li>
                            <a href="<?php echo WP_HOME . '/solution/cate/53/tag/' ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
-                               <?php _e('System Administration (ERP)') ?>
+                               <?php echo __('System Administration (ERP)', 'dgw') ?>
                            </a>
                        </li>
 
@@ -100,7 +100,7 @@
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
-                               <?php _e('Production Management (MES)') ?>
+                               <?php echo __('Production Management (MES)', 'dgw') ?>
                            </a>
                        </li>
 
@@ -109,7 +109,7 @@
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
-                               <?php _e('Smart Warehouse (WMS)') ?>
+                               <?php echo __('Smart Warehouse (WMS)', 'dgw') ?>
                            </a>
                        </li>
 
@@ -118,7 +118,7 @@
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
-                               <?php _e('Digital Transformation in the Plastics Industry') ?>
+                               <?php echo __('Digital Transformation in the Plastics Industry', 'dgw') ?>
                            </a>
                        </li>
 
@@ -127,7 +127,7 @@
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
-                               <?php _e('Case Studies') ?>
+                               <?php echo __('Case Studies', 'dgw') ?>
                            </a>
                        </li>
 
@@ -135,7 +135,7 @@
                </div>
 
                <div>
-                   <h3 class="h3-title dot-title"><?php _e('contact') ?> </h3>
+                   <h3 class="h3-title dot-title"><?php __('contact', 'dgw') ?> </h3>
                    <ul class='footer-list contact-list'>
                        <li>
                            <div>
@@ -181,7 +181,7 @@
 
 
                <div class="social-link">
-                   <h3 class="h3-title"><?php _e('Zalo OA Community') ?> </h3>
+                   <h3 class="h3-title"><?php __('Zalo OA Community', 'dgw') ?> </h3>
                    <ul class='footer-list'>
                        <li>
                            <a href="https://zalo.me/digiwinsoftvietnam" target="_blank">
@@ -189,7 +189,7 @@
                            </a>
                        </li>
                        <li class="zalo-text">
-                           <?php _e('Scan to join Zalo OA & get the latest industry reports') ?>
+                           <?php __('Scan to join Zalo OA & get the latest industry reports', 'dgw') ?>
                        </li>
                        <li class="icon-link">
                            <a href="<?php echo $lang === 'vn'

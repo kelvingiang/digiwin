@@ -18,7 +18,8 @@ function my_custom_comment($comment, $args, $depth)
             <div class="comment-reply">
                 <?php
                 comment_reply_link(array_merge($args, array(
-                    'reply_text' => __('Reply', 'dwg'),      // 🔹顯示的文字
+                    // [2026-10-06] - Sửa textdomain từ 'dwg' sang 'dgw' chuẩn i18n
+                    'reply_text' => __('Reply', 'dgw'),      // 🔹顯示的文字
                     'depth' => $depth,            // 🔹必要參數：目前留言層級
                     'max_depth' => $args['max_depth'], // 🔹最大層級
                     'class' => 'comment-reply-link reply' // ✅ 加上你要的 class

@@ -5,7 +5,7 @@
     <div class="row-two-column">
         <div class="col">
             <div class="cell-title">
-                <label><?php _e('首次加載') ?></label>
+                <label><?php  echo __('First load', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <input type="text" 
@@ -17,7 +17,7 @@
         </div>
         <div class="col">
             <div class="cell-title">
-                <label><?php _e('更多加載') ?></label>
+                <label><?php echo __('More loading', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <input type="text" 
@@ -33,7 +33,7 @@
 
  
     <div class="button-row">
-        <input type="submit" name="btn-submit" id="btn-submit" class="button button-primary button-large" value="<?php echo _e('Submit') ?>"/>
+        <input type="submit" name="btn-submit" id="btn-submit" class="button button-primary button-large" value="<?php echo __('Submit', 'dgw') ?>"/>
     </div>
 </form>
 

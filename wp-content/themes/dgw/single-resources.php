@@ -6,7 +6,7 @@ $cate_ID = (!is_wp_error($cate) && !empty($cate)) ? $cate[0]->term_id : 0;;
 $source = get_post_meta($post_id, '_metabox_source', true);
 ?>
 <div class="page-title-h1">
-    <h1><?php echo __('resource') ?></h1>
+    <h1><?php echo __('resource', 'dgw') ?></h1>
 </div>
 <div class="menu-sub"></div>
 <div id="single-row">

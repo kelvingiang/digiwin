@@ -1,5 +1,5 @@
 <div class="side-list-title">
-    <?php _e('cases') ?>
+    <?php __('cases', 'dgw') ?>
 </div>
 <div class="side-list">
     <?php

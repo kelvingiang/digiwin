@@ -12,7 +12,7 @@ class Metabox_View
     public function create()
     {
         $id = 'admin-metabox-web';
-        $title =  __('View') .' - '.  __('Like');
+        $title =  __('View', 'dgw') .' - '.  __('Like', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('post','solutions','services','industries','active','resources','casestudies','joinus'));
     }
@@ -26,7 +26,7 @@ class Metabox_View
         <div class="row-three-column">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('View') ?></label>
+                    <label><?php echo __('View', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-view" id="txt-view" class="my-input type-number"
@@ -35,7 +35,7 @@ class Metabox_View
             </div>
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('Like') ?></label>
+                    <label><?php echo __('Like', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-like" id="txt-like" class="my-input type-number"
@@ -44,7 +44,7 @@ class Metabox_View
             </div>
             <!-- <div class="col">
                 <div class="cell-title">
-                    <label><?php //_e('Comment') ?></label>
+                    <label><?php //__('Comment', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-comment" id="txt-comment" class="my-input type-number"

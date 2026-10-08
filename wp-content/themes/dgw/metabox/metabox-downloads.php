@@ -9,7 +9,7 @@ class Metabox_Download {
 
     public function create() {
         $id = 'admin-metabox-download';
-        $title = __('Data Download');
+        $title = __('Data Download', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('downloads',));
     }
@@ -24,7 +24,7 @@ class Metabox_Download {
 
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('Upload File') ?> <i style="margin-left: 3rem; font-size: 0.8rem; color: #ccc"> 目前檔案 ： <?php echo get_post_meta($post->ID, _download_file, true); ?></i></label>
+                <label><?php __('Upload File', 'dgw') ?> <i style="margin-left: 3rem; font-size: 0.8rem; color: #ccc"> 目前檔案 ： <?php echo get_post_meta($post->ID, _download_file, true); ?></i></label>
             </div>
             <div class="cell-text" style="margin: 2rem">
                 <input type="file" name="file_upload"  id="file_upload" />

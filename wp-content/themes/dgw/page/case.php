@@ -9,7 +9,7 @@
     <?php pageImg(get_the_ID());?>
 </div>
 <div class="page-title-h1">
-    <h1><?php echo __('cases') ?></h1> 
+    <h1><?php echo __('cases', 'dgw') ?></h1> 
 </div>
 <div class="menu-sub">
     <?php

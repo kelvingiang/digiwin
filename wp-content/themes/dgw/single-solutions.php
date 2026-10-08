@@ -3,7 +3,7 @@ $cate =  wp_get_post_terms(get_the_ID(), 'solutions_category');
 $cate_ID = $cate[0]->term_id;
 ?>
 <div class="page-title-h1">
-    <h1><?php echo __('solution') ?></h1> 
+    <h1><?php echo __('solution', 'dgw') ?></h1> 
 </div>
 <div class="menu-sub"></div>
 <div id="single-row">
