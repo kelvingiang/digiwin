@@ -42,7 +42,7 @@
                 ?>
             </div>
             <a class="content-more my-link" href="<?php echo home_url('activities') ?>">
-                <i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
+                <i class="fas fa-chevron-circle-right"></i> <?php echo __('Read More', 'dgw') ?></a>
         </div>
 
         <div class="content-news">
@@ -68,7 +68,7 @@
                 ?>
             </div>
             <!-- 69 is category ID -->
-            <a class="content-more my-link" href="<?php echo home_url('resource/cate/69/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('resource/cate/69/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php echo __('Read More', 'dgw') ?></a>
         </div>
 
         <div class="content-article">
@@ -94,7 +94,7 @@
                 ?>
             </div>
             <!-- 70 is category ID -->
-            <a class="content-more my-link" href="<?php echo home_url('resource/cate/105/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('resource/cate/105/tag/') ?>"><i class="fas fa-chevron-circle-right"></i> <?php echo __('Read More', 'dgw') ?></a>
 
         </div>
 
@@ -120,7 +120,7 @@
              
                 ?>
             </div>
-            <a class="content-more my-link" href="<?php echo home_url('cases') ?>"><i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?></a>
+            <a class="content-more my-link" href="<?php echo home_url('cases') ?>"><i class="fas fa-chevron-circle-right"></i> <?php echo __('Read More', 'dgw') ?></a>
 
         </div>
 
@@ -148,7 +148,7 @@
             </div>
             <!-- 104 is category ID -->
             <a class="content-more my-link" href="<?php echo home_url('resource/cate/104/tag/') ?>">
-                <i class="fas fa-chevron-circle-right"></i> <?php __('Read More', 'dgw') ?>
+                <i class="fas fa-chevron-circle-right"></i> <?php echo __('Read More', 'dgw') ?>
             </a>
         </div>
     </div>

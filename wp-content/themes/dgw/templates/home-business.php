@@ -1,4 +1,4 @@
-<h1 class="h2-home-title"><?php echo __('Corporate management focus', 'dgw') ?></h1>
+<h2 class="h2-home-title"><?php echo __('Corporate management focus', 'dgw') ?></h2>
 <div id="business-home">
     <?php
     $wp_query = getCustomPostAtHome('resources', 4);

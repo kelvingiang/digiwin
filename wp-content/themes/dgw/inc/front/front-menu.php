@@ -50,6 +50,8 @@ function menu_main_list()
             'name'  => __('Case Studies', 'dgw'),
             'class' => 'menu-main-item',
             'data'  => 'cases',
+            'subClass' => 'menu-main-sub-1',
+            'sub'      => function_exists('getCategories') ? getCategories('casestudies_category') : array(),
         ),
         'solution' => array(
             'name'     => __('Solutions', 'dgw'),

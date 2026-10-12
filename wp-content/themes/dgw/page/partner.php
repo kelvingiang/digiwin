@@ -1,8 +1,8 @@
 <?php
 /**
- * Date: 2026-08-24
+ * [2026-10-12] - @author: Kelvin
  * Template Name: Partner Page
- * Description: Custom template for Partner Page
+ * Description: Tối ưu bảo mật (Late Escaping/Sanitize), chuẩn posts_per_page và load more 60fps qua requestAnimationFrame
  */
 get_header(); ?>
 
@@ -10,7 +10,7 @@ get_header(); ?>
     <?php pageImg(get_the_ID()); ?>
 </div>
 <div class="page-title-h1">
-    <h1><?php echo __('distribution', 'dgw') ?></h1>
+    <h1><?php echo esc_html__('distribution', 'dgw'); ?></h1>
 </div>
 <div class="menu-sub">
 </div>
@@ -19,18 +19,17 @@ get_header(); ?>
     <div class='data-list'>
         <?php
         global $wp;
-        $postCount = get_option('first_load');
-        // $cate = '98';
+        // [2026-10-12] - @author: Kelvin - Lấy số lượng bài viết từ Cài đặt > Đọc (posts_per_page) trong WP Admin
+        $postCount = (int) get_option('posts_per_page', 10);
         $postType = 'joinus';
         $tax = 'joinus_category';
-        // L廕句 object term th繫ng qua slug (v穩 d廙?slug l? 'tuyen-dung')
         $term = get_term_by('slug', 'distribution', $tax);
+        $cate = '';
 
         if ($term) {
-            $cate = $term->term_id; // T廙??廙g l廕句 ID tng 廙姊g (98 ho廕搾 115)
+            $cate = $term->term_id;
             getCustomsPostByCate($postType, $cate, $postCount, $tax);
         }
-        // getCustomsPostByCate($postType, $cate, $postCount, $tax);
         ?>
     </div>
     <div id="load-more">
@@ -40,32 +39,36 @@ get_header(); ?>
     </div>
 </div>
 <script>
-    jQuery(document).ready(function() {
+    // [2026-10-12] - @author: Kelvin - Xử lý tải thêm Partners khi cuộn chuột mượt mà 60fps qua requestAnimationFrame
+    jQuery(document).ready(function($) {
         var isLoading = false;
         var hasMore = true;
+        var isTicking = false;
+        var $loadMore = $('#load-more');
 
-        jQuery('#load-more').hide();
+        $loadMore.hide();
 
-        function loadMoreCases() {
+        var post = '<?php echo esc_js($postType); ?>';
+        var cateID = '<?php echo esc_js(!empty($cate) ? $cate : ''); ?>';
+        var count = '<?php echo esc_js(get_option('more_load') ?: get_option('posts_per_page', 10)); ?>';
+        var cate = '<?php echo esc_js($tax); ?>';
+        var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+
+        function loadMorePartners() {
             if (isLoading || !hasMore) return;
 
-            var lastItem = jQuery(".data-list > div:last-child");
-            if (lastItem.length === 0) return;
+            var $lastItem = $(".data-list > div:last-child");
+            if ($lastItem.length === 0) return;
 
-            var scrollBottom = jQuery(window).scrollTop() + jQuery(window).height();
-            var lastItemBottom = lastItem.offset().top + lastItem.outerHeight();
+            var scrollBottom = $(window).scrollTop() + $(window).height();
+            var lastItemBottom = $lastItem.offset().top + $lastItem.outerHeight();
 
             if (scrollBottom >= lastItemBottom - 50) {
                 isLoading = true;
+                var lastID = $lastItem.attr("data-id");
 
-                var lastID = lastItem.attr("data-id");
-                var post = 'joinus';
-                var cateID = '<?php echo $cate ?>';
-                var count = '<?php echo get_option('more_load') ?>';
-                var cate = 'joinus_category';
-
-                jQuery.ajax({
-                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                $.ajax({
+                    url: ajaxUrl,
                     type: 'post',
                     data: {
                         action: 'load_more_posts',
@@ -78,30 +81,37 @@ get_header(); ?>
                     dataType: 'json',
                     beforeSend: function() {
                         var spinner = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite; display: inline-block;"><style>@keyframes spin { 100% { transform: rotate(360deg); } }</style><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>';
-                        jQuery('#load-more').show().html('<p style="text-align:center; margin:10px 0;">' + spinner + '</p>');
+                        $loadMore.show().html('<p style="text-align:center; margin:10px 0;">' + spinner + '</p>');
                     },
                     success: function(data) {
-                        if (data.status === 'done') {
-                            jQuery(".data-list").append(data.html);
+                        if (data && data.status === 'done') {
+                            $(".data-list").append(data.html);
                             isLoading = false;
-                            jQuery('#load-more').hide();
-                        } else if (data.status === 'empty') {
+                            $loadMore.hide();
+                        } else if (data && data.status === 'empty') {
                             hasMore = false;
-                            jQuery("#load-more").hide();
+                            $loadMore.hide();
                         }
                     },
                     error: function(xhr) {
-                        console.log(xhr.responseText);
+                        console.error(xhr.responseText);
                         isLoading = false;
-                        jQuery('#load-more').hide();
+                        $loadMore.hide();
                     }
                 });
             }
         }
 
-        jQuery(window).scroll(function() {
-            loadMoreCases();
+        $(window).on('scroll', function() {
+            if (!isTicking) {
+                window.requestAnimationFrame(function() {
+                    loadMorePartners();
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
         });
     });
 </script>
+
 <?php get_footer(); ?>

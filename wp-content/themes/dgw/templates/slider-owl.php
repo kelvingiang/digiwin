@@ -1,102 +1,100 @@
 <?php
+
+/**
+ * [2026-10-09] - @author: Kelvin
+ * Chức năng: Template hiển thị Hero Slider banner trang chủ (Owl Carousel).
+ * - Fix N+1 Query: Bật update_post_meta_cache để gom nhóm truy vấn metadata.
+ * - Sửa orderby: 'meta_value_num' để sắp xếp đúng thứ tự số học.
+ * - Tối ưu Technical SEO: Sử dụng thẻ <a> chuẩn thay cho div[data-link] để Googlebot crawl link.
+ * - Tối ưu LCP & Core Web Vitals: fetchpriority="high", decoding="sync" cho slide đầu tiên.
+ * - Giảm tải JS: Loại bỏ click handler thừa qua JS.
+ */
+
+$current_lang = dgw_get_lang();
+
+// [2026-10-09] - @author: Kelvin - Cấu hình query tối ưu hiệu năng và sửa N+1 queries
 $args = array(
-    'post_type' => 'slider',
-    // [2026-07-08] - @author: Kelvin - Tối ưu truy vấn: Giới hạn 10 ảnh thay vì -1, tắt đếm tổng trang để giảm TTFB
-    'posts_per_page' => 10,
-    'no_found_rows' => true,
-    'update_post_meta_cache' => false,
+    'post_type'              => 'slider',
+    'posts_per_page'         => 10,
+    'no_found_rows'          => true,
+    'update_post_meta_cache' => true,  // Bật true để WP nạp toàn bộ meta trong 1 query duy nhất
     'update_post_term_cache' => false,
-    'orderby' => 'meta_value',
-    'order' => 'DESC',
-    'meta_key' => '_metabox_order',
-    'meta_query' => array(
+    'orderby'                => 'meta_value_num', // Sắp xếp theo số học chuẩn xác
+    'order'                  => 'DESC',
+    'meta_key'               => '_metabox_order',
+    'meta_query'             => array(
         array(
-            'key' => '_metabox_langguage',
-            'value' => dgw_get_lang(),
+            'key'     => '_metabox_langguage',
+            'value'   => $current_lang,
             'compare' => '='
         )
     )
 );
-$wp_query = new WP_Query($args);
 
-// --- 優化點 1: 確保 Preload 在最前面執行 ---
-if ($wp_query->have_posts()) {
-    $first_post = $wp_query->posts[0];
-    $first_thumb_id = get_post_thumbnail_id($first_post->ID);
-    $first_img_data = wp_get_attachment_image_src($first_thumb_id, 'medium');
-    if ($first_img_data) {
-        // 建議將此標籤放在 wp_head() 附近，若不行，放在這裡也能幫助瀏覽器提早發現
-        echo '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url($first_img_data[0]) . '">';
+$slider_query = new WP_Query($args);
+
+// [2026-10-09] - @author: Kelvin - Preload ảnh slide đầu tiên hỗ trợ LCP
+if ($slider_query->have_posts()) {
+    $first_post_id  = $slider_query->posts[0]->ID;
+    $first_thumb_id = get_post_thumbnail_id($first_post_id);
+    $first_desktop  = wp_get_attachment_image_src($first_thumb_id, 'large');
+    $first_mobile   = wp_get_attachment_image_src($first_thumb_id, 'medium_large');
+
+    if ($first_desktop) {
+        echo '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url($first_desktop[0]) . '" media="(min-width: 769px)">' . "\n";
+    }
+    if ($first_mobile) {
+        echo '<link rel="preload" fetchpriority="high" as="image" href="' . esc_url($first_mobile[0]) . '" media="(max-width: 768px)">' . "\n";
     }
 }
 ?>
 
-<style>
-    /* --- 優化點 2: 防止渲染延遲 (Render Delay) --- */
-    #slider {
-        border-bottom: 2px solid rgba(208, 228, 247, 0.5);
-        min-height: 300px;
-        /* 給予基本高度，防止頁面跳動 */
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* 在 JS 載入前，強制顯示第一張圖，隱藏其他的，這能大幅降低渲染延遲感 */
-    .owl-carousel:not(.owl-loaded) .item {
-        display: none;
-    }
-
-    .owl-carousel:not(.owl-loaded) .item:first-child {
-        display: block;
-    }
-
-    #slider .item img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-</style>
-
 <div id="slider">
     <div class="owl-carousel owl-theme">
         <?php
-        if ($wp_query->have_posts()) :
-            $count = 0;
-            while ($wp_query->have_posts()) : 
-                $wp_query->the_post();
-                $count++;
-                $link = get_post_meta(get_the_ID(), '_metabox_link', true);
-                $thumb_id = get_post_thumbnail_id(get_the_ID());
-                $url_desktop = wp_get_attachment_image_src($thumb_id, 'large');        // Desktop
-                $url_mobile  = wp_get_attachment_image_src($thumb_id, 'medium_large'); // Mobile (768px)
+        if ($slider_query->have_posts()) :
+            $slide_index = 0;
+            while ($slider_query->have_posts()) :
+                $slider_query->the_post();
+                $slide_index++;
+                $post_id     = get_the_ID();
+                $link        = get_post_meta($post_id, '_metabox_link', true);
+                $thumb_id    = get_post_thumbnail_id($post_id);
+                $url_desktop = wp_get_attachment_image_src($thumb_id, 'large');
+                $url_mobile  = wp_get_attachment_image_src($thumb_id, 'medium_large');
+
+                if (!$url_desktop) {
+                    continue;
+                }
+
+                $has_link = !empty($link) && $link !== '#';
+                $tag_name = $has_link ? 'a' : 'div';
+                $tag_attr = $has_link ? 'href="' . esc_url($link) . '" title="' . the_title_attribute(array('echo' => false)) . '"' : '';
         ?>
-                <div class="item" <?php if (!empty($link)) : ?>data-link="<?php echo esc_url($link); ?>" <?php endif; ?>>
+                <!-- [2026-10-09] - @author: Kelvin - Dùng thẻ <a> để chuẩn SEO thay vì bắt sự kiện JS -->
+                <<?php echo $tag_name; ?> class="item" <?php echo $tag_attr; ?>>
                     <picture>
                         <!-- Mobile <= 768px -->
                         <source
                             media="(max-width: 768px)"
-                            srcset="<?php echo esc_url($url_mobile[0]); ?>">
+                            srcset="<?php echo esc_url($url_mobile ? $url_mobile[0] : $url_desktop[0]); ?>">
 
                         <!-- Desktop > 768px -->
                         <source
                             media="(min-width: 769px)"
                             srcset="<?php echo esc_url($url_desktop[0]); ?>">
 
-                        <!-- Fallback -->
+                        <!-- Fallback Image -->
                         <img
                             alt="<?php the_title_attribute(); ?>"
                             src="<?php echo esc_url($url_desktop[0]); ?>"
-                            decoding="<?php echo ($count === 1) ? 'sync' : 'async'; ?>"
-                            loading="<?php echo ($count === 1) ? 'eager' : 'lazy'; ?>"
-                            fetchpriority="<?php echo ($count === 1) ? 'high' : 'low'; ?>"
-                            width="<?php echo $url_desktop[1]; ?>"
-                            height="<?php echo $url_desktop[2]; ?>">
+                            decoding="<?php echo ($slide_index === 1) ? 'sync' : 'async'; ?>"
+                            loading="<?php echo ($slide_index === 1) ? 'eager' : 'lazy'; ?>"
+                            fetchpriority="<?php echo ($slide_index === 1) ? 'high' : 'low'; ?>"
+                            width="<?php echo esc_attr((string) $url_desktop[1]); ?>"
+                            height="<?php echo esc_attr((string) $url_desktop[2]); ?>">
                     </picture>
-
-                    <div class="owl-slider-content">
-                        <?php the_content(); ?>
-                    </div>
-                </div>
+                </<?php echo $tag_name; ?>>
         <?php
             endwhile;
         endif;
@@ -106,30 +104,28 @@ if ($wp_query->have_posts()) {
 </div>
 
 <script>
-    // 這裡保持你原本的 Owl Carousel 初始化代碼即可
-    jQuery(document).ready(function() {
-        jQuery('#slider .owl-carousel').owlCarousel({
-            loop: true,
-            margin: 10,
-            nav: false,
-            autoplay: true,
-            autoplayTimeout: 3000,
-            autoplaySpeed: 500,
-            dots: true,
-            autoplayHoverPause: true,
-            items: 1,
-            onInitialized: function(event) {
-                jQuery(event.target).find('.owl-dot').each(function(index) {
-                    jQuery(this).attr('aria-label', 'digiwin solution ' + (index + 1) + ' page');
-                });
-            }
-        });
+    // [2026-10-09] - @author: Kelvin - Khởi tạo Owl Carousel gọn nhẹ, bỏ click handler thừa
+    jQuery(document).ready(function($) {
+        var $carousel = $('#slider .owl-carousel');
+        var itemCount = $carousel.children('.item').length;
 
-        jQuery('#slider').on('click', '.item', function() {
-            const link = jQuery(this).data('link'); // 建議用 jQuery(this)
-            if (link) {
-                window.location.href = link;
-            }
-        });
+        if ($carousel.length) {
+            $carousel.owlCarousel({
+                loop: (itemCount > 1),
+                margin: 0,
+                nav: false,
+                autoplay: (itemCount > 1),
+                autoplayTimeout: 4000,
+                autoplaySpeed: 500,
+                dots: (itemCount > 1),
+                autoplayHoverPause: true,
+                items: 1,
+                onInitialized: function(event) {
+                    $(event.target).find('.owl-dot').each(function(index) {
+                        $(this).attr('aria-label', 'Slide ' + (index + 1));
+                    });
+                }
+            });
+        }
     });
 </script>

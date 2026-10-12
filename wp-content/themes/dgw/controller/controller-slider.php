@@ -61,7 +61,7 @@ class Controller_Slider
             'has_archive'         => true,
             'hierarchical'        => false,
             'menu_position'       => 6,
-            'supports'            => ['title', 'thumbnail', 'editor'],
+            'supports'            => ['title', 'thumbnail'],
         ];
 
         register_post_type('slider', $args);

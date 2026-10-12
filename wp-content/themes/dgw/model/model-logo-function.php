@@ -59,6 +59,8 @@ class Model_Logo_Function
             $where = array('ID' => $arrData['hid-id']);
             $wpdb->update($this->table, $UpdateData, $where);
         }
+        // [2026-10-08] - Xóa transient cache trang chủ khi cập nhật logo
+        delete_transient('dgw_home_cases_logos');
     }
 
     // THAY DOI TRANG THAI 
@@ -79,6 +81,8 @@ class Model_Logo_Function
             $sql = "UPDATE $this->table SET trash = $trash  WHERE ID IN ($ids)";
             $wpdb->query($sql);
         }
+        // [2026-10-08] - Xóa transient cache trang chủ khi thay đổi trạng thái trash
+        delete_transient('dgw_home_cases_logos');
     }
 
     // THAY DOI TRANG THAI 
@@ -113,5 +117,7 @@ class Model_Logo_Function
             $sql = "DELETE FROM $this->table WHERE ID IN ($ids)";
             $wpdb->query($sql);
         }
+        // [2026-10-08] - Xóa transient cache trang chủ khi xóa logo
+        delete_transient('dgw_home_cases_logos');
     }
 }

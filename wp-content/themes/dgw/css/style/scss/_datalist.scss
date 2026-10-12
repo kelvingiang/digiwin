@@ -1,0 +1,181 @@
+// [2026-10-09]: Tối ưu hóa giao diện danh sách bài viết .data-list theo phong cách Modern Corporate Card
+@use "define" as *;
+@use "responsive" as *;
+
+@keyframes cardFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.data-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px 24px;
+    margin-bottom: 2.5rem;
+
+    @include Respond(lg) {
+        gap: 20px;
+    }
+
+    @include Respond(md) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    @include Respond(sm) {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        text-align: left;
+        box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+        animation: cardFadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease;
+
+        /* Khung bọc ảnh và badge meta lượt xem */
+        > div:first-child {
+            position: relative;
+            overflow: hidden;
+            background-color: #f1f5f9;
+        }
+
+        &-img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            display: block;
+            border-radius: 0;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .view_comment_area {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 5px;
+            padding: 3px 10px;
+            z-index: 2;
+
+            .view_comment_content {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #ffffff;
+                font-size: 0.75rem;
+                font-weight: 500;
+
+                > div {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+            }
+
+            .icon-comment {
+                width: 13px;
+                height: 13px;
+                fill: rgba(255, 255, 255, 0.9);
+            }
+        }
+
+        &-title {
+            padding: 1rem 1.15rem 1.25rem;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+
+            h3 {
+                margin: 0;
+                font-size: 1.05rem;
+                font-weight: 600;
+                line-height: 1.5;
+                color: #1e293b;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                transition: color 0.25s ease;
+
+                @include Respond(lg) {
+                    font-size: 1rem;
+                }
+            }
+        }
+
+        &:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0, 175, 240, 0.4);
+            box-shadow: 0 16px 30px -4px rgba(15, 23, 42, 0.1), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+
+            .item-img {
+                transform: scale(1.05);
+            }
+
+            .item-title h3 {
+                color: $Color_main_menu_link_hover;
+            }
+        }
+    }
+}
+
+.group-list {
+    .item {
+        background-color: rgba(149, 186, 200, 0.3);
+        display: flex;
+        flex-direction: row;
+        transition-duration: 1s;
+        padding: 1rem;
+        .group-list-item-title {
+            margin: 0rem 0 1rem;
+        }
+        a {
+            color: rgb(199, 99, 63);
+            &:hover {
+                color: rgba(255, 127, 80, 1);
+            }
+        }
+        img {
+            width: 90%;
+            border-radius: 0.3rem;
+        }
+        h3 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            @include Respond(lg) {
+                font-size: 1.3rem;
+            }
+            @include Respond(md) {
+                font-size: 1.2rem;
+            }
+            @include Respond(sm) {
+                font-size: 1.1rem;
+            }
+        }
+    }
+    .item:nth-child(odd) {
+        background-color: rgba(149, 186, 200, 0.5);
+    }
+    .item:hover {
+        background-color: rgba(149, 186, 200, 0.7);
+    }
+}

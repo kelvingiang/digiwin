@@ -13,9 +13,10 @@ function dgw_frontend_scripts()
     // Lưu ý: is_page() chỉ hoạt động đúng khi dùng hook wp_enqueue_scripts, không hoạt động ở init
     if (!is_page('member')) {
         //====== OWL SLIDER (Thư viện duy nhất được sử dụng trong Theme) ======
-        wp_enqueue_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.css', array(), '1.0', 'all');
-        wp_enqueue_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', array(), '1.0', 'all');
-        wp_enqueue_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.js', array('jquery'), '1.0.0', true);
+        // [2026-10-08] - @author: Kelvin - Chuyển sang bản nén .min.css và .min.js để tiết kiệm ~70KB băng thông tải trang
+        wp_enqueue_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.min.css', array(), '2.3.4', 'all');
+        wp_enqueue_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', array(), '2.3.4', 'all');
+        wp_enqueue_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.min.js', array('jquery'), '2.3.4', true);
     }
 
     //====== MY STYLE ======

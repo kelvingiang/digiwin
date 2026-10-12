@@ -1,8 +1,8 @@
 <?php
 /**
- * Date: 2026-08-24
+ * [2026-10-12] - @author: Kelvin
  * Template Name: Services Page
- * Description: Custom template for Services Page
+ * Description: Tối ưu bảo mật (Late Escaping/Sanitize), chuẩn posts_per_page và load more 60fps qua requestAnimationFrame
  */
 get_header(); ?>
 
@@ -22,27 +22,21 @@ get_header(); ?>
         <?php
         global $wp;
         $param = $wp->query_vars;
-        $postCount = get_option('first_load');
+        // [2026-10-12] - @author: Kelvin - Lấy số lượng bài viết từ Cài đặt > Đọc (posts_per_page) trong WP Admin
+        $postCount = (int) get_option('posts_per_page', 10);
 
-        $tag  = isset($param['tag']) ? $param['tag'] : '';
-        $cate = isset($param['cate']) ? $param['cate'] : '';
+        $tag  = isset($param['tag']) ? sanitize_text_field($param['tag']) : '';
+        $cate = isset($param['cate']) ? sanitize_text_field($param['cate']) : '';
 
         $postType = 'services';
         $tax = 'services_category';
-        if (empty($param['tag']) && empty($param['cate'])) {
-            getCustomsPost('services', $postCount);
+        $term_slug = !empty($tag) ? $tag : $cate;
+
+        if (empty($term_slug)) {
+            getCustomsPost($postType, $postCount);
         } else {
-            // neu TAG ton tai thi lay value la TAG con khong thi lay CATE
-            if (empty($param['tag'])) {
-                $cate = $param['cate'];
-            } else {
-                $cate = $param['tag'];
-            }
-            $postType = 'services';
-            $tax = 'services_category';
-            getCustomsPostByCate($postType, $cate, $postCount, $tax);
+            getCustomsPostByCate($postType, $term_slug, $postCount, $tax);
         }
-      
         ?>
     </div>
 
@@ -53,32 +47,36 @@ get_header(); ?>
     </div>
 </div>
 <script>
-    jQuery(document).ready(function() {
+    // [2026-10-12] - @author: Kelvin - Xử lý tải thêm Services khi cuộn chuột mượt mà 60fps qua requestAnimationFrame
+    jQuery(ready = function($) {
         var isLoading = false;
         var hasMore = true;
+        var isTicking = false;
+        var $loadMore = $('#load-more');
 
-        jQuery('#load-more').hide();
+        $loadMore.hide();
 
-        function loadMoreCases() {
+        var post = '<?php echo esc_js($postType); ?>';
+        var cateID = '<?php echo esc_js($term_slug); ?>';
+        var count = '<?php echo esc_js(get_option('more_load') ?: get_option('posts_per_page', 10)); ?>';
+        var cate = '<?php echo esc_js($tax); ?>';
+        var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+
+        function loadMoreServices() {
             if (isLoading || !hasMore) return;
 
-            var lastItem = jQuery(".data-list > div:last-child");
-            if (lastItem.length === 0) return;
+            var $lastItem = $(".data-list > div:last-child");
+            if ($lastItem.length === 0) return;
 
-            var scrollBottom = jQuery(window).scrollTop() + jQuery(window).height();
-            var lastItemBottom = lastItem.offset().top + lastItem.outerHeight();
+            var scrollBottom = $(window).scrollTop() + $(window).height();
+            var lastItemBottom = $lastItem.offset().top + $lastItem.outerHeight();
 
             if (scrollBottom >= lastItemBottom - 50) {
                 isLoading = true;
+                var lastID = $lastItem.attr("data-id");
 
-                var lastID = lastItem.attr("data-id");
-                var post = 'services';
-                var cateID = '<?php echo $cate ?>';
-                var count = '<?php echo get_option('more_load') ?>';
-                var cate = 'services_category';
-
-                jQuery.ajax({
-                    url: '<?php echo admin_url('admin-ajax.php'); ?>',
+                $.ajax({
+                    url: ajaxUrl,
                     type: 'post',
                     data: {
                         action: 'load_more_posts',
@@ -91,29 +89,35 @@ get_header(); ?>
                     dataType: 'json',
                     beforeSend: function() {
                         var spinner = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite; display: inline-block;"><style>@keyframes spin { 100% { transform: rotate(360deg); } }</style><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>';
-                        jQuery('#load-more').show().html('<p style="text-align:center; margin:10px 0;">' + spinner + '</p>');
+                        $loadMore.show().html('<p style="text-align:center; margin:10px 0;">' + spinner + '</p>');
                     },
                     success: function(data) {
-                        if (data.status === 'done') {
-                            jQuery(".data-list").append(data.html);
+                        if (data && data.status === 'done') {
+                            $(".data-list").append(data.html);
                             isLoading = false;
-                            jQuery('#load-more').hide();
-                        } else if (data.status === 'empty') {
+                            $loadMore.hide();
+                        } else if (data && data.status === 'empty') {
                             hasMore = false;
-                            jQuery("#load-more").hide();
+                            $loadMore.hide();
                         }
                     },
                     error: function(xhr) {
-                        console.log(xhr.responseText);
+                        console.error(xhr.responseText);
                         isLoading = false;
-                        jQuery('#load-more').hide();
+                        $loadMore.hide();
                     }
                 });
             }
         }
 
-        jQuery(window).scroll(function() {
-            loadMoreCases();
+        $(window).on('scroll', function() {
+            if (!isTicking) {
+                window.requestAnimationFrame(function() {
+                    loadMoreServices();
+                    isTicking = false;
+                });
+                isTicking = true;
+            }
         });
     });
 </script>

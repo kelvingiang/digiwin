@@ -30,7 +30,7 @@
                        DIGITAL TRANSFORMATION PARTNER
                    </div>
 
-                   <h3><?php echo __('Office In VietNam', 'dgw') ?> </h3>
+                   <h2><?php echo __('Office In VietNam', 'dgw') ?> </h2>
                    <ul class='footer-list'>
                        <li>
                            <label>
@@ -84,7 +84,7 @@
                </div>
 
                <div>
-                   <h3 class="h3-title dot-title"><?php __('Solutions & Industries', 'dgw') ?> </h3>
+                   <h2 class="h3-title dot-title"><?php echo __('Solutions & Industries', 'dgw') ?> </h2>
                    <ul class='footer-list article-link'>
                        <li>
                            <a href="<?php echo WP_HOME . '/solution/cate/53/tag/' ?>">
@@ -135,7 +135,7 @@
                </div>
 
                <div>
-                   <h3 class="h3-title dot-title"><?php __('contact', 'dgw') ?> </h3>
+                   <h2 class="h3-title dot-title"><?php echo __('Contact Us', 'dgw') ?> </h2>
                    <ul class='footer-list contact-list'>
                        <li>
                            <div>
@@ -178,10 +178,8 @@
                    </ul>
                </div>
 
-
-
                <div class="social-link">
-                   <h3 class="h3-title"><?php __('Zalo OA Community', 'dgw') ?> </h3>
+                   <h2 class="h3-title"><?php echo __('Zalo OA Community', 'dgw') ?> </h2>
                    <ul class='footer-list'>
                        <li>
                            <a href="https://zalo.me/digiwinsoftvietnam" target="_blank">
@@ -189,22 +187,22 @@
                            </a>
                        </li>
                        <li class="zalo-text">
-                           <?php __('Scan to join Zalo OA & get the latest industry reports', 'dgw') ?>
+                           <?php echo __('Scan to join Zalo OA & get the latest industry reports', 'dgw') ?>
                        </li>
                        <li class="icon-link">
                            <a href="<?php echo $lang === 'vn'
                                         ? 'https://www.facebook.com/Digiwinsoftvn'
-                                        : 'https://www.facebook.com/Digiwinsoftware'; ?>" target="_blank">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                        : 'https://www.facebook.com/Digiwinsoftware'; ?>" target="_blank" aria-label="Trang Facebook Digiwin">
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L258.2 544L258.2 398.2L205.4 398.2L205.4 320L258.2 320L258.2 286.3C258.2 199.2 297.6 158.8 383.2 158.8C399.4 158.8 427.4 162 438.9 165.2L438.9 236C432.9 235.4 422.4 235 409.3 235C367.3 235 351.1 250.9 351.1 292.2L351.1 320L434.7 320L420.3 398.2L351 398.2L351 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96z" />
                                </svg></a>
 
-                           <a href="https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA/?sub_confirmation=1" target="_blank"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                           <a href="https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA/?sub_confirmation=1" target="_blank" aria-label="Trang youtube Digiwin"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M581.7 188.1C575.5 164.4 556.9 145.8 533.4 139.5C490.9 128 320.1 128 320.1 128C320.1 128 149.3 128 106.7 139.5C83.2 145.8 64.7 164.4 58.4 188.1C47 231 47 320.4 47 320.4C47 320.4 47 409.8 58.4 452.7C64.7 476.3 83.2 494.2 106.7 500.5C149.3 512 320.1 512 320.1 512C320.1 512 490.9 512 533.5 500.5C557 494.2 575.5 476.3 581.8 452.7C593.2 409.8 593.2 320.4 593.2 320.4C593.2 320.4 593.2 231 581.8 188.1zM264.2 401.6L264.2 239.2L406.9 320.4L264.2 401.6z" />
                                </svg> </a>
 
-                           <a href="https://www.linkedin.com/company/digiwinsoft-asean/" target="_blank">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                           <a href="https://www.linkedin.com/company/digiwinsoft-asean/" target="_blank" aria-label="Trang linkedin Digiwin">
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96zM165 266.2L231.5 266.2L231.5 480L165 480L165 266.2zM236.7 198.5C236.7 219.8 219.5 237 198.2 237C176.9 237 159.7 219.8 159.7 198.5C159.7 177.2 176.9 160 198.2 160C219.5 160 236.7 177.2 236.7 198.5zM413.9 480L413.9 376C413.9 351.2 413.4 319.3 379.4 319.3C344.8 319.3 339.5 346.3 339.5 374.2L339.5 480L273.1 480L273.1 266.2L336.8 266.2L336.8 295.4L337.7 295.4C346.6 278.6 368.3 260.9 400.6 260.9C467.8 260.9 480.3 305.2 480.3 362.8L480.3 480L413.9 480z" />
                                </svg></a>
                        </li>
@@ -225,7 +223,6 @@
                <div>
                    <img title="muse design" alt="muse design" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
                    <label> MUSE DESIGN <br><i> Awards </i></label>
-                   </a>
                </div>
                <div>
                    <img title="Control Engineering" alt="Control Engineering" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />

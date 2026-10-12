@@ -13,12 +13,13 @@ add_action('wp_ajax_nopriv_load_more_posts', 'ajax_load_more_posts');  // 未登
 
 function ajax_load_more_posts()
 {
-    // 🔒 安全清理輸入資料
-    $lastID = isset($_POST['lastID']) ? intval($_POST['lastID']) : 0;
-    $post = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
-    $cateID = isset($_POST['cateID']) ? intval($_POST['cateID']) : 0;
-    $count = isset($_POST['count']) ? intval($_POST['count']) : 5;
-    $cate = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
+    // 🔒 [2026-10-09] - @author: Kelvin - Hỗ trợ lọc category theo cả slug lẫn term_id, tránh bị intval ép về 0
+    $lastID   = isset($_POST['lastID']) ? intval($_POST['lastID']) : 0;
+    $post     = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
+    $raw_cate = isset($_POST['cateID']) ? sanitize_text_field(wp_unslash($_POST['cateID'])) : '';
+    $cateID   = is_numeric($raw_cate) ? intval($raw_cate) : $raw_cate;
+    $count    = isset($_POST['count']) ? intval($_POST['count']) : 5;
+    $cate     = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
 
     // ✅ 基本查詢參數
     $args = array(
@@ -37,12 +38,12 @@ function ajax_load_more_posts()
         ),
     );
 
-    // ✅ 若有分類
+    // ✅ [2026-10-09]: Nếu có phân loại, tự động phân biệt term_id số hoặc slug chuỗi
     if (!empty($cateID)) {
         $args['tax_query'] = array(
             array(
                 'taxonomy' => $cate,
-                'field'    => 'term_id',
+                'field'    => is_numeric($cateID) ? 'term_id' : 'slug',
                 'terms'    => $cateID,
             ),
         );

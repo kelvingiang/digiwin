@@ -1,0 +1,429 @@
+@use "define" as *;
+@use "responsive" as *;
+
+$MenuTextColor: rgb(52, 114, 133);
+// $MenuTextHoverColor: #0665ad;
+$bgHoverColor: rgba(231, 231, 231, 0.9);
+@mixin MenuBG {
+    @include MenuBGHoverColor;
+    height: 100%;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 12;
+    transition: all 1.5s;
+    opacity: 0;
+}
+
+@mixin BGMouseOn {
+    left: 0;
+    width: 100%;
+    opacity: 1;
+}
+
+@mixin MenuBGSub {
+    height: 100%;
+    width: 1px;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 12;
+    transition: all 1.5s;
+    opacity: 0;
+}
+
+@mixin BGMouseOnSub {
+    width: 95%;
+    opacity: 1;
+}
+
+@mixin MenuLink($position, $font-size, $padding-1, $padding-2) {
+    position: $position;
+    padding: $padding-1 $padding-2;
+    cursor: pointer;
+    // color: $MenuTextColor;
+    color: $Color_main_menu_link;
+    font-size: $font-size;
+    font-weight: bold;
+    z-index: 20;
+    transition: all 1s;
+}
+
+@mixin HasSub($rotate, $left) {
+    content: "\276F";
+    margin-left: $left;
+    display: inline-block;
+    -webkit-transform: rotate($rotate);
+    -moz-transform: rotate($rotate);
+    -o-transform: rotate($rotate);
+    -ms-transform: rotate($rotate);
+    transform: rotate($rotate);
+}
+
+@mixin MenuBGColor {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,73b1e7+24,0a77d5+50,539fe1+79,87bcea+100;Blue+Pipe+%231 */
+    background: rgb(208, 228, 247);
+    /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0)";
+    // filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0);
+    /* IE6-9 */
+}
+
+@mixin MenuBGHoverColor {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#d0e4f7+0,c3d6e5+24,ffffff+50,c3d3e0+79,c9dae8+100 */
+    background: rgb(208, 228, 247);
+    /* Old browsers */
+    background: -moz-linear-gradient(top, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, $bgHoverColor 0%, $bgHoverColor 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#d0e4f7', endColorstr='#87bcea', GradientType=0)";
+    // filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#d0e4f7', endColorstr='#c9dae8', GradientType=0);
+    /* IE6-9 */
+}
+
+// [2026-10-09] - @author: Kelvin - Tái thiết kế .menu-main theo phong cách Corporate Hiện đại (Glassmorphism & Micro-animations)
+.menu-main {
+    position: relative;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+
+    @include Respond(md) {
+        display: none;
+    }
+
+    &-item {
+        position: relative;
+        z-index: 1001;
+
+        label {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        &-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 0.95rem;
+            font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+            font-weight: 600;
+            color: $Color_main_menu_link;
+            text-decoration: none;
+            border-radius: 8px;
+            white-space: nowrap;
+            position: relative;
+            transition: color 0.25s ease, background-color 0.25s ease;
+
+            @include Respond(lg) {
+                padding: 0.5rem 0.65rem;
+                font-size: 1rem;
+            }
+
+            /* Hiệu ứng thanh chỉ báo bên dưới (Modern Running Bar) */
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 3px;
+                left: 14px;
+                right: 14px;
+                height: 2px;
+                background: linear-gradient(90deg, #00aff0, #0088cc);
+                border-radius: 2px;
+                transform: scaleX(0);
+                transform-origin: center;
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+        }
+
+        // [2026-10-09] - @author: Kelvin - Thiết lập mũi tên .has-sub cách chữ 10px
+        .has-sub {
+            &::after {
+                @include HasSub(90deg, 10px);
+                font-size: 0.75rem;
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+        }
+
+        &:hover {
+            .menu-main-item-link {
+                color: $Color_main_menu_link_hover;
+                background-color: rgba(0, 175, 240, 0.08);
+
+                &::before {
+                    transform: scaleX(1);
+                }
+            }
+
+            .has-sub::after {
+                transform: rotate(-90deg);
+            }
+
+            .menu-main-sub-1 {
+                pointer-events: auto;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    .active {
+        > a,
+        > label {
+            color: $Color_main_menu_link_hover !important;
+            background-color: rgba(0, 175, 240, 0.08);
+
+            &::before {
+                transform: scaleX(1);
+            }
+        }
+    }
+
+    // ===== SUB LEVEL 1 (Modern Floating Glass Card) =================
+    .menu-main-sub-1 {
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        transform: translateY(8px);
+        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        white-space: nowrap;
+        z-index: 1002;
+        min-width: 230px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+
+        /* Cầu nối vô hình chống mất hover */
+        &::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: transparent;
+        }
+
+        // [2026-10-09] - @author: Kelvin - Thêm border-top và hiệu ứng màu nền chạy từ phải qua khi hover
+        &-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            transition: border-color 0.2s ease;
+
+            &:first-child {
+                border-top: none;
+            }
+
+            &-link {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                transition: color 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+                /* [2026-10-09]: Màu nền ẩn ban đầu và chạy từ phải qua trái khi hover */
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(270deg, rgba(0, 175, 240, 0.12) 0%, rgba(240, 247, 255, 0.95) 100%);
+                    border-radius: 8px;
+                    transform: scaleX(0);
+                    transform-origin: right;
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    z-index: -1;
+                }
+            }
+
+            .has-sub {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #1e293b;
+
+                svg {
+                    width: 14px;
+                    height: auto;
+                    fill: #64748b;
+                    transition: fill 0.2s ease, transform 0.2s ease;
+                }
+            }
+
+            &:hover {
+                .menu-main-sub-1-item-link {
+                    color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
+
+                    &::before {
+                        transform: scaleX(1);
+                    }
+                }
+
+                .has-sub svg {
+                    fill: $Color_main_menu_link_hover;
+                    transform: translateX(2px);
+                }
+
+                .menu-main-sub-2 {
+                    opacity: 1;
+                    pointer-events: auto;
+                    visibility: visible;
+                    left: calc(100% + 4px);
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+
+    // ===== SUB LEVEL 2 ============================================
+    .menu-main-sub-2 {
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: calc(100% + 10px);
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+        z-index: 1003;
+        min-width: 210px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+
+        &-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: background-color 0.2s ease;
+
+            &-link {
+                display: block;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+            }
+
+            &:hover {
+                background-color: #f0f7ff;
+
+                .menu-main-sub-2-item-link {
+                    color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
+                }
+
+                .menu-main-sub-3 {
+                    opacity: 1;
+                    pointer-events: auto;
+                    visibility: visible;
+                    left: calc(100% + 4px);
+                }
+            }
+        }
+    }
+
+    // ===== SUB LEVEL 3 ============================================
+    .menu-main-sub-3 {
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: calc(100% + 10px);
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 1004;
+        min-width: 210px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12);
+
+        &-item {
+            position: relative;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: background-color 0.2s ease;
+
+            &-link {
+                display: block;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.2s ease;
+            }
+
+            &:hover {
+                background-color: #f0f7ff;
+
+                .menu-main-sub-3-item-link {
+                    color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+}
+
+// [2026-10-09] - @author: Kelvin - Thiết lập khoảng cách mũi tên .has-sub cách chữ 10px cho các ngôn ngữ
+html[lang="zh-TW"] .has-sub::after {
+    @include HasSub(90deg, 10px);
+}
+
+html[lang="vi-VN"] .has-sub::after {
+    @include HasSub(90deg, 10px);
+}

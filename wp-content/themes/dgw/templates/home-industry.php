@@ -31,7 +31,7 @@
 
                                 <!-- Fallback: width/height lấy từ ảnh desktop thực tế -->
                                 <img
-                                    alt="<?php the_title_attribute(); ?>"
+                                    alt=""
                                     src="<?php echo esc_url($url_desktop[0]); ?>"
                                     loading="lazy"
                                     width="<?php echo $url_desktop[1]; ?>"
@@ -40,7 +40,7 @@
                         <?php else : ?>
                             <img
                                 src="<?php echo PART_IMAGES . 'no-image.jpg'; ?>"
-                                alt="<?php echo esc_attr($title); ?>"
+                                alt="no image"
                                 width="410"
                                 height="270" />
                         <?php endif; ?>

@@ -235,4 +235,16 @@ function dgw_comment_count($count)
 }
 
 
+/**
+ * [2026-10-08] - @author: Kelvin - Xóa Transient Cache của Case Studies khi thêm/sửa/xóa bài viết casestudies trong WP-Admin
+ */
+add_action('save_post_casestudies', 'dgw_clear_casestudies_transients');
+add_action('deleted_post', 'dgw_clear_casestudies_transients');
+function dgw_clear_casestudies_transients($post_id = 0)
+{
+    delete_transient('dgw_home_casestudies_vn');
+    delete_transient('dgw_home_casestudies_cn');
+}
+
+
 
