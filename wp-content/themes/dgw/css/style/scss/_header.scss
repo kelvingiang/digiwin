@@ -1,17 +1,39 @@
 @use "define" as *;
 @use "responsive" as *;
 
+// [2026-10-12] - @author: Kelvin - Tách biệt header-home (float tuyệt đối trên slider) và header-page (luồng thông thường trên trang con)
 #header-space {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    position: absolute;
     width: 100%;
+    position: relative;
+    min-height: 75px;
+    z-index: 100000;
+}
+
+.header-home #header-space,
+body.home #header-space {
+    position: absolute;
     top: 0;
     left: 0;
-    z-index: 100000;
     background-color: transparent !important;
+}
+
+.header-page {
+    position: relative;
+    width: 100%;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f1f5f9;
+
+    #header-space {
+        position: relative;
+        top: auto;
+        left: auto;
+        min-height: 75px;
+        background-color: transparent;
+    }
 }
 .languages-container {
     display: flex;

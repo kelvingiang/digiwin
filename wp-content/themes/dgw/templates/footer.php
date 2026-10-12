@@ -40,9 +40,10 @@
                    </ul>
                    <div class="prize-link">
                        <?php
+                        // [2026-10-12] - @author: Kelvin - Thay the WP_HOME bang home_url() chuan WordPress, khac phuc Fatal Error tren PHP 8.x
                         // Giá trị mặc định
-                        $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin'; // fallback link
-                        $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download';
+                        $link_award = home_url('/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin'); // fallback link
+                        $link_download = home_url('/resources/chuyen-doi-so-white-book-download');
 
                         $allowed_langs = ['vn', 'cn'];
                         $lang = isset($_COOKIE['site_lang']) ? $_COOKIE['site_lang'] : '';
@@ -50,11 +51,11 @@
                         // Chỉ xử lý nếu giá trị hợp lệ
                         if (in_array($lang, $allowed_langs, true)) {
                             if ($lang === 'vn') {
-                                $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin';
-                                $link_download = WP_HOME . '/resources/chuyen-doi-so-white-book-download';
+                                $link_award = home_url('/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin');
+                                $link_download = home_url('/resources/chuyen-doi-so-white-book-download');
                             } elseif ($lang === 'cn') {
-                                $link_award = WP_HOME . '/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin';
-                                $link_download = WP_HOME . '/resources/circular-99-guide-zhtc';
+                                $link_award = home_url('/giai-thuong-danh-hieu-chung-nhan-quoc-te-cua-digiwin');
+                                $link_download = home_url('/resources/circular-99-guide-zhtc');
                             }
                         }
                         ?>
@@ -87,7 +88,7 @@
                    <h2 class="h3-title dot-title"><?php echo __('Solutions & Industries', 'dgw') ?> </h2>
                    <ul class='footer-list article-link'>
                        <li>
-                           <a href="<?php echo WP_HOME . '/solution/cate/53/tag/' ?>">
+                           <a href="<?php echo home_url('/solution/cate/53/tag/') ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
@@ -96,7 +97,7 @@
                        </li>
 
                        <li>
-                           <a href="<?php echo WP_HOME . '/solution/cate/54/tag/' ?>">
+                           <a href="<?php echo home_url('/solution/cate/54/tag/') ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
@@ -105,7 +106,7 @@
                        </li>
 
                        <li>
-                           <a href="<?php echo WP_HOME . '/solutions/he-thong-logistics-thong-minh/' ?>">
+                           <a href="<?php echo home_url('/solutions/he-thong-logistics-thong-minh/') ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
@@ -114,7 +115,7 @@
                        </li>
 
                        <li>
-                           <a href="<?php echo WP_HOME . '/solutions/nganh-cao-su-nhua/' ?>">
+                           <a href="<?php echo home_url('/solutions/nganh-cao-su-nhua/') ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
@@ -123,7 +124,7 @@
                        </li>
 
                        <li>
-                           <a href="<?php echo WP_HOME . '/cases/' ?>">
+                           <a href="<?php echo home_url('/cases/') ?>">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                    <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
                                </svg>
@@ -239,7 +240,7 @@
 
                <div>
                    <a class="foot-link"
-                       href="<?php echo WP_HOME . '/digiwinasean_privacy-policy/' ?>">
+                       href="<?php echo home_url('/digiwinasean_privacy-policy/') ?>">
                        Chính Sách Bảo Mật | Điều Kiện Sử Dụng
                    </a>
                </div>

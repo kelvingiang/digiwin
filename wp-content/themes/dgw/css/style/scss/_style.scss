@@ -12,6 +12,15 @@ a {
     box-sizing: border-box;
 }
 
+// [2026-10-12] - @author: Kelvin - Phòng ngừa lỗi body#error-page từ core WordPress làm co nhỏ layout còn 700px trên hosting
+body,
+body#error-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
 html {
     -webkit-text-size-adjust: 100%; /* Cho Safari trên iOS */
     -moz-text-size-adjust: 100%; /* Cho Firefox (nếu cần) */
@@ -165,8 +174,10 @@ body:focus-within {
     scroll-behavior: smooth;
 }
 
+// [2026-10-12] - @author: Kelvin - Thêm display: flow-root để ngăn margin collapse
 .my-content {
     min-height: 450px;
+    display: flow-root;
 }
 
 .page-col {

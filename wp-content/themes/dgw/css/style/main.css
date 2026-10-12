@@ -10,6 +10,14 @@ a {
   box-sizing: border-box;
 }
 
+body,
+body#error-page {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 html {
   -webkit-text-size-adjust: 100%; /* Cho Safari trên iOS */
   -moz-text-size-adjust: 100%; /* Cho Firefox (nếu cần) */
@@ -147,6 +155,7 @@ body:focus-within {
 
 .my-content {
   min-height: 450px;
+  display: flow-root;
 }
 
 .page-col {
@@ -628,9 +637,6 @@ hr.style-two {
 .data-list .item-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16/10;
-  -o-object-fit: cover;
-     object-fit: cover;
   display: block;
   border-radius: 0;
   transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
@@ -2350,10 +2356,29 @@ html[lang=vi-VN] .has-sub::after {
 }
 
 .page-title-h1 {
-  text-align: center;
-  font-size: 0.7rem;
-  color: transparent;
-  margin-top: 15px;
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+.page-title-h1 h1 {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+  color: transparent !important;
+  font-size: 0 !important;
+  line-height: 0 !important;
 }
 
 .menu-sub {
@@ -2361,13 +2386,19 @@ html[lang=vi-VN] .has-sub::after {
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   margin-bottom: 2rem;
   padding: 1rem 0.5rem 1.25rem;
   border-bottom: 1px solid #e2e8f0;
 }
+@media (max-width: 991.98px) {
+  .menu-sub {
+    margin-top: 1.25rem;
+  }
+}
 @media (max-width: 767.98px) {
   .menu-sub {
+    margin-top: 1rem;
     flex-wrap: nowrap;
     overflow-x: auto;
     padding-bottom: 0.75rem;
@@ -2434,6 +2465,11 @@ html[lang=vi-VN] .has-sub::after {
 }
 .menu-sub-item.no-link a {
   pointer-events: none;
+}
+
+.page-img ~ .menu-sub,
+div:has(> .page-img) ~ .menu-sub {
+  margin-top: 1.5rem !important;
 }
 
 .side-list {
@@ -2988,12 +3024,32 @@ html[lang=vi-VN] .has-sub::after {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  position: absolute;
   width: 100%;
+  position: relative;
+  min-height: 75px;
+  z-index: 100000;
+}
+
+.header-home #header-space,
+body.home #header-space {
+  position: absolute;
   top: 0;
   left: 0;
-  z-index: 100000;
   background-color: transparent !important;
+}
+
+.header-page {
+  position: relative;
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f5f9;
+}
+.header-page #header-space {
+  position: relative;
+  top: auto;
+  left: auto;
+  min-height: 75px;
+  background-color: transparent;
 }
 
 .languages-container {

@@ -96,15 +96,22 @@ if (false === $case_items) {
     </div>
 
     <script>
-        // [2026-10-08] - @author: Kelvin - Khởi tạo Owl Carousel mượt mà, tắt dots dư thừa, ngăn reflow
+        // [2026-10-12] - @author: Kelvin - Khởi tạo Owl Carousel an toàn chống lỗi trên hosting khi bị cache/defer JS
         jQuery(document).ready(function($) {
             var $slider = $('#casestudies-slider .owl-carousel');
-            if ($slider.length) {
+            if (!$slider.length) return;
+
+            function initCaseSlider() {
+                if (typeof $.fn.owlCarousel !== 'function') {
+                    setTimeout(initCaseSlider, 100);
+                    return;
+                }
+
                 $slider.owlCarousel({
                     loop: true,
                     margin: 15,
                     nav: true,
-                    dots: false, // [2026-10-08] - Tắt dots trực tiếp, không tạo DOM rác
+                    dots: false,
                     autoplay: true,
                     autoplayTimeout: 6000,
                     autoplaySpeed: 600,
@@ -130,11 +137,12 @@ if (false === $case_items) {
                     }
                 });
 
-                // [2026-10-08] - Để footer.php xử lý plus_one_view ajax mà không mở tab trùng lặp
                 $('#casestudies-slider').on('click', 'a.item', function(e) {
                     e.preventDefault();
                 });
             }
+
+            initCaseSlider();
         });
     </script>
 <?php endif; ?>

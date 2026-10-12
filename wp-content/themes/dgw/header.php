@@ -42,6 +42,19 @@
         })(window, document, 'script', 'dataLayer', 'GTM-PC6FVTMZ');
     </script>
     <!-- End Google Tag Manager -->
+
+    <style>
+        /* [2026-10-12] - @author: Kelvin - Vô hiệu hóa triệt để lỗi CSS core WordPress thu nhỏ body#error-page còn 700px trên hosting */
+        html,
+        body,
+        body#error-page {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent;
+        }
+    </style>
 </head>
 
 <body <?php body_class(); ?>>

@@ -13,10 +13,12 @@ function dgw_frontend_scripts()
     // Lưu ý: is_page() chỉ hoạt động đúng khi dùng hook wp_enqueue_scripts, không hoạt động ở init
     if (!is_page('member')) {
         //====== OWL SLIDER (Thư viện duy nhất được sử dụng trong Theme) ======
-        // [2026-10-08] - @author: Kelvin - Chuyển sang bản nén .min.css và .min.js để tiết kiệm ~70KB băng thông tải trang
+        // [2026-10-12] - @author: Kelvin - Nạp trong Header ($in_footer = false) để script inline trên trang chủ không bị lỗi "$slider.owlCarousel is not a function" khi lên hosting
+        $owl_js_path = get_template_directory() . '/js/slider-owl/owl.carousel.min.js';
+        $owl_js_ver  = file_exists($owl_js_path) ? filemtime($owl_js_path) : '2.3.4';
         wp_enqueue_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.min.css', array(), '2.3.4', 'all');
         wp_enqueue_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', array(), '2.3.4', 'all');
-        wp_enqueue_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.min.js', array('jquery'), '2.3.4', true);
+        wp_enqueue_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.min.js', array('jquery'), $owl_js_ver, false);
     }
 
     //====== MY STYLE ======

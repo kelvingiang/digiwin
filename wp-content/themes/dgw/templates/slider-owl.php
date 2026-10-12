@@ -104,12 +104,18 @@ if ($slider_query->have_posts()) {
 </div>
 
 <script>
-    // [2026-10-09] - @author: Kelvin - Khởi tạo Owl Carousel gọn nhẹ, bỏ click handler thừa
+    // [2026-10-12] - @author: Kelvin - Khởi tạo Owl Carousel an toàn chống lỗi trên hosting khi bị cache/defer JS
     jQuery(document).ready(function($) {
         var $carousel = $('#slider .owl-carousel');
-        var itemCount = $carousel.children('.item').length;
+        if (!$carousel.length) return;
 
-        if ($carousel.length) {
+        function initMainSlider() {
+            if (typeof $.fn.owlCarousel !== 'function') {
+                setTimeout(initMainSlider, 100);
+                return;
+            }
+
+            var itemCount = $carousel.children('.item').length;
             $carousel.owlCarousel({
                 loop: (itemCount > 1),
                 margin: 0,
@@ -127,5 +133,7 @@ if ($slider_query->have_posts()) {
                 }
             });
         }
+
+        initMainSlider();
     });
 </script>

@@ -2,25 +2,52 @@
 @use "define" as *;
 @use "responsive" as *;
 
+// [2026-10-12] - @author: Kelvin - Ẩn hoàn toàn H1 trên giao diện người dùng nhưng bảo toàn cho SEO & Screen Readers
 .page-title-h1 {
-    text-align: center;
-    font-size: 0.7rem;
-    color: transparent;
-    margin-top: 15px;
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+
+    h1 {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
+    }
 }
 
 // [2026-10-09] - @author: Kelvin - Module Menu Sub dạng Pill Tabs cao cấp
+// [2026-10-12] - @author: Kelvin - Điều chỉnh margin-top để tách biệt rõ ràng .menu-sub khỏi #header-space (tránh đè lên nhau)
 .menu-sub {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 8px 12px;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     margin-bottom: 2rem;
     padding: 1rem 0.5rem 1.25rem;
     border-bottom: 1px solid #e2e8f0;
 
+    @include Respond(md) {
+        margin-top: 1.25rem;
+    }
+
     @include Respond(sm) {
+        margin-top: 1rem;
         flex-wrap: nowrap;
         overflow-x: auto;
         padding-bottom: 0.75rem;
@@ -97,3 +124,8 @@
     }
 }
 
+// Trường hợp trang có ảnh banner .page-img phía trên thì chỉ cần margin-top bình thường
+.page-img ~ .menu-sub,
+div:has(> .page-img) ~ .menu-sub {
+    margin-top: 1.5rem !important;
+}
