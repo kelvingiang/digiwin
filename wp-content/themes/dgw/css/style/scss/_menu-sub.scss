@@ -105,20 +105,29 @@
             }
         }
 
+        // [2026-10-13] - @author: Kelvin - Trạng thái khi được chọn (.active): hiển thị nổi bật nhưng vẫn giữ link cho thẻ <a> và <h2> để người xem tiện click quay lại category đó
+        &.active,
+        &.is-active,
         &.no-link {
-            cursor: default;
+            cursor: pointer;
             background: linear-gradient(135deg, #00aff0 0%, #0088cc 100%);
             border-color: transparent;
             box-shadow: 0 4px 14px rgba(0, 175, 240, 0.35);
             transform: translateY(-1px);
+
+            a {
+                cursor: pointer;
+                pointer-events: auto;
+            }
 
             h2 {
                 color: #ffffff !important;
                 font-weight: 600;
             }
 
-            a {
-                pointer-events: none;
+            &:hover {
+                box-shadow: 0 6px 16px rgba(0, 175, 240, 0.45);
+                transform: translateY(-2px);
             }
         }
     }

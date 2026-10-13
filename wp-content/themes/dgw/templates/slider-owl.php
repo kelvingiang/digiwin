@@ -115,6 +115,12 @@ if ($slider_query->have_posts()) {
                 return;
             }
 
+            // [2026-10-13] - @author: Kelvin - Khắc phục lỗi tiếng Trung: giải phóng các thẻ .item nếu bị plugin (như Divi Builder #et-boc) bọc lại bên trong
+            var $allSlides = $carousel.find('.item');
+            if ($allSlides.length > 0 && $carousel.children('.item').length !== $allSlides.length) {
+                $carousel.empty().append($allSlides);
+            }
+
             var itemCount = $carousel.children('.item').length;
             $carousel.owlCarousel({
                 loop: (itemCount > 1),

@@ -1,5 +1,5 @@
 <div class="side-list-title">
-    <?php __('cases', 'dgw') ?>
+    <?php echo esc_html__('cases', 'dgw'); ?>
 </div>
 <div class="side-list">
     <?php

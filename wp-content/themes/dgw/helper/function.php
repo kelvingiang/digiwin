@@ -467,3 +467,14 @@ function custom_noindex_member_page() {
     }
 }
 
+/**
+ * Date: 2026-10-13
+ * Function: Điều chỉnh chất lượng nén ảnh WebP/JPEG xuống 78% để tối ưu Core Web Vitals (FCP/LCP)
+ */
+add_filter('wp_editor_set_quality', 'digiwin_optimize_image_quality', 10, 2);
+function digiwin_optimize_image_quality(int $quality, string $mime_type): int {
+    if (in_array($mime_type, ['image/webp', 'image/jpeg'], true)) {
+        return 78; // Mức cân bằng tối ưu giữa dung lượng và độ nét theo chuẩn Lighthouse
+    }
+    return $quality;
+}

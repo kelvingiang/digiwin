@@ -28,7 +28,8 @@
             ?>
                 <div class="menu-mobile__item <?php echo $has_sub ? 'menu-mobile__item--has-submenu' : ''; ?>">
                     <div class="menu-mobile__item-main">
-                        <a href="<?php echo $has_sub ? 'javascript:void(0)' : esc_url(home_url($key)); ?>" class="menu-mobile__link">
+                        <!-- [2026-10-13] - @author: Kelvin - Luôn dùng URL thực tế thay vì javascript:void(0) để tối ưu Technical SEO (Googlebot crawlable) -->
+                        <a href="<?php echo esc_url(home_url($key)); ?>" class="menu-mobile__link">
                              <?php _e($item['name'], 'dgw'); ?>
                         </a>
 
@@ -77,8 +78,11 @@
             }, 300);
         });
 
-        // Toggle Submenu (Accordion)
+        // [2026-10-13] - @author: Kelvin - Tách biệt hành vi: click link điều hướng bình thường, click toggle/khoảng trống sẽ bật tắt submenu accordion
         $('.menu-mobile__item--has-submenu .menu-mobile__item-main').click(function(e) {
+            if ($(e.target).closest('.menu-mobile__link').length) {
+                return; // Để thẻ <a> chuyển trang bình thường
+            }
             e.preventDefault();
             var $this = $(this);
             var $toggleIcon = $this.find('.menu-mobile__toggle');

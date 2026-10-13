@@ -555,29 +555,70 @@ hr.style-two {
 }
 .single-space .view_like_area {
   background-color: transparent;
-  margin-top: 0rem;
-  margin-bottom: 1rem;
-  padding-right: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  padding-right: 1.5rem;
   z-index: 10;
 }
 .single-space .view_like_area .view_like_content {
-  text-align: end;
-  color: #bbbbbb;
   display: flex;
   flex-direction: row;
-  justify-content: end;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1.25rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
-.single-space .view_like_area .view_like_content > div {
-  margin: 0rem 0.5rem;
-  display: flex;
-  flex-direction: row;
+.single-space .view_like_area .view_like_content .view-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
-.single-space .view_like_area .view_like_content > div div {
-  margin: 0.2rem;
+.single-space .view_like_area .view_like_content .view-item .icon-comment {
+  width: 17px;
+  height: 17px;
+  fill: #94a3b8;
+  display: block;
+  transition: all 0.25s ease;
 }
-.single-space .view_like_area .view_like_content > div div .like-post {
-  fill: #153f77;
+.single-space .view_like_area .view_like_content .like-click {
+  display: inline-flex;
+  align-items: center;
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline: none;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post .icon-comment {
+  fill: #64748b;
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post:hover {
+  transform: scale(1.2);
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post:hover .icon-comment {
+  fill: #00aff0;
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post:active {
+  transform: scale(0.95);
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.is-liked {
+  cursor: default;
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.is-liked .icon-comment {
+  fill: #00aff0;
+}
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.is-loading {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 @keyframes cardFadeInUp {
@@ -2452,19 +2493,24 @@ html[lang=vi-VN] .has-sub::after {
 .menu-sub-item:hover h2 {
   color: #00AFF0;
 }
-.menu-sub-item.no-link {
-  cursor: default;
+.menu-sub-item.active, .menu-sub-item.is-active, .menu-sub-item.no-link {
+  cursor: pointer;
   background: linear-gradient(135deg, #00aff0 0%, #0088cc 100%);
   border-color: transparent;
   box-shadow: 0 4px 14px rgba(0, 175, 240, 0.35);
   transform: translateY(-1px);
 }
-.menu-sub-item.no-link h2 {
+.menu-sub-item.active a, .menu-sub-item.is-active a, .menu-sub-item.no-link a {
+  cursor: pointer;
+  pointer-events: auto;
+}
+.menu-sub-item.active h2, .menu-sub-item.is-active h2, .menu-sub-item.no-link h2 {
   color: #ffffff !important;
   font-weight: 600;
 }
-.menu-sub-item.no-link a {
-  pointer-events: none;
+.menu-sub-item.active:hover, .menu-sub-item.is-active:hover, .menu-sub-item.no-link:hover {
+  box-shadow: 0 6px 16px rgba(0, 175, 240, 0.45);
+  transform: translateY(-2px);
 }
 
 .page-img ~ .menu-sub,

@@ -127,19 +127,28 @@ function plus_one_view()
     ));
 }
 
-//=====================================================================================================
+// [2026-10-12] - @author: Kelvin - Tối ưu hóa API plus_one_like: validate post ID, sanitize và trả về count mới nhất cho client
 add_action('wp_ajax_plus_one_like', 'plus_one_like');          // 已登入使用者
 add_action('wp_ajax_nopriv_plus_one_like', 'plus_one_like');
 
 function plus_one_like()
 {
-    $postID = isset($_POST['postID']) ? intval($_POST['postID']) : 0;
-    $view = get_post_meta($postID, '_metabox_like', true) ? intval(get_post_meta($postID, '_metabox_like', true)) : 0;
-    update_post_meta($postID, '_metabox_like', $view + 1);
-    wp_send_json(array(
+    $postID = isset($_POST['postID']) ? absint($_POST['postID']) : 0;
+    if ($postID <= 0 || !get_post_status($postID)) {
+        wp_send_json_error(array('status' => 'error', 'message' => 'Invalid Post ID'));
+        wp_die();
+    }
+
+    $current_likes = (int) get_post_meta($postID, '_metabox_like', true);
+    $new_likes     = $current_likes + 1;
+    update_post_meta($postID, '_metabox_like', $new_likes);
+
+    wp_send_json_success(array(
         'status' => 'done',
-        // 'html'   => $view + 1,
+        'count'  => $new_likes,
+        'html'   => $new_likes,
     ));
+    wp_die();
 }
 
 // [2026-10-06] - Đã chuyển chức năng change_languages AJAX sang file inc/ajax/ajax-language.php để quản lý tập trung và tránh trùng lặp hook.

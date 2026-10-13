@@ -75,7 +75,7 @@
             <div class="content-list">
                 <?php
                 // LAY CATEGORY CUA POST
-                $wp_query = getCustomPostCateAtHome('resources', 'article',  5);
+                $wp_query = getCustomPostCateAtHome('resources', 'digi_know',  5);
                 if ($wp_query->have_posts()) :
                     while ($wp_query->have_posts()):
                         $wp_query->the_post();
