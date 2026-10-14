@@ -1,0 +1,519 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * ============================================================================
+ * [2026-10-13] - @author: Kelvin - Hệ thống XML Sitemap & HTML Sitemap thuần Code (Không dùng Plugin)
+ * File: inc/code/code-sitemap.php
+ * Mục đích & Tính năng:
+ * 1. Tạo XML Sitemap chuẩn SEO Protocol tại URL: /sitemap.xml (và /sitemap.xsl hiển thị giao diện đẹp trên trình duyệt).
+ * 2. Vô hiệu hóa sitemap mặc định của WordPress core để tập trung vào sitemap tối ưu riêng của theme.
+ * 3. Hỗ trợ đầy đủ: Trang chủ, Trang tĩnh (Pages), Bài viết (Posts), Toàn bộ Custom Post Types
+ *    (casestudies, solutions, resources, active, services, industries, joinus) và các Taxonomies danh mục tương ứng.
+ * 4. Tự động liên kết hình ảnh đại diện (Google Image Sitemap) cho bài viết có featured image.
+ * 5. Tối ưu hiệu suất đỉnh cao (Performance): Áp dụng Transient Caching (24h) để giảm TTFB xuống dưới 30ms,
+ *    tự động xóa cache khi đăng bài mới, sửa bài hoặc thay đổi danh mục (save_post, edit_terms...).
+ * 6. Cung cấp Shortcode [html_sitemap] để nhúng danh sách cây thư mục vào trang HTML nếu cần.
+ * ============================================================================
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+final class DGW_Sitemap_Manager
+{
+    private const VERSION = '1.0.1';
+    private const CACHE_KEY = 'dgw_sitemap_xml_cache';
+    private const CACHE_EXPIRATION = 86400; // 24 giờ
+
+    /**
+     * Danh sách CPT và Taxonomy cần index trong sitemap
+     */
+    private const SITEMAP_POST_TYPES = [
+        'page'        => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'casestudies' => ['priority' => '0.9', 'changefreq' => 'weekly'],
+        'solutions'   => ['priority' => '0.9', 'changefreq' => 'weekly'],
+        'resources'   => ['priority' => '0.9', 'changefreq' => 'weekly'],
+        'active'      => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'services'    => ['priority' => '0.8', 'changefreq' => 'monthly'],
+        'industries'  => ['priority' => '0.8', 'changefreq' => 'monthly'],
+        'joinus'      => ['priority' => '0.7', 'changefreq' => 'monthly'],
+        'post'        => ['priority' => '0.7', 'changefreq' => 'weekly'],
+    ];
+
+    private const SITEMAP_TAXONOMIES = [
+        'casestudies_category' => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'solutions_category'   => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'resources_category'   => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'active_category'      => ['priority' => '0.8', 'changefreq' => 'weekly'],
+        'category'             => ['priority' => '0.6', 'changefreq' => 'weekly'],
+    ];
+
+    public static function init(): void
+    {
+        $instance = new self();
+
+        // 1. Tắt sitemap mặc định của WordPress core để tránh trùng lặp
+        add_filter('wp_sitemaps_enabled', '__return_false');
+
+        // 2. Đăng ký Rewrite Rule cho /sitemap.xml và /sitemap.xsl
+        add_action('init', [$instance, 'register_rewrite_rules'], 10);
+        add_filter('query_vars', [$instance, 'register_query_vars']);
+        add_action('template_redirect', [$instance, 'handle_sitemap_request']);
+
+        // 3. Ngăn WordPress tự động chuyển hướng thêm trailing slash vào sitemap.xml
+        add_filter('redirect_canonical', [$instance, 'disable_canonical_redirect_for_sitemap'], 10, 2);
+
+        // 4. Tự động flush rewrite rules khi nâng cấp version
+        add_action('init', [$instance, 'maybe_flush_rules'], 99);
+
+        // 5. Hook tự động xóa cache khi nội dung thay đổi
+        add_action('save_post', [$instance, 'clear_cache']);
+        add_action('delete_post', [$instance, 'clear_cache']);
+        add_action('created_term', [$instance, 'clear_cache']);
+        add_action('edited_term', [$instance, 'clear_cache']);
+        add_action('delete_term', [$instance, 'clear_cache']);
+
+        // 6. Tự động khai báo Sitemap vào robots.txt chuẩn SEO
+        add_filter('robots_txt', [$instance, 'append_sitemap_to_robots_txt'], 10, 2);
+
+        // 7. Đăng ký Shortcode [html_sitemap]
+        add_shortcode('html_sitemap', [$instance, 'render_html_sitemap_shortcode']);
+    }
+
+    /**
+     * [2026-10-13] - Khai báo sitemap vào virtual robots.txt của WordPress
+     */
+    public function append_sitemap_to_robots_txt(string $output, bool $public): string
+    {
+        if ($public) {
+            $output .= "\nSitemap: " . esc_url(home_url('/sitemap.xml')) . "\n";
+        }
+        return $output;
+    }
+
+    /**
+     * [2026-10-13] - Đăng ký rewrite rules cho sitemap
+     */
+    public function register_rewrite_rules(): void
+    {
+        add_rewrite_rule('^sitemap\.xml/?$', 'index.php?dgw_sitemap=xml', 'top');
+        add_rewrite_rule('^sitemap\.xsl/?$', 'index.php?dgw_sitemap=xsl', 'top');
+    }
+
+    /**
+     * [2026-10-13] - Ngăn canonical redirect thêm dấu / vào file xml/xsl
+     */
+    public function disable_canonical_redirect_for_sitemap($redirect_url, $requested_url)
+    {
+        if (is_string($requested_url) && (strpos($requested_url, 'sitemap.xml') !== false || strpos($requested_url, 'sitemap.xsl') !== false)) {
+            return false;
+        }
+        return $redirect_url;
+    }
+
+    /**
+     * [2026-10-13] - Đăng ký query_vars
+     */
+    public function register_query_vars(array $vars): array
+    {
+        $vars[] = 'dgw_sitemap';
+        return $vars;
+    }
+
+    /**
+     * [2026-10-13] - Tự động flush rewrite rules khi version thay đổi
+     */
+    public function maybe_flush_rules(): void
+    {
+        $saved_version = get_option('dgw_sitemap_version');
+        if ($saved_version !== self::VERSION) {
+            flush_rewrite_rules(false);
+            update_option('dgw_sitemap_version', self::VERSION);
+        }
+    }
+
+    /**
+     * [2026-10-13] - Xử lý xuất sitemap XML / XSL khi truy cập
+     */
+    public function handle_sitemap_request(): void
+    {
+        $sitemap_type = get_query_var('dgw_sitemap');
+
+        if (empty($sitemap_type)) {
+            return;
+        }
+
+        if ($sitemap_type === 'xml') {
+            $this->output_xml_sitemap();
+            exit;
+        }
+
+        if ($sitemap_type === 'xsl') {
+            $this->output_xsl_stylesheet();
+            exit;
+        }
+    }
+
+    /**
+     * [2026-10-13] - Xóa transient cache của sitemap
+     */
+    public function clear_cache(): void
+    {
+        delete_transient(self::CACHE_KEY);
+    }
+
+    /**
+     * [2026-10-13] - Xuất file XML sitemap (có cache để tối ưu TTFB)
+     */
+    private function output_xml_sitemap(): void
+    {
+        // 1. Kiểm tra cache
+        $xml = get_transient(self::CACHE_KEY);
+
+        if (empty($xml) || !is_string($xml)) {
+            $xml = $this->generate_xml_content();
+            set_transient(self::CACHE_KEY, $xml, self::CACHE_EXPIRATION);
+        }
+
+        // 2. Gửi headers chuẩn SEO
+        if (!headers_sent()) {
+            header('HTTP/1.1 200 OK');
+            header('Content-Type: text/xml; charset=UTF-8');
+            header('X-Robots-Tag: noindex, follow');
+            header('Cache-Control: public, max-age=86400');
+        }
+
+        echo $xml;
+    }
+
+    /**
+     * [2026-10-13] - Tạo toàn bộ nội dung XML sitemap
+     */
+    private function generate_xml_content(): string
+    {
+        global $wpdb;
+
+        $xsl_url = home_url('/sitemap.xsl');
+        $output  = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $output .= '<?xml-stylesheet type="text/xsl" href="' . esc_url($xsl_url) . '"?>' . "\n";
+        $output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" ' .
+                   'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
+
+        // A. TRANG CHỦ
+        $home_url   = trailingslashit(home_url('/'));
+        $home_date  = date('c');
+        $output    .= $this->build_url_tag($home_url, $home_date, 'daily', '1.0');
+
+        // B. CÁC LOẠI BÀI VIẾT & TRANG (CPT & PAGES)
+        foreach (self::SITEMAP_POST_TYPES as $post_type => $meta) {
+            $query_args = [
+                'post_type'              => $post_type,
+                'post_status'            => 'publish',
+                'posts_per_page'         => 1000,
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
+                'orderby'                => 'modified',
+                'order'                  => 'DESC',
+            ];
+
+            $query = new WP_Query($query_args);
+
+            if ($query->have_posts()) {
+                while ($query->have_posts()) {
+                    $query->the_post();
+                    $post_id   = get_the_ID();
+                    $loc       = get_permalink($post_id);
+                    $mod_date  = get_the_modified_date('c', $post_id);
+
+                    // Lấy ảnh đại diện nếu có
+                    $image_url = '';
+                    if (has_post_thumbnail($post_id)) {
+                        $img_src = wp_get_attachment_image_src(get_post_thumbnail_id($post_id), 'full');
+                        if (!empty($img_src[0])) {
+                            $image_url = $img_src[0];
+                        }
+                    }
+
+                    $output .= $this->build_url_tag($loc, $mod_date, $meta['changefreq'], $meta['priority'], $image_url, get_the_title($post_id));
+                }
+                wp_reset_postdata();
+            }
+        }
+
+        // C. CÁC DANH MỤC TAXONOMY
+        foreach (self::SITEMAP_TAXONOMIES as $taxonomy => $meta) {
+            if (!taxonomy_exists($taxonomy)) {
+                continue;
+            }
+
+            $terms = get_terms([
+                'taxonomy'   => $taxonomy,
+                'hide_empty' => true,
+            ]);
+
+            if (!empty($terms) && !is_wp_error($terms)) {
+                foreach ($terms as $term) {
+                    $term_url = get_term_link($term, $taxonomy);
+                    if (!is_wp_error($term_url)) {
+                        $output .= $this->build_url_tag($term_url, date('c'), $meta['changefreq'], $meta['priority']);
+                    }
+                }
+            }
+        }
+
+        $output .= '</urlset>';
+
+        return $output;
+    }
+
+    /**
+     * [2026-10-13] - Helper dựng thẻ <url> trong sitemap
+     */
+    private function build_url_tag(string $loc, string $lastmod, string $changefreq, string $priority, string $image_url = '', string $image_title = ''): string
+    {
+        $xml  = "\t<url>\n";
+        $xml .= "\t\t<loc>" . esc_url($loc) . "</loc>\n";
+        $xml .= "\t\t<lastmod>" . esc_html($lastmod) . "</lastmod>\n";
+        $xml .= "\t\t<changefreq>" . esc_html($changefreq) . "</changefreq>\n";
+        $xml .= "\t\t<priority>" . esc_html($priority) . "</priority>\n";
+
+        if (!empty($image_url)) {
+            $xml .= "\t\t<image:image>\n";
+            $xml .= "\t\t\t<image:loc>" . esc_url($image_url) . "</image:loc>\n";
+            if (!empty($image_title)) {
+                $xml .= "\t\t\t<image:title>" . esc_html($image_title) . "</image:title>\n";
+            }
+            $xml .= "\t\t</image:image>\n";
+        }
+
+        $xml .= "\t</url>\n";
+        return $xml;
+    }
+
+    /**
+     * [2026-10-13] - Xuất file giao diện XSLT cho sitemap khi mở trên browser
+     */
+    private function output_xsl_stylesheet(): void
+    {
+        if (!headers_sent()) {
+            header('HTTP/1.1 200 OK');
+            header('Content-Type: text/xsl; charset=UTF-8');
+            header('Cache-Control: public, max-age=86400');
+        }
+
+        echo '<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0" 
+    xmlns:html="http://www.w3.org/TR/REC-html40"
+    xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+    <xsl:template match="/">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+            <head>
+                <title>XML Sitemap - Digiwin Vietnam</title>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <style type="text/css">
+                    body {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                        color: #334155;
+                        background: #f8fafc;
+                        margin: 0;
+                        padding: 40px 20px;
+                    }
+                    .container {
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        background: #ffffff;
+                        padding: 30px;
+                        border-radius: 12px;
+                        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+                        border: 1px solid #e2e8f0;
+                    }
+                    h1 {
+                        font-size: 26px;
+                        margin-top: 0;
+                        color: #0f172a;
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+                    .desc {
+                        font-size: 14px;
+                        color: #64748b;
+                        margin-bottom: 25px;
+                        line-height: 1.6;
+                    }
+                    .desc a {
+                        color: #00aff0;
+                        text-decoration: none;
+                    }
+                    .count-badge {
+                        background: #e0f2fe;
+                        color: #0284c7;
+                        padding: 4px 12px;
+                        border-radius: 20px;
+                        font-size: 13px;
+                        font-weight: 600;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 15px;
+                    }
+                    th {
+                        background-color: #f1f5f9;
+                        color: #475569;
+                        text-align: left;
+                        padding: 12px 16px;
+                        font-size: 13px;
+                        font-weight: 600;
+                        border-bottom: 2px solid #cbd5e1;
+                    }
+                    td {
+                        padding: 12px 16px;
+                        border-bottom: 1px solid #f1f5f9;
+                        font-size: 13px;
+                        color: #334155;
+                        word-break: break-all;
+                    }
+                    tr:hover td {
+                        background-color: #f8fafc;
+                    }
+                    td a {
+                        color: #0284c7;
+                        text-decoration: none;
+                        font-weight: 500;
+                    }
+                    td a:hover {
+                        text-decoration: underline;
+                    }
+                    .priority-tag {
+                        display: inline-block;
+                        padding: 2px 8px;
+                        border-radius: 4px;
+                        background: #ecfdf5;
+                        color: #059669;
+                        font-weight: 600;
+                        font-size: 12px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>XML Sitemap <span class="count-badge"><xsl:value-of select="count(sitemap:urlset/sitemap:url)"/> URLs</span></h1>
+                    <p class="desc">
+                        Sitemap này được tạo tự động bằng Code của Theme Digiwin. Được thiết kế tối ưu cho các công cụ tìm kiếm như Google, Bing thu thập dữ liệu (crawl).<br/>
+                        Tìm hiểu thêm về giao thức XML Sitemap tại <a href="https://www.sitemaps.org" target="_blank" rel="noopener">sitemaps.org</a>.
+                    </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;">Đường dẫn liên kết (URL)</th>
+                                <th style="width: 15%;">Hình ảnh</th>
+                                <th style="width: 15%;">Cập nhật lần cuối</th>
+                                <th style="width: 10%;">Tần suất</th>
+                                <th style="width: 10%;">Độ ưu tiên</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:for-each select="sitemap:urlset/sitemap:url">
+                                <tr>
+                                    <td>
+                                        <a href="{sitemap:loc}" target="_blank">
+                                            <xsl:value-of select="sitemap:loc"/>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <xsl:choose>
+                                            <xsl:when test="image:image">
+                                                <span style="color: #059669;">1 ảnh</span>
+                                            </xsl:when>
+                                            <xsl:otherwise>
+                                                <span style="color: #94a3b8;">-</span>
+                                            </xsl:otherwise>
+                                        </xsl:choose>
+                                    </td>
+                                    <td>
+                                        <xsl:value-of select="substring(sitemap:lastmod, 0, 11)"/>
+                                    </td>
+                                    <td>
+                                        <xsl:value-of select="sitemap:changefreq"/>
+                                    </td>
+                                    <td>
+                                        <span class="priority-tag"><xsl:value-of select="sitemap:priority"/></span>
+                                    </td>
+                                </tr>
+                            </xsl:for-each>
+                        </tbody>
+                    </table>
+                </div>
+            </body>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>';
+    }
+
+    /**
+     * [2026-10-13] - Shortcode [html_sitemap] render cây danh mục bài viết cho trang HTML
+     */
+    public function render_html_sitemap_shortcode(): string
+    {
+        ob_start();
+        ?>
+        <div class="dgw-html-sitemap">
+            <h2><?php esc_html_e('Sơ đồ trang web (Sitemap)', 'dgw'); ?></h2>
+            
+            <div class="sitemap-section">
+                <h3><?php esc_html_e('Trang chính', 'dgw'); ?></h3>
+                <ul>
+                    <li><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Trang chủ', 'dgw'); ?></a></li>
+                    <?php
+                    $pages = get_pages(['sort_column' => 'post_title', 'sort_order' => 'ASC']);
+                    foreach ($pages as $p) :
+                    ?>
+                        <li><a href="<?php echo esc_url(get_permalink($p->ID)); ?>"><?php echo esc_html($p->post_title); ?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+
+            <?php
+            $cpts = [
+                'casestudies' => __('Dự án (Case Studies)', 'dgw'),
+                'solutions'   => __('Giải pháp (Solutions)', 'dgw'),
+                'resources'   => __('Tài liệu (Resources)', 'dgw'),
+                'active'      => __('Sự kiện & Hoạt động', 'dgw'),
+            ];
+
+            foreach ($cpts as $post_type => $label) :
+                $posts = get_posts([
+                    'post_type'      => $post_type,
+                    'post_status'    => 'publish',
+                    'posts_per_page' => 100,
+                    'no_found_rows'  => true,
+                ]);
+                if (!empty($posts)) :
+            ?>
+                <div class="sitemap-section">
+                    <h3><?php echo esc_html($label); ?></h3>
+                    <ul>
+                        <?php foreach ($posts as $post_item) : ?>
+                            <li><a href="<?php echo esc_url(get_permalink($post_item->ID)); ?>"><?php echo esc_html($post_item->post_title); ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php
+                endif;
+            endforeach;
+            ?>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+}
+
+// Khởi chạy module Sitemap
+DGW_Sitemap_Manager::init();

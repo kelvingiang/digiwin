@@ -3,11 +3,12 @@
     // Danh sách các loại sidebar bạn muốn hiển thị
     $sidebar_types = ['resources', 'active', 'casestudies', 'joinus', 'solutions'];
 
+    // [2026-10-14] - @author: Kelvin - Đổi tên biến sang $side_query để tránh ghi đè biến toàn cục $wp_query
     foreach ($sidebar_types as $type) :
-        $wp_query = getCustomPostShowSidebar($type);
+        $side_query = getCustomPostShowSidebar($type);
         
-        if ($wp_query->have_posts()) :
-            while ($wp_query->have_posts()) : $wp_query->the_post(); 
+        if ($side_query->have_posts()) :
+            while ($side_query->have_posts()) : $side_query->the_post(); 
                 // Lấy Alt Text
                 $thumb_id = get_post_thumbnail_id();
                 $alt = get_post_meta($thumb_id, '_wp_attachment_image_alt', true);

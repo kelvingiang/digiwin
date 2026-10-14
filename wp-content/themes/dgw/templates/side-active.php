@@ -22,9 +22,10 @@
             <?php
             $tax = 'active_category';
             $tax_id = $val['ID'];
-            $wp_query = getCustomPostAtSideCate('active', -1, $tax, $tax_id);
-            while ($wp_query->have_posts()) :
-                $wp_query->the_post();
+            // [2026-10-14] - @author: Kelvin - Đổi tên biến sang $side_active_query để tránh ghi đè biến toàn cục $wp_query
+            $side_active_query = getCustomPostAtSideCate('active', -1, $tax, $tax_id);
+            while ($side_active_query->have_posts()) :
+                $side_active_query->the_post();
             ?>
                 <a class="card-item" href="<?php the_permalink(); ?>">
                     <div class="card-title"><?php the_title(); ?></div>

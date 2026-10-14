@@ -119,35 +119,27 @@ add_action('wp_enqueue_scripts', function (): void {
 });
 
 /**
- * [2026-10-05] - @author: Kelvin - Gán data attribute cho nút tải tài liệu trong footer
+ * [2026-10-14] - @author: Kelvin - Đã bỏ hook wp_footer gán data attribute vì data-post-id & data-post-title
+ * đã được gán trực tiếp trong single-resources.php để tránh xung đột làm lệch Post ID từ các query phụ ở sidebar.
  */
-add_action('wp_footer', function (): void {
-    $post_id    = get_the_ID();
-    $post_title = get_the_title();
-    if (!$post_id) {
-        return;
-    }
-    ?>
-    <script>
-        jQuery(document).ready(function($) {
-            $('#my-load-data').attr({
-                'data-post-id': '<?php echo esc_js((string) $post_id); ?>',
-                'data-post-title': '<?php echo esc_js((string) $post_title); ?>'
-            });
-        });
-    </script>
-    <?php
-});
+// add_action('wp_footer', function (): void {
+//     $post_id    = get_the_ID();
+//     $post_title = get_the_title();
+//     if (!$post_id) {
+//         return;
+//     }
+//     echo '<script>jQuery(document).ready(function($) { $("#my-load-data").attr({ "data-post-id": "' . esc_js((string) $post_id) . '", "data-post-title": "' . esc_js((string) $post_title) . '" }); });</script>';
+// });
 
 /**
- * [2026-10-05] - @author: Kelvin - Nạp modal form đăng nhập và quên mật khẩu vào footer
+ * [2026-10-14] - @author: Kelvin - Nạp modal form đăng nhập và quên mật khẩu vào footer
+ * Đưa function_exists vào bên trong callback của wp_footer để đảm bảo inc/shortcode/ đã được load xong.
  */
-if (function_exists('member_login_register_form')) {
-    add_action('wp_footer', 'member_login_register_form');
-}
-
-if (function_exists('member_forgot_password_form')) {
-    add_action('wp_footer', function (): void {
+add_action('wp_footer', function (): void {
+    if (function_exists('member_login_register_form')) {
+        echo member_login_register_form();
+    }
+    if (function_exists('member_forgot_password_form')) {
         echo member_forgot_password_form();
-    });
-}
+    }
+});
