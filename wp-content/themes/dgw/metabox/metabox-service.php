@@ -9,7 +9,7 @@ class Metabox_Service {
 
     public function create() {
         $id = 'admin-metabox-service';
-        $title = __('Services');
+        $title = __('Services', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('services',));
     }
@@ -24,15 +24,15 @@ class Metabox_Service {
 
         <div id="tabs">
             <ul>
-                <li><a href="#tabs-1"><?php _e('Chinese') ?></a></li>
-                <li><a href="#tabs-2"><?php _e('Vietnamese') ?></a></li>
-                <li><a href="#tabs-3"><?php _e('English') ?></a></li>
+                <li><a href="#tabs-1"><?php __('Chinese', 'dgw') ?></a></li>
+                <li><a href="#tabs-2"><?php __('Vietnamese', 'dgw') ?></a></li>
+                <li><a href="#tabs-3"><?php __('English', 'dgw') ?></a></li>
             </ul>
             <div id="tabs-1">
                 <div class="row-two-column">
                     <div class="col">
                         <div class="cell-title">
-                            <label><?php _e('Service Name') ?> (<?php _e('Chinese') ?>)</label>
+                            <label><?php __('Service Name', 'dgw') ?> (<?php __('Chinese', 'dgw') ?>)</label>
                         </div>
                         <div class="cell-text">
                             <input type="text" name="txt-name-cn" id="txt-name-cn" class="my-input"
@@ -42,7 +42,7 @@ class Metabox_Service {
                 </div>
                 <div class="row-one-column">
                     <div class="cell-title">
-                        <label><?php _e('Service Content') ?> (<?php _e('Chinese') ?>)</label>
+                        <label><?php __('Service Content', 'dgw') ?> (<?php __('Chinese', 'dgw') ?>)</label>
                     </div>
                     <div class="cell-text">
                         <?php wp_editor(get_post_meta($post->ID, '_service_content_cn', true), 'txt-content-cn', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -55,7 +55,7 @@ class Metabox_Service {
                 <div class="row-two-column">
                     <div class="col">
                         <div class="cell-title">
-                            <label><?php _e('Service Name') ?> (<?php _e('Vietnamese') ?>)</label>
+                            <label><?php __('Service Name', 'dgw') ?> (<?php __('Vietnamese', 'dgw') ?>)</label>
                         </div>
                         <div class="cell-text">
                             <input type="text" name="txt-name-vn" id="txt-name-vn" class="my-input"
@@ -65,7 +65,7 @@ class Metabox_Service {
                 </div>
                 <div class="row-one-column">
                     <div class="cell-title">
-                        <label><?php _e('Service Content') ?> (<?php _e('Vietnamese') ?>)</label>
+                        <label><?php __('Service Content', 'dgw') ?> (<?php __('Vietnamese', 'dgw') ?>)</label>
                     </div>
                     <div class="cell-text">
                         <?php wp_editor(get_post_meta($post->ID, '_service_content_vn', true), 'txt-content-vn', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -78,7 +78,7 @@ class Metabox_Service {
                 <div class="row-two-column">
                     <div class="col">
                         <div class="cell-title">
-                            <label><?php _e('Service Name') ?> (<?php _e('English') ?>)</label>
+                            <label><?php __('Service Name', 'dgw') ?> (<?php __('English', 'dgw') ?>)</label>
                         </div>
                         <div class="cell-text">
                             <input type="text" name="txt-name-en" id="txt-name-en" class="my-input"
@@ -88,7 +88,7 @@ class Metabox_Service {
                 </div>
                 <div class="row-one-column">
                     <div class="cell-title">
-                        <label><?php _e('Service Content') ?> (<?php _e('English') ?>)</label>
+                        <label><?php __('Service Content', 'dgw') ?> (<?php __('English', 'dgw') ?>)</label>
                     </div>
                     <div class="cell-text">
                         <?php wp_editor(get_post_meta($post->ID, '_service_content_en', true), 'txt-content-en', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -109,18 +109,18 @@ class Metabox_Service {
     public function save($post_id) {
 
         // global $wpdb;
-        //  $wpdb->update($wpdb->posts, array('post_title' => $_POST['txt-name-cn']), array('ID' => $post_id));
+        //  $wpdb->update($wpdb->posts, array('post_title' => sanitize_text_field(wp_unslash($_POST['txt-name-cn']))), array('ID' => $post_id));
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP 
 
-        update_post_meta($post_id, '_service_name_cn', $_POST['txt-name-cn']);
-        update_post_meta($post_id, '_service_content_cn', $_POST['txt-content-cn']);
+        update_post_meta($post_id, '_service_name_cn', sanitize_text_field(wp_unslash($_POST['txt-name-cn'])));
+        update_post_meta($post_id, '_service_content_cn', sanitize_text_field(wp_unslash($_POST['txt-content-cn'])));
 
-        update_post_meta($post_id, '_service_name_vn', $_POST['txt-name-vn']);
-        update_post_meta($post_id, '_service_content_vn', $_POST['txt-content-vn']);
+        update_post_meta($post_id, '_service_name_vn', sanitize_text_field(wp_unslash($_POST['txt-name-vn'])));
+        update_post_meta($post_id, '_service_content_vn', sanitize_text_field(wp_unslash($_POST['txt-content-vn'])));
 
-        update_post_meta($post_id, '_service_name_en', $_POST['txt-name-en']);
-        update_post_meta($post_id, '_service_content_en', $_POST['txt-content-en']);
+        update_post_meta($post_id, '_service_name_en', sanitize_text_field(wp_unslash($_POST['txt-name-en'])));
+        update_post_meta($post_id, '_service_content_en', sanitize_text_field(wp_unslash($_POST['txt-content-en'])));
     }
 
 }

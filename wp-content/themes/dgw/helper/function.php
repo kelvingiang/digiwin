@@ -2,36 +2,81 @@
 // dua toan bo cac function vao file nay de giam do phuc tap cua file functions.php
 require_once get_template_directory() . '/inc/init.php';
 
+/**
+ * [2026-10-05] - @author: Kelvin - Fallback tuong thich nguoc cho cac loi goi get_template_part('templates/template', $name)
+ * Tu dong dieu huong sang template moi trong thu muc templates/ theo chuan kebab-case
+ */
+add_action('get_template_part_templates/template', function ($slug, $name = null, $args = []) {
+    if (empty($name)) {
+        return;
+    }
+    $cleanName = str_replace('_', '-', $name);
+    get_template_part('templates/' . $cleanName, null, $args);
+}, 10, 3);
 
+
+// [2026-07-09] - Refactor dgw_get_lang and locale mapping for AJAX/get/cookie consistency
 function dgw_get_lang()
 {
-  // Kiểm tra AJAX POST
-    if (wp_doing_ajax() && isset($_POST['lang'])) {
-        return sanitize_text_field($_POST['lang']) === 'zh-TW' ? 'cn' : 'vn';
+    $default = 'vn';
+
+    if (wp_doing_ajax()) {
+        if (isset($_REQUEST['lang'])) {
+            $lang = sanitize_text_field($_REQUEST['lang']);
+            if ($lang === 'cn' || $lang === 'zh-TW') {
+                return 'cn';
+            }
+            if ($lang === 'vi-VN' || $lang === 'vn') {
+                return 'vn';
+            }
+        }
     }
-    
-    // Kiểm tra GET request
+
     if (isset($_GET['lang'])) {
-        return sanitize_text_field($_GET['lang']) === 'cn' ? 'cn' : 'vn';
+        $lang = sanitize_text_field($_GET['lang']);
+        if ($lang === 'cn' || $lang === 'zh-TW') {
+            return 'cn';
+        }
+        return 'vn';
     }
-    
-    // Lấy từ cookie
-    return isset($_COOKIE['site_lang']) ? sanitize_text_field($_COOKIE['site_lang']) : 'vn';
+
+    if (isset($_COOKIE['site_lang'])) {
+        $lang = sanitize_text_field($_COOKIE['site_lang']);
+        return $lang === 'cn' ? 'cn' : 'vn';
+    }
+
+    return $default;
 }
 
+/**
+ * [2026-10-07] - Thiết lập cấu hình ngôn ngữ hệ thống:
+ * - Backend (WP-Admin): Cố định duy nhất 1 ngôn ngữ là Tiếng Trung (zh_TW), không bị ảnh hưởng bởi Frontend.
+ * - Frontend: Áp dụng cơ chế đa ngôn ngữ (Việt - Trung) dựa trên cookie site_lang / URL param.
+ */
+add_filter('admin_locale', function () {
+    return 'zh_TW';
+});
+
+add_filter('determine_locale', function ($locale) {
+    if (is_admin() && !wp_doing_ajax()) {
+        return 'zh_TW';
+    }
+    return $locale;
+});
+
 add_filter('locale', function ($locale) {
-
-    // ưu tiên AJAX
-    if (wp_doing_ajax() && isset($_POST['lang'])) {
-
-        $lang = $_POST['lang'];
-
-        // mapping chuẩn WP
-        if ($lang === 'zh-TW') return 'zh_TW';
-        if ($lang === 'vi-VN') return 'vi_VN';
+    // 1. Phía Backend Admin: Cố định 100% tiếng Trung
+    if (is_admin() && !wp_doing_ajax()) {
+        return 'zh_TW';
     }
 
-    return $locale;
+    // 2. Phía Frontend: Chuyển đổi linh hoạt giữa Tiếng Trung và Tiếng Việt
+    $lang = dgw_get_lang();
+    if ($lang === 'cn') {
+        return 'zh_TW';
+    }
+
+    return 'vi_VN';
 });
 
 // sắp xếp lại trình tự các input trong phần comment ==========
@@ -57,7 +102,7 @@ add_action('add_meta_boxes', function () {
         // 加到右側欄
         add_meta_box(
             'commentstatusdiv',
-            __('討論'),
+            __('Discuss', 'dgw'),
             'post_comment_status_meta_box',
             $pt,
             'side',
@@ -78,101 +123,69 @@ add_action('template_redirect', function () {
     }
 });
 
-/* ==============================================================
-  CHECK THE ARRAY IS NULL
-  =============================================================== */
 
-function MenuMain($arr, $class = "menu-main-item", $item_link = 'menu-main-item-link', $item_bg = 'menu-main-item-bg', $hassub = 'has-sub')
-{
-    foreach ($arr as $key => $val) :
-?>
-        <div class="<?php echo $class ?>">
-            <a href="<?php echo home_url($key) ?>"
-                class="<?php echo $item_link ?> <?php echo is_array($val['sub']) ? $hassub : '' ?>">
-                <?php echo $val[dgw_get_lang()] ?>
-            </a>
-            <div class="<?php echo $item_bg ?>"></div>
-
-            <?php if (is_array($val['sub'])) : ?>
-                <div class="<?php echo $val['class'] ?>">
-                    <!--/====== AP DUNG DEQUY CHO MENU NHIEU CAPV ================================================-->
-                    <?php MenuMain($val['sub'], $val['class'] . '-item', $val['class'] . '-item-link', $val['class'] . '-item-bg', 'has-sub-sub'); ?>
-                </div>
-            <?php endif ?>
-        </div>
-    <?php
-    endforeach;
-}
-
-function MenuMobile($arr, $item_link = 'menu-mobile-item-link')
-{
-    foreach ($arr as $key => $val) :
-    ?>
-        <a href="<?php echo home_url($key) ?>" style="  " class="<?php echo $item_link ?>">
-            <?php echo $val[dgw_get_lang()] ?>
-        </a>
-    <?php
-    endforeach;
-}
 
 //====== SAP LAI ARRAY THEO THU TU GIAM DAN AP DUNG CATEGORY =================
 function cmp($a, $b)
 {
-    return strcmp($b['order'], $a['order']);
+    return strcmp((string)($b['order'] ?? ''), (string)($a['order'] ?? ''));
+}
+
+// [2026-07-09] - Refactor getParams: trả default an toàn, sanitize dữ liệu, không trả khoảng trắng
+function dgw_sanitize_request_value($value)
+{
+    if (is_array($value)) {
+        return array_map('dgw_sanitize_request_value', $value);
+    }
+    return sanitize_text_field(wp_unslash($value));
 }
 
 //==== GET PARAM TREN URL============================================
-function getParams($name = null)
+function getParams($name = null, $default = '')
 {
-    if ($name == null || empty($name)) {
-        return $_REQUEST; // TRA VE GIA TRI REQUEST
-    } else {
-        // TRUONG HOP name DC CHUYEN VAO 
-        // KIEM TRA name CO TON TAI TRA VE name NGUOI ''
-        $val = (isset($_REQUEST[$name])) ? $_REQUEST[$name] : ' ';
-        return $val;
+    if ($name === null || $name === '') {
+        return dgw_sanitize_request_value($_REQUEST);
     }
+
+    $name = sanitize_key($name);
+
+    if (!isset($_REQUEST[$name])) {
+        return $default;
+    }
+
+    return dgw_sanitize_request_value($_REQUEST[$name]);
 }
 
-function custom_redirect($location)
+function custom_redirect($location = '')
 {
     global $post_type;
-    $location = admin_url('edit.php?post_type=' . $post_type);
-    return $location;
+    $url = admin_url('edit.php?post_type=' . rawurlencode($post_type));
+
+    if (empty($location)) {
+        return $url;
+    }
+
+    if (is_array($location)) {
+        return add_query_arg($location, $url);
+    }
+
+    $location = ltrim($location, '&?');
+    if (strpos($location, '=') !== false) {
+        return $url . '&' . $location;
+    }
+
+    return $url;
 }
 
 //============= KIEM DU LIEU CHUYEN QUA BANG PHUONG POST HAY GET======================
 function isPost()
 {
-    $flag = ($_SERVER['REQUEST_METHOD'] == 'POST') ? TRUE : FALSE;
-    return $flag;
+    return isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST';
 }
 
-//==== FUNCTION SHOW SUB CONTENT============================================
-function mySubContent($data)
-{
-    $str = explode('<!--more-->', $data);
-    return $str[0] . '....';
-}
 
-function getImage($name = '')
-{
-    return PART_IMAGES . $name;
-}
 
-//===============FUNCTION =================
-function createRandom($length)
-{
-    //$characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    $characters = "0123456789";
-    $charsLength = strlen($characters) - 1;
-    $string = "";
-    for ($i = 0; $i < $length; $i++) {
-        $randNum = mt_rand(0, $charsLength);
-        $string .= $characters[$randNum];
-    }
-    return $string;
-}
+
 
 function toBack($num)
 {
@@ -180,155 +193,194 @@ function toBack($num)
     $page = isset($_REQUEST['page']) ? sanitize_key($_REQUEST['page']) : '';
     $url = admin_url('admin.php?page=' . $page . '&paged=' . $paged . '&msg=' . intval($num));
     wp_redirect($url);
-    exit;;
+    exit;
 }
 
+// [2026-07-09] - Cập nhật style / cú pháp: sửa exit;; và chỉnh format login logo
 //======= THAY DOI LOGO DANG NHAP O ADMIN =====================================================
 // if (!is_admin()) {
 
-    // custom admin login logo
-    function custom_login_logo()
-    {
-        echo '<style type="text/css">
-	h1 a { background-image: url(' . PART_IMAGES . 'logo.png' . ') !important; }
-	</style>';
-    }
+function custom_login_logo()
+{
+    echo '<style type="text/css">\n'
+        . '    h1 a { background-image: url(' . esc_url(PART_IMAGES . 'logo.png') . ') !important; }\n'
+        . '</style>';
+}
 
-    add_action('login_head', 'custom_login_logo');
+add_action('login_head', 'custom_login_logo');
 // } else {
-    // require_once DIR_HELPER . 'code/function-add-media.php';
-    // require_once DIR_HELPER . 'code/function-upload-file.php';
+//     require_once DIR_HELPER . 'code/code-add-media.php';
+//     require_once DIR_HELPER . 'code/code-upload-file.php';
 // }
 
-// ====================FUNCTION SEO=========================================================== 
-function seo()
+// [2026-07-09] - Refactor SEO output to use WordPress title/meta hooks and avoid nested title functions.
+add_filter('document_title_parts', 'dgw_seo_document_title_parts');
+add_action('wp_head', 'dgw_seo_meta_tags');
+
+/**
+ * [02/10/2026] - Lay doi tuong WP_Term an toan theo slug hoac term_id
+ * Tranh loi WP_Error khi truyen slug vao get_category(intval($cate)).
+ */
+function dgw_get_category_by_param($cate)
 {
-    //  global $suite;
-    global $suite;
-    $suite = array(
-        'txtTitleSeo' => get_option('company_name_vn'),
-        'strDescriptionSeo' => get_option('company_name_vn') . '-' . get_option('company_address_vn'),
-        'strKeywordsSeo' => get_option('company_name_vn'),
-        'strPageName' => get_query_var('pagename'),
-    );
-    if (is_home() == true) {
+    if (empty($cate)) {
+        return null;
+    }
 
-        // THE DOI GIA TRI CUA TITLE WP_HEAD
-        function custom_title()
-        {
-            global $suite;
-            return $suite['txtTitleSeo'];
+    if (is_numeric($cate)) {
+        $term = get_term((int) $cate);
+        return ($term instanceof WP_Term) ? $term : null;
+    }
+
+    $slug = sanitize_title((string) $cate);
+    $taxonomies = array('solutions_category', 'casestudies_category', 'resources_category', 'services_category', 'category');
+
+    foreach ($taxonomies as $taxonomy) {
+        $term = get_term_by('slug', $slug, $taxonomy);
+        if ($term instanceof WP_Term) {
+            return $term;
         }
+    }
 
-        add_filter('wp_title', 'custom_title');
-        echo '<title>' . $suite['txtTitleSeo'] . '</title>';
-        echo '<meta name="description" content="' . $suite['strDescriptionSeo'] . '" />';
-        echo '<meta name="keywords" content="' . $suite['strKeywordsSeo'] . '" />';
-    } else if (is_single() || is_page()) {
-        /* ==============================
-          global $post;
-          $strSeoTitle = get_post_meta($post->ID, '_seo_title', true);
-          $strSeoDescription = get_post_meta($post->ID, '_seo_description', true);
-          $strSeoKeywords = get_post_meta($post->ID, '_seo_key', true);
+    return null;
+}
 
-          global $strTitle;
-          if (empty($strSeoTitle) != false) {
-          $strTitle = $suite['txtTitleSeo'] . '-' . get_query_var('pagename');
-          } else {
-          $strTitle = $suite['txtTitleSeo'] . ' - ' . $strSeoTitle;
-          }
+function dgw_seo_document_title_parts($title_parts)
+{
+    $site_name = get_option('company_name_vn') ?: get_bloginfo('name');
+    $page_name = get_query_var('pagename');
+    $title = '';
 
-          // THE DOI GIA TRI CUA TITLE WP_HEAD
-          function custom_title() {
-          global $strTitle;
-          return $strTitle;
-          }
-         */
-
+    if (is_home() || is_front_page()) {
+        $title = $site_name;
+    } elseif (is_single() || is_page()) {
         $cate = get_query_var('cate');
         $sp = get_query_var('sp');
 
         if (empty($cate) && empty($sp)) {
-            add_filter('wp_title', 'custom_title');
-            echo '<title> Digiwin' . $suite['strPageName']  . '</title>';
-            echo '<meta name="description" content="' . $suite['strDescriptionSeo'] . '" />';
-            echo '<meta name="keywords" content="' . $suite['strPageName'] . ', ' . $suite['txtTitleSeo'] . '" />';
+            $title = trim('Digiwin ' . $page_name);
         } elseif (!empty($cate)) {
-            $cateArr = get_category_by_id($cate);
-            add_filter('wp_title', 'custom_title');
-            echo '<title>' . $cateArr['name_vn'] . ' Digiwin</title>';
-            echo '<meta name="description" content="beautiful, luggage,' . $suite['strDescriptionSeo'] . ' - ' . $cateArr['name_vn'] . '" />';
-            echo '<meta name="keywords" content="beautiful, luggage,' . $suite['strPageName'] . ', ' . $suite['txtTitleSeo'] . ', ' . $cateArr['name_vn'] . '" />';
+            $cate_obj = dgw_get_category_by_param($cate);
+            if ($cate_obj instanceof WP_Term) {
+                $title = $cate_obj->name . ' Digiwin';
+            }
         } elseif (!empty($sp)) {
             $proArr = get_product($sp);
-            add_filter('wp_title', 'custom_title');
-            echo '<title> ' . $proArr['seo_title'] . ' Digiwin</title>';
-            echo '<meta name="description" content="' . $proArr['seo_description'] . '" />';
-            echo '<meta name="keywords" content="' . 'Beautiful, ' . $proArr['seo_key'] . '" />';
+            if (!empty($proArr['seo_title'])) {
+                $title = $proArr['seo_title'] . ' Digiwin';
+            }
         }
-    } else if (is_tax() || is_tag() || is_category()) {
-        global $taxonomy, $term;
-        $term = get_term_by('slug', $term, $taxonomy);
-        $term_id = $term->term_id;
-        $term_meta = get_option("taxonomy_$term_id");
-
-        $strSeoTitle = $term_meta['txtTitleSeo'];
-        $strSeoDescription = $term_meta['strDescriptionSeo'];
-        $strSeoKeywords = $term_meta['seo_keywords'];
-
-        if (empty($strSeoTitle) != false) {
-            $strTitle = $suite['txtTitleSeo'];
-        } else {
-            $strTitle = $suite['txtTitleSeo'] . ' - ' . $strSeoTitle;
+    } elseif (is_tax() || is_tag() || is_category()) {
+        $term = get_queried_object();
+        if ($term && isset($term->term_id)) {
+            $term_meta = get_option('taxonomy_' . $term->term_id);
+            $strSeoTitle = $term_meta['txtTitleSeo'] ?? '';
+            if (empty($strSeoTitle)) {
+                $title = $site_name;
+            } else {
+                $title = $site_name . ' - ' . $strSeoTitle;
+            }
         }
-
-        // THE DOI GIA TRI CUA TITLE WP_HEAD
-        function custom_title()
-        {
-            global $strTitle;
-            return $strTitle;
-        }
-
-        add_filter('wp_title', 'custom_title');
-        echo '<title>' . $strTitle . '</title>';
-        echo '<meta name="description" content="' . $strSeoDescription . '" />';
-        echo '<meta name="keywords" content="' . $strSeoKeywords . '" />';
     }
-    echo '<meta name="robots" content="INDEX, FOLLOW" />';
-    echo '<meta http-equiv="REFRESH" content="1800" />';
+
+    if (!empty($title)) {
+        $title_parts['title'] = $title;
+    }
+
+    return $title_parts;
+}
+
+function dgw_seo_meta_tags()
+{
+    if (defined('RANK_MATH_VERSION')) {
+        return;
+    }
+
+    $site_name = get_option('company_name_vn') ?: get_bloginfo('name');
+    $site_description = get_option('company_name_vn') . ' - ' . get_option('company_address_vn');
+    $site_keywords = get_option('company_name_vn');
+    $description = '';
+    $keywords = '';
+    $page_name = get_query_var('pagename');
+
+    if (is_home() || is_front_page()) {
+        $description = $site_description;
+        $keywords = $site_keywords;
+    } elseif (is_single() || is_page()) {
+        $cate = get_query_var('cate');
+        $sp = get_query_var('sp');
+
+        if (empty($cate) && empty($sp)) {
+            $description = $site_description;
+            $keywords = trim($page_name . ', ' . $site_name, ', ');
+        } elseif (!empty($cate)) {
+            $cate_obj = dgw_get_category_by_param($cate);
+            $category_name = ($cate_obj instanceof WP_Term) ? $cate_obj->name : '';
+            $description = 'beautiful, luggage, ' . $site_description . ' - ' . $category_name;
+            $keywords = trim('beautiful, luggage, ' . $page_name . ', ' . $site_name . ', ' . $category_name, ', ');
+        } elseif (!empty($sp)) {
+            $proArr = get_product($sp);
+            $description = $proArr['seo_description'] ?? $site_description;
+            $keywords = !empty($proArr['seo_key']) ? 'Beautiful, ' . $proArr['seo_key'] : $site_keywords;
+        }
+    } elseif (is_tax() || is_tag() || is_category()) {
+        $term = get_queried_object();
+        if ($term && isset($term->term_id)) {
+            $term_meta = get_option('taxonomy_' . $term->term_id);
+            $description = $term_meta['strDescriptionSeo'] ?? $site_description;
+            $keywords = $term_meta['seo_keywords'] ?? $site_keywords;
+        }
+    }
+
+    if (!empty($description)) {
+        echo '<meta name="description" content="' . esc_attr($description) . '" />' . "\n";
+    }
+    if (!empty($keywords)) {
+        echo '<meta name="keywords" content="' . esc_attr($keywords) . '" />' . "\n";
+    }
 }
 
 function uploadFileDownLoad($File, $name)
 {
-
-    if (!empty($File['file_upload']['name'])) {
-        $errors = array();
-        $file_name = $File['file_upload']['name'];
-        $file_size = $File['file_upload']['size'];
-        $file_tmp = $File['file_upload']['tmp_name'];
-        //$file_type = $File['file_upload']['type'];
-        //$file_trim = ((explode('.', $File['file_upload']['name'])));
-        //$trim_name = strtolower($file_trim[0]);
-        //$trim_type = strtolower($file_trim[1]);
-
-        $cus_name = $file_name;
-
-        if ($file_size > 10097152) {
-            $errors[] = '上傳檔案容量不可大於 10 MB';
-        }
-        $path = DIR_FILE; /* get function path upload img dc khai bao tai file hepler */
-
-        if (empty($errors) == true) {
-            if (is_file(DIR_FILE . $name)) {
-                unlink(DIR_FILE . $name);
-            }
-
-            move_uploaded_file($file_tmp, ($path . $cus_name));
-            return $cus_name;
-        } else {
-            return $errors;
-        }
+    if (empty($File['file_upload']['name'])) {
+        return '';
     }
+
+    if (!empty($File['file_upload']['error']) && $File['file_upload']['error'] !== UPLOAD_ERR_OK) {
+        return 'Upload error: ' . intval($File['file_upload']['error']);
+    }
+
+    $file_name = sanitize_file_name($File['file_upload']['name']);
+    $file_size = intval($File['file_upload']['size']);
+    $file_tmp = $File['file_upload']['tmp_name'];
+    $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    $allowed_ext = array('pdf', 'doc', 'docx', 'xls', 'xlsx', 'zip', 'rar', 'txt', 'csv', 'png', 'jpg', 'jpeg', 'gif');
+    if (!in_array($file_ext, $allowed_ext, true)) {
+        return '不支援的檔案格式';
+    }
+
+    if ($file_size > 10097152) {
+        return '上傳檔案容量不可大於 10 MB';
+    }
+
+    $upload_dir = untrailingslashit(DIR_FILE) . DS;
+    if (!file_exists($upload_dir) && !wp_mkdir_p($upload_dir)) {
+        return '無法建立上傳資料夾';
+    }
+
+    if (!empty($name) && is_file($upload_dir . $name)) {
+        unlink($upload_dir . $name);
+    }
+
+    $destination_name = wp_unique_filename($upload_dir, $file_name);
+    $destination = $upload_dir . $destination_name;
+
+    if (move_uploaded_file($file_tmp, $destination)) {
+        return $destination_name;
+    }
+
+    return 'File upload failed.';
 }
 
 // Mục đích của đoạn code:
@@ -415,3 +467,14 @@ function custom_noindex_member_page() {
     }
 }
 
+/**
+ * Date: 2026-10-13
+ * Function: Điều chỉnh chất lượng nén ảnh WebP/JPEG xuống 78% để tối ưu Core Web Vitals (FCP/LCP)
+ */
+add_filter('wp_editor_set_quality', 'digiwin_optimize_image_quality', 10, 2);
+function digiwin_optimize_image_quality(int $quality, string $mime_type): int {
+    if (in_array($mime_type, ['image/webp', 'image/jpeg'], true)) {
+        return 78; // Mức cân bằng tối ưu giữa dung lượng và độ nét theo chuẩn Lighthouse
+    }
+    return $quality;
+}

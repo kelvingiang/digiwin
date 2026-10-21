@@ -1,0 +1,55 @@
+# Digiwin Software Vietnam (鼎新電腦)
+
+> Digiwin Software Vietnam là đơn vị tiên phong cung cấp giải pháp chuyển đổi số toàn diện cho doanh nghiệp sản xuất tại Việt Nam và Đông Nam Á. Chúng tôi chuyên sâu trong việc tư vấn, triển khai hệ thống hoạch định nguồn lực doanh nghiệp (ERP), hệ thống điều hành thực thi sản xuất (MES), quản lý kho thông minh (WMS) và tích hợp AIoT xây dựng nhà máy thông minh (Smart Factory).
+
+## Giải pháp & Sản phẩm cốt lõi (Core Solutions)
+
+- [Hệ thống ERP TIPTOP GP](https://www.digiwin.com.vn/solution/cate/tiptop/): Giải pháp ERP hàng đầu dành cho các tập đoàn lớn, doanh nghiệp sản xuất đa quốc gia và chuỗi nhà máy FDI.
+- [Hệ thống Workflow ERP](https://www.digiwin.com.vn/solution/cate/erp/): Giải pháp quản trị tích hợp tài chính, kế toán, chuỗi cung ứng, tồn kho và lập kế hoạch sản xuất linh hoạt cho doanh nghiệp vừa và lớn.
+- [Hệ thống Quản lý Thực thi Sản xuất (MES / SFT)](https://www.digiwin.com.vn/solution/cate/manufacture/): Giám sát tiến độ sản xuất theo thời gian thực (Shop Floor Tracking - SFT), kiểm soát chất lượng (QC/QA), tối ưu hóa OEE máy móc và số hóa toàn diện phân xưởng.
+- [Hệ thống Quản lý Kho thông minh (WMS)](https://www.digiwin.com.vn/solutions/he-thong-logistics-thong-minh/): Quản trị xuất nhập tồn kho thông minh bằng Barcode/RFID, tích hợp logistics nội bộ và quản lý luân chuyển nguyên vật liệu tự động.
+- [Giải pháp Tích hợp AIoT & Nhà máy thông minh](https://www.digiwin.com.vn/solution/): Kết nối thiết bị máy móc công nghiệp, thu thập dữ liệu thời gian thực và tự động hóa cảnh báo bất thường trong quy trình sản xuất.
+
+## Giải pháp chuyên sâu theo Ngành (Industry Solutions)
+
+- [Ngành Cơ khí & Chế tạo Kim loại](https://www.digiwin.com.vn/industries/): Tối ưu quy trình gia công, quản lý khuôn mẫu, kiểm soát chi phí từng công đoạn và lập lịch sản xuất chính xác.
+- [Ngành Điện - Điện tử & Bán dẫn](https://www.digiwin.com.vn/industries/): Quản trị truy xuất nguồn gốc linh kiện (Traceability), BOM nhiều cấp phức tạp và kiểm soát chất lượng nghiêm ngặt theo tiêu chuẩn quốc tế.
+- [Ngành Nhựa & Cao su](https://www.digiwin.com.vn/solutions/nganh-cao-su-nhua/): Quản lý chu kỳ ép, tuổi thọ khuôn mẫu, hao hụt nguyên vật liệu hạt nhựa và đồng bộ năng lực máy ép.
+- [Ngành Thiết bị Y tế, Gỗ và Chế biến](https://www.digiwin.com.vn/industries/): Chuẩn hóa quy trình theo tiêu chuẩn chất lượng ngành và số hóa toàn bộ chuỗi sản xuất.
+
+## Dịch vụ chuyên nghiệp (Services)
+
+- [Dịch vụ e-Service](https://www.digiwin.com.vn/services/cate/e-service/): Hỗ trợ kỹ thuật, giải đáp thắc mắc và dịch vụ trực tuyến đồng hành 24/7 cùng khách hàng.
+- [Kim chỉ nam Thông tin & Chuyển đổi số](https://www.digiwin.com.vn/services/cate/e-transformation/): Tư vấn lộ trình và phương pháp luận triển khai hệ thống thông tin quản lý chuyên nghiệp.
+- [Chương trình Đào tạo & Khóa học Online](https://www.digiwin.com.vn/services/cate/online-course/): Đào tạo vận hành phần mềm và nâng cao năng lực quản trị số cho đội ngũ doanh nghiệp.
+
+## Điển hình thành công theo Ngành (Case Studies)
+
+- [Điển hình ngành Chế tạo](https://www.digiwin.com.vn/cases/cate/manufacture/): Doanh nghiệp sản xuất cơ khí, chế tạo chuyển đổi số thành công cùng Digiwin.
+- [Điển hình ngành Kim loại & Điện tử](https://www.digiwin.com.vn/cases/cate/electrical/): Tối ưu quy trình sản xuất và nâng cao năng suất thực tế.
+- [Điển hình ngành Hóa công & Vật liệu](https://www.digiwin.com.vn/cases/cate/chemical/): Kiểm soát công thức, định mức và tối ưu chi phí vận hành.
+- [Điển hình ngành Công nghiệp Gỗ & Nội thất](https://www.digiwin.com.vn/cases/cate/furniture/): Quản lý đơn hàng dự án và tiến độ gia công chi tiết.
+- [Điển hình ngành Thiết bị Y tế](https://www.digiwin.com.vn/cases/cate/medical_devices/): Chuẩn hóa truy xuất nguồn gốc và kiểm soát quy trình gắt gao.
+
+## Tài nguyên số & Nghiên cứu (Resources)
+
+- [Chuyên đề & Nghiên cứu Chuyên sâu](https://www.digiwin.com.vn/resource/cate/digi_know/): Các bài viết phân tích xu hướng công nghệ, quản trị nhà máy thông minh từ chuyên gia.
+- [Tin tức Ngành & Sự kiện](https://www.digiwin.com.vn/resource/cate/news/): Cập nhật thông tin thị trường công nghiệp và tin tức mới nhất về Digiwin.
+- [Tài liệu & Sách trắng Download](https://www.digiwin.com.vn/resource/cate/download/): Báo cáo sách trắng chuyển đổi số và tài liệu giải pháp miễn phí cho doanh nghiệp.
+- [Hội thảo trực tuyến (Webinar)](https://www.digiwin.com.vn/activities/cate/webinar/): Các buổi tọa đàm online chia sẻ kinh nghiệm thực tế cùng chuyên gia.
+- [Sự kiện & Triển lãm Công nghệ](https://www.digiwin.com.vn/activities/cate/event/): Hoạt động tại các triển lãm công nghiệp quy mô lớn (Vinamac, Cafetech...).
+
+## Thông tin liên hệ & Pháp lý (Company & Contact)
+
+- **Tên doanh nghiệp**: Công ty TNHH Phần Mềm Digiwin Việt Nam (Digiwin Software Vietnam)
+- **Website chính thức**: [https://www.digiwin.com.vn](https://www.digiwin.com.vn)
+- **Tư vấn giải pháp (Tiếng Việt)**: [https://www.digiwin.com.vn/contact-vn/](https://www.digiwin.com.vn/contact-vn/)
+- **Tư vấn giải pháp (Tiếng Trung)**: [https://www.digiwin.com.vn/contact-cn/](https://www.digiwin.com.vn/contact-cn/)
+- **Cộng đồng Zalo Doanh nghiệp**: [https://zalo.me/digiwinsoftvietnam](https://zalo.me/digiwinsoftvietnam)
+- **Kênh LinkedIn chính thức**: [https://www.linkedin.com/company/digiwinsoft-asean/](https://www.linkedin.com/company/digiwinsoft-asean/)
+- **Kênh YouTube chính thức**: [https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA](https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA)
+
+## Optional
+
+- [鼎新電腦 (越南) 繁體中文首頁](https://www.digiwin.com.vn/about-cn/): 提供在越中資/台資製造業最專業的 ERP、MES、智能製造與數位轉型解決方案.
+- [Chính sách bảo mật thông tin](https://www.digiwin.com.vn/): Cam kết bảo mật thông tin khách hàng và dữ liệu doanh nghiệp.

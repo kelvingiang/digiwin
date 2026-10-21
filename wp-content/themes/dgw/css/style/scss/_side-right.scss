@@ -1,6 +1,7 @@
 @use "define" as *;
 @use "responsive" as *;
 
+// [2026-10-08]: Thanh tiện ích liên hệ nhanh (Side-Right) chuẩn BEM và Accessibility
 .side-right {
     display: flex;
     flex-direction: row;
@@ -22,7 +23,13 @@
         cursor: pointer;
         color: $color_blue_link;
         position: relative;
+        background: transparent;
+        border: none;
+        padding: 0;
+        outline: none;
+
         svg {
+            width: 15px;
             font-size: 2rem;
             position: absolute;
             left: -18px;
@@ -60,7 +67,16 @@
                 }
             }
 
-         
+            .item-link {
+                display: flex;
+                width: 100%;
+                height: 100%;
+                align-items: center;
+                justify-content: center;
+                text-decoration: none;
+                color: inherit;
+            }
+
             .hotline {
                 position: absolute;
                 z-index: -10;
@@ -76,6 +92,11 @@
                 padding-left: 10px;
                 margin-top: 2px;
                 color: rgb(82, 82, 82);
+
+                a {
+                    color: inherit;
+                    text-decoration: none;
+                }
             }
             .zalo-code {
                 position: absolute;

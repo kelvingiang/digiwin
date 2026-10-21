@@ -1,6 +1,4 @@
-// thay doi style khi dc chon cua submenu link =====================================
-
-// 1. 從 URL 取出 cate
+// [2026-10-13] - @author: Kelvin - Đánh dấu active cho submenu item nhưng VẪN GIỮ NGUYÊN thẻ <a> để người xem tiện click quay lại category đó
 const path = window.location.pathname.split("/").filter((s) => s);
 const cateIndex = path.indexOf("cate");
 let cateId = "";
@@ -10,11 +8,10 @@ if (cateIndex !== -1 && path[cateIndex + 1]) {
 }
 
 if (cateId) {
-  const $item = jQuery(`.menu-sub-item[data-id="${cateId}"] a`);
-  const text = $item.text();
-  const $label = jQuery("<h2>").text(text);
-  $item.replaceWith($label);
-  jQuery(`.menu-sub-item[data-id="${cateId}"]`).addClass("no-link");
+  const $subItem = jQuery(`.menu-sub-item[data-id="${cateId}"]`);
+  if ($subItem.length) {
+    $subItem.addClass("active");
+  }
 }
 
 // const mainPath = window.location.pathname.split("/").filter((s) => s);

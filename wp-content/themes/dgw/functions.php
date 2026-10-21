@@ -8,6 +8,13 @@ add_action('init', function() {
     }
 }, 1); // Độ ưu tiên là 1 để chạy sớm nhất có thể
 
+// [19/10/2026] - Khắc phục cảnh báo Permissions Policy "unload is not allowed in this document" trên Chrome 115+
+add_action('send_headers', function () {
+    if (!headers_sent()) {
+        header('Permissions-Policy: unload=(self)');
+    }
+});
+
 // @ini_set( 'upload_max_size' , '64M' );
 // @ini_set( 'post_max_size', '64M');
 // @ini_set( 'max_execution_time', '300' );
@@ -22,17 +29,6 @@ require_once(DIR_HELPER . 'style.php');
 require_once(DIR_HELPER . 'function.php');
 require_once(DIR_HELPER . 'require.php');
 
-require_once(DIR_CLASS . 'rewrite.class.php');
-new Rewrite_Url();
-
-
-$shortcode_path = get_template_directory() . '/shortcode/';
-
-if ( is_dir( $shortcode_path ) ) {
-    foreach ( glob( $shortcode_path . "*.php" ) as $filename ) {
-        require_once $filename;
-    }
-}
 
 
 add_action('init', function () {
@@ -67,8 +63,7 @@ add_action('init', function () {
             'site_lang',
             $lang,
             time() + YEAR_IN_SECONDS,
-            COOKIEPATH,
-            COOKIE_DOMAIN
+            '/'
         );
 
         $_COOKIE['site_lang'] = $lang;
@@ -89,45 +84,18 @@ add_action('init', function () {
     unregister_post_type('project');
 }, 1000);
 
-/* ==============================================================
-  THAY DOI FILE DATA NGON NGU THEO SESSION LANGGUAGE
-  =============================================================== */
-
-function change_translate_text($translated)
-{
-    $lang = dgw_get_lang();
-    $languages = ($lang === 'cn') ? 'zh_TW' : 'vi_VN';
-
-    if (is_admin()) {
-        $file = dirname(dirname(dirname(__FILE__))) . "/languages/admin_languages/data.php";
-    } else {
-        $file = dirname(dirname(dirname(__FILE__))) . "/languages/{$languages}/data.php";
-    }
-
-    if (file_exists($file)) {
-        include_once $file;
-
-        if (function_exists('getTranslate')) {
-            $data = getTranslate();
-
-            if (isset($data[$translated])) {
-                return $data[$translated];
-            }
-        }
-    }
-
-    return $translated;
-}
-add_filter('gettext', 'change_translate_text', 20);
-
 /* =======================================  
   FUNCTION OF THIS TEMPLATE
   ======================================= */
 
-add_action('after_setup_theme', 'blankslate_setup');
-function blankslate_setup()
+add_action('after_setup_theme', 'dgw_setup');
+function dgw_setup()
 {
-    load_theme_textdomain('blankslate', get_template_directory() . '/languages');
+    /**
+     * [2026-10-06] - Load textdomain chuẩn WordPress cho theme DGW từ thư mục languages/
+     * Loại bỏ cơ chế filter gettext cũ để tối ưu hiệu năng và tương thích với Loco Translate / file .pot, .mo, .po
+     */
+    load_theme_textdomain('dgw', get_template_directory() . '/languages');
     add_theme_support('title-tag');
     add_theme_support('automatic-feed-links');
     add_theme_support('post-thumbnails');
@@ -136,19 +104,19 @@ function blankslate_setup()
     if (!isset($content_width)) {
         $content_width = 1920;
     }
-    register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'blankslate')));
+    register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'dgw')));
 }
 
-add_action('wp_enqueue_scripts', 'blankslate_load_scripts');
-function blankslate_load_scripts()
-{
-    wp_enqueue_style('blankslate-style', get_stylesheet_uri());
-    wp_enqueue_script('jquery');
-}
+// add_action('wp_enqueue_scripts', 'dgw_load_scripts');
+// function dgw_load_scripts()
+// {
+//     wp_enqueue_style('blankslate-style', get_stylesheet_uri());
+//     wp_enqueue_script('jquery');
+// }
 
-add_action('wp_footer', 'blankslate_footer_scripts');
+add_action('wp_footer', 'dgw_footer_scripts');
 
-function blankslate_footer_scripts()
+function dgw_footer_scripts()
 {
 ?>
     <script>
@@ -174,17 +142,17 @@ function blankslate_footer_scripts()
 <?php
 }
 
-add_filter('document_title_separator', 'blankslate_document_title_separator');
+add_filter('document_title_separator', 'dgw_document_title_separator');
 
-function blankslate_document_title_separator($sep)
+function dgw_document_title_separator($sep)
 {
     $sep = '|';
     return $sep;
 }
 
-add_filter('the_title', 'blankslate_title');
+add_filter('the_title', 'dgw_title');
 
-function blankslate_title($title)
+function dgw_title($title)
 {
     if ($title == '') {
         return '...';
@@ -193,18 +161,18 @@ function blankslate_title($title)
     }
 }
 
-add_filter('the_content_more_link', 'blankslate_read_more_link');
+add_filter('the_content_more_link', 'dgw_read_more_link');
 
-function blankslate_read_more_link()
+function dgw_read_more_link()
 {
     if (!is_admin()) {
         return ' <a href="' . esc_url(get_permalink()) . '" class="more-link">...</a>';
     }
 }
 
-add_filter('excerpt_more', 'blankslate_excerpt_read_more_link');
+add_filter('excerpt_more', 'dgw_excerpt_read_more_link');
 
-function blankslate_excerpt_read_more_link($more)
+function dgw_excerpt_read_more_link($more)
 {
     if (!is_admin()) {
         global $post;
@@ -212,20 +180,20 @@ function blankslate_excerpt_read_more_link($more)
     }
 }
 
-add_filter('intermediate_image_sizes_advanced', 'blankslate_image_insert_override');
+add_filter('intermediate_image_sizes_advanced', 'dgw_image_insert_override');
 
-function blankslate_image_insert_override($sizes)
+function dgw_image_insert_override($sizes)
 {
     unset($sizes['medium_large']);
     return $sizes;
 }
 
-add_action('widgets_init', 'blankslate_widgets_init');
+add_action('widgets_init', 'dgw_widgets_init');
 
-function blankslate_widgets_init()
+function dgw_widgets_init()
 {
     register_sidebar(array(
-        'name' => esc_html__('Sidebar Widget Area', 'blankslate'),
+        'name' => esc_html__('Sidebar Widget Area', 'dgw'),
         'id' => 'primary-widget-area',
         'before_widget' => '<li id="%1$s" class="widget-container %2$s">',
         'after_widget' => '</li>',
@@ -234,34 +202,34 @@ function blankslate_widgets_init()
     ));
 }
 
-add_action('wp_head', 'blankslate_pingback_header');
+add_action('wp_head', 'dgw_pingback_header');
 
-function blankslate_pingback_header()
+function dgw_pingback_header()
 {
     if (is_singular() && pings_open()) {
         printf('<link rel="pingback" href="%s" />' . "\n", esc_url(get_bloginfo('pingback_url')));
     }
 }
 
-add_action('comment_form_before', 'blankslate_enqueue_comment_reply_script');
+add_action('comment_form_before', 'dgw_enqueue_comment_reply_script');
 
-function blankslate_enqueue_comment_reply_script()
+function dgw_enqueue_comment_reply_script()
 {
     if (get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
     }
 }
 
-function blankslate_custom_pings($comment)
+function dgw_custom_pings($comment)
 {
 ?>
     <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>"><?php echo comment_author_link(); ?></li>
 <?php
 }
 
-add_filter('get_comments_number', 'blankslate_comment_count', 0);
+add_filter('get_comments_number', 'dgw_comment_count', 0);
 
-function blankslate_comment_count($count)
+function dgw_comment_count($count)
 {
     if (!is_admin()) {
         global $id;
@@ -274,42 +242,35 @@ function blankslate_comment_count($count)
 }
 
 
-add_action('phpmailer_init', function ($phpmailer) {
+/**
+ * [2026-10-08] - @author: Kelvin - Xóa Transient Cache của Case Studies khi thêm/sửa/xóa bài viết casestudies trong WP-Admin
+ */
+add_action('save_post_casestudies', 'dgw_clear_casestudies_transients');
+add_action('deleted_post', 'dgw_clear_casestudies_transients');
+function dgw_clear_casestudies_transients($post_id = 0)
+{
+    delete_transient('dgw_home_casestudies_vn');
+    delete_transient('dgw_home_casestudies_cn');
+}
 
-    $phpmailer->isSMTP();
+/**
+ * [20/10/2026] - Phục vụ file chuẩn /llms.txt cho AI/LLM Search Engines (ChatGPT, Claude, Perplexity, Gemini...)
+ */
+add_action('init', function (): void {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
 
-    $phpmailer->Host       = SMTP_HOST;
-    $phpmailer->Port       = SMTP_PORT;
-    $phpmailer->SMTPAuth   = true;
-    $phpmailer->Username   = SMTP_USERNAME;
-    $phpmailer->Password   = SMTP_PASSWORD;
-    $phpmailer->SMTPSecure = SMTP_SECURE;
-
-    // 🔥 開啟完整 SMTP Debug
-    $phpmailer->SMTPDebug  = 3;
-    $phpmailer->Debugoutput = function ($str, $level) {
-        error_log("SMTP DEBUG [$level]: $str");
-    };
+    if ($path === 'llms.txt') {
+        $file_path = get_template_directory() . '/llms.txt';
+        if (file_exists($file_path)) {
+            header('Content-Type: text/markdown; charset=utf-8');
+            header('X-Robots-Tag: all');
+            readfile($file_path);
+            exit;
+        }
+    }
 });
 
-// add_action('init', function () {
 
-//     if (!isset($_GET['testmail'])) {
-//         return;
-//     }
 
-//      error_log('>>> TESTMAIL INIT TRIGGERED <<<');
-
-//     $sent = wp_mail(
-//         get_option('admin_email'),
-//         'WP Mail Test',
-//         'This is a test email'
-//     );
-
-//     if ($sent) {
-//         wp_die('✅ Mail sent');
-//     } else {
-//         wp_die('❌ Mail failed');
-//     }
-// });
 

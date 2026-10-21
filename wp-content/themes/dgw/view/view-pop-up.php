@@ -6,9 +6,9 @@ $lbl = null;
 $msg = null;
 $page = getParams('page');
 $linkAdd = admin_url('admin.php?page=' . $page . '&action=add');  // TAO LINH CHO ADD NEW
-$lblAdd = __('Add Item');
+$lblAdd = __('Add Item', 'dgw');
 if (getParams('msg') == 1) {
-    $msg .= '<div class="updated notice notice-success is-dismissible"><p>' . __('Data Adjustment succeeded') . '</p></div>';
+    $msg = '<div class="updated notice notice-success is-dismissible"><p>' . __('Data Adjustment succeeded', 'dgw') . '</p></div>';
 }
 ?>
 
@@ -19,7 +19,7 @@ if (getParams('msg') == 1) {
     </h2>
     <?php echo @$msg; ?>
     <form action ="" method="post" name="<?php echo $page; ?>" id="<?php echo $page; ?>">
-        <?php $dataList->search_box(__('Search'), 'search_id') ?>
+        <?php $dataList->search_box(__('Search', 'dgw'), 'search_id') ?>
         <?php $dataList->views(); ?>
         <?php $dataList->display(); ?>
     </form>

@@ -6,16 +6,16 @@ add_action('post_tag_add_form_fields', 'add_term_tag_fields');
 function add_term_tag_fields($taxonomy) {
     ?>
     <div class="form-field">
-        <label for="tag_vn"> <?php _e('Name') ?> ( <?php _e('Vietnamese') ?>)</label>
+        <label for="tag_vn"> <?php __('Name', 'dgw') ?> ( <?php __('Vietnamese', 'dgw') ?>)</label>
         <input  type="hidden" name="tag_cn" id="tag_cn"/>
         <input  type="text" name="tag_vn" id="tag_vn" />
     </div>
     <div class="form-field">
-        <label for="tag_en"> <?php _e('Name') ?> ( <?php _e('English') ?>)</label>
+        <label for="tag_en"> <?php __('Name', 'dgw') ?> ( <?php __('English', 'dgw') ?>)</label>
         <input type="text" name="tag_en" id="tag_en"/>
     </div>
     <div class="form-field">
-        <label for="tag_order"><?php _e('Show Order') ?></label>
+        <label for="tag_order"><?php __('Show Order', 'dgw') ?></label>
         <input  type="text" name="tag_order" id="tag_order" />
     </div>
     <script>
@@ -35,7 +35,7 @@ function edit_term_tag_fields($term, $taxonomy) {
 
     <tr class="form-field">
         <th>
-            <label for="cate_vn"> <?php _e('Name') ?> ( <?php _e('Vietnamese') ?>)</label>
+            <label for="cate_vn"> <?php __('Name', 'dgw') ?> ( <?php __('Vietnamese', 'dgw') ?>)</label>
         </th>
         <td>
             <input  type="hidden" name="tag_cn" id="tag_cn" value="<?php echo $value['tag_cn'] ?>" />
@@ -44,7 +44,7 @@ function edit_term_tag_fields($term, $taxonomy) {
     </tr>
     <tr class="form-field">
         <th>
-            <label for="cate_en"> <?php _e('Name') ?> ( <?php _e('English') ?>)</label>
+            <label for="cate_en"> <?php __('Name', 'dgw') ?> ( <?php __('English', 'dgw') ?>)</label>
         </th>
         <td>
             <input type="text" name="tag_en" id="tag_en" value="<?php echo $value['tag_en'] ?>" />
@@ -52,7 +52,7 @@ function edit_term_tag_fields($term, $taxonomy) {
     </tr>
     <tr class="form-field">
         <th>
-            <label for="cate_order"><?php _e('Show Order') ?></label>
+            <label for="cate_order"><?php __('Show Order', 'dgw') ?></label>
         </th>
         <td>
             <input  type="text" name="tag_order" id="tag_order" value="<?php echo $value['tag_order'] ?>" />
@@ -97,13 +97,13 @@ add_filter("manage_post_tag_custom_column", 'tag_columns_manage', 10, 3);
 function tag_columns() {
     $new_columns = array(
         'cb' => '<input type="checkbox" />',
-        'name' => __('Name'),
-        'slug' => __('Slug'),
-//            'description' => __('Description'),
-        'vietnamese' => __('Vietnamese'),
-        'english' => __('English'),
-        'order' => __('Show Order'),
-        'posts' => __('Count')
+        'name' => __('Name', 'dgw'),
+        'slug' => __('Slug', 'dgw'),
+//            'description' => __('Description', 'dgw'),
+        'vietnamese' => __('Vietnamese', 'dgw'),
+        'english' => __('English', 'dgw'),
+        'order' => __('Show Order', 'dgw'),
+        'posts' => __('Count', 'dgw')
     );
 
     return $new_columns;

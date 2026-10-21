@@ -5,16 +5,16 @@
 function taxonomy_add_field() {
     ?>
     <div class="form-field">
-        <label for="cate_vn"> <?php _e('Name') ?> ( <?php _e('Vietnamese') ?>)</label>
+        <label for="cate_vn"> <?php __('Name', 'dgw') ?> ( <?php __('Vietnamese', 'dgw') ?>)</label>
         <input  type="hidden" name="cate_cn" id="cate_cn" value="" />
         <input  type="text" name="cate_vn" id="cate_vn" value="" />
     </div>
     <div class="form-field">
-        <label for="cate_en"> <?php _e('Name') ?> ( <?php _e('English') ?>)</label>
+        <label for="cate_en"> <?php __('Name', 'dgw') ?> ( <?php __('English', 'dgw') ?>)</label>
         <input type="text" name="cate_en" id="cate_en" value="" />
     </div>
     <div class="form-field">
-        <label for="cate_order"><?php _e('Show Order') ?></label>
+        <label for="cate_order"><?php __('Show Order', 'dgw') ?></label>
         <input  type="text" name="cate_order" id="cate_order" value="" />
     </div>
     <script>
@@ -38,7 +38,7 @@ function taxonomy_edit_field($term) {
     ?>
     <tr class="form-field">
         <th scope="row" valign="top">
-            <label><?php _e('Name') ?> ( <?php _e('Vietnamese') ?>)</label>
+            <label><?php __('Name', 'dgw') ?> ( <?php __('Vietnamese', 'dgw') ?>)</label>
         </th>
         <td>
             <input type="hidden" name="cate_cn" id="cate_cn" value="<?php echo $val['cate_cn'] ?>">
@@ -47,7 +47,7 @@ function taxonomy_edit_field($term) {
     </tr>
     <tr class="form-field">
         <th scope="row" valign="top">
-            <label><?php _e('Name') ?> ( <?php _e('English') ?>)</label>
+            <label><?php __('Name', 'dgw') ?> ( <?php __('English', 'dgw') ?>)</label>
         </th>
         <td>
             <input type="text" name="cate_en" id="cate_en" value="<?php echo $val['cate_en'] ?>">
@@ -55,7 +55,7 @@ function taxonomy_edit_field($term) {
     </tr>
     <tr class="form-field">
         <th scope="row" valign="top">
-            <label><?php _e('Show Order') ?></label>
+            <label><?php __('Show Order', 'dgw') ?></label>
         </th>
         <td>
             <input type="text" name="cate_order" id="cate_order" value="<?php echo $val['cate_order'] ?>">
@@ -102,13 +102,13 @@ add_filter("manage_category_custom_column", 'category_columns_manage', 10, 3);
 function category_columns() {
     $new_columns = array(
         'cb' => '<input type="checkbox" />',
-        'name' => __('Name'),
-        'slug' => __('Slug'),
-//            'description' => __('Description'),
-        'vietnamese' => __('Vietnamese'),
-        'english' => __('English'),
-        'order' => __('Show Order'),
-        'posts' => __('Count')
+        'name' => __('Name', 'dgw'),
+        'slug' => __('Slug', 'dgw'),
+//            'description' => __('Description', 'dgw'),
+        'vietnamese' => __('Vietnamese', 'dgw'),
+        'english' => __('English', 'dgw'),
+        'order' => __('Show Order', 'dgw'),
+        'posts' => __('Count', 'dgw')
     );
 
     return $new_columns;

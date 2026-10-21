@@ -1,0 +1,24 @@
+[2026-07-20 11:27:00] Register Attempt
+Email: giaminh0265@yahoo.com
+Username: 123123
+Activation Link: http://localhost/digiwin/activate-member/?key=ede8f6b1d8f32b684bd98a6c8f0b7ba61599d4019a7a2d61c324eeedd74b691b&email=giaminh0265%40yahoo.com
+From: giaminh0265@yahoo.com
+Headers: Array
+(
+    [0] => Content-Type: text/html; charset=UTF-8
+    [1] => From: 越南鼎捷股份有限公司 <giaminh0265@yahoo.com>
+    [2] => Reply-To: marketing_vn@digiwin.com
+)
+
+[2026-07-20 15:13:58] Register Attempt
+Email: giaminh0265@yahoo.com
+Username: dsfsdafsadf
+Activation Link: http://localhost/digiwin/activate-member/?key=5479d5255d418c09f42543f976deae598c57d636178748a9474b8080010fa535&email=giaminh0265%40yahoo.com
+From: giaminh0265@yahoo.com
+Headers: Array
+(
+    [0] => Content-Type: text/html; charset=UTF-8
+    [1] => From: 越南鼎捷股份有限公司 <giaminh0265@yahoo.com>
+    [2] => Reply-To: marketing_vn@digiwin.com
+)
+

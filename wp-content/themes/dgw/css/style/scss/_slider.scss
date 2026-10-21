@@ -70,27 +70,41 @@
     }
 }
 
+// [2026-10-08]: Tối ưu hiển thị Hero Slider (#slider) và chống nhấp nháy FOUC/CLS
 #slider {
+    border-bottom: 2px solid rgba(208, 228, 247, 0.5);
+    min-height: 300px;
+    position: relative;
+    overflow: hidden;
+
     .owl-carousel {
-        //min-height: 890px; /* Điều chỉnh con số này cho khớp với chiều cao banner thực tế */
         display: block;
+
+        &:not(.owl-loaded) .item {
+            display: none;
+
+            &:first-child {
+                display: block;
+            }
+        }
     }
     .item {
-        //    max-height: 500px;
-        //     @include Respond(lg) {
-        //         max-height: 450px;
-        //     }
-        //     @include Respond(md) {
-        //         max-height: 350px;
-        //     }
-        //     @include Respond(sm) {
-        //         max-height: 250px;
-        //     }
         cursor: pointer;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+
         .owl-slider-title,
         .owl-slider-content {
             display: none;
         }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         img[fetchpriority="high"] {
             aspect-ratio: 16 / 9 !important;
             width: 100% !important;
@@ -161,9 +175,19 @@
 }
 
 // ========================================================
+// [2026-10-08]: Khối Case Studies Slider với CSS Flexbox chống Layout Thrashing
 #casestudies-slider {
-    background-color: #fff;
+    background-color: transparent;
     padding: 0rem 1rem;
+
+    .owl-stage {
+        display: flex;
+    }
+
+    .owl-item {
+        display: flex;
+        flex: 1 0 auto;
+    }
 
     .owl-theme {
         //padding-top: 2.5rem;
@@ -193,13 +217,17 @@
     .item {
         transition-duration: 0.8s;
         border-radius: 0.5rem;
-        border: 1px solid #f3f3f3;
+        border: 1px solid #d8d6d6;
         cursor: pointer;
         overflow: hidden;
         margin: 1rem 0.5rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        width: 100%;
+        height: auto;
+        text-decoration: none;
+        color: inherit;
 
         @include Respond(sm) {
         }
@@ -212,10 +240,13 @@
         .item-title {
             text-align: center;
             padding: 0.5rem;
-            h2 {
-                font-size: 1.2rem;
+            h2,
+            h3 {
+                font-size: 1.1rem;
                 font-weight: bold;
-                color: $color_blue_link;
+                color: #333;
+                margin: 0;
+                line-height: 1.4;
                 @include Respond(lg) {
                     font-size: 1rem;
                 }
@@ -234,8 +265,9 @@
             transform: scale(1.001, 1.001);
             box-shadow: rgba(0, 0, 0, 0.56) 0px 2px 8px 1px;
             .item-title {
-                h2 {
-                    color: $color_blue_link_hover;
+                h2,
+                h3 {
+                    color: #571307;
                 }
             }
         }

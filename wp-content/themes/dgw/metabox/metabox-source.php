@@ -12,7 +12,7 @@ class Metabox_source
     public function create()
     {
         $id = 'admin-metabox-source';
-        $title = __('Google Drive file download link');
+        $title = __('Google Drive file download link', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('resources',));
     }
@@ -47,7 +47,7 @@ class Metabox_source
     {
 
         if (!empty($_POST['txt-source'])) {
-            update_post_meta($post_id, '_metabox_source', $_POST['txt-source']);
+            update_post_meta($post_id, '_metabox_source', sanitize_text_field(wp_unslash($_POST['txt-source'])));
         }
     }
 }

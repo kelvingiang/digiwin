@@ -63,8 +63,8 @@ class Controller_Popup
     public function create()
     {
         // THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
-        $page_title = __('Pop-up'); // TIEU DE CUA TRANG
-        $menu_title = __('Pop-up');  // TEN HIEN TRONG MENU
+        $page_title = __('Pop-up', 'dgw'); // TIEU DE CUA TRANG
+        $menu_title = __('Pop-up', 'dgw');  // TEN HIEN TRONG MENU
         // CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
         $capability = 'manage_categories'; // QUYEN TRUY CAP DE THAY MENU NAY
         $menu_slug = 'popup_page'; // TEN slug TEN DUY NHAT KO DC TRUNG VOI TRANG KHAC GAN TREN THANH DIA CHI OF MENU
@@ -155,7 +155,7 @@ class Controller_Popup
     {
         $flag = true;
         if (isPost()) {
-                  if ($_FILES)
+            if ($_FILES)
                 foreach ($_FILES as $key => $file) {
                     $upload = uploadImg($_POST['txt-title'], $file);
                     if (is_array($upload)) {
@@ -181,7 +181,8 @@ class Controller_Popup
                 toBack(1);
             }
         }
-        require_once(DIR_VIEW . 'from-pop-up.php');
+        // [2026-10-05] - @author: Kelvin - Sua loi chinh ta from -> form
+        require_once(DIR_VIEW . 'form-pop-up.php');
     }
 
     public function deleteAction()

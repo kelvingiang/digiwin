@@ -1,10 +1,14 @@
-<?php /*  Template Name: Reset Password Page */
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Reset Password Page
+ * Description: Custom template for Reset Password Page
+ */
 
 use phpseclib3\File\ASN1\Maps\Time;
 
-?>
-<?php get_header();
-get_template_part('templates/template', 'header');
+get_header();
+get_template_part('templates/header');
 
 $email = isset($_GET['email']) ? sanitize_email($_GET['email']) : '';
 $token = isset($_GET['key']) ? sanitize_text_field($_GET['key']) : '';
@@ -45,7 +49,7 @@ if ($email && $token) {
                 <div class="reset-password-form">
                     <div class="one-columns">
                         <div class="row-cell">
-                            <label><?php _e('New Password') ?></label>
+                            <label><?php echo __('New Password', 'dgw') ?></label>
                             <input type="password"
                                 id="new-password"
                                 placeholder="***********"
@@ -56,7 +60,7 @@ if ($email && $token) {
 
                     <div class="one-columns">
                         <div class="row-cell">
-                            <label class="title"><?php _e('Confirm Password') ?></label>
+                            <label class="title"><?php echo __('Confirm Password', 'dgw') ?></label>
                             <input type="password"
                                 id="confirm-password"
                                 placeholder="***********"
@@ -67,7 +71,7 @@ if ($email && $token) {
 
                     <div class="btn-space">
                         <button id="btn-reset-password" class="btn-my-style">
-                            <?php _e('Submit Email') ?>
+                            <?php echo __('Submit Email', 'dgw') ?>
                         </button>
                         <p id="change-password-msg" class="msg"></p>
                     </div>
@@ -76,21 +80,21 @@ if ($email && $token) {
             <?php else : ?>
                 <!-- TRƯỜNG HỢP 2: TOKEN SAI HOẶC HẾT HẠN -> ẨN FORM & HIỆN LỖI -->
                 <div class="dgw-error-box">
-                    <h3><?php _e('Cannot Reset Password', 'dgw'); ?></h3>
+                    <h3><?php echo __('Cannot Reset Password', 'dgw'); ?></h3>
                     <p style="color: #c53030; font-weight: 500; margin: 0;">
                         <?php echo esc_html($error_message); ?>
                     </p>
                     <!-- Bạn có thể thêm 1 nút "Yêu cầu lại" dẫn về trang Quên mật khẩu ở đây -->
                     <a href="<?php echo home_url('/member'); ?>" class="btn-my-style"
                         style="margin-top: 38px; display: inline-block;">
-                        <?php _e('Request a new code', 'dgw'); ?>
+                        <?php echo __('Request a new code', 'dgw'); ?>
                     </a>
                 </div>
             <?php endif; ?>
         </main>
         <aside class="dgw-active-sidebar">
-            <?php get_template_part('templates/template', 'side_cases'); ?>
-            <?php get_template_part('templates/template', 'side_active'); ?>
+            <?php get_template_part('templates/side-cases'); ?>
+            <?php get_template_part('templates/side-active'); ?>
         </aside>
     </div>
 </div>
@@ -140,5 +144,5 @@ if ($email && $token) {
     });
 </script>
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer(); ?>

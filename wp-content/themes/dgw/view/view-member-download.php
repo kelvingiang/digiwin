@@ -7,14 +7,14 @@ $count = 1;
 $page = getParams('page');
 ?>
 <div>
-    <h2>下載統計</h2>
+    <h2><?php echo __('Download Statistics','dgw') ?></h2>
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
 
                 <tr>
-                    <th style="width: 300px;">資源名稱</th>
-                    <th style="width: 100px;">下載次數</th>
+                    <th style="width: 300px;"><?php echo __('Resource Name','dgw')?></th>
+                    <th style="width: 100px;"><?php echo __('Download Count', 'dgw')?></th>
                 </tr>
             </thead>
             <tbody>
@@ -32,19 +32,19 @@ $page = getParams('page');
 
 <div style="margin-top: 1.5rem;">
     <div class="wrap" style="display: inline-block;">
-        <h1 class="wp-heading-inline">下載報表</h1> 
-        <a href="<?php echo admin_url('admin.php?page=' . $page . '&action=export_download_excel'); ?>" class="page-title-action"><?php echo __('匯出 Excel 檔案', 'dgw'); ?></a>
+        <h1 class="wp-heading-inline"><?php echo __('Download Report','dgw') ?></h1> 
+        <a href="<?php echo admin_url('admin.php?page=' . $page . '&action=export_download_excel'); ?>" class="page-title-action"><?php echo __('Export Excel file', 'dgw'); ?></a>
     </div>
     <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
                     <th style="width:20px"></th>
-                    <th style="width: 100px;">姓名</th>
-                    <th style="width: 200px;">公司名稱</th>
-                    <th style="width: 200px;">E-mail</th>
-                    <th style="width: 250px;">下載資源</th>
-                    <th style="width: 100px;">下載日期</th>
+                    <th style="width: 100px;"><?php echo __('Full Name','dgw') ?></th>
+                    <th style="width: 200px;"><?php echo __('Company Name', 'dgw') ?></th>
+                    <th style="width: 200px;"><?php echo __('E-mail', 'dgw') ?></th>
+                    <th style="width: 250px;"><?php echo __('Resource Name', 'dgw')?></th>
+                    <th style="width: 100px;"><?php echo __('Download Date', 'dgw') ?></th>
                 </tr>
             </thead>
 

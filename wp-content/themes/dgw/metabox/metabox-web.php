@@ -9,7 +9,7 @@ class Metabox_Web_FreeBook {
 
     public function create() {
         $id = 'admin-metabox-web';
-        $title = __('Web Site And FreeBook');
+        $title = __('Web Site And FreeBook', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('advertising',));
     }
@@ -22,7 +22,7 @@ class Metabox_Web_FreeBook {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('Web Site') ?></label>
+                    <label><?php __('Web Site', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-web" id="txt-web" class="my-input"
@@ -33,7 +33,7 @@ class Metabox_Web_FreeBook {
         <div class="row-two-column">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php _e('Free Book') ?></label>
+                    <label><?php __('Free Book', 'dgw') ?></label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-freebook" id="txt-freebook" class="my-input"
@@ -48,11 +48,11 @@ class Metabox_Web_FreeBook {
     public function save($post_id) {
 
         if (!empty($_POST['txt-web'])) {
-            update_post_meta($post_id, '_metabox_web', $_POST['txt-web']);
+            update_post_meta($post_id, '_metabox_web', sanitize_text_field(wp_unslash($_POST['txt-web'])));
         }
 
         if (!empty($_POST['txt-freebook'])) {
-            update_post_meta($post_id, '_metabox_freebook', $_POST['txt-freebook']);
+            update_post_meta($post_id, '_metabox_freebook', sanitize_text_field(wp_unslash($_POST['txt-freebook'])));
         }
     }
 

@@ -1,7 +1,11 @@
-<?php /* Template Name: Activate Member Page */ ?>
 <?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Activate Member Page
+ * Description: Custom template for Activate Member Page
+ */
 get_header();
-get_template_part('templates/template', 'header');
+get_template_part('templates/header');
 
 // Sử dụng filter_input để đảm bảo an toàn dữ liệu đầu vào (PHP 8.2)
 $email = sanitize_email(wp_unslash($_GET['email'] ?? ''));
@@ -51,16 +55,16 @@ if ($email && $token) {
                     <div class="dgw-loading-state">
                         <div class="dgw-loader"></div>
                         <h2 id="dgw-status-msg">
-                            <?php _e('Account verification is in progress, please wait...', 'dgw'); ?>
+                            <?php __('Account verification is in progress, please wait...', 'dgw'); ?>
                         </h2>
                     </div>
                 </div>
             <?php else : ?>
                 <?php if ($is_valid && $user_data && (int)$user_data->status !== 0) : ?>
                     <div class="dgw-status-box">
-                        <p class="msg msg--info"><?php _e('This account has already been activated', 'dgw'); ?></p>
+                        <p class="msg msg--info"><?php __('This account has already been activated', 'dgw'); ?></p>
                         <a href="<?php echo esc_url(home_url('/member/')); ?>" class="btn-dgw">
-                            <?php _e('Go to member page', 'dgw'); ?>
+                            <?php __('Go to member page', 'dgw'); ?>
                         </a>
                     </div>
                 <?php else : ?>
@@ -72,8 +76,8 @@ if ($email && $token) {
         </main>
 
         <aside class="dgw-active-sidebar">
-            <?php get_template_part('templates/template', 'side_cases'); ?>
-            <?php get_template_part('templates/template', 'side_active'); ?>
+            <?php get_template_part('templates/side-cases'); ?>
+            <?php get_template_part('templates/side-active'); ?>
         </aside>
     </div>
 </div>
@@ -108,16 +112,16 @@ if ($email && $token) {
                     },
                     success: (res) => {
                         if (res.success) {
-                            msgBox.innerHTML = `<span class="txt-success"><?php _e('Account activated successfully!', 'dgw'); ?></span>`;
+                            msgBox.innerHTML = `<span class="txt-success"><?php __('Account activated successfully!', 'dgw'); ?></span>`;
                             setTimeout(() => {
                                 window.location.href = config.redirect;
                             }, 3000);
                         } else {
-                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php _e('Failed to activate account', 'dgw'); ?>'}</span>`;
+                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php __('Failed to activate account', 'dgw'); ?>'}</span>`;
                         }
                     },
                     error: () => {
-                        msgBox.innerHTML = `<span class="txt-error"><?php _e('Server connection error', 'dgw'); ?></span>`;
+                        msgBox.innerHTML = `<span class="txt-error"><?php __('Server connection error', 'dgw'); ?></span>`;
                     }
                 });
             };
@@ -131,6 +135,6 @@ if ($email && $token) {
 </script>
 
 <?php
-get_template_part('templates/template', 'footer');
+get_template_part('templates/footer');
 get_footer();
 ?>

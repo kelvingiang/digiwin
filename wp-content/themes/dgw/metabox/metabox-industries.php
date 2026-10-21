@@ -12,7 +12,7 @@ class Metabox_Industries
     public function create()
     {
         $id = 'admin-metabox-service';
-        $title = __('Industries');
+        $title = __('Industries', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('industries',));
     }
@@ -27,7 +27,7 @@ class Metabox_Industries
         <div class="clear"></div>
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('管理挑戰') ?></label>
+                <label><?php __('Management Challenges', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <?php wp_editor(get_post_meta($post->ID, '_industry_challenge', true), 'txt-challenge', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -36,7 +36,7 @@ class Metabox_Industries
 
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('解決方案') ?></label>
+                <label><?php __('Solution', 'dgw') ?></label>
             </div>
             <div class="cell-text">
                 <?php wp_editor(get_post_meta($post->ID, '_industry_solution', true), 'txt-solution', array('wpautop' => false, 'editor_height' => '300px')) ?>
@@ -50,11 +50,11 @@ class Metabox_Industries
     public function save($post_id)
     {
 
-        // $wpdb->update($wpdb->posts, array('post_title' => $_POST['txt-name-cn']), array('ID' => $post_id));
+        // $wpdb->update($wpdb->posts, array('post_title' => sanitize_text_field(wp_unslash($_POST['txt-name-cn']))), array('ID' => $post_id));
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP 
 
-        update_post_meta($post_id, '_industry_challenge', $_POST['txt-challenge']);
-        update_post_meta($post_id, '_industry_solution', $_POST['txt-solution']);
+        update_post_meta($post_id, '_industry_challenge', sanitize_text_field(wp_unslash($_POST['txt-challenge'])));
+        update_post_meta($post_id, '_industry_solution', sanitize_text_field(wp_unslash($_POST['txt-solution'])));
     }
 }

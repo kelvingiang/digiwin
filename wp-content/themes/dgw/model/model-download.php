@@ -57,12 +57,12 @@ class Model_Download extends WP_List_Table
     {
         $arr = array(
             'cb' => '<input type="checkbox" />',
-            'member_email' => 'E-mail',
-            'member_name' => '姓名',
-            'member_company' => '公司名稱',
-            'member_phone' => '聯絡電話',
-            'member_download_count' => '下載次數',
-            'create_date' => '註冊日期',
+            'member_email' => __('E-mail', 'dgw'),
+            'member_name' => __('Full Name','dgw'),
+            'member_company' => __('Company Name', 'dgw'),
+            'member_phone' => __('Contact Number','dgw'),
+            'member_download_count' => __('Download Count','dgw'),
+            'create_date' => __('Create Date', 'dgw'),
         );
         return $arr;
     }
@@ -85,10 +85,11 @@ class Model_Download extends WP_List_Table
     private function table_data()
     {
         global $wpdb;
-
-        // LAY GIA TRI SAP XEP DU LIEU TREN COT
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+ 
+        // [13/07/2026] Fix: Thay thế cách lấy biến $_GET trực tiếp bằng hàm getParams() để an toàn hơn
+        // và tránh lỗi "Undefined array key" trên PHP 8+.
+        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
 
         // 基本 SELECT 與 JOIN
         $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
@@ -144,8 +145,12 @@ class Model_Download extends WP_List_Table
         global $wpdb;
 
         // This is almost the same as table_data(), but without pagination.
-        $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
+
+            $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
+        
+        // $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
+        // $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
 
         $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
             FROM {$this->table} AS m 
@@ -213,17 +218,17 @@ class Model_Download extends WP_List_Table
         //All link
         $class = ($current == 'all' ? ' class="current"' : '');
         $all_url = remove_query_arg('customvar');
-        $views['all'] = "<strong>" . __('All') . " (" . $this->total_list() . ")</strong>";
+        $views['all'] = "<strong>" . __('All', 'dgw') . " (" . $this->total_list() . ")</strong>";
 
         //Foo link
         $foo_url = add_query_arg('customvar', 'published');
         $class = ($current == 'foo' ? ' class="current"' : '');
-        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published') . " (" . $this->total_publish() . ")</a>";
+        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published', 'dgw') . " (" . $this->total_publish() . ")</a>";
 
         //Bar link
         $bar_url = add_query_arg('customvar', 'trash');
         $class = ($current == 'bar' ? ' class="current"' : '');
-        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash') . "(" . $this->total_trash() . ")</a>";
+        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash', 'dgw') . "(" . $this->total_trash() . ")</a>";
 
         return $views;
     }
@@ -233,12 +238,12 @@ class Model_Download extends WP_List_Table
     {
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => __('Restore'),
-                'delete' => __('Delete Permanently')
+                'restore' => __('Restore', 'dgw'),
+                'delete' => __('Delete Permanently', 'dgw')
             );
         } else {
             $actions = array(
-                'trash' => __('Trash'),
+                'trash' => __('Trash', 'dgw'),
             );
         }
         return $actions;
@@ -257,13 +262,13 @@ class Model_Download extends WP_List_Table
         $page = getParams('page');
         if (@$_GET['customvar'] == 'trash') {
             $actions = array(
-                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore') . '</a>',
-                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently') . ' </a>',
+                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore', 'dgw') . '</a>',
+                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently', 'dgw') . ' </a>',
             );
         } else {
             $actions = array(
-                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit') . '</a>',
-                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash') . '</a>',
+                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit', 'dgw') . '</a>',
+                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash', 'dgw') . '</a>',
             );
         }
         $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['email'] . '</a> </strong>' . $this->row_actions($actions);

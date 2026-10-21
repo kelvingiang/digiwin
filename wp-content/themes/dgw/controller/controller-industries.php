@@ -1,99 +1,120 @@
 <?php
+declare(strict_types=1);
+
+// [2026-10-05] - @author: Kelvin - Quản lý CPT Industries và chuẩn hóa Admin Columns theo chuẩn WordPress OOP & Security
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 class Controller_Industries
 {
-
+    /**
+     * [2026-10-05] - @author: Kelvin - Khởi tạo hooks cho CPT Industries và bảng quản trị WP-Admin
+     */
     public function __construct()
     {
-        add_action('init', array($this, 'register_custom_post'));
-        add_action('manage_edit-industries_columns', array($this, 'manage_columns'));
-        add_action('manage_industries_posts_custom_column', array($this, 'render_columns'));
+        // 1. Đăng ký CPT Industries
+        add_action('init', [$this, 'register_custom_post']);
 
-        add_filter('manage_edit-industries_sortable_columns', array($this, 'sortable_views_column'));
-        add_filter('request', array($this, 'sort_views_column'));
-    }
-
-    public function register_custom_post()
-    {
-        $labels = array(
-            'name' => __('Industries'),
-            'singular_name' => __('Industries'),
-            'add_new' => __('Add New'),
-            'add_new_item' => __('Add Item'),
-            'edit_item' => __('Edit'),
-            'new_item' => __('Add Item'),
-            'all_items' => __('All Item'),
-            'view_item' => __('View Item'),
-            'search_items' => __('Search'),
-            'not_found' => __('No slides found.'),
-            'not_found_in_trash' => __('No found in Trash.'),
-            'parent_item_colon' => '',
-            'menu_name' => __('Industries')
-        );
-        $args = array(
-            'labels' => $labels,
-            'public' => true,
-            'exclude_from_search' => true,
-            'publicly_queryable' => true,
-            'show_ui' => true,
-            'show_in_menu' => TRUE,
-            'menu_icon' => PART_ICON . 'icon-link.png',
-            'query_var' => true,
-            'rewrite' => true,
-            'capability_type' => 'post',
-            'has_archive' => false,
-            'hierarchical' => false,
-            'menu_position' => 5,
-            'supports' => array('thumbnail', 'editor', 'title'),
-        );
-        register_post_type('industries', $args);
-    }
-
-    //==== QUAN LY COT HIEN THI TRON BANG   
-    public function manage_columns($columns)
-    {
-        unset($columns['create_date']); // an cot ngay mac dinh
-        unset($columns['categories']); // an cot ngay mac dinh
-        //==== THEM COT VA BAN
-        // $columns['author'] = __('Author');
-        // $columns['order'] = __('Show Order');
-        return $columns;
-    }
-
-    //==== HIEN THI NOI DUNG TRONG COT
-    public function render_columns($columns)
-    {
-        global $post;
-
-        switch ($columns) {
-              // case 'category':
-                //     $terms = wp_get_post_terms($post->ID, 'industries_category');
-                //     if (count($terms) > 0) {
-                //         foreach ($terms as $key => $term) {
-                //             echo '<a href=' . custom_redirect($term->slug) . '&' . $term->taxonomy . '=' . $term->slug . '>' . $term->name . '</a></br>';
-                //         }
-                //     }
-                //     break;
-            
+        // 2. Tùy biến bảng dữ liệu trong WP-Admin (chỉ chạy trong admin để tối ưu hiệu năng)
+        if (is_admin()) {
+            add_filter('manage_edit-industries_columns', [$this, 'manage_columns']);
+            add_action('manage_industries_posts_custom_column', [$this, 'render_columns'], 10, 2);
+            add_filter('manage_edit-industries_sortable_columns', [$this, 'sortable_views_column']);
+            add_filter('request', [$this, 'sort_views_column']);
         }
     }
 
-    //====== SAP SEP THEO TRINH TU
-    public function sortable_views_column($col)
+    /**
+     * [2026-10-05] - @author: Kelvin - Đăng ký Custom Post Type Industries
+     */
+    public function register_custom_post(): void
     {
-        $col['order'] = 'order';
-        $col['create-date'] = 'create-date';
-        return $col;
+        $labels = [
+            'name'               => __('Industries', 'dgw'),
+            'singular_name'      => __('Industries', 'dgw'),
+            'add_new'            => __('Add New', 'dgw'),
+            'add_new_item'       => __('Add Item', 'dgw'),
+            'edit_item'          => __('Edit', 'dgw'),
+            'new_item'           => __('Add Item', 'dgw'),
+            'all_items'          => __('All Items', 'dgw'),
+            'view_item'          => __('View Item', 'dgw'),
+            'search_items'       => __('Search', 'dgw'),
+            'not_found'          => __('No slides found.', 'dgw'),
+            'not_found_in_trash' => __('No found in Trash.', 'dgw'),
+            'parent_item_colon'  => '',
+            'menu_name'          => __('Industries', 'dgw'),
+        ];
+
+        $args = [
+            'labels'              => $labels,
+            'public'              => true,
+            'exclude_from_search' => true,
+            'publicly_queryable'  => true,
+            'show_ui'             => true,
+            'show_in_menu'        => true,
+            'menu_icon'           => PART_ICON . 'icon-link.png',
+            'query_var'           => true,
+            'rewrite'             => ['slug' => 'industries', 'with_front' => false],
+            'capability_type'     => 'post',
+            'has_archive'         => false,
+            'hierarchical'        => false,
+            'menu_position'       => 5,
+            'supports'            => ['thumbnail', 'editor', 'title'],
+        ];
+
+        register_post_type('industries', $args);
     }
 
-    public function sort_views_column($vars)
+    /**
+     * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết Industries
+     */
+    public function manage_columns(array $columns): array
     {
-        if (isset($vars['orderby']) && 'order' == $vars['orderby']) {
+        unset(
+            $columns['date'],
+            $columns['categories'],
+            $columns['comments']
+            // $columns['author']
+        );
+
+        $columns['order']       = __('Show Order', 'dgw');
+        $columns['create-date'] = __('Create Date', 'dgw');
+
+        return $columns;
+    }
+
+    /**
+     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột cho Industries
+     */
+    public function render_columns(string $column, int $post_id): void
+    {
+        // Các cột chung (order, create-date) đã được Custom_post_RenderCols xử lý toàn cục
+    }
+
+    /**
+     * [2026-10-05] - @author: Kelvin - Thiết lập các cột cho phép sắp xếp
+     */
+    public function sortable_views_column(array $columns): array
+    {
+        $columns['order']       = 'order';
+        $columns['create-date'] = 'date';
+        return $columns;
+    }
+
+    /**
+     * [2026-10-05] - @author: Kelvin - Tối ưu query sắp xếp thứ tự theo số (meta_value_num)
+     */
+    public function sort_views_column(array $vars): array
+    {
+        if (isset($vars['orderby']) && $vars['orderby'] === 'order') {
             $vars = array_merge(
                 $vars,
-                array(
-                    'meta_key' => '_metabox_order', //Custom field key
-                    'orderby' => 'meta_value_num' //Custom field value (number)
-                )
+                [
+                    'meta_key' => '_metabox_order',
+                    'orderby'  => 'meta_value_num',
+                ]
             );
         }
         return $vars;

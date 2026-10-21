@@ -1,62 +1,140 @@
+// [2026-10-09]: Tối ưu hóa thanh điều hướng danh mục .menu-sub theo phong cách Modern Segmented Pill Tabs
 @use "define" as *;
 @use "responsive" as *;
 
-@keyframes aniName {
-    0% {
-        margin: 0rem;
-    }
-    100% {
-        margin: 0.3rem 0;
+// [2026-10-12] - @author: Kelvin - Ẩn hoàn toàn H1 trên giao diện người dùng nhưng bảo toàn cho SEO & Screen Readers
+.page-title-h1 {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+
+    h1, span {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+        color: transparent !important;
+        font-size: 0 !important;
+        line-height: 0 !important;
     }
 }
 
-.page-title-h1{
-    text-align: center;
-    font-size: 0.7rem;
-    color: transparent;
-    margin-top: 15px;
-}
-
+// [2026-10-09] - @author: Kelvin - Module Menu Sub dạng Pill Tabs cao cấp
+// [2026-10-12] - @author: Kelvin - Điều chỉnh margin-top để tách biệt rõ ràng .menu-sub khỏi #header-space (tránh đè lên nhau)
 .menu-sub {
     display: flex;
-    flex-direction: row;
-    flex-flow: row wrap;
-    justify-content: center;
-    margin-bottom: 1rem;
-    margin-top: 0.5rem;
-    border-top: 1px solid #f1f1f1;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem 0.5rem 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
 
-    // ✅ Style h2 chung cho toàn bộ .menu-sub
-    h2 {
-        padding: 0.5rem 1rem;
-        font-weight: bold;
-        display: block;
-        font-size: 1.1rem;
-        color: $Color_main_menu_link;
-        @include Respond(md) {
-            font-size: 1rem;
-        }
+    @include Respond(md) {
+        margin-top: 1.25rem;
     }
 
-    .no-link {
-        color: #f1f1f1;
-        cursor: default;
-        h2 {
-            color: #666;
-        }
-    }
+    @include Respond(sm) {
+        margin-top: 1rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.75rem;
+        margin-bottom: 1.5rem;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
 
-    a {
-        h2:hover {
-            color:$Color_main_menu_link_hover;
+        &::-webkit-scrollbar {
+            display: none;
         }
     }
 
     &-item {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         cursor: pointer;
-        padding: 1px 3px;
-        height: 50px;
-        transition: all 0.1s;
-        border-top: 0.15rem solid transparent;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+        a {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 9999px;
+        }
+
+        span, h2 {
+            margin: 0;
+            padding: 7px 18px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: #475569;
+            line-height: 1.4;
+            transition: color 0.2s ease;
+
+            @include Respond(sm) {
+                font-size: 0.85rem;
+                padding: 6px 14px;
+            }
+        }
+
+        &:hover {
+            border-color: rgba(0, 175, 240, 0.45);
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 175, 240, 0.12);
+
+            h2 {
+                color: $Color_main_menu_link_hover;
+            }
+        }
+
+        // [2026-10-13] - @author: Kelvin - Trạng thái khi được chọn (.active): hiển thị nổi bật nhưng vẫn giữ link cho thẻ <a> và <h2> để người xem tiện click quay lại category đó
+        &.active,
+        &.is-active,
+        &.no-link {
+            cursor: pointer;
+            background: linear-gradient(135deg, #00aff0 0%, #0088cc 100%);
+            border-color: transparent;
+            box-shadow: 0 4px 14px rgba(0, 175, 240, 0.35);
+            transform: translateY(-1px);
+
+            a {
+                cursor: pointer;
+                pointer-events: auto;
+            }
+
+            h2 , span {
+                color: #ffffff !important;
+                font-weight: 600;
+            }
+
+            &:hover {
+                box-shadow: 0 6px 16px rgba(0, 175, 240, 0.45);
+                transform: translateY(-2px);
+            }
+        }
     }
+}
+
+// Trường hợp trang có ảnh banner .page-img phía trên thì chỉ cần margin-top bình thường
+.page-img ~ .menu-sub,
+div:has(> .page-img) ~ .menu-sub {
+    margin-top: 1.5rem !important;
 }

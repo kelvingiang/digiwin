@@ -92,197 +92,338 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
     /* IE6-9 */
 }
 
+// [2026-10-09] - @author: Kelvin - Tái thiết kế .menu-main theo phong cách Corporate Hiện đại (Glassmorphism & Micro-animations)
 .menu-main {
     position: relative;
-    z-index: 1000000000;
-    margin: 0rem 0rem;
-    padding-top: 0rem;
+    z-index: 1000;
+    margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: right;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+
     @include Respond(md) {
         display: none;
     }
+
     &-item {
         position: relative;
-        float: left;
-        // @include MenuBGColor;
-        padding: 0.7rem 1rem;
-        z-index: 100003;
-        // border: 0.1rem solid #fff;
+        z-index: 1001;
+
         label {
-            padding: 0rem;
+            cursor: pointer;
+            margin: 0;
         }
-        @include Respond(lg) {
-            padding: 0.5rem 0.6rem;
-        }
+
         &-link {
-            @include MenuLink(relative, 1.1rem, 1rem, 0.5rem);
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 0.95rem;
+            font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+            font-weight: 600;
+            color: $Color_main_menu_link;
+            text-decoration: none;
+            border-radius: 8px;
             white-space: nowrap;
+            position: relative;
+            transition: color 0.25s ease, background-color 0.25s ease;
+
+            @include Respond(lg) {
+                padding: 0.5rem 0.65rem;
+                font-size: 1rem;
+            }
+
+            /* Hiệu ứng thanh chỉ báo bên dưới (Modern Running Bar) */
+            &::before {
+                content: '';
+                position: absolute;
+                bottom: 3px;
+                left: 14px;
+                right: 14px;
+                height: 2px;
+                background: linear-gradient(90deg, #00aff0, #0088cc);
+                border-radius: 2px;
+                transform: scaleX(0);
+                transform-origin: center;
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            }
         }
-        &-bg {
-            @include MenuBG;
-        }
-        // .has-sub {
-        //     &:after {
-        //             @include HasSub(90deg, -2px);
-        //     }
-        // }
-        &:last-child {
-            border-radius: 0 0.4rem 0.4rem 0;
-            overflow: hidden;
-        }
-        &:first-child {
-            border-radius: 0.4rem 0 0 0.4rem;
-            overflow: hidden;
-        }
+
+        // [2026-10-09] - @author: Kelvin - Thiết lập mũi tên .has-sub cách chữ 10px
         .has-sub {
-            &:after {
-                @include HasSub(90deg, 3px);
+            &::after {
+                @include HasSub(90deg, 10px);
+                font-size: 0.75rem;
+                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             }
         }
+
         &:hover {
-            .menu-main-item-bg {
-                @include BGMouseOn();
-            }
             .menu-main-item-link {
                 color: $Color_main_menu_link_hover;
-                // color: $Color_main_menu_link_ho;
+                background-color: rgba(0, 175, 240, 0.08);
+
+                &::before {
+                    transform: scaleX(1);
+                }
             }
+
+            .has-sub::after {
+                transform: rotate(-90deg);
+            }
+
             .menu-main-sub-1 {
                 pointer-events: auto;
                 opacity: 1;
-                margin-top: 0.6rem;
+                visibility: visible;
+                transform: translateY(0);
             }
         }
     }
+
     .active {
         > a,
         > label {
-            color: #00384e !important;
+            color: $Color_main_menu_link_hover !important;
+            background-color: rgba(0, 175, 240, 0.08);
+
+            &::before {
+                transform: scaleX(1);
+            }
         }
     }
-    //===== SUB =======================================================
+
+    // ===== SUB LEVEL 1 (Modern Floating Glass Card) =================
     .menu-main-sub-1 {
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         position: absolute;
-        margin-top: -30px;
-        margin-left: -18px;
-        transition: all 1s;
-        padding: 2px;
+        top: calc(100% + 4px);
+        left: 0;
+        transform: translateY(8px);
+        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         white-space: nowrap;
-        z-index: 100001;
+        z-index: 1002;
+        min-width: 230px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+
+        /* Cầu nối vô hình chống mất hover */
+        &::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: transparent;
+        }
+
+        // [2026-10-09] - @author: Kelvin - Thêm border-top và hiệu ứng màu nền chạy từ phải qua khi hover
         &-item {
             position: relative;
-            height: 50px;
-            line-height: 50px;
-            background-color: $bgHoverColor;
-            border-bottom: 1px solid #fff;
             cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            transition: border-color 0.2s ease;
+
+            &:first-child {
+                border-top: none;
+            }
+
             &-link {
-                @include MenuLink(relative, 1.1rem, 0rem, 1.5rem);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                position: relative;
+                overflow: hidden;
+                z-index: 1;
+                transition: color 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+                /* [2026-10-09]: Màu nền ẩn ban đầu và chạy từ phải qua trái khi hover */
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(270deg, rgba(0, 175, 240, 0.12) 0%, rgba(240, 247, 255, 0.95) 100%);
+                    border-radius: 8px;
+                    transform: scaleX(0);
+                    transform-origin: right;
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    z-index: -1;
+                }
             }
-            &-bg {
-                @include MenuBGSub;
-            }
+
             .has-sub {
-                display: inline-flex;
-                color: #00384e !important;
-                font-size: 3rem !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                color: #1e293b;
+
                 svg {
-                    width: 14px; /* 設定 SVG 的寬度 */
-                    height: auto; /* 保持比例 */
-                    fill: #333; /* 設定顏色 */
-                    transition: fill 0.3s; /* (選填) 增加顏色變換的過渡動畫 */
+                    width: 14px;
+                    height: auto;
+                    fill: #64748b;
+                    transition: fill 0.2s ease, transform 0.2s ease;
                 }
-                // &:after {
-                //     @include HasSub(0deg, 20px);
-                // }
             }
+
             &:hover {
-                .menu-main-sub-1-item-bg {
-                    @include BGMouseOnSub();
-                }
                 .menu-main-sub-1-item-link {
                     color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
+
+                    &::before {
+                        transform: scaleX(1);
+                    }
                 }
+
+                .has-sub svg {
+                    fill: $Color_main_menu_link_hover;
+                    transform: translateX(2px);
+                }
+
                 .menu-main-sub-2 {
                     opacity: 1;
                     pointer-events: auto;
-                    left: 100%;
+                    visibility: visible;
+                    left: calc(100% + 4px);
+                    transform: translateY(0);
                 }
             }
         }
     }
-    //===SUB SUB==================================================================
+
+    // ===== SUB LEVEL 2 ============================================
     .menu-main-sub-2 {
         pointer-events: none;
         opacity: 0;
-        position: relative;
-        left: 0%;
-        top: -51px;
-        height: 50px;
-        transition: all 1s;
+        visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: calc(100% + 10px);
+        transform: translateY(6px);
+        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+        z-index: 1003;
+        min-width: 210px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+
         &-item {
             position: relative;
-            background-color: $bgHoverColor;
-            border-bottom: 1px solid #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: background-color 0.2s ease;
+
             &-link {
-                @include MenuLink(relative, 1rem, 0rem, 2rem);
+                display: block;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.2s ease;
             }
-            &-bg {
-                @include MenuBGSub;
-            }
+
             &:hover {
-                .menu-main-sub-2-item-bg {
-                    @include BGMouseOnSub();
-                }
+                background-color: #f0f7ff;
+
                 .menu-main-sub-2-item-link {
                     color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
                 }
+
                 .menu-main-sub-3 {
                     opacity: 1;
                     pointer-events: auto;
-                    left: 100%;
+                    visibility: visible;
+                    left: calc(100% + 4px);
                 }
             }
         }
     }
-    //===SUB SUB  SUB==================================================================
+
+    // ===== SUB LEVEL 3 ============================================
     .menu-main-sub-3 {
         pointer-events: none;
         opacity: 0;
+        visibility: hidden;
         position: absolute;
-        width: 100%;
-        top: 0px;
-        left: 0%;
-        transition: all 1s;
+        top: 0;
+        left: calc(100% + 10px);
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 1004;
+        min-width: 210px;
+        padding: 6px;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 12px;
+        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12);
+
         &-item {
             position: relative;
-            background-color: rgba(98, 199, 239, 0.9);
-            border-bottom: 1px solid #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            margin: 2px 0;
+            transition: background-color 0.2s ease;
+
             &-link {
-                @include MenuLink(relative, 1rem, 0rem, 2.5rem);
+                display: block;
+                padding: 10px 14px;
+                color: #334155;
+                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.2s ease;
             }
-            &-bg {
-                @include MenuBGSub;
-            }
+
             &:hover {
-                .menu-main-sub-3-item-bg {
-                    @include BGMouseOnSub();
-                }
+                background-color: #f0f7ff;
+
                 .menu-main-sub-3-item-link {
                     color: $Color_main_menu_link_hover;
+                    transform: translateX(4px);
+                    font-weight: 600;
                 }
             }
         }
     }
 }
 
+// [2026-10-09] - @author: Kelvin - Thiết lập khoảng cách mũi tên .has-sub cách chữ 10px cho các ngôn ngữ
 html[lang="zh-TW"] .has-sub::after {
-    @include HasSub(90deg, 1px);
+    @include HasSub(90deg, 10px);
 }
 
 html[lang="vi-VN"] .has-sub::after {
-    @include HasSub(90deg, 1px);
+    @include HasSub(90deg, 10px);
 }

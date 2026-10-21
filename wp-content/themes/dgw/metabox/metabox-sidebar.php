@@ -12,7 +12,7 @@ class Metabox_SideBar
     public function create()
     {
         $id = 'admin-metabox-sidebar';
-        $title = __('Show in Sidebar');
+        $title = __('Show in Sidebar', 'dgw');
         $callback = array($this, 'display');
         $screens = array('resources', 'solutions', 'casestudies', 'active', 'joinus');
         foreach ($screens as $screen) {
@@ -38,7 +38,7 @@ class Metabox_SideBar
             <div class="col">
                 <div class="title-cell">
                     <input type="checkbox" id="ckd-sidebar" name="ckd-sidebar" <?php echo $checkValue ?> />
-                    <label style="margin-right: 15px"><?php echo __('Show in Sidebar'); ?></label>
+                    <label style="margin-right: 15px"><?php echo __('Show in Sidebar', 'dgw'); ?></label>
                 </div>
             </div>
         </div>
@@ -64,7 +64,7 @@ class Metabox_SideBar
 
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP 
 
-        $chk = $_POST['ckd-sidebar'] == 'on' ? "1" : "0";
+        $chk = sanitize_text_field(wp_unslash($_POST['ckd-sidebar'])) == 'on' ? "1" : "0";
         update_post_meta($post_id, '_metabox_sidebar', $chk);
     }
 }

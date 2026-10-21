@@ -1,17 +1,20 @@
 @use "define" as *;
 @use "responsive" as *;
 
-
-
+// [2026-10-08]: Popup thông báo trang chủ chuẩn Accessibility và BEM
 .dgw-popup {
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.8);
     position: fixed;
     z-index: 10000000000;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
+
+    &.is-visible {
+        display: flex;
+    }
 
     &-space {
         position: relative;
@@ -25,48 +28,71 @@
         }
 
         background-color: #fff;
-        border-radius: 2px;
+        border-radius: 10px;
+        overflow: hidden;
         padding: 0.1rem;
         box-shadow: 0px 0px 30px #fff;
         cursor: pointer;
         .popup-link {
-            .img-computer {
-                border-radius: 2px;
-                max-width: 100%;
-                width: 100%;
-                
-                @include Respond(md) {
-                    display: none;
-                }
-                @include Respond(xl) {
-                    display: block;
-                }
+            display: block;
+            text-decoration: none;
+
+            picture {
+                display: block;
             }
-            .img-mobile {
+
+            img {
+                width: 100%;
+                height: auto;
+                display: block;
                 border-radius: 2px;
                 max-width: 100%;
-                @include Respond(md) {
-                    display: block;
-                }
-                @include Respond(xl) {
-                    display: none;
-                }
             }
         }
+        // [2026-10-09]: Tối ưu kích thước nút đóng Popup nhỏ gọn nhưng giữ Hitbox 48px đạt chuẩn Lighthouse Accessibility
         .dgw-popup-close {
-            color: rgb(253, 253, 253);
-            opacity: 0.3;
+            // 1. Kích thước hiển thị thực tế (nhỏ gọn ~24px)
+            width: 24px;
+            height: 24px;
+            padding: 0;
             position: absolute;
-            top: 5px;
-            right: 5px;
-            font-size: 1.2rem;
+            top: 10px;
+            right: 10px;
+            background-color: #ffffff;
+            border: none;
+            outline: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            svg{
-                width: 25px;
-                fill:#fff;
+            color: rgb(253, 1, 1);
+            opacity: 1;
+
+            // 2. Tạo vùng chạm ảo 48x48px cho Lighthouse mà mắt thường không thấy
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 48px;
+                height: 48px;
             }
+
+            // 3. Icon nhỏ gọn bên trong (14px - 16px)
+            svg {
+                width: 14px;
+                height: 14px;
+                fill: #9b0202;
+                pointer-events: none;
+            }
+
             &:hover {
                 opacity: 1;
+                svg {
+                    fill: #000;
+                }
             }
         }
     }

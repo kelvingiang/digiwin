@@ -13,8 +13,8 @@ class Controller_Member
     public function create()
     {
         // THEM 1 NHOM MENU MOI VAO TRONG ADMIN MENU
-        $page_title = __('資料下載'); // TIEU DE CUA TRANG
-        $menu_title = __('資料下載');  // TEN HIEN TRONG MENU
+        $page_title = __('Download Data', 'dgw'); // TIEU DE CUA TRANG
+        $menu_title = __('Download Data', 'dgw');  // TEN HIEN TRONG MENU
         // CHON QUYEN TRUY CAP manage_categories DE role ADMINNITRATOR VÀ EDITOR DEU THAY DUOC
         $capability = 'manage_categories'; // QUYEN TRUY CAP DE THAY MENU NAY
         $menu_slug = 'member_page'; // TEN slug TEN DUY NHAT KO DC TRUNG VOI TRANG KHAC GAN TREN THANH DIA CHI OF MENU
@@ -81,9 +81,8 @@ class Controller_Member
 
     public function editAction()
     {
-        if (isPost()) {
-        }
-        require_once(DIR_VIEW . 'from-member.php');
+        // [2026-10-05] - @author: Kelvin - Sua loi chinh ta from -> form
+        require_once(DIR_VIEW . 'form-member.php');
     }
 
     public function trashAction()
@@ -108,7 +107,7 @@ class Controller_Member
         }
 
         require_once(DIR_MODEL . 'model-download.php');
-        require_once(get_template_directory() . '/inc/code/function-member-dictionary.php');
+        require_once(get_template_directory() . '/inc/code/code-member-dictionary.php');
 
         $exporter = new Model_Download();
         $data = $exporter->get_export_data();
@@ -192,7 +191,9 @@ class Controller_Member
             $filename = "members_export_" . date("Y-m-d") . ".xlsx";
 
             // Xóa bỏ mọi output đã được tạo trước đó để tránh file excel bị lỗi hỏng
-            if (ob_get_length()) ob_clean();
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
 
             // Set headers for file download
             header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

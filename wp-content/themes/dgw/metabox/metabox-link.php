@@ -12,7 +12,7 @@ class Metabox_Link
     public function create()
     {
         $id = 'admin-metabox-link';
-        $title = __('Link');
+        $title = __('Link', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('slider',));
     }
@@ -43,7 +43,7 @@ class Metabox_Link
     {
 
         if (!empty($_POST['txt-link'])) {
-            update_post_meta($post_id, '_metabox_link', $_POST['txt-link']);
+            update_post_meta($post_id, '_metabox_link', sanitize_text_field(wp_unslash($_POST['txt-link'])));
         }
     }
 }

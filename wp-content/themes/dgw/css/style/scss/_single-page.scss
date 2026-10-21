@@ -134,27 +134,83 @@
         font-weight: bold;
     }
 
+    // [2026-10-12] - @author: Kelvin - Tối ưu hóa UI/UX view_like_area: flex căn chỉnh icon thẳng hàng, hiệu ứng nút like mượt mà và highlight khi đã like (.is-liked)
     .view_like_area {
         background-color: transparent;
-        margin-top: 0rem;
-        margin-bottom: 1rem;
-        padding-right: 2rem;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        padding-right: 1.5rem;
         z-index: 10;
+
         .view_like_content {
-            text-align: end;
-            color: #bbbbbb;
             display: flex;
             flex-direction: row;
-            justify-content: end;
-            & > div {
-                margin: 0rem 0.5rem;
-                display: flex;
-                flex-direction: row;
-                div {
-                    margin: 0.2rem;
-                    .like-post {
-                        fill: #153f77;
-                        cursor: pointer;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.25rem;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 500;
+
+            .view-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+
+                .icon-comment {
+                    width: 17px;
+                    height: 17px;
+                    fill: #94a3b8;
+                    display: block;
+                    transition: all 0.25s ease;
+                }
+            }
+
+            .like-click {
+                display: inline-flex;
+                align-items: center;
+
+                .like-btn-action {
+                    background: transparent;
+                    border: none;
+                    padding: 0;
+                    margin: 0;
+                    outline: none;
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+                    &.like-post {
+                        .icon-comment {
+                            fill: #64748b;
+                        }
+
+                        &:hover {
+                            transform: scale(1.2);
+
+                            .icon-comment {
+                                fill: #00aff0;
+                            }
+                        }
+
+                        &:active {
+                            transform: scale(0.95);
+                        }
+                    }
+
+                    &.is-liked {
+                        cursor: default;
+
+                        .icon-comment {
+                            fill: #00aff0;
+                        }
+                    }
+
+                    &.is-loading {
+                        opacity: 0.6;
+                        cursor: wait;
                     }
                 }
             }

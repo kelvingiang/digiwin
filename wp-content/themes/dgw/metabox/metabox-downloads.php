@@ -9,7 +9,7 @@ class Metabox_Download {
 
     public function create() {
         $id = 'admin-metabox-download';
-        $title = __('Data Download');
+        $title = __('Data Download', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('downloads',));
     }
@@ -24,7 +24,7 @@ class Metabox_Download {
 
         <div class="row-one-column">
             <div class="cell-title">
-                <label><?php _e('Upload File') ?> <i style="margin-left: 3rem; font-size: 0.8rem; color: #ccc"> 目前檔案 ： <?php echo get_post_meta($post->ID, _download_file, true); ?></i></label>
+                <label><?php __('Upload File', 'dgw') ?> <i style="margin-left: 3rem; font-size: 0.8rem; color: #ccc"> 目前檔案 ： <?php echo get_post_meta($post->ID, _download_file, true); ?></i></label>
             </div>
             <div class="cell-text" style="margin: 2rem">
                 <input type="file" name="file_upload"  id="file_upload" />
@@ -36,7 +36,7 @@ class Metabox_Download {
     public function save($post_id) {
 
         global $wpdb;
-        // $wpdb->update($wpdb->posts, array('post_title' => $_POST['txt-name-cn']), array('ID' => $post_id));
+        // $wpdb->update($wpdb->posts, array('post_title' => sanitize_text_field(wp_unslash($_POST['txt-name-cn']))), array('ID' => $post_id));
         // kiem thanh phan an bao mat cua wp
         // 4 BON PHAN TREN DUNG DE BAO MAT KHI LUU METABOX TRONG WP
         $old_file = get_post_meta($post_id, '_download_file', true);

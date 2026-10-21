@@ -1,8 +1,13 @@
-<?php /*  Template Name: Download Page */ ?>
-<?php get_header(); ?>
+<?php
+/**
+ * Date: 2026-08-24
+ * Template Name: Download Page
+ * Description: Custom template for Download Page
+ */
+get_header(); ?>
 
 <div>
-  <?php pageImg($post->ID); ?>
+  <?php pageImg(get_the_ID()); ?>
 </div>
 
 <div class="container-fluid">
@@ -16,7 +21,11 @@
         $param = $wp->query_vars;
         $arr = array(
           'post_type' => 'downloads',
-          'posts_per_page' => -1,
+          // [2026-07-08] - @author: Kelvin - Tối ưu truy vấn: Giới hạn 50 tài liệu, tắt đếm tổng trang tránh nặng server
+          'posts_per_page' => 50,
+          'no_found_rows' => true,
+          'update_post_meta_cache' => false,
+          'update_post_term_cache' => false,
           'orderby' => 'meta_value_num',
           'order' => 'DESC',
           'meta_key' => '_metabox_order',
@@ -63,7 +72,7 @@
 
     </div>
     <div>
-        <?php get_template_part('templates/template', 'side_active');  ?>
+        <?php get_template_part('templates/side-active');  ?>
     </div>
   </div>
 </div>
