@@ -41,8 +41,8 @@ error_log
 # ----------------------------------------------------
 
 # [2026-10-21] Cho phép Git track custom plugin tự viết
-!/wp-content/plugins/dgw_zalo_api/
-!/wp-content/plugins/dgw_zalo_api/**
+!/wp-content/plugins/dgw-zalo-api/
+!/wp-content/plugins/dgw-zalo-api/**
 
 # ====================================================
 # [非常重要] 
