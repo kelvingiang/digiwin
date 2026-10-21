@@ -155,7 +155,7 @@ class Controller_Popup
     {
         $flag = true;
         if (isPost()) {
-                  if ($_FILES)
+            if ($_FILES)
                 foreach ($_FILES as $key => $file) {
                     $upload = uploadImg($_POST['txt-title'], $file);
                     if (is_array($upload)) {

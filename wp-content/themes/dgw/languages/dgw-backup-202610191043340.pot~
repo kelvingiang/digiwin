@@ -1,13 +1,14 @@
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-06 02:50+0000\n"
-"PO-Revision-Date: 2026-10-07 07:50+0000\n"
-"Last-Translator: \n"
-"Language-Team: 繁體中文\n"
-"Language: zh_TW\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"POT-Creation-Date: 2026-10-19 03:42+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -27,11 +28,11 @@ msgstr ""
 
 #: comments.php:11
 msgid "1 comment"
-msgstr "有 1 留言"
+msgstr ""
 
 #: inc/front/front-menu.php:45
 msgid "About Digiwin"
-msgstr "關於我們"
+msgstr ""
 
 #. Name of the template
 #: page/about.php:2
@@ -40,7 +41,7 @@ msgstr ""
 
 #: page/activate-member.php:115
 msgid "Account activated successfully!"
-msgstr "帳號啟用成功！"
+msgstr ""
 
 #: page/activate-member.php:35
 msgid "Account does not exist"
@@ -48,7 +49,7 @@ msgstr ""
 
 #: page/activate-member.php:58
 msgid "Account verification is in progress, please wait..."
-msgstr "帳號驗證中，請稍候..."
+msgstr ""
 
 #. Name of the template
 #: page/activate-member.php:2
@@ -59,9 +60,9 @@ msgstr ""
 #: controller/controller-active.php:47 metabox/metabox-active.php:12
 #: inc/front/front-menu.php:19
 msgid "Active"
-msgstr "活動快訊"
+msgstr ""
 
-#: single-active.php:3 page/active.php:13
+#: page/active.php:13
 msgid "active"
 msgstr ""
 
@@ -80,9 +81,9 @@ msgstr ""
 msgid "Actives Page"
 msgstr ""
 
-#: inc/front/front-menu.php:69
+#: inc/front/front-menu.php:71
 msgid "Activities"
-msgstr "活動快訊"
+msgstr ""
 
 #: controller/controller-active.php:38 controller/controller-active.php:40
 #: controller/controller-case-studies.php:38
@@ -96,7 +97,7 @@ msgstr "活動快訊"
 #: controller/controller-solutions.php:40 view/view-logo.php:9
 #: view/view-member.php:8 view/view-pop-up.php:9
 msgid "Add Item"
-msgstr "新增項目"
+msgstr ""
 
 #: controller/controller-active.php:37
 #: controller/controller-case-studies.php:37
@@ -115,15 +116,15 @@ msgstr "新增項目"
 #: taxonomy/taxonomy-services.php:36 taxonomy/taxonomy-services.php:37
 #: taxonomy/taxonomy-solution.php:105 taxonomy/taxonomy-solution.php:106
 msgid "Add New"
-msgstr "新增項目"
+msgstr ""
 
 #: inc/code/code-add-media.php:10
 msgid "Add Product Images"
 msgstr ""
 
-#: page/about.php:43 view/view-information.php:47 view/view-information.php:101
+#: page/about.php:43 view/view-information.php:74 view/view-information.php:128
 msgid "Address"
-msgstr "地址"
+msgstr ""
 
 #: metabox/metabox-solution.php:42
 msgid "Advisory Services"
@@ -132,7 +133,7 @@ msgstr ""
 #: model/bk_model-member.php:139 model/model-download.php:221
 #: model/model-logo.php:149 model/model-popup.php:152
 msgid "All"
-msgstr "全部"
+msgstr ""
 
 #: controller/controller-active.php:41
 #: controller/controller-case-studies.php:41
@@ -140,11 +141,15 @@ msgstr "全部"
 #: controller/controller-resources.php:41 controller/controller-services.php:41
 #: controller/controller-slider.php:41 controller/controller-solutions.php:41
 msgid "All Items"
-msgstr "所有項目"
+msgstr ""
 
 #: taxonomy/taxonomy-advertising.php:23 taxonomy/taxonomy-advertising.php:24
 #: taxonomy/taxonomy-advertising.php:33
 msgid "Area"
+msgstr ""
+
+#: page/article.php:16
+msgid "article"
 msgstr ""
 
 #. Name of the template
@@ -152,37 +157,49 @@ msgstr ""
 msgid "Article Page"
 msgstr ""
 
-#: inc/front/front-menu.php:112
+#: inc/front/front-menu.php:114
 msgid "Assistant"
-msgstr "助理"
+msgstr ""
 
-#: inc/front/front-menu.php:155
+#: inc/front/front-menu.php:157
 msgid "Associations"
-msgstr "協會"
+msgstr ""
 
 #: inc/admin/admin-custom-columns.php:11
 msgid "Author"
-msgstr "作者"
+msgstr ""
 
-#: inc/front/front-menu.php:140
+#: inc/front/front-menu.php:142
 msgid "Automotive Parts"
-msgstr "汽車零件"
+msgstr ""
 
-#: templates/footer.php:65
+#: templates/footer.php:66
 msgid "Awards & Certificates"
-msgstr "獎項與證書"
+msgstr ""
 
-#: inc/front/front-menu.php:181
+#: inc/front/front-menu.php:183
 msgid "Board of Directors"
-msgstr "董事會"
+msgstr ""
+
+#: templates/home-cases.php:136
+msgid "Bài tiếp theo"
+msgstr ""
+
+#: templates/home-cases.php:135
+msgid "Bài trước"
+msgstr ""
+
+#: templates/view-comment.php:33
+msgid "Bình luận"
+msgstr ""
 
 #: comments.php:139
 msgid "Cancel"
-msgstr "取消回覆"
+msgstr ""
 
 #: page/reset-password.php:83
 msgid "Cannot Reset Password"
-msgstr "無法重設密碼"
+msgstr ""
 
 #: model/bk_model-member.php:52
 msgid "Career"
@@ -190,14 +207,14 @@ msgstr ""
 
 #: controller/controller-case-studies.php:35
 #: controller/controller-case-studies.php:36
-#: controller/controller-case-studies.php:47 templates/footer.php:130
+#: controller/controller-case-studies.php:47 templates/footer.php:131
 #: inc/front/front-menu.php:50
 msgid "Case Studies"
-msgstr "成功案例"
+msgstr ""
 
-#: single-casestudies.php:4 page/case.php:12 templates/side-cases.php:2
+#: page/case.php:12 templates/side-cases.php:2
 msgid "cases"
-msgstr "成功案例"
+msgstr ""
 
 #. Name of the template
 #: page/case.php:2
@@ -229,125 +246,117 @@ msgstr ""
 #: taxonomy/taxonomy-solution.php:97 taxonomy/taxonomy-solution.php:98
 #: taxonomy/taxonomy-solution.php:107 inc/admin/admin-custom-columns.php:12
 msgid "Category"
-msgstr "分類"
+msgstr ""
 
-#: inc/front/front-menu.php:105
+#: inc/front/front-menu.php:107
 msgid "CEO"
-msgstr "CEO"
+msgstr ""
 
 #: page/member.php:174
 msgid "Change Information"
-msgstr "修改資訊"
+msgstr ""
 
 #: page/member.php:99
 msgid "Change Password"
-msgstr "修改密碼"
+msgstr ""
 
-#: inc/front/front-menu.php:151
+#: inc/front/front-menu.php:153
 msgid "Chemicals"
-msgstr "化學品"
+msgstr ""
 
 #: metabox/bk-metabox-resources.php:27 metabox/bk-metabox-resources.php:35
 #: metabox/bk-metabox-resources.php:45 metabox/metabox-active.php:27
 #: metabox/metabox-active.php:35 metabox/metabox-active.php:45
 #: metabox/metabox-language.php:35 metabox/metabox-service.php:27
 #: metabox/metabox-service.php:35 metabox/metabox-service.php:45
-#: view/view-information.php:32 view/view-information.php:39
-#: view/view-information.php:47 view/view-information.php:58
-#: view/view-information.php:69 view/view-information.php:80
+#: view/view-information.php:59 view/view-information.php:66
+#: view/view-information.php:74 view/view-information.php:85
+#: view/view-information.php:96 view/view-information.php:107
 msgid "Chinese"
-msgstr "中文"
+msgstr ""
 
-#: view/form-pop-up.php:81
-#| msgid "Chinese Article - ID (VN)"
-msgid "Chinese Article - ID (CN)"
-msgstr "中文文章 - ID (CN)"
-
-#: view/form-pop-up.php:110
+#: view/form-pop-up.php:159
 msgid "Chinese Horizontal Image (CN)"
-msgstr "中文橫式圖片 (CN)"
+msgstr ""
 
-#: view/form-pop-up.php:72
+#: view/form-pop-up.php:104
 msgid "Chinese Link (CN)"
-msgstr "中文連結 (CN)"
+msgstr ""
 
-#: view/form-pop-up.php:124
+#: view/form-pop-up.php:173
 msgid "Chinese Vertical Image (CN)"
-msgstr "中文直式圖片 (CN)"
+msgstr ""
 
 #: templates/home-news.php:14
 msgid "Classic Case"
-msgstr "典範案例 "
+msgstr ""
 
 #: templates/home-news.php:11
 msgid "Column Article"
-msgstr "專欄文章"
+msgstr ""
 
 #: comments.php:100
 msgid "Comment Content"
-msgstr "內容"
+msgstr ""
 
 #: comments.php:11 entry-footer.php:4
 msgid "Comments"
-msgstr "留言"
+msgstr ""
 
 #: comments.php:34
 msgctxt "comments count"
 msgid "Trackback or Pingback"
 msgid_plural "Trackbacks and Pingbacks"
 msgstr[0] ""
+msgstr[1] ""
 
 #: model/bk_model-member.php:49
 msgid "Company "
 msgstr ""
 
-#: controller/controller-information.php:14
-#: controller/controller-information.php:15
+#: controller/controller-information.php:17
+#: controller/controller-information.php:18
 msgid "Company Information"
-msgstr "公司資訊"
+msgstr ""
 
-#: view/view-information.php:80 view/view-information.php:134
+#: view/view-information.php:107 view/view-information.php:161
 msgid "Company Location"
-msgstr "服務據點"
+msgstr ""
 
 #: model/model-download.php:62 model/model-logo.php:53 page/member.php:133
-#: view/form-logo.php:21 view/view-information.php:39
-#: view/view-information.php:93 view/view-member-download.php:44
+#: view/form-logo.php:21 view/view-information.php:66
+#: view/view-information.php:120 view/view-member-download.php:44
 #: inc/front/front-core.php:119
 msgid "Company Name"
-msgstr "公司名稱"
+msgstr ""
 
-#: view/view-information.php:69 view/view-information.php:123
+#: view/view-information.php:96 view/view-information.php:150
 msgid "Company Operating"
-msgstr "永續經營"
+msgstr ""
 
-#: view/view-information.php:58 view/view-information.php:112
+#: view/view-information.php:85 view/view-information.php:139
 msgid "Company Summary"
-msgstr "公司簡介"
+msgstr ""
 
 #: page/member.php:93 page/reset-password.php:63
 msgid "Confirm Password"
-msgstr "確定密碼"
+msgstr ""
 
-#: inc/front/front-menu.php:115
+#: inc/front/front-menu.php:117
 msgid "Consultant"
-msgstr "顧問"
-
-#: templates/footer.php:138
-msgid "contact"
 msgstr ""
 
 #: model/model-download.php:63
 msgid "Contact Number"
-msgstr "聯絡電話"
+msgstr ""
 
-#: inc/front/front-menu.php:86
+#: templates/footer.php:139 inc/front/front-menu.php:88
 msgid "Contact Us"
-msgstr "聯絡我們"
+msgstr ""
 
 #: templates/home-business.php:1
 msgid "Corporate management focus"
-msgstr "企業管理焦點"
+msgstr ""
 
 #: taxonomy/tag-advertising.php:116 taxonomy/tag-casestudies.php:101
 #: taxonomy/tag-solution.php:101 taxonomy/taxonomy-advertising.php:108
@@ -366,15 +375,15 @@ msgstr ""
 #: model/model-logo.php:56 model/model-popup.php:57
 #: inc/admin/admin-custom-columns.php:16
 msgid "Create Date"
-msgstr "建立日期"
+msgstr ""
 
 #: page/member.php:83
 msgid "Current Password"
-msgstr "當前密碼"
+msgstr ""
 
 #: controller/controller-logo.php:16 controller/controller-logo.php:17
 msgid "Customer Trademark"
-msgstr "客戶商標"
+msgstr ""
 
 #: view/view-logo.php:11 view/view-member.php:10 view/view-pop-up.php:11
 msgid "Data Adjustment succeeded"
@@ -393,15 +402,15 @@ msgstr ""
 
 #: page/member.php:158 inc/front/front-core.php:130
 msgid "Department"
-msgstr "部門"
+msgstr ""
+
+#: inc/front/front-menu.php:112
+msgid "Deputy Director"
+msgstr ""
 
 #: inc/front/front-menu.php:110
-msgid "Deputy Director"
-msgstr "副經理"
-
-#: inc/front/front-menu.php:108
 msgid "Deputy General Director"
-msgstr "副總經理"
+msgstr ""
 
 #: model/bk_model-member.php:50
 msgid "Description"
@@ -415,45 +424,46 @@ msgstr ""
 msgid "DGW"
 msgstr ""
 
-#: templates/footer.php:121
+#: templates/footer.php:122
 msgid "Digital Transformation in the Plastics Industry"
-msgstr "塑膠產業數位轉型"
+msgstr ""
 
 #. Author of the theme
 msgid "Digiwin"
 msgstr ""
 
-#: inc/front/front-menu.php:109
+#: inc/front/front-menu.php:111
 msgid "Director"
-msgstr "經理"
+msgstr ""
 
-#: helper/function.php:87
+#: helper/function.php:105
 msgid "Discuss"
-msgstr "留言討論"
+msgstr ""
 
 #: page/partner.php:13
 msgid "distribution"
-msgstr "經銷合作"
+msgstr ""
 
-#: templates/footer.php:80
+#: templates/footer.php:81
 msgid "Download 2026 Digital Transformation Whitepaper"
-msgstr "下載 99 通報_企業財務合規全面解讀"
+msgstr ""
 
 #: model/model-download.php:64 view/view-member-download.php:17
 msgid "Download Count"
-msgstr "下載次數"
+msgstr ""
 
 #: controller/controller-member.php:16 controller/controller-member.php:17
+#: view/form-member.php:34
 msgid "Download Data"
-msgstr "資料下載"
+msgstr ""
 
 #: view/view-member-download.php:47
 msgid "Download Date"
-msgstr "下載日期"
+msgstr ""
 
-#: single-resources.php:30
+#: single-resources.php:43
 msgid "Download File digiwin"
-msgstr "下載文件"
+msgstr ""
 
 #. Name of the template
 #: page/download.php:2
@@ -462,19 +472,19 @@ msgstr ""
 
 #: view/view-member-download.php:35
 msgid "Download Report"
-msgstr "下載報表"
+msgstr ""
 
 #: controller/controller-member-download.php:15
 #: controller/controller-member-download.php:16
 #: view/view-member-download.php:10
 msgid "Download Statistics"
-msgstr "下載數據"
+msgstr ""
 
 #: model/model-download.php:60 page/member.php:40 view/view-information.php:22
 #: view/view-member-download.php:45 inc/front/front-core.php:114
-#: inc/shortcode/shortcode-member.php:53
+#: inc/shortcode/shortcode-member.php:54
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #: controller/controller-active.php:39
 #: controller/controller-case-studies.php:39
@@ -490,93 +500,93 @@ msgstr "E-mail"
 #: taxonomy/taxonomy-joinus.php:33 taxonomy/taxonomy-resource.php:33
 #: taxonomy/taxonomy-services.php:34 taxonomy/taxonomy-solution.php:103
 msgid "Edit"
-msgstr "修改"
+msgstr ""
 
-#: inc/front/front-menu.php:143
+#: inc/front/front-menu.php:145
 msgid "Electronic Parts"
-msgstr "電子零件"
+msgstr ""
 
 #: metabox/bk-metabox-resources.php:29 metabox/bk-metabox-resources.php:81
 #: metabox/bk-metabox-resources.php:91 metabox/metabox-active.php:29
 #: metabox/metabox-active.php:81 metabox/metabox-active.php:91
-#: metabox/metabox-language.php:43 metabox/metabox-service.php:29
-#: metabox/metabox-service.php:81 metabox/metabox-service.php:91
-#: taxonomy/taxonomy-active.php:60 taxonomy/taxonomy-active.php:105
-#: taxonomy/taxonomy-active.php:133 taxonomy/taxonomy-casestudies.php:61
-#: taxonomy/taxonomy-casestudies.php:93 taxonomy/taxonomy-casestudies.php:135
-#: taxonomy/taxonomy-industries.php:61 taxonomy/taxonomy-industries.php:93
-#: taxonomy/taxonomy-industries.php:135 taxonomy/taxonomy-joinus.php:60
-#: taxonomy/taxonomy-joinus.php:113 taxonomy/taxonomy-joinus.php:141
-#: taxonomy/taxonomy-resource.php:60 taxonomy/taxonomy-resource.php:107
-#: taxonomy/taxonomy-resource.php:135 taxonomy/taxonomy-services.php:62
-#: taxonomy/taxonomy-services.php:113 taxonomy/taxonomy-services.php:140
-#: taxonomy/taxonomy-solution.php:33 taxonomy/taxonomy-solution.php:132
-#: taxonomy/taxonomy-solution.php:160 inc/admin/admin-add-post-tag-field.php:14
+#: metabox/metabox-service.php:29 metabox/metabox-service.php:81
+#: metabox/metabox-service.php:91 taxonomy/taxonomy-active.php:60
+#: taxonomy/taxonomy-active.php:105 taxonomy/taxonomy-active.php:133
+#: taxonomy/taxonomy-casestudies.php:61 taxonomy/taxonomy-casestudies.php:93
+#: taxonomy/taxonomy-casestudies.php:135 taxonomy/taxonomy-industries.php:61
+#: taxonomy/taxonomy-industries.php:93 taxonomy/taxonomy-industries.php:135
+#: taxonomy/taxonomy-joinus.php:60 taxonomy/taxonomy-joinus.php:113
+#: taxonomy/taxonomy-joinus.php:141 taxonomy/taxonomy-resource.php:60
+#: taxonomy/taxonomy-resource.php:107 taxonomy/taxonomy-resource.php:135
+#: taxonomy/taxonomy-services.php:62 taxonomy/taxonomy-services.php:113
+#: taxonomy/taxonomy-services.php:140 taxonomy/taxonomy-solution.php:33
+#: taxonomy/taxonomy-solution.php:132 taxonomy/taxonomy-solution.php:160
+#: inc/admin/admin-add-post-tag-field.php:14
 #: inc/admin/admin-add-post-tag-field.php:47
 #: inc/admin/admin-add-post-tag-field.php:104
 #: inc/admin/admin-add-post-taxonomy-field.php:13
 #: inc/admin/admin-add-post-taxonomy-field.php:50
 #: inc/admin/admin-add-post-taxonomy-field.php:109
 msgid "English"
-msgstr "英文"
+msgstr ""
 
-#: inc/shortcode/shortcode-member.php:12
+#: inc/shortcode/shortcode-member.php:14
 msgid "Enter your email address to reset your password"
-msgstr "請輸入您的電子郵件地址以重設密碼"
+msgstr ""
 
-#: templates/home-cases.php:1
+#: templates/home-cases.php:49
 msgid "Enterprise model success case"
-msgstr "企業典範成功案例"
+msgstr ""
 
 #: view/view-member-download.php:36 view/view-member.php:15
 msgid "Export Excel file"
-msgstr "匯出 Excel 檔"
+msgstr ""
 
-#: inc/front/front-menu.php:145
+#: inc/front/front-menu.php:147
 msgid "F&B"
-msgstr "F&B (食品與飲料)"
+msgstr ""
 
 #: page/activate-member.php:120
 msgid "Failed to activate account"
-msgstr "帳號啟用失敗"
+msgstr ""
 
 #: view/view-information.php:14
 msgid "Fax"
 msgstr ""
 
-#: inc/front/front-menu.php:188
+#: inc/front/front-menu.php:190
 msgid "Finance and Accounting"
-msgstr "財務會計"
+msgstr ""
 
 #: view/view-setting.php:8
 msgid "First load"
 msgstr ""
 
-#: page/member.php:57 inc/shortcode/shortcode-member.php:11
-#: inc/shortcode/shortcode-member.php:69
+#: page/member.php:57 inc/shortcode/shortcode-member.php:13
+#: inc/shortcode/shortcode-member.php:70
 msgid "Forget Password"
-msgstr "忘記密碼"
+msgstr ""
 
 #: metabox/metabox-web.php:36
 msgid "Free Book"
 msgstr ""
 
-#: templates/footer.php:72
+#: templates/footer.php:73
 msgid "Free Resources for Businesses"
-msgstr "企業專用免費資源"
+msgstr ""
 
 #: model/model-download.php:61 page/member.php:107
 #: view/view-member-download.php:43 inc/front/front-core.php:120
 msgid "Full Name"
-msgstr "姓名"
+msgstr ""
 
-#: inc/front/front-menu.php:107
+#: inc/front/front-menu.php:109
 msgid "General Director"
-msgstr "總經理"
+msgstr ""
 
 #: page/activate-member.php:67
 msgid "Go to member page"
-msgstr "前往會員頁面"
+msgstr ""
 
 #: metabox/metabox-source.php:15
 msgid "Google Drive file download link"
@@ -587,11 +597,15 @@ msgstr ""
 #: controller/controller-resources.php:88 controller/controller-services.php:88
 #: controller/controller-solutions.php:88 inc/admin/admin-custom-columns.php:13
 msgid "Home Page"
-msgstr "首頁"
+msgstr ""
 
-#: inc/front/front-menu.php:191
+#: templates/home-side-right.php:29
+msgid "Hotline tư vấn"
+msgstr ""
+
+#: inc/front/front-menu.php:193
 msgid "HR"
-msgstr "HR (人力資源)"
+msgstr ""
 
 #. URI of the theme
 #. Author URI of the theme
@@ -600,26 +614,26 @@ msgstr ""
 
 #: inc/front/front-core.php:208
 msgid "I agree with Digiwin's privacy policy"
-msgstr "我同意 Digiwin 的隱私政策"
+msgstr ""
 
 #: model/model-popup.php:55
 msgid "Image"
-msgstr "照片"
+msgstr ""
 
-#: inc/front/front-menu.php:192
+#: inc/front/front-menu.php:194
 msgid "Import and Export"
-msgstr "進出口"
+msgstr ""
 
 #: controller/controller-industries.php:35
 #: controller/controller-industries.php:36
 #: controller/controller-industries.php:47 metabox/metabox-industries.php:15
 #: inc/front/front-menu.php:16
 msgid "Industries"
-msgstr "行業應用"
+msgstr ""
 
 #: page/member.php:144 inc/front/front-core.php:128
 msgid "Industry"
-msgstr "行業"
+msgstr ""
 
 #. Name of the template
 #: page/industry.php:2
@@ -628,7 +642,7 @@ msgstr ""
 
 #: templates/home-news.php:17
 msgid "Information Request"
-msgstr "資料索取"
+msgstr ""
 
 #: page/activate-member.php:38
 msgid "Invalid request"
@@ -636,32 +650,32 @@ msgstr ""
 
 #: page/reset-password.php:41
 msgid "Invalid request."
-msgstr "請求無效!"
+msgstr ""
 
 #: page/activate-member.php:32 page/reset-password.php:32
 msgid "Invalid verification code"
-msgstr "驗證碼無效！"
+msgstr ""
 
-#: inc/front/front-menu.php:185
+#: inc/front/front-menu.php:187
 msgid "Inventory"
-msgstr "庫存"
+msgstr ""
 
-#: inc/front/front-menu.php:153
+#: inc/front/front-menu.php:155
 msgid "IoT / Automation"
 msgstr ""
 
-#: inc/front/front-menu.php:154 inc/front/front-menu.php:190
+#: inc/front/front-menu.php:156 inc/front/front-menu.php:192
 msgid "IT"
-msgstr "IT (資訊技術)"
+msgstr ""
 
 #: page/join.php:13
 msgid "join"
-msgstr "招募員工"
+msgstr ""
 
 #: controller/controller-join-us.php:35 controller/controller-join-us.php:36
-#: controller/controller-join-us.php:47 inc/front/front-menu.php:76
+#: controller/controller-join-us.php:47 inc/front/front-menu.php:78
 msgid "Join Digiwin"
-msgstr "招募員工"
+msgstr ""
 
 #. Name of the template
 #: page/join.php:2
@@ -685,45 +699,57 @@ msgstr ""
 #: taxonomy/tag-advertising.php:27 taxonomy/tag-advertising.php:36
 #: inc/admin/admin-custom-columns.php:14
 msgid "Language"
-msgstr "語言"
+msgstr ""
+
+#: templates/languages.php:78
+msgid "Language Switcher"
+msgstr ""
 
 #: templates/home-news.php:5
 msgid "Latest Event"
-msgstr "最近活動"
+msgstr ""
 
 #: templates/home-news.php:1
 msgid "Latest News"
-msgstr "最新資訊"
+msgstr ""
 
 #: metabox/metabox-view.php:15 metabox/metabox-view.php:38
 msgid "Like"
-msgstr "讚"
+msgstr ""
 
 #: metabox/metabox-link.php:15 model/model-logo.php:55 model/model-popup.php:56
 #: view/form-logo.php:34
 msgid "Link"
-msgstr "連接"
+msgstr ""
 
 #: page/about.php:31
 msgid "Location"
-msgstr "服務據點"
+msgstr ""
 
-#: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:46
-#: inc/shortcode/shortcode-member.php:66
+#: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:47
+#: inc/shortcode/shortcode-member.php:67
 msgid "Login"
-msgstr "登入"
+msgstr ""
 
-#: templates/languages.php:20
+#: templates/languages.php:72
 msgid "Login-Register"
-msgstr "登入 - 註冊"
+msgstr ""
 
 #: page/member.php:77
 msgid "Logout"
-msgstr "登出"
+msgstr ""
 
-#: inc/front/front-menu.php:152
+#: templates/view-comment.php:24 templates/view-like.php:43
+msgid "Lượt thích"
+msgstr ""
+
+#: templates/view-comment.php:16 templates/view-like.php:33
+msgid "Lượt xem"
+msgstr ""
+
+#: inc/front/front-menu.php:154
 msgid "Machinery Manufacturing"
-msgstr "機械製造"
+msgstr ""
 
 #: functions.php:100
 msgid "Main Menu"
@@ -733,13 +759,13 @@ msgstr ""
 msgid "Management Challenges"
 msgstr ""
 
-#: inc/front/front-menu.php:113
+#: inc/front/front-menu.php:115
 msgid "Manager"
-msgstr "主管"
+msgstr ""
 
-#: inc/front/front-menu.php:189
+#: inc/front/front-menu.php:191
 msgid "Marketing"
-msgstr "行銷"
+msgstr ""
 
 #: page/member.php:25
 msgid "member login and register"
@@ -750,12 +776,16 @@ msgstr ""
 msgid "Member Page"
 msgstr ""
 
-#: inc/front/front-menu.php:139
+#: inc/front/front-menu.php:141
 msgid "Metal Processing"
-msgstr "金屬加工"
+msgstr ""
 
 #: view/view-setting.php:20
 msgid "More loading"
+msgstr ""
+
+#: templates/home-side-right.php:50
+msgid "Mã QR Zalo Digiwin"
 msgstr ""
 
 #: taxonomy/tag-advertising.php:113 taxonomy/tag-casestudies.php:98
@@ -788,11 +818,11 @@ msgstr ""
 #: inc/admin/admin-add-post-taxonomy-field.php:50
 #: inc/admin/admin-add-post-taxonomy-field.php:105
 msgid "Name"
-msgstr "名稱"
+msgstr ""
 
 #: page/member.php:88 page/reset-password.php:52
 msgid "New Password"
-msgstr "新密碼"
+msgstr ""
 
 #: nav-below.php:3
 #, php-format
@@ -801,18 +831,20 @@ msgstr ""
 
 #: templates/home-news.php:8
 msgid "News Center"
-msgstr "新聞中心"
+msgstr ""
 
 #. Name of the template
 #: page/news.php:2
 msgid "News Page"
 msgstr ""
 
+#: templates/home-side-right.php:66
+msgid "Nhắn tin cho chúng tôi qua Zalo"
+msgstr ""
+
 #: comments.php:11
-#, fuzzy
-#| msgid "No comments yet"
 msgid "No Comments Yet"
-msgstr "沒有留言"
+msgstr ""
 
 #: controller/controller-active.php:45
 #: controller/controller-case-studies.php:45
@@ -836,27 +868,27 @@ msgstr ""
 
 #: templates/footer.php:33
 msgid "Office In VietNam"
-msgstr "越南辦公室"
+msgstr ""
 
-#: view/form-pop-up.php:55
+#: view/form-pop-up.php:89
 msgid "Open a New Tab"
-msgstr "在新分頁開啟"
+msgstr ""
 
 #: page/about.php:26
 msgid "Operating"
-msgstr "永續經營"
+msgstr ""
 
-#: inc/front/front-menu.php:158 inc/front/front-menu.php:193
+#: inc/front/front-menu.php:160 inc/front/front-menu.php:195
 msgid "Other"
-msgstr "其他"
+msgstr ""
 
-#: inc/front/front-menu.php:157
+#: inc/front/front-menu.php:159
 msgid "Other Manufacturing"
-msgstr "其他製造"
+msgstr ""
 
-#: inc/front/front-menu.php:148
+#: inc/front/front-menu.php:150
 msgid "Packaging"
-msgstr "包裝"
+msgstr ""
 
 #: taxonomy/tag-advertising.php:30 taxonomy/tag-advertising.php:31
 #: taxonomy/tag-casestudies.php:30 taxonomy/tag-casestudies.php:31
@@ -870,58 +902,63 @@ msgstr "包裝"
 #: taxonomy/taxonomy-services.php:32 taxonomy/taxonomy-services.php:33
 #: taxonomy/taxonomy-solution.php:101 taxonomy/taxonomy-solution.php:102
 msgid "Parent Class"
-msgstr "父類"
+msgstr ""
 
 #. Name of the template
 #: page/partner.php:2
 msgid "Partner Page"
 msgstr ""
 
-#: inc/front/front-menu.php:81
+#: inc/front/front-menu.php:83
 msgid "Partners"
-msgstr "經銷合作"
+msgstr ""
 
 #: page/member.php:47 inc/front/front-core.php:115
-#: inc/shortcode/shortcode-member.php:59
+#: inc/shortcode/shortcode-member.php:60
 msgid "Password"
-msgstr "密碼"
+msgstr ""
 
 #: comments.php:105
 msgid "Perform Calculations"
-msgstr "請回答"
+msgstr ""
 
-#: inc/front/front-menu.php:150
+#: inc/front/front-menu.php:152
 msgid "Pharmaceuticals"
-msgstr "製藥"
+msgstr ""
 
 #: page/about.php:41 page/member.php:126 view/view-information.php:6
 #: inc/front/front-core.php:125
 msgid "Phone"
-msgstr "電話"
+msgstr ""
 
-#: inc/front/front-menu.php:141
+#: inc/front/front-menu.php:143
 msgid "Plastic Injection"
-msgstr "塑料注塑"
+msgstr ""
 
 #: comments.php:116
 msgid "Please share your opinions"
-msgstr "請發表您的意見"
+msgstr ""
 
 #: controller/controller-popup.php:66 controller/controller-popup.php:67
+#: view/form-pop-up.php:68
 msgid "Pop-up"
-msgstr "彈出視窗"
+msgstr ""
 
 #: page/member.php:111 inc/front/front-core.php:123
 msgid "Position"
-msgstr "職位"
+msgstr ""
 
-#: inc/front/front-menu.php:104
+#: inc/front/front-menu.php:106
 msgid "President"
-msgstr "總裁"
+msgstr ""
 
 #: inc/front/front-core.php:212
-msgid "privacy policy"
-msgstr "隱私政策"
+msgid "Privacy Policy"
+msgstr ""
+
+#: templates/footer.php:244
+msgid "Terms of Use"
+msgstr ""
 
 #: taxonomy/tag-casestudies.php:26 taxonomy/tag-casestudies.php:27
 #: taxonomy/tag-casestudies.php:36 taxonomy/tag-solution.php:26
@@ -929,55 +966,59 @@ msgstr "隱私政策"
 msgid "Product"
 msgstr ""
 
-#: templates/home-count.php:56
+#: templates/home-count.php:61 view/view-information.php:49
 msgid "Product Solutions"
-msgstr "產品方案"
+msgstr ""
 
-#: inc/front/front-menu.php:186
+#: inc/front/front-menu.php:188
 msgid "Production"
-msgstr "生產"
+msgstr ""
 
-#: templates/footer.php:103
+#: templates/footer.php:104
 msgid "Production Management (MES)"
-msgstr "生產管理 (MES)"
+msgstr ""
 
-#: templates/home-count.php:39
+#: templates/home-count.php:44 view/view-information.php:41
 msgid "Projects & Clients"
-msgstr "成功案例"
+msgstr ""
 
 #: model/bk_model-member.php:144 model/model-download.php:226
 #: model/model-logo.php:154 model/model-popup.php:157
 msgid "Published"
-msgstr "已發布"
+msgstr ""
 
-#: inc/front/front-menu.php:184
+#: inc/front/front-menu.php:186
 msgid "Purchasing"
-msgstr "採購"
+msgstr ""
 
-#: inc/front/front-menu.php:187
+#: inc/front/front-menu.php:189
 msgid "Quality Control"
-msgstr "品質控制 (QC)"
+msgstr ""
 
 #: taxonomy/taxonomy-active.php:62 taxonomy/taxonomy-joinus.php:62
 #: taxonomy/taxonomy-resource.php:62 taxonomy/taxonomy-services.php:64
 #: taxonomy/taxonomy-solution.php:35
 msgid "Quantity"
-msgstr "數量"
+msgstr ""
 
-#: inc/front/front-menu.php:182
+#: templates/home-side-right.php:55
+msgid "Quét mã QR Zalo Digiwin"
+msgstr ""
+
+#: inc/front/front-menu.php:184
 msgid "R&D"
-msgstr "R&D (研究與開發)"
+msgstr ""
 
 #: templates/home-news.php:45 templates/home-news.php:71
 #: templates/home-news.php:97 templates/home-news.php:123
 #: templates/home-news.php:151
 msgid "Read More"
-msgstr "更多"
+msgstr ""
 
 #: page/member.php:33 inc/front/front-core.php:145
-#: inc/shortcode/shortcode-member.php:47
+#: inc/shortcode/shortcode-member.php:48
 msgid "Register"
-msgstr "註冊"
+msgstr ""
 
 #: view/view-member.php:14
 msgid "Registered List"
@@ -985,24 +1026,24 @@ msgstr ""
 
 #: inc/code/code-custom-comment.php:22
 msgid "Reply"
-msgstr "回覆"
+msgstr ""
 
 #: comments.php:140
 msgid "Reply to"
-msgstr "回覆"
+msgstr ""
 
 #: page/reset-password.php:90
 msgid "Request a new code"
-msgstr "重新申請"
+msgstr ""
 
 #. Name of the template
 #: page/reset-password.php:2
 msgid "Reset Password Page"
 msgstr ""
 
-#: single-resources.php:9 page/resource.php:13
+#: page/resource.php:13
 msgid "resource"
-msgstr "有料資源"
+msgstr ""
 
 #: metabox/bk-metabox-resources.php:45 metabox/bk-metabox-resources.php:68
 #: metabox/bk-metabox-resources.php:91
@@ -1011,7 +1052,7 @@ msgstr ""
 
 #: view/view-member-download.php:16 view/view-member-download.php:46
 msgid "Resource Name"
-msgstr "資源名稱"
+msgstr ""
 
 #: metabox/bk-metabox-resources.php:35 metabox/bk-metabox-resources.php:58
 #: metabox/bk-metabox-resources.php:81
@@ -1021,9 +1062,9 @@ msgstr ""
 #: controller/controller-resources.php:35
 #: controller/controller-resources.php:36
 #: controller/controller-resources.php:47 metabox/bk-metabox-resources.php:12
-#: inc/front/front-menu.php:62
+#: inc/front/front-menu.php:64
 msgid "Resources"
-msgstr "有料資源"
+msgstr ""
 
 #. Name of the template
 #: page/resource.php:2
@@ -1042,17 +1083,17 @@ msgstr ""
 msgid "Return to %s"
 msgstr ""
 
-#: inc/front/front-menu.php:142
+#: inc/front/front-menu.php:144
 msgid "Rubber"
-msgstr "橡膠"
+msgstr ""
 
-#: inc/front/front-menu.php:183
+#: inc/front/front-menu.php:185
 msgid "Sales"
-msgstr "銷售"
+msgstr ""
 
-#: templates/footer.php:192
+#: templates/footer.php:191
 msgid "Scan to join Zalo OA & get the latest industry reports"
-msgstr "掃碼關注 Zalo OA, 獲取最新行業報告"
+msgstr ""
 
 #: controller/controller-active.php:43
 #: controller/controller-case-studies.php:43
@@ -1061,7 +1102,7 @@ msgstr "掃碼關注 Zalo OA, 獲取最新行業報告"
 #: controller/controller-slider.php:43 controller/controller-solutions.php:43
 #: view/view-logo.php:22 view/view-member.php:19 view/view-pop-up.php:22
 msgid "Search"
-msgstr "查詢"
+msgstr ""
 
 #: taxonomy/tag-advertising.php:28 taxonomy/tag-casestudies.php:28
 #: taxonomy/tag-solution.php:28 taxonomy/taxonomy-active.php:29
@@ -1077,29 +1118,29 @@ msgstr ""
 msgid "Search Results for: %s"
 msgstr ""
 
-#: inc/front/front-menu.php:111
+#: inc/front/front-menu.php:113
 msgid "Secretary"
-msgstr "秘書"
+msgstr ""
 
 #: page/member.php:161 inc/front/front-core.php:109
 msgid "Select Department"
-msgstr "選擇部門"
+msgstr ""
 
 #: page/member.php:147 inc/front/front-core.php:104
 msgid "Select Industry"
-msgstr "選擇行業"
+msgstr ""
 
 #: page/member.php:114 inc/front/front-core.php:99
 msgid "Select Position"
-msgstr "選擇職位"
+msgstr ""
 
 #: page/activate-member.php:124
 msgid "Server connection error"
-msgstr "伺服器連線錯誤"
+msgstr ""
 
 #: inc/front/front-menu.php:18
 msgid "Service"
-msgstr "客戶服務"
+msgstr ""
 
 #: metabox/metabox-service.php:45 metabox/metabox-service.php:68
 #: metabox/metabox-service.php:91
@@ -1113,26 +1154,26 @@ msgstr ""
 
 #: controller/controller-services.php:35 controller/controller-services.php:36
 #: controller/controller-services.php:47 metabox/metabox-service.php:12
-#: inc/front/front-menu.php:156
+#: inc/front/front-menu.php:158
 msgid "Services"
-msgstr "客戶服務"
+msgstr ""
 
 #. Name of the template
 #: page/service.php:2
 msgid "Services Page"
 msgstr ""
 
-#: inc/front/front-menu.php:147
+#: inc/front/front-menu.php:149
 msgid "Shoes and Leather"
-msgstr "鞋子與皮革"
+msgstr ""
 
 #: metabox/metabox-home.php:15 metabox/metabox-home.php:42
 msgid "Show In Home Page"
-msgstr "首頁顯示"
+msgstr ""
 
 #: metabox/metabox-sidebar.php:15 metabox/metabox-sidebar.php:41
 msgid "Show in Sidebar"
-msgstr "側邊欄顯示"
+msgstr ""
 
 #: controller/controller-active.php:90
 #: controller/controller-case-studies.php:90
@@ -1164,7 +1205,13 @@ msgstr "側邊欄顯示"
 #: inc/admin/admin-add-post-taxonomy-field.php:110
 #: inc/admin/admin-custom-columns.php:15
 msgid "Show Order"
-msgstr "排序"
+msgstr ""
+
+#: single-active.php:38 single-casestudies.php:38 single-industries.php:38
+#: single-joinus.php:38 single-resources.php:58 single-services.php:38
+#: single-solutions.php:38 single.php:38
+msgid "Sidebar Content"
+msgstr ""
 
 #: functions.php:189
 msgid "Sidebar Widget Area"
@@ -1173,7 +1220,7 @@ msgstr ""
 #: controller/controller-slider.php:35 controller/controller-slider.php:36
 #: controller/controller-slider.php:47
 msgid "Slider"
-msgstr "圖片輪播"
+msgstr ""
 
 #: taxonomy/tag-advertising.php:115 taxonomy/tag-casestudies.php:100
 #: taxonomy/tag-solution.php:100 taxonomy/taxonomy-active.php:58
@@ -1185,9 +1232,9 @@ msgstr "圖片輪播"
 msgid "Slug"
 msgstr ""
 
-#: templates/footer.php:112
+#: templates/footer.php:113
 msgid "Smart Warehouse (WMS)"
-msgstr "智慧倉儲 (WMS)"
+msgstr ""
 
 #: model/bk_model-member.php:51
 msgid "Softwear"
@@ -1197,7 +1244,7 @@ msgstr ""
 msgid "Solution"
 msgstr ""
 
-#: single-solutions.php:6 page/solution.php:13
+#: page/solution.php:13
 msgid "solution"
 msgstr ""
 
@@ -1212,13 +1259,13 @@ msgstr ""
 #: controller/controller-solutions.php:35
 #: controller/controller-solutions.php:36
 #: controller/controller-solutions.php:47 metabox/metabox-solution.php:12
-#: inc/front/front-menu.php:17 inc/front/front-menu.php:55
+#: inc/front/front-menu.php:17 inc/front/front-menu.php:57
 msgid "Solutions"
-msgstr "產品方案"
+msgstr ""
 
-#: templates/footer.php:87
+#: templates/footer.php:88
 msgid "Solutions & Industries"
-msgstr "解決方案與產業"
+msgstr ""
 
 #. Name of the template
 #: page/solution.php:2
@@ -1231,51 +1278,52 @@ msgstr ""
 
 #: templates/home-industry.php:1
 msgid "Specialize in the industry"
-msgstr "專精行業，淬鍊智慧"
+msgstr ""
 
-#: inc/front/front-menu.php:116
+#: inc/front/front-menu.php:118
 msgid "Staff"
-msgstr "員工"
+msgstr ""
 
 #: model/model-popup.php:54
 msgid "Status"
-msgstr "狀態"
+msgstr ""
 
-#: view/form-logo.php:63 view/view-information.php:145 view/view-setting.php:36
+#: view/form-logo.php:63 view/form-pop-up.php:254 view/view-information.php:172
+#: view/view-setting.php:36
 msgid "Submit"
-msgstr "提交"
+msgstr ""
 
 #: comments.php:119
 msgid "Submit Comment"
-msgstr "發表"
+msgstr ""
 
-#: page/reset-password.php:74 inc/shortcode/shortcode-member.php:23
+#: page/reset-password.php:74 inc/shortcode/shortcode-member.php:25
 msgid "Submit Email"
-msgstr "提交"
+msgstr ""
 
 #: comments.php:215
 msgid "Submitting..."
-msgstr "處理中..."
+msgstr ""
 
-#: templates/footer.php:94
+#: templates/footer.php:95
 msgid "System Administration (ERP)"
-msgstr "系統管理 (ERP)"
+msgstr ""
 
 #: page/member.php:137 inc/front/front-core.php:126
 msgid "Tax Number"
-msgstr "稅號"
+msgstr ""
 
-#: inc/front/front-menu.php:114
+#: inc/front/front-menu.php:116
 msgid "Team Leader"
-msgstr "組長"
+msgstr ""
 
-#: inc/front/front-menu.php:146
+#: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
-msgstr "紡織與服裝"
+msgstr ""
 
 #: comments.php:193
 msgid "The calculation problem is incorrect. Please enter the correct answer!"
-msgstr "計算題錯誤，請輸入正確答案！"
+msgstr ""
 
 #: metabox/metabox-order.php:42
 msgid "The larger the number will show in front"
@@ -1283,11 +1331,11 @@ msgstr ""
 
 #: page/reset-password.php:30
 msgid "The link has expired. Please request a new code"
-msgstr "連結已過期，請重新申請"
+msgstr ""
 
 #: page/reset-password.php:38
 msgid "The user does not exist."
-msgstr "使用者不存在!"
+msgstr ""
 
 #. Description of the theme
 msgid "Theme DGW tùy biến chuẩn i18n và tối ưu hiệu suất."
@@ -1295,19 +1343,35 @@ msgstr ""
 
 #: page/activate-member.php:65
 msgid "This account has already been activated"
-msgstr "此帳號已啟用"
+msgstr ""
 
-#: model/model-popup.php:53 view/form-pop-up.php:43
+#: templates/home-side-right.php:21
+msgid "Thu gọn hoặc mở rộng thanh tiện ích"
+msgstr ""
+
+#: templates/view-like.php:50
+msgid "Thích bài viết này"
+msgstr ""
+
+#: templates/home-side-right.php:42
+msgid "Thông tin liên hệ & Danh thiếp"
+msgstr ""
+
+#: model/model-popup.php:53 view/form-pop-up.php:75
 msgid "Title"
-msgstr "標題"
+msgstr ""
 
 #: metabox/metabox-seo.php:35
 msgid "Title SEO"
 msgstr ""
 
+#: templates/home-side-right.php:17
+msgid "Tiện ích liên hệ nhanh"
+msgstr ""
+
 #: model/model-logo.php:54 view/form-logo.php:48
 msgid "Trademark"
-msgstr "商標"
+msgstr ""
 
 #. Name of the template
 #: page/translate.php:2
@@ -1322,7 +1386,7 @@ msgstr ""
 #: model/model-popup.php:208 model/model-popup.php:214
 #: model/model-popup.php:220
 msgid "Trash"
-msgstr "回收桶"
+msgstr ""
 
 #: taxonomy/tag-advertising.php:33 taxonomy/tag-casestudies.php:33
 #: taxonomy/tag-solution.php:33 taxonomy/taxonomy-active.php:34
@@ -1337,9 +1401,9 @@ msgstr ""
 msgid "Upload File"
 msgstr ""
 
-#: inc/front/front-menu.php:106
+#: inc/front/front-menu.php:108
 msgid "Vice President"
-msgstr "副總裁"
+msgstr ""
 
 #: metabox/bk-metabox-resources.php:28 metabox/bk-metabox-resources.php:58
 #: metabox/bk-metabox-resources.php:68 metabox/metabox-active.php:28
@@ -1356,37 +1420,33 @@ msgstr "副總裁"
 #: taxonomy/taxonomy-resource.php:131 taxonomy/taxonomy-services.php:61
 #: taxonomy/taxonomy-services.php:109 taxonomy/taxonomy-services.php:136
 #: taxonomy/taxonomy-solution.php:32 taxonomy/taxonomy-solution.php:128
-#: taxonomy/taxonomy-solution.php:156 view/view-information.php:33
-#: view/view-information.php:93 view/view-information.php:101
-#: view/view-information.php:112 view/view-information.php:123
-#: view/view-information.php:134 inc/admin/admin-add-post-tag-field.php:9
+#: taxonomy/taxonomy-solution.php:156 view/view-information.php:60
+#: view/view-information.php:120 view/view-information.php:128
+#: view/view-information.php:139 view/view-information.php:150
+#: view/view-information.php:161 inc/admin/admin-add-post-tag-field.php:9
 #: inc/admin/admin-add-post-tag-field.php:38
 #: inc/admin/admin-add-post-tag-field.php:103
 #: inc/admin/admin-add-post-taxonomy-field.php:8
 #: inc/admin/admin-add-post-taxonomy-field.php:41
 #: inc/admin/admin-add-post-taxonomy-field.php:108
 msgid "Vietnamese"
-msgstr "越文"
+msgstr ""
 
-#: view/form-pop-up.php:99
-msgid "Vietnamese Article - ID (VN)"
-msgstr "越文文章 - ID (VN)"
-
-#: view/form-pop-up.php:138
+#: view/form-pop-up.php:187
 msgid "Vietnamese Horizontal Image (VN)"
-msgstr "越文橫式圖片 (VN)"
+msgstr ""
 
-#: view/form-pop-up.php:90
+#: view/form-pop-up.php:131
 msgid "Vietnamese Link (VN)"
-msgstr "越文連結 (VN)"
+msgstr ""
 
-#: view/form-pop-up.php:152
+#: view/form-pop-up.php:201
 msgid "Vietnamese Vertical Image (VN)"
-msgstr "越文直式圖片 (VN)"
+msgstr ""
 
 #: metabox/metabox-view.php:15 metabox/metabox-view.php:29
 msgid "View"
-msgstr "瀏覽"
+msgstr ""
 
 #: controller/controller-active.php:42
 #: controller/controller-case-studies.php:42
@@ -1408,26 +1468,30 @@ msgstr ""
 msgid "Website Settings"
 msgstr ""
 
-#: inc/front/front-menu.php:149
+#: inc/front/front-menu.php:151
 msgid "Wires and Fiber Optics"
-msgstr "線纜與光纖"
+msgstr ""
 
-#: inc/front/front-menu.php:144
+#: inc/front/front-menu.php:146
 msgid "Wooden Furniture"
-msgstr "木製家具"
+msgstr ""
 
-#: templates/home-count.php:20
+#: templates/home-count.php:25 view/view-information.php:33
 msgid "Years of experience"
-msgstr "年資"
+msgstr ""
 
 #: comments.php:93
 msgid "Your E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #: comments.php:89
 msgid "Your Name"
-msgstr "名字"
+msgstr ""
 
-#: templates/footer.php:184
+#: templates/footer.php:183
 msgid "Zalo OA Community"
-msgstr "越南鼎捷 Zalo OA"
+msgstr ""
+
+#: templates/home-popup.php:78
+msgid "Đóng thông báo"
+msgstr ""

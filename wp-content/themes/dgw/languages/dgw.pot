@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-07 07:11+0000\n"
+"POT-Creation-Date: 2026-10-19 03:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: single-active.php:3 page/active.php:13
+#: page/active.php:13
 msgid "active"
 msgstr ""
 
@@ -81,7 +81,7 @@ msgstr ""
 msgid "Actives Page"
 msgstr ""
 
-#: inc/front/front-menu.php:69
+#: inc/front/front-menu.php:71
 msgid "Activities"
 msgstr ""
 
@@ -122,7 +122,7 @@ msgstr ""
 msgid "Add Product Images"
 msgstr ""
 
-#: page/about.php:43 view/view-information.php:47 view/view-information.php:101
+#: page/about.php:43 view/view-information.php:74 view/view-information.php:128
 msgid "Address"
 msgstr ""
 
@@ -148,16 +148,20 @@ msgstr ""
 msgid "Area"
 msgstr ""
 
+#: page/article.php:16
+msgid "article"
+msgstr ""
+
 #. Name of the template
 #: page/article.php:2
 msgid "Article Page"
 msgstr ""
 
-#: inc/front/front-menu.php:112
+#: inc/front/front-menu.php:114
 msgid "Assistant"
 msgstr ""
 
-#: inc/front/front-menu.php:155
+#: inc/front/front-menu.php:157
 msgid "Associations"
 msgstr ""
 
@@ -165,16 +169,28 @@ msgstr ""
 msgid "Author"
 msgstr ""
 
-#: inc/front/front-menu.php:140
+#: inc/front/front-menu.php:142
 msgid "Automotive Parts"
 msgstr ""
 
-#: templates/footer.php:65
+#: templates/footer.php:66
 msgid "Awards & Certificates"
 msgstr ""
 
-#: inc/front/front-menu.php:181
+#: inc/front/front-menu.php:183
 msgid "Board of Directors"
+msgstr ""
+
+#: templates/home-cases.php:136
+msgid "Bài tiếp theo"
+msgstr ""
+
+#: templates/home-cases.php:135
+msgid "Bài trước"
+msgstr ""
+
+#: templates/view-comment.php:33
+msgid "Bình luận"
 msgstr ""
 
 #: comments.php:139
@@ -191,12 +207,12 @@ msgstr ""
 
 #: controller/controller-case-studies.php:35
 #: controller/controller-case-studies.php:36
-#: controller/controller-case-studies.php:47 templates/footer.php:130
+#: controller/controller-case-studies.php:47 templates/footer.php:131
 #: inc/front/front-menu.php:50
 msgid "Case Studies"
 msgstr ""
 
-#: single-casestudies.php:4 page/case.php:12 templates/side-cases.php:2
+#: page/case.php:12 templates/side-cases.php:2
 msgid "cases"
 msgstr ""
 
@@ -232,7 +248,7 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: inc/front/front-menu.php:105
+#: inc/front/front-menu.php:107
 msgid "CEO"
 msgstr ""
 
@@ -244,7 +260,7 @@ msgstr ""
 msgid "Change Password"
 msgstr ""
 
-#: inc/front/front-menu.php:151
+#: inc/front/front-menu.php:153
 msgid "Chemicals"
 msgstr ""
 
@@ -253,25 +269,21 @@ msgstr ""
 #: metabox/metabox-active.php:35 metabox/metabox-active.php:45
 #: metabox/metabox-language.php:35 metabox/metabox-service.php:27
 #: metabox/metabox-service.php:35 metabox/metabox-service.php:45
-#: view/view-information.php:32 view/view-information.php:39
-#: view/view-information.php:47 view/view-information.php:58
-#: view/view-information.php:69 view/view-information.php:80
+#: view/view-information.php:59 view/view-information.php:66
+#: view/view-information.php:74 view/view-information.php:85
+#: view/view-information.php:96 view/view-information.php:107
 msgid "Chinese"
 msgstr ""
 
-#: view/form-pop-up.php:81
-msgid "Chinese Article - ID (CN)"
-msgstr ""
-
-#: view/form-pop-up.php:110
+#: view/form-pop-up.php:159
 msgid "Chinese Horizontal Image (CN)"
 msgstr ""
 
-#: view/form-pop-up.php:72
+#: view/form-pop-up.php:104
 msgid "Chinese Link (CN)"
 msgstr ""
 
-#: view/form-pop-up.php:124
+#: view/form-pop-up.php:173
 msgid "Chinese Vertical Image (CN)"
 msgstr ""
 
@@ -302,27 +314,27 @@ msgstr[1] ""
 msgid "Company "
 msgstr ""
 
-#: controller/controller-information.php:14
-#: controller/controller-information.php:15
+#: controller/controller-information.php:17
+#: controller/controller-information.php:18
 msgid "Company Information"
 msgstr ""
 
-#: view/view-information.php:80 view/view-information.php:134
+#: view/view-information.php:107 view/view-information.php:161
 msgid "Company Location"
 msgstr ""
 
 #: model/model-download.php:62 model/model-logo.php:53 page/member.php:133
-#: view/form-logo.php:21 view/view-information.php:39
-#: view/view-information.php:93 view/view-member-download.php:44
+#: view/form-logo.php:21 view/view-information.php:66
+#: view/view-information.php:120 view/view-member-download.php:44
 #: inc/front/front-core.php:119
 msgid "Company Name"
 msgstr ""
 
-#: view/view-information.php:69 view/view-information.php:123
+#: view/view-information.php:96 view/view-information.php:150
 msgid "Company Operating"
 msgstr ""
 
-#: view/view-information.php:58 view/view-information.php:112
+#: view/view-information.php:85 view/view-information.php:139
 msgid "Company Summary"
 msgstr ""
 
@@ -330,19 +342,15 @@ msgstr ""
 msgid "Confirm Password"
 msgstr ""
 
-#: inc/front/front-menu.php:115
+#: inc/front/front-menu.php:117
 msgid "Consultant"
-msgstr ""
-
-#: templates/footer.php:138
-msgid "contact"
 msgstr ""
 
 #: model/model-download.php:63
 msgid "Contact Number"
 msgstr ""
 
-#: inc/front/front-menu.php:86
+#: templates/footer.php:139 inc/front/front-menu.php:88
 msgid "Contact Us"
 msgstr ""
 
@@ -396,11 +404,11 @@ msgstr ""
 msgid "Department"
 msgstr ""
 
-#: inc/front/front-menu.php:110
+#: inc/front/front-menu.php:112
 msgid "Deputy Director"
 msgstr ""
 
-#: inc/front/front-menu.php:108
+#: inc/front/front-menu.php:110
 msgid "Deputy General Director"
 msgstr ""
 
@@ -416,7 +424,7 @@ msgstr ""
 msgid "DGW"
 msgstr ""
 
-#: templates/footer.php:121
+#: templates/footer.php:122
 msgid "Digital Transformation in the Plastics Industry"
 msgstr ""
 
@@ -424,11 +432,11 @@ msgstr ""
 msgid "Digiwin"
 msgstr ""
 
-#: inc/front/front-menu.php:109
+#: inc/front/front-menu.php:111
 msgid "Director"
 msgstr ""
 
-#: helper/function.php:87
+#: helper/function.php:105
 msgid "Discuss"
 msgstr ""
 
@@ -436,7 +444,7 @@ msgstr ""
 msgid "distribution"
 msgstr ""
 
-#: templates/footer.php:80
+#: templates/footer.php:81
 msgid "Download 2026 Digital Transformation Whitepaper"
 msgstr ""
 
@@ -445,6 +453,7 @@ msgid "Download Count"
 msgstr ""
 
 #: controller/controller-member.php:16 controller/controller-member.php:17
+#: view/form-member.php:34
 msgid "Download Data"
 msgstr ""
 
@@ -452,7 +461,7 @@ msgstr ""
 msgid "Download Date"
 msgstr ""
 
-#: single-resources.php:30
+#: single-resources.php:43
 msgid "Download File digiwin"
 msgstr ""
 
@@ -473,7 +482,7 @@ msgstr ""
 
 #: model/model-download.php:60 page/member.php:40 view/view-information.php:22
 #: view/view-member-download.php:45 inc/front/front-core.php:114
-#: inc/shortcode/shortcode-member.php:53
+#: inc/shortcode/shortcode-member.php:54
 msgid "E-mail"
 msgstr ""
 
@@ -493,26 +502,26 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: inc/front/front-menu.php:143
+#: inc/front/front-menu.php:145
 msgid "Electronic Parts"
 msgstr ""
 
 #: metabox/bk-metabox-resources.php:29 metabox/bk-metabox-resources.php:81
 #: metabox/bk-metabox-resources.php:91 metabox/metabox-active.php:29
 #: metabox/metabox-active.php:81 metabox/metabox-active.php:91
-#: metabox/metabox-language.php:43 metabox/metabox-service.php:29
-#: metabox/metabox-service.php:81 metabox/metabox-service.php:91
-#: taxonomy/taxonomy-active.php:60 taxonomy/taxonomy-active.php:105
-#: taxonomy/taxonomy-active.php:133 taxonomy/taxonomy-casestudies.php:61
-#: taxonomy/taxonomy-casestudies.php:93 taxonomy/taxonomy-casestudies.php:135
-#: taxonomy/taxonomy-industries.php:61 taxonomy/taxonomy-industries.php:93
-#: taxonomy/taxonomy-industries.php:135 taxonomy/taxonomy-joinus.php:60
-#: taxonomy/taxonomy-joinus.php:113 taxonomy/taxonomy-joinus.php:141
-#: taxonomy/taxonomy-resource.php:60 taxonomy/taxonomy-resource.php:107
-#: taxonomy/taxonomy-resource.php:135 taxonomy/taxonomy-services.php:62
-#: taxonomy/taxonomy-services.php:113 taxonomy/taxonomy-services.php:140
-#: taxonomy/taxonomy-solution.php:33 taxonomy/taxonomy-solution.php:132
-#: taxonomy/taxonomy-solution.php:160 inc/admin/admin-add-post-tag-field.php:14
+#: metabox/metabox-service.php:29 metabox/metabox-service.php:81
+#: metabox/metabox-service.php:91 taxonomy/taxonomy-active.php:60
+#: taxonomy/taxonomy-active.php:105 taxonomy/taxonomy-active.php:133
+#: taxonomy/taxonomy-casestudies.php:61 taxonomy/taxonomy-casestudies.php:93
+#: taxonomy/taxonomy-casestudies.php:135 taxonomy/taxonomy-industries.php:61
+#: taxonomy/taxonomy-industries.php:93 taxonomy/taxonomy-industries.php:135
+#: taxonomy/taxonomy-joinus.php:60 taxonomy/taxonomy-joinus.php:113
+#: taxonomy/taxonomy-joinus.php:141 taxonomy/taxonomy-resource.php:60
+#: taxonomy/taxonomy-resource.php:107 taxonomy/taxonomy-resource.php:135
+#: taxonomy/taxonomy-services.php:62 taxonomy/taxonomy-services.php:113
+#: taxonomy/taxonomy-services.php:140 taxonomy/taxonomy-solution.php:33
+#: taxonomy/taxonomy-solution.php:132 taxonomy/taxonomy-solution.php:160
+#: inc/admin/admin-add-post-tag-field.php:14
 #: inc/admin/admin-add-post-tag-field.php:47
 #: inc/admin/admin-add-post-tag-field.php:104
 #: inc/admin/admin-add-post-taxonomy-field.php:13
@@ -521,11 +530,11 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: inc/shortcode/shortcode-member.php:12
+#: inc/shortcode/shortcode-member.php:14
 msgid "Enter your email address to reset your password"
 msgstr ""
 
-#: templates/home-cases.php:1
+#: templates/home-cases.php:49
 msgid "Enterprise model success case"
 msgstr ""
 
@@ -533,7 +542,7 @@ msgstr ""
 msgid "Export Excel file"
 msgstr ""
 
-#: inc/front/front-menu.php:145
+#: inc/front/front-menu.php:147
 msgid "F&B"
 msgstr ""
 
@@ -545,7 +554,7 @@ msgstr ""
 msgid "Fax"
 msgstr ""
 
-#: inc/front/front-menu.php:188
+#: inc/front/front-menu.php:190
 msgid "Finance and Accounting"
 msgstr ""
 
@@ -553,8 +562,8 @@ msgstr ""
 msgid "First load"
 msgstr ""
 
-#: page/member.php:57 inc/shortcode/shortcode-member.php:11
-#: inc/shortcode/shortcode-member.php:69
+#: page/member.php:57 inc/shortcode/shortcode-member.php:13
+#: inc/shortcode/shortcode-member.php:70
 msgid "Forget Password"
 msgstr ""
 
@@ -562,7 +571,7 @@ msgstr ""
 msgid "Free Book"
 msgstr ""
 
-#: templates/footer.php:72
+#: templates/footer.php:73
 msgid "Free Resources for Businesses"
 msgstr ""
 
@@ -571,7 +580,7 @@ msgstr ""
 msgid "Full Name"
 msgstr ""
 
-#: inc/front/front-menu.php:107
+#: inc/front/front-menu.php:109
 msgid "General Director"
 msgstr ""
 
@@ -590,7 +599,11 @@ msgstr ""
 msgid "Home Page"
 msgstr ""
 
-#: inc/front/front-menu.php:191
+#: templates/home-side-right.php:29
+msgid "Hotline tư vấn"
+msgstr ""
+
+#: inc/front/front-menu.php:193
 msgid "HR"
 msgstr ""
 
@@ -607,7 +620,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: inc/front/front-menu.php:192
+#: inc/front/front-menu.php:194
 msgid "Import and Export"
 msgstr ""
 
@@ -643,15 +656,15 @@ msgstr ""
 msgid "Invalid verification code"
 msgstr ""
 
-#: inc/front/front-menu.php:185
+#: inc/front/front-menu.php:187
 msgid "Inventory"
 msgstr ""
 
-#: inc/front/front-menu.php:153
+#: inc/front/front-menu.php:155
 msgid "IoT / Automation"
 msgstr ""
 
-#: inc/front/front-menu.php:154 inc/front/front-menu.php:190
+#: inc/front/front-menu.php:156 inc/front/front-menu.php:192
 msgid "IT"
 msgstr ""
 
@@ -660,7 +673,7 @@ msgid "join"
 msgstr ""
 
 #: controller/controller-join-us.php:35 controller/controller-join-us.php:36
-#: controller/controller-join-us.php:47 inc/front/front-menu.php:76
+#: controller/controller-join-us.php:47 inc/front/front-menu.php:78
 msgid "Join Digiwin"
 msgstr ""
 
@@ -688,6 +701,10 @@ msgstr ""
 msgid "Language"
 msgstr ""
 
+#: templates/languages.php:78
+msgid "Language Switcher"
+msgstr ""
+
 #: templates/home-news.php:5
 msgid "Latest Event"
 msgstr ""
@@ -709,12 +726,12 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:46
-#: inc/shortcode/shortcode-member.php:66
+#: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:47
+#: inc/shortcode/shortcode-member.php:67
 msgid "Login"
 msgstr ""
 
-#: templates/languages.php:20
+#: templates/languages.php:72
 msgid "Login-Register"
 msgstr ""
 
@@ -722,7 +739,15 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-#: inc/front/front-menu.php:152
+#: templates/view-comment.php:24 templates/view-like.php:43
+msgid "Lượt thích"
+msgstr ""
+
+#: templates/view-comment.php:16 templates/view-like.php:33
+msgid "Lượt xem"
+msgstr ""
+
+#: inc/front/front-menu.php:154
 msgid "Machinery Manufacturing"
 msgstr ""
 
@@ -734,11 +759,11 @@ msgstr ""
 msgid "Management Challenges"
 msgstr ""
 
-#: inc/front/front-menu.php:113
+#: inc/front/front-menu.php:115
 msgid "Manager"
 msgstr ""
 
-#: inc/front/front-menu.php:189
+#: inc/front/front-menu.php:191
 msgid "Marketing"
 msgstr ""
 
@@ -751,12 +776,16 @@ msgstr ""
 msgid "Member Page"
 msgstr ""
 
-#: inc/front/front-menu.php:139
+#: inc/front/front-menu.php:141
 msgid "Metal Processing"
 msgstr ""
 
 #: view/view-setting.php:20
 msgid "More loading"
+msgstr ""
+
+#: templates/home-side-right.php:50
+msgid "Mã QR Zalo Digiwin"
 msgstr ""
 
 #: taxonomy/tag-advertising.php:113 taxonomy/tag-casestudies.php:98
@@ -809,6 +838,10 @@ msgstr ""
 msgid "News Page"
 msgstr ""
 
+#: templates/home-side-right.php:66
+msgid "Nhắn tin cho chúng tôi qua Zalo"
+msgstr ""
+
 #: comments.php:11
 msgid "No Comments Yet"
 msgstr ""
@@ -837,7 +870,7 @@ msgstr ""
 msgid "Office In VietNam"
 msgstr ""
 
-#: view/form-pop-up.php:55
+#: view/form-pop-up.php:89
 msgid "Open a New Tab"
 msgstr ""
 
@@ -845,15 +878,15 @@ msgstr ""
 msgid "Operating"
 msgstr ""
 
-#: inc/front/front-menu.php:158 inc/front/front-menu.php:193
+#: inc/front/front-menu.php:160 inc/front/front-menu.php:195
 msgid "Other"
 msgstr ""
 
-#: inc/front/front-menu.php:157
+#: inc/front/front-menu.php:159
 msgid "Other Manufacturing"
 msgstr ""
 
-#: inc/front/front-menu.php:148
+#: inc/front/front-menu.php:150
 msgid "Packaging"
 msgstr ""
 
@@ -876,12 +909,12 @@ msgstr ""
 msgid "Partner Page"
 msgstr ""
 
-#: inc/front/front-menu.php:81
+#: inc/front/front-menu.php:83
 msgid "Partners"
 msgstr ""
 
 #: page/member.php:47 inc/front/front-core.php:115
-#: inc/shortcode/shortcode-member.php:59
+#: inc/shortcode/shortcode-member.php:60
 msgid "Password"
 msgstr ""
 
@@ -889,7 +922,7 @@ msgstr ""
 msgid "Perform Calculations"
 msgstr ""
 
-#: inc/front/front-menu.php:150
+#: inc/front/front-menu.php:152
 msgid "Pharmaceuticals"
 msgstr ""
 
@@ -898,7 +931,7 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: inc/front/front-menu.php:141
+#: inc/front/front-menu.php:143
 msgid "Plastic Injection"
 msgstr ""
 
@@ -907,6 +940,7 @@ msgid "Please share your opinions"
 msgstr ""
 
 #: controller/controller-popup.php:66 controller/controller-popup.php:67
+#: view/form-pop-up.php:68
 msgid "Pop-up"
 msgstr ""
 
@@ -914,8 +948,12 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: inc/front/front-menu.php:104
+#: inc/front/front-menu.php:106
 msgid "President"
+msgstr ""
+
+#: templates/footer.php:244
+msgid "Privacy Policy"
 msgstr ""
 
 #: inc/front/front-core.php:212
@@ -928,19 +966,19 @@ msgstr ""
 msgid "Product"
 msgstr ""
 
-#: templates/home-count.php:56
+#: templates/home-count.php:61 view/view-information.php:49
 msgid "Product Solutions"
 msgstr ""
 
-#: inc/front/front-menu.php:186
+#: inc/front/front-menu.php:188
 msgid "Production"
 msgstr ""
 
-#: templates/footer.php:103
+#: templates/footer.php:104
 msgid "Production Management (MES)"
 msgstr ""
 
-#: templates/home-count.php:39
+#: templates/home-count.php:44 view/view-information.php:41
 msgid "Projects & Clients"
 msgstr ""
 
@@ -949,11 +987,11 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: inc/front/front-menu.php:184
+#: inc/front/front-menu.php:186
 msgid "Purchasing"
 msgstr ""
 
-#: inc/front/front-menu.php:187
+#: inc/front/front-menu.php:189
 msgid "Quality Control"
 msgstr ""
 
@@ -963,7 +1001,11 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: inc/front/front-menu.php:182
+#: templates/home-side-right.php:55
+msgid "Quét mã QR Zalo Digiwin"
+msgstr ""
+
+#: inc/front/front-menu.php:184
 msgid "R&D"
 msgstr ""
 
@@ -974,7 +1016,7 @@ msgid "Read More"
 msgstr ""
 
 #: page/member.php:33 inc/front/front-core.php:145
-#: inc/shortcode/shortcode-member.php:47
+#: inc/shortcode/shortcode-member.php:48
 msgid "Register"
 msgstr ""
 
@@ -999,7 +1041,7 @@ msgstr ""
 msgid "Reset Password Page"
 msgstr ""
 
-#: single-resources.php:9 page/resource.php:13
+#: page/resource.php:13
 msgid "resource"
 msgstr ""
 
@@ -1020,7 +1062,7 @@ msgstr ""
 #: controller/controller-resources.php:35
 #: controller/controller-resources.php:36
 #: controller/controller-resources.php:47 metabox/bk-metabox-resources.php:12
-#: inc/front/front-menu.php:62
+#: inc/front/front-menu.php:64
 msgid "Resources"
 msgstr ""
 
@@ -1041,15 +1083,15 @@ msgstr ""
 msgid "Return to %s"
 msgstr ""
 
-#: inc/front/front-menu.php:142
+#: inc/front/front-menu.php:144
 msgid "Rubber"
 msgstr ""
 
-#: inc/front/front-menu.php:183
+#: inc/front/front-menu.php:185
 msgid "Sales"
 msgstr ""
 
-#: templates/footer.php:192
+#: templates/footer.php:191
 msgid "Scan to join Zalo OA & get the latest industry reports"
 msgstr ""
 
@@ -1076,7 +1118,7 @@ msgstr ""
 msgid "Search Results for: %s"
 msgstr ""
 
-#: inc/front/front-menu.php:111
+#: inc/front/front-menu.php:113
 msgid "Secretary"
 msgstr ""
 
@@ -1112,7 +1154,7 @@ msgstr ""
 
 #: controller/controller-services.php:35 controller/controller-services.php:36
 #: controller/controller-services.php:47 metabox/metabox-service.php:12
-#: inc/front/front-menu.php:156
+#: inc/front/front-menu.php:158
 msgid "Services"
 msgstr ""
 
@@ -1121,7 +1163,7 @@ msgstr ""
 msgid "Services Page"
 msgstr ""
 
-#: inc/front/front-menu.php:147
+#: inc/front/front-menu.php:149
 msgid "Shoes and Leather"
 msgstr ""
 
@@ -1165,6 +1207,12 @@ msgstr ""
 msgid "Show Order"
 msgstr ""
 
+#: single-active.php:38 single-casestudies.php:38 single-industries.php:38
+#: single-joinus.php:38 single-resources.php:58 single-services.php:38
+#: single-solutions.php:38 single.php:38
+msgid "Sidebar Content"
+msgstr ""
+
 #: functions.php:189
 msgid "Sidebar Widget Area"
 msgstr ""
@@ -1184,7 +1232,7 @@ msgstr ""
 msgid "Slug"
 msgstr ""
 
-#: templates/footer.php:112
+#: templates/footer.php:113
 msgid "Smart Warehouse (WMS)"
 msgstr ""
 
@@ -1196,7 +1244,7 @@ msgstr ""
 msgid "Solution"
 msgstr ""
 
-#: single-solutions.php:6 page/solution.php:13
+#: page/solution.php:13
 msgid "solution"
 msgstr ""
 
@@ -1211,11 +1259,11 @@ msgstr ""
 #: controller/controller-solutions.php:35
 #: controller/controller-solutions.php:36
 #: controller/controller-solutions.php:47 metabox/metabox-solution.php:12
-#: inc/front/front-menu.php:17 inc/front/front-menu.php:55
+#: inc/front/front-menu.php:17 inc/front/front-menu.php:57
 msgid "Solutions"
 msgstr ""
 
-#: templates/footer.php:87
+#: templates/footer.php:88
 msgid "Solutions & Industries"
 msgstr ""
 
@@ -1232,7 +1280,7 @@ msgstr ""
 msgid "Specialize in the industry"
 msgstr ""
 
-#: inc/front/front-menu.php:116
+#: inc/front/front-menu.php:118
 msgid "Staff"
 msgstr ""
 
@@ -1240,7 +1288,8 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: view/form-logo.php:63 view/view-information.php:145 view/view-setting.php:36
+#: view/form-logo.php:63 view/form-pop-up.php:254 view/view-information.php:172
+#: view/view-setting.php:36
 msgid "Submit"
 msgstr ""
 
@@ -1248,7 +1297,7 @@ msgstr ""
 msgid "Submit Comment"
 msgstr ""
 
-#: page/reset-password.php:74 inc/shortcode/shortcode-member.php:23
+#: page/reset-password.php:74 inc/shortcode/shortcode-member.php:25
 msgid "Submit Email"
 msgstr ""
 
@@ -1256,7 +1305,7 @@ msgstr ""
 msgid "Submitting..."
 msgstr ""
 
-#: templates/footer.php:94
+#: templates/footer.php:95
 msgid "System Administration (ERP)"
 msgstr ""
 
@@ -1264,11 +1313,15 @@ msgstr ""
 msgid "Tax Number"
 msgstr ""
 
-#: inc/front/front-menu.php:114
+#: inc/front/front-menu.php:116
 msgid "Team Leader"
 msgstr ""
 
-#: inc/front/front-menu.php:146
+#: templates/footer.php:244
+msgid "Terms of Use"
+msgstr ""
+
+#: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
 msgstr ""
 
@@ -1296,12 +1349,28 @@ msgstr ""
 msgid "This account has already been activated"
 msgstr ""
 
-#: model/model-popup.php:53 view/form-pop-up.php:43
+#: templates/home-side-right.php:21
+msgid "Thu gọn hoặc mở rộng thanh tiện ích"
+msgstr ""
+
+#: templates/view-like.php:50
+msgid "Thích bài viết này"
+msgstr ""
+
+#: templates/home-side-right.php:42
+msgid "Thông tin liên hệ & Danh thiếp"
+msgstr ""
+
+#: model/model-popup.php:53 view/form-pop-up.php:75
 msgid "Title"
 msgstr ""
 
 #: metabox/metabox-seo.php:35
 msgid "Title SEO"
+msgstr ""
+
+#: templates/home-side-right.php:17
+msgid "Tiện ích liên hệ nhanh"
 msgstr ""
 
 #: model/model-logo.php:54 view/form-logo.php:48
@@ -1336,7 +1405,7 @@ msgstr ""
 msgid "Upload File"
 msgstr ""
 
-#: inc/front/front-menu.php:106
+#: inc/front/front-menu.php:108
 msgid "Vice President"
 msgstr ""
 
@@ -1355,10 +1424,10 @@ msgstr ""
 #: taxonomy/taxonomy-resource.php:131 taxonomy/taxonomy-services.php:61
 #: taxonomy/taxonomy-services.php:109 taxonomy/taxonomy-services.php:136
 #: taxonomy/taxonomy-solution.php:32 taxonomy/taxonomy-solution.php:128
-#: taxonomy/taxonomy-solution.php:156 view/view-information.php:33
-#: view/view-information.php:93 view/view-information.php:101
-#: view/view-information.php:112 view/view-information.php:123
-#: view/view-information.php:134 inc/admin/admin-add-post-tag-field.php:9
+#: taxonomy/taxonomy-solution.php:156 view/view-information.php:60
+#: view/view-information.php:120 view/view-information.php:128
+#: view/view-information.php:139 view/view-information.php:150
+#: view/view-information.php:161 inc/admin/admin-add-post-tag-field.php:9
 #: inc/admin/admin-add-post-tag-field.php:38
 #: inc/admin/admin-add-post-tag-field.php:103
 #: inc/admin/admin-add-post-taxonomy-field.php:8
@@ -1367,19 +1436,15 @@ msgstr ""
 msgid "Vietnamese"
 msgstr ""
 
-#: view/form-pop-up.php:99
-msgid "Vietnamese Article - ID (VN)"
-msgstr ""
-
-#: view/form-pop-up.php:138
+#: view/form-pop-up.php:187
 msgid "Vietnamese Horizontal Image (VN)"
 msgstr ""
 
-#: view/form-pop-up.php:90
+#: view/form-pop-up.php:131
 msgid "Vietnamese Link (VN)"
 msgstr ""
 
-#: view/form-pop-up.php:152
+#: view/form-pop-up.php:201
 msgid "Vietnamese Vertical Image (VN)"
 msgstr ""
 
@@ -1407,15 +1472,15 @@ msgstr ""
 msgid "Website Settings"
 msgstr ""
 
-#: inc/front/front-menu.php:149
+#: inc/front/front-menu.php:151
 msgid "Wires and Fiber Optics"
 msgstr ""
 
-#: inc/front/front-menu.php:144
+#: inc/front/front-menu.php:146
 msgid "Wooden Furniture"
 msgstr ""
 
-#: templates/home-count.php:20
+#: templates/home-count.php:25 view/view-information.php:33
 msgid "Years of experience"
 msgstr ""
 
@@ -1427,6 +1492,10 @@ msgstr ""
 msgid "Your Name"
 msgstr ""
 
-#: templates/footer.php:184
+#: templates/footer.php:183
 msgid "Zalo OA Community"
+msgstr ""
+
+#: templates/home-popup.php:78
+msgid "Đóng thông báo"
 msgstr ""

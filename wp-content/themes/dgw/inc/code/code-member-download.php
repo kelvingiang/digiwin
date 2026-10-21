@@ -85,14 +85,18 @@ if (!function_exists('get_current_custom_user')) {
 
 /**
  * [2026-10-05] - @author: Kelvin - Đăng ký script download tài liệu
+ * [20/10/2026] - Tối ưu nạp file nén my-download.min.js kèm dynamic versioning filemtime
  */
 function my_enqueue_scripts(): void
 {
+    $download_js_path = get_stylesheet_directory() . '/js/my-download.min.js';
+    $download_ver     = file_exists($download_js_path) ? (string) filemtime($download_js_path) : '1.0.0';
+
     wp_enqueue_script(
         'my-script',
-        get_stylesheet_directory_uri() . '/js/my-download.js',
+        get_stylesheet_directory_uri() . '/js/my-download.min.js',
         ['jquery'],
-        '1.0.0',
+        $download_ver,
         true
     );
 

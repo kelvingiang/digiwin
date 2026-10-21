@@ -8,6 +8,13 @@ add_action('init', function() {
     }
 }, 1); // Độ ưu tiên là 1 để chạy sớm nhất có thể
 
+// [19/10/2026] - Khắc phục cảnh báo Permissions Policy "unload is not allowed in this document" trên Chrome 115+
+add_action('send_headers', function () {
+    if (!headers_sent()) {
+        header('Permissions-Policy: unload=(self)');
+    }
+});
+
 // @ini_set( 'upload_max_size' , '64M' );
 // @ini_set( 'post_max_size', '64M');
 // @ini_set( 'max_execution_time', '300' );
@@ -100,12 +107,12 @@ function dgw_setup()
     register_nav_menus(array('main-menu' => esc_html__('Main Menu', 'dgw')));
 }
 
-add_action('wp_enqueue_scripts', 'dgw_load_scripts');
-function dgw_load_scripts()
-{
-    wp_enqueue_style('blankslate-style', get_stylesheet_uri());
-    wp_enqueue_script('jquery');
-}
+// add_action('wp_enqueue_scripts', 'dgw_load_scripts');
+// function dgw_load_scripts()
+// {
+//     wp_enqueue_style('blankslate-style', get_stylesheet_uri());
+//     wp_enqueue_script('jquery');
+// }
 
 add_action('wp_footer', 'dgw_footer_scripts');
 
@@ -245,6 +252,25 @@ function dgw_clear_casestudies_transients($post_id = 0)
     delete_transient('dgw_home_casestudies_vn');
     delete_transient('dgw_home_casestudies_cn');
 }
+
+/**
+ * [20/10/2026] - Phục vụ file chuẩn /llms.txt cho AI/LLM Search Engines (ChatGPT, Claude, Perplexity, Gemini...)
+ */
+add_action('init', function (): void {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
+
+    if ($path === 'llms.txt') {
+        $file_path = get_template_directory() . '/llms.txt';
+        if (file_exists($file_path)) {
+            header('Content-Type: text/markdown; charset=utf-8');
+            header('X-Robots-Tag: all');
+            readfile($file_path);
+            exit;
+        }
+    }
+});
+
 
 
 

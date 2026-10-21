@@ -426,15 +426,16 @@
             align-items: center;
             cursor: pointer;
             padding: 0.8rem 1.5rem;
-            color: #666;
+            color: $color_blue_link;
             background-color: transparent;
             border-radius: 13px; // Pill shape
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
             h3 {
                 font-size: 1.1rem;
+                font-weight: bold;
                 margin: 0;
-                font-weight: 500;
+           
                 @include Respond(lg) {
                     font-size: 1rem;
                 }
@@ -533,7 +534,7 @@
                         transform: translateY(-2px);
 
                         div:first-child {
-                            color: $color_blue_link;
+                            color: $color_blue_link_hover;
                         }
                     }
                 }
@@ -555,7 +556,7 @@
                 }
 
                 &:hover {
-                    color: darken($color_blue_link, 15%);
+                    color: $color_blue_link_hover;
                     i {
                         transform: translateX(5px);
                     }

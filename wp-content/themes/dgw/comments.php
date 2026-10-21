@@ -5,22 +5,48 @@
         $comments_by_type = separate_comments($comments);
 
         if (! empty($comments_by_type['comment'])) :
-
+            $comment_count = count($comments_by_type['comment']);
     ?>
             <section id="comments-list" class="comments">
-                <h3 class="comments-title"><?php comments_number(__('No Comments Yet', 'dgw'), __('1 comment', 'dgw'),  '% ' . __('Comments', 'dgw')); ?></h3>
+                <!-- [19/10/2026] - Redesign giao diện tiêu đề danh sách bình luận sang trọng, có icon, số lượng và nút cuộn đến khung phản hồi -->
+                <div class="comments-header">
+                    <div class="comments-header__left">
+                        <span class="comments-header__icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        <div class="comments-title">
+                            <?php comments_number(__('No Comments Yet', 'dgw'), __('1 comment', 'dgw'), '% ' . __('Comments', 'dgw')); ?>
+                        </div>
+                        <span class="comments-header__badge"><?php echo esc_html($comment_count); ?></span>
+                    </div>
+
+                    <?php if (comments_open()) : ?>
+                        <div class="comments-header__right">
+                            <a href="#respond" class="btn-jump-reply">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" />
+                                    <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
+                                </svg>
+                                <span><?php _e('Please share your opinions', 'dgw'); ?></span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
                 <?php if (get_comment_pages_count() > 1) : ?>
-                    <nav id="comments-nav-above" class="comments-navigation" role="navigation">
+                    <nav id="comments-nav-above" class="comments-navigation" role="navigation" aria-label="<?php esc_attr_e('Comments Pagination Top', 'dgw'); ?>">
                         <div class="paginated-comments-links"><?php paginate_comments_links(); ?></div>
                     </nav>
                 <?php endif; ?>
-                <ul>
+
+                <ul class="comments-list-items">
                     <?php wp_list_comments(array('type' => 'comment', 'callback' => 'my_custom_comment')); ?>
-                    <?php //wp_list_comments(array('type' => 'comment')); 
-                    ?>
                 </ul>
+
                 <?php if (get_comment_pages_count() > 1) : ?>
-                    <nav id="comments-nav-below" class="comments-navigation" role="navigation">
+                    <nav id="comments-nav-below" class="comments-navigation" role="navigation" aria-label="<?php esc_attr_e('Comments Pagination Bottom', 'dgw'); ?>">
                         <div class="paginated-comments-links"><?php paginate_comments_links(); ?></div>
                     </nav>
                 <?php endif; ?>
@@ -30,9 +56,22 @@
         if (! empty($comments_by_type['pings'])) :
             $ping_count = count($comments_by_type['pings']);
         ?>
-            <section id="trackbacks-list" class="comments">
-                <h3 class="comments-title"><?php echo '<span class="ping-count">' . esc_html($ping_count) . '</span> ' . esc_html(_nx('Trackback or Pingback', 'Trackbacks and Pingbacks', $ping_count, 'comments count', 'dgw')); ?></h3>
-                <ul>
+            <section id="trackbacks-list" class="comments trackbacks-list">
+                <!-- [19/10/2026] - Redesign giao diện Trackback & Pingback đồng bộ hiện đại -->
+                <div class="comments-header">
+                    <div class="comments-header__left">
+                        <span class="comments-header__icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.756-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011.06 0 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.756 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01.646-1.353z" clip-rule="evenodd" />
+                            </svg>
+                        </span>
+                        <div class="comments-title">
+                            <?php echo esc_html(_nx('Trackback or Pingback', 'Trackbacks and Pingbacks', $ping_count, 'comments count', 'dgw')); ?>
+                        </div>
+                        <span class="comments-header__badge"><?php echo esc_html($ping_count); ?></span>
+                    </div>
+                </div>
+                <ul class="trackbacks-list-items">
                     <?php wp_list_comments('type=pings&callback=dgw_custom_pings'); ?>
                 </ul>
             </section>
@@ -110,14 +149,17 @@
                   ';
 
         // 組合所有設定
+        // [19/10/2026] - Thay thế thẻ h3 mặc định của reply-title bằng thẻ div để tối ưu hóa Technical SEO
         $comments_args = array(
-            'fields' => $fields,
-            'comment_field' => $comment_field,
-            'title_reply' => __('Please share your opinions', 'dgw'),
+            'fields'             => $fields,
+            'comment_field'      => $comment_field,
+            'title_reply'        => __('Please share your opinions', 'dgw'),
+            'title_reply_before' => '<div id="reply-title" class="comment-reply-title">',
+            'title_reply_after'  => '</div>',
             // 'title_reply_to' => 'Reply to to to %s',
             // 'cancel_reply_link' => __('Cancel Reply 123', 'dgw'), // 重要：要有取消回覆連結
-            'label_submit' => __('Submit Comment', 'dgw'),
-            'format' => 'html5', // 確保使用正確的格式
+            'label_submit'       => __('Submit Comment', 'dgw'),
+            'format'             => 'html5', // 確保使用正確的格式
         );
         comment_form($comments_args);
     }

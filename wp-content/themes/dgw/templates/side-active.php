@@ -8,7 +8,7 @@
         <div class="tab-title title-tab-<?php echo $val['ID'] ?> 
     <?php echo ($stt == 1 ? 'active' : ''); ?>"
             data-target="content-tab-<?php echo $val['ID']; ?>">
-            <h3><?php echo $val['name']; ?></h3>
+            <label><?php echo $val['name']; ?></label>
         </div>
     <?php
         $stt = $stt + 1;

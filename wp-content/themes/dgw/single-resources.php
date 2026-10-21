@@ -4,9 +4,9 @@
  */
 get_header(); ?>
 <div class="container-fluid">
-    <div class="page-title-h1">
-        <h1><?php echo esc_html(get_the_title()); ?></h1>
-    </div>
+    <!-- <div class="page-title-h1">
+        <h1><?php //echo esc_html(get_the_title()); ?></h1>
+    </div> -->
     <div class="menu-sub">
         <?php
         $menu_category = 'resources_category';
@@ -20,9 +20,9 @@ get_header(); ?>
                     $source = get_post_meta(get_the_ID(), '_metabox_source', true);
             ?>
                     <article id="post-<?php the_ID(); ?>" <?php post_class('single-space'); ?>>
-                        <h2 class="single-space-title">
-                            <?php echo esc_html(get_the_title()); ?>
-                        </h2>
+                        <!-- <h2 class="single-space-title">
+                            <?php // echo esc_html(get_the_title()); ?>
+                        </h2> -->
                         <div class="single-space-content entry-content">
                             <?php the_content(); ?>
                         </div>

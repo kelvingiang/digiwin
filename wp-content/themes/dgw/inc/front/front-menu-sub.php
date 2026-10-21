@@ -1,4 +1,5 @@
 <?php
+
 /**
  * [2026-10-13] - @author: Kelvin - Hiển thị ảnh đại diện và submenu điều hướng (.menu-sub):
  * - Giữ nguyên thẻ <a> bọc <h2> cho các item đang active để người dùng tiện click quay lại category đó.
@@ -34,10 +35,12 @@ function menuSub($cate, $page)
         $slug_or_id = !empty($val['slug']) ? (string)$val['slug'] : (string)$val['ID'];
         $is_active   = (!empty($current_cate_slug) && ((string)$current_cate_slug === (string)$slug_or_id || (string)$current_cate_slug === (string)$val['ID']));
         $active_cls  = $is_active ? ' active' : '';
+        // 2026-10-19: Sử dụng span trên trang single, các trang khác dùng h2
+        $tag = (is_single()) ? 'span' : 'h2';
 
         echo '<div class="menu-sub-item' . esc_attr($active_cls) . '" data-id="' . esc_attr($slug_or_id) . '" data-term-id="' . esc_attr((string)$val['ID']) . '">';
         echo '<a href="' . esc_url(home_url($val['page'] . '/cate/' . $slug_or_id . '/')) . '" class="' . esc_attr(trim($active_cls)) . '">';
-        echo '<h2>' . esc_html($val['name']) . '</h2>';
+        echo '<' . $tag . ' class="menu-title">' . esc_html($val['name']) . '</' . $tag . '>';
         echo '</a>';
         echo '</div>';
     }

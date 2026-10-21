@@ -4,9 +4,9 @@
  */
 get_header(); ?>
 <div class="container-fluid">
-    <div class="page-title-h1">
-        <h1><?php echo esc_html(get_the_title()); ?></h1>
-    </div>
+    <!-- <div class="page-title-h1">
+        <h1><?php // echo esc_html(get_the_title()); ?></h1>
+    </div> -->
     <div class="menu-sub">
         <?php
         $menu_category = 'joinus_category';

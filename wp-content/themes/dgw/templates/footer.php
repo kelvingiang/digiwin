@@ -21,16 +21,17 @@
                        <img class="company-logo" loading="lazy"
                            title="digiwin company"
                            alt="digiwin company"
-                           src="<?php echo PART_IMAGES . 'logo-white-Digiwin.png' ?>"
+                           src="<?php echo PART_IMAGES . 'Logo-white-Digiwin-small.webp' ?>"
                            width="150"
-                           height="42" />
+                           height="46" />
                    </div>
 
                    <div class="foot-slogan">
                        DIGITAL TRANSFORMATION PARTNER
                    </div>
 
-                   <h2><?php echo __('Office In VietNam', 'dgw') ?> </h2>
+                   <label class="footer-title"><?php echo __('Office In VietNam', 'dgw') ?> </label>
+                   
                    <ul class='footer-list'>
                        <li>
                            <label>
@@ -38,6 +39,7 @@
                            </label>
                        </li>
                    </ul>
+
                    <div class="prize-link">
                        <?php
                         // [2026-10-12] - @author: Kelvin - Thay the WP_HOME bang home_url() chuan WordPress, khac phuc Fatal Error tren PHP 8.x
@@ -85,7 +87,7 @@
                </div>
 
                <div>
-                   <h2 class="h3-title dot-title"><?php echo __('Solutions & Industries', 'dgw') ?> </h2>
+                   <label class="footer-title dot-title"><?php echo __('Solutions & Industries', 'dgw') ?> </label>
                    <ul class='footer-list article-link'>
                        <li>
                            <a href="<?php echo home_url('/solution/cate/53/tag/') ?>">
@@ -136,7 +138,7 @@
                </div>
 
                <div>
-                   <h2 class="h3-title dot-title"><?php echo __('Contact Us', 'dgw') ?> </h2>
+                   <label class="footer-title dot-title"><?php echo __('Contact Us', 'dgw') ?> </label>
                    <ul class='footer-list contact-list'>
                        <li>
                            <div>
@@ -180,7 +182,7 @@
                </div>
 
                <div class="social-link">
-                   <h2 class="h3-title"><?php echo __('Zalo OA Community', 'dgw') ?> </h2>
+                   <label class="footer-title"><?php echo __('Zalo OA Community', 'dgw') ?> </label>
                    <ul class='footer-list'>
                        <li>
                            <a href="https://zalo.me/digiwinsoftvietnam" target="_blank">
@@ -193,19 +195,37 @@
                        <li class="icon-link">
                            <a href="<?php echo $lang === 'vn'
                                         ? 'https://www.facebook.com/Digiwinsoftvn'
-                                        : 'https://www.facebook.com/Digiwinsoftware'; ?>" target="_blank" aria-label="Trang Facebook Digiwin">
+                                        : 'https://www.facebook.com/Digiwinsoftware'; ?>" target="_blank"
+                               aria-label="Trang Facebook Digiwin"
+                               rel="noopener noreferrer">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L258.2 544L258.2 398.2L205.4 398.2L205.4 320L258.2 320L258.2 286.3C258.2 199.2 297.6 158.8 383.2 158.8C399.4 158.8 427.4 162 438.9 165.2L438.9 236C432.9 235.4 422.4 235 409.3 235C367.3 235 351.1 250.9 351.1 292.2L351.1 320L434.7 320L420.3 398.2L351 398.2L351 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96z" />
                                </svg></a>
 
-                           <a href="https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA/?sub_confirmation=1" target="_blank" aria-label="Trang youtube Digiwin"> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
+                           <a href="https://www.youtube.com/channel/UC5wPn6YNU6KHkrgAjCIojVA/?sub_confirmation=1"
+                               target="_blank"
+                               aria-label="Trang youtube Digiwin"
+                               rel="noopener noreferrer">
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M581.7 188.1C575.5 164.4 556.9 145.8 533.4 139.5C490.9 128 320.1 128 320.1 128C320.1 128 149.3 128 106.7 139.5C83.2 145.8 64.7 164.4 58.4 188.1C47 231 47 320.4 47 320.4C47 320.4 47 409.8 58.4 452.7C64.7 476.3 83.2 494.2 106.7 500.5C149.3 512 320.1 512 320.1 512C320.1 512 490.9 512 533.5 500.5C557 494.2 575.5 476.3 581.8 452.7C593.2 409.8 593.2 320.4 593.2 320.4C593.2 320.4 593.2 231 581.8 188.1zM264.2 401.6L264.2 239.2L406.9 320.4L264.2 401.6z" />
                                </svg> </a>
 
-                           <a href="https://www.linkedin.com/company/digiwinsoft-asean/" target="_blank" aria-label="Trang linkedin Digiwin">
+                           <a href="https://www.linkedin.com/company/digiwinsoft-asean/"
+                               target="_blank"
+                               aria-label="Trang linkedin Digiwin"
+                               rel="noopener noreferrer">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
                                    <path d="M160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96zM165 266.2L231.5 266.2L231.5 480L165 480L165 266.2zM236.7 198.5C236.7 219.8 219.5 237 198.2 237C176.9 237 159.7 219.8 159.7 198.5C159.7 177.2 176.9 160 198.2 160C219.5 160 236.7 177.2 236.7 198.5zM413.9 480L413.9 376C413.9 351.2 413.4 319.3 379.4 319.3C344.8 319.3 339.5 346.3 339.5 374.2L339.5 480L273.1 480L273.1 266.2L336.8 266.2L336.8 295.4L337.7 295.4C346.6 278.6 368.3 260.9 400.6 260.9C467.8 260.9 480.3 305.2 480.3 362.8L480.3 480L413.9 480z" />
                                </svg></a>
+
+                           <a href="https://vi.wikipedia.org/wiki/Digiwin_Software"
+                               target="_blank"
+                               aria-label="Trang wikipedia Digiwin"
+                               rel="noopener noreferrer">
+                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+                                   <path d="M640 51.2l-.3 12.2c-28.1 .8-45 15.8-55.8 40.3-25 57.8-103.3 240-155.3 358.6l-13.6 0-81.9-193.1c-32.5 63.6-68.3 130-99.2 193.1-.3 .3-15 0-15-.3-46.9-109.7-96.1-218.6-143.1-328.6-11.4-26.7-49.4-70-75.6-69.7 0-3.1-.3-10-.3-14.2l161.9 0 0 13.9c-19.2 1.1-52.8 13.3-43.3 34.2 21.9 49.7 103.6 240.3 125.6 288.6 15-29.7 57.8-109.2 75.3-142.8-13.9-28.3-58.6-133.9-72.8-160-9.7-17.8-36.1-19.4-55.8-19.7l0-13.9 142.5 .3 0 13.1c-19.4 .6-38.1 7.8-29.4 26.1 18.9 40 30.6 68.1 48.1 104.7 5.6-10.8 34.7-69.4 48.1-100.8 8.9-20.6-3.9-28.6-38.6-29.4 .3-3.6 0-10.3 .3-13.6 44.4-.3 111.1-.3 123.1-.6l0 13.6C462.4 64 439.1 76 426.8 94.9L367.6 217.7c6.4 16.1 63.3 142.8 69.2 156.7L559.2 91.8c-8.6-23.1-36.4-28.1-47.2-28.3l0-13.9 127.8 1.1 .2 .5z" />
+                               </svg>
+                           </a>
                        </li>
                    </ul>
                </div>
@@ -214,23 +234,23 @@
 
            <div class="footer-icon">
                <div>
-                   <img title="reddot winner" alt="reddot winner" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-1.png' ?>" />
+                   <img title="reddot winner" alt="reddot winner" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-1.webp' ?>" />
                    <label> REDDOT WINNER </label>
                </div>
                <div>
-                   <img title="cmmi" alt="cmmi" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-2.png' ?>" />
+                   <img title="cmmi" alt="cmmi" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-2.webp' ?>" />
                    <label> CMMI <br><i> Level 4 </i></label>
                </div>
                <div>
-                   <img title="muse design" alt="muse design" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-3.png' ?>" />
+                   <img title="muse design" alt="muse design" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-3.webp' ?>" />
                    <label> MUSE DESIGN <br><i> Awards </i></label>
                </div>
                <div>
-                   <img title="Control Engineering" alt="Control Engineering" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-4.png' ?>" />
+                   <img title="Control Engineering" alt="Control Engineering" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-4.webp' ?>" />
                    <label> CONTROL ENGINEERING <br> <i>Product of the Year</i> </label>
                </div>
                <div>
-                   <img title="isrs" alt="isrs" width="30" height="35" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-5.png' ?>" />
+                   <img title="isrs" alt="isrs" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-5.webp' ?>" />
                    <label> ISRS <br> <i>Reporting Standards</i> </label>
                </div>
            </div>
@@ -241,7 +261,7 @@
                <div>
                    <a class="foot-link"
                        href="<?php echo home_url('/digiwinasean_privacy-policy/') ?>">
-                       Chính Sách Bảo Mật | Điều Kiện Sử Dụng
+                       <?php echo __('Privacy Policy', 'dgw') . ' | ' .  __('Terms of Use', 'dgw'); ?>
                    </a>
                </div>
            </div>

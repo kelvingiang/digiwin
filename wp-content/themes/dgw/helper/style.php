@@ -28,13 +28,16 @@ function dgw_frontend_scripts()
     wp_enqueue_style('my-main-css', get_template_directory_uri() . '/css/style/main.min.css', array(), $css_version, 'all');
 
     //====== CHUNG (CLIENT) ======
-    wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.js', array('jquery'), '1.0.0', true);
+    // [20/10/2026] - Nạp bản custom.min.js tối ưu hóa tốc độ tải trang
+    $custom_js_path = get_template_directory() . '/js/custom.min.js';
+    $custom_version = file_exists($custom_js_path) ? filemtime($custom_js_path) : '1.0.0';
+    wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.min.js', array('jquery'), $custom_version, true);
     
     //====== FOOTER SCRIPT ======
-    // KHÔNG dùng time() làm version vì sẽ phá vỡ cache trình duyệt, gây chậm website. Chuyển sang dùng filemtime.
-    $footer_js_path = get_template_directory() . '/js/footer.js';
+    // [20/10/2026] - Nạp bản footer.min.js đã nén dung lượng
+    $footer_js_path = get_template_directory() . '/js/footer.min.js';
     $footer_version = file_exists($footer_js_path) ? filemtime($footer_js_path) : '1.0';
-    wp_enqueue_script('my-footer-js', get_template_directory_uri() . '/js/footer.js', array('jquery'), $footer_version, true);
+    wp_enqueue_script('my-footer-js', get_template_directory_uri() . '/js/footer.min.js', array('jquery'), $footer_version, true);
 }
 add_action('wp_enqueue_scripts', 'dgw_frontend_scripts');
 
@@ -54,8 +57,10 @@ function dgw_admin_scripts()
     wp_enqueue_style('jquery-ui-css', get_template_directory_uri() . '/css/jquery-ui.min.css', array(), '1.0', 'all');
     wp_enqueue_script('custom-admin-js', get_template_directory_uri() . '/js/custom-admin.js', array('jquery'), '1.0.0', true);
     
-    // Add custom.js cho cả admin (như code cũ của bạn)
-    wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.js', array('jquery'), '1.0.0', true);
+    // [20/10/2026] - Add custom.min.js cho cả admin
+    $custom_admin_path = get_template_directory() . '/js/custom.min.js';
+    $custom_admin_ver  = file_exists($custom_admin_path) ? filemtime($custom_admin_path) : '1.0.0';
+    wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.min.js', array('jquery'), $custom_admin_ver, true);
 }
 add_action('admin_enqueue_scripts', 'dgw_admin_scripts');
 

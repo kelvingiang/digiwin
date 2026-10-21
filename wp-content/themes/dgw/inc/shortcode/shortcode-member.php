@@ -10,7 +10,7 @@ function member_forgot_password_form()
         <div class="dwf-container">
             <span class="dwf-close">&times;</span>
             <div class="dwf-header">
-                <h3><?php esc_html_e('Forget Password', 'dgw'); ?></h3>
+                <label class="forget-title"><?php esc_html_e('Forget Password', 'dgw'); ?></label>
                 <p><?php esc_html_e('Enter your email address to reset your password', 'dgw'); ?></p>
             </div>
             <form id="forgot_password_form_ajax" class="dwf-form">

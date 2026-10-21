@@ -201,7 +201,7 @@
             position: relative;
             img {
                 width: 30px;
-                height: 35px;
+                height: 30px;
                 margin-right: 10px;
                 opacity: 0.8;
             }
@@ -230,8 +230,10 @@
             text-align: right; /* Đảm bảo chữ bên trong cũng căn phải nếu có nhiều dòng */
         }
     }
-    .h3-title {
+    .footer-title {
         text-transform: uppercase;
+        color: #fff;
+        font-weight: bold;
     }
     .dot-title::before {
         content: ""; /* 必須設定 content 虛擬元素才會顯示 */
