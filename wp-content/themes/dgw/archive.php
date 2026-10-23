@@ -4,11 +4,17 @@
     <div>
         <div class='data-list'>
             <?php
+            // [22/10/2026] - Khởi tạo $post_type và $cate từ main query, tránh lỗi Undefined variable khi archive rỗng bài viết
+            $current_post_type = get_query_var('post_type');
+            if (is_array($current_post_type)) {
+                $current_post_type = reset($current_post_type);
+            }
+            $post_type = !empty($current_post_type) ? $current_post_type : (get_post_type() ?: 'post');
+            $cate      = $post_type . '_category';
+
             $stt = 1;
             if (have_posts()) :
                 while (have_posts()) : the_post();
-                    $post_type = get_post_type(get_the_ID());
-                    $cate = $post_type . '_category';
                     get_template_part('entry', null, array('stt' => $stt));
 
                     $stt++;
@@ -43,10 +49,10 @@
                 isLoading = true;
 
                 var lastID = lastItem.attr("data-id");
-                var post = '<?php echo $post_type ?>';
+                var post = '<?php echo esc_js($post_type); ?>';
                 var cateID = '';
-                var count = '<?php echo get_option('more_load') ?>';
-                var cate = '<?php echo $cate ?>';
+                var count = '<?php echo esc_js(get_option('more_load', 6)); ?>';
+                var cate = '<?php echo esc_js($cate); ?>';
 
                 jQuery.ajax({
                     url: '<?php echo admin_url('admin-ajax.php'); ?>',
