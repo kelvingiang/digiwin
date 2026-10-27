@@ -34,14 +34,15 @@ class Routes {
             ],
         ] );
 
-        // 21/10/2026: Đăng ký endpoint lấy danh sách solutions theo category cho Zalo Mini App
-        $solution_controller = new \DGW_API\Controllers\Solution_Controller();
-
-        $solutions_args = [
-            'category' => [
+        // 26/10/2026: Tham số phân trang & Infinite Scroll (Load More) dùng chung cho các endpoint danh sách
+        $pagination_scroll_args = [
+            'offset'   => [
                 'required'          => false,
-                'default'           => 'tiptop',
-                'sanitize_callback' => 'sanitize_title',
+                'default'           => null,
+                'validate_callback' => function( $param ) {
+                    return is_numeric( $param ) && $param >= 0;
+                },
+                'sanitize_callback' => 'absint',
             ],
             'page'     => [
                 'required'          => false,
@@ -59,12 +60,38 @@ class Routes {
                 },
                 'sanitize_callback' => 'absint',
             ],
+            'limit'    => [
+                'required'          => false,
+                'default'           => null,
+                'validate_callback' => function( $param ) {
+                    return is_numeric( $param ) && $param > 0;
+                },
+                'sanitize_callback' => 'absint',
+            ],
             'lang'     => [
                 'required'          => false,
                 'default'           => 'vn',
-                'sanitize_callback' => 'sanitize_key',
+                'sanitize_callback' => function( $param ) {
+                    return sanitize_key( (string) $param );
+                },
             ],
         ];
+
+        // 21/10/2026: Đăng ký endpoint lấy danh sách solutions theo category cho Zalo Mini App
+        $solution_controller = new \DGW_API\Controllers\Solution_Controller();
+
+        $solutions_args = array_merge(
+            [
+                'category' => [
+                    'required'          => false,
+                    'default'           => 'tiptop',
+                    'sanitize_callback' => function( $param ) {
+                        return sanitize_title( (string) $param );
+                    },
+                ],
+            ],
+            $pagination_scroll_args
+        );
 
         // 1. GET /wp-json/dgw/v1/solutions (Mặc định category=tiptop hoặc truyền qua query string ?category=tiptop)
         register_rest_route( $this->namespace, '/solutions', [
@@ -85,34 +112,18 @@ class Routes {
         // 21/10/2026: Đăng ký endpoint lấy danh sách resources theo category cho Zalo Mini App
         $resource_controller = new \DGW_API\Controllers\Resource_Controller();
 
-        $resources_args = [
-            'category' => [
-                'required'          => false,
-                'default'           => 'download',
-                'sanitize_callback' => 'sanitize_title',
+        $resources_args = array_merge(
+            [
+                'category' => [
+                    'required'          => false,
+                    'default'           => 'download',
+                    'sanitize_callback' => function( $param ) {
+                        return sanitize_title( (string) $param );
+                    },
+                ],
             ],
-            'page'     => [
-                'required'          => false,
-                'default'           => 1,
-                'validate_callback' => function( $param ) {
-                    return is_numeric( $param ) && $param > 0;
-                },
-                'sanitize_callback' => 'absint',
-            ],
-            'per_page' => [
-                'required'          => false,
-                'default'           => 10,
-                'validate_callback' => function( $param ) {
-                    return is_numeric( $param ) && $param > 0;
-                },
-                'sanitize_callback' => 'absint',
-            ],
-            'lang'     => [
-                'required'          => false,
-                'default'           => 'vn',
-                'sanitize_callback' => 'sanitize_key',
-            ],
-        ];
+            $pagination_scroll_args
+        );
 
         // 3. GET /wp-json/dgw/v1/resources (Mặc định category=download hoặc truyền qua query string ?category=download)
         register_rest_route( $this->namespace, '/resources', [
@@ -128,6 +139,61 @@ class Routes {
             'callback'            => [ $resource_controller, 'get_items' ],
             'permission_callback' => [ $resource_controller, 'check_permissions' ],
             'args'                => $resources_args,
+        ] );
+
+        // 26/10/2026: Đăng ký endpoint lấy danh sách post_type 'active' (hoạt động/sự kiện) cho Zalo Mini App
+        $active_controller = new \DGW_API\Controllers\Active_Controller();
+
+        $actives_args = array_merge(
+            [
+                'category' => [
+                    'required'          => false,
+                    'default'           => '',
+                    'sanitize_callback' => function( $param ) {
+                        return sanitize_title( (string) $param );
+                    },
+                ],
+            ],
+            $pagination_scroll_args
+        );
+
+        // 5. GET /wp-json/dgw/v1/actives hoặc /wp-json/dgw/v1/active (Lấy tất cả hoặc lọc theo query params ?category=...&lang=...&page=...)
+        register_rest_route( $this->namespace, '/actives', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => [ $active_controller, 'get_items' ],
+            'permission_callback' => [ $active_controller, 'check_permissions' ],
+            'args'                => $actives_args,
+        ] );
+
+        register_rest_route( $this->namespace, '/active', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => [ $active_controller, 'get_items' ],
+            'permission_callback' => [ $active_controller, 'check_permissions' ],
+            'args'                => $actives_args,
+        ] );
+
+        // 6. GET /wp-json/dgw/v1/actives/{category} (Ví dụ: /dgw/v1/actives/event, /dgw/v1/actives/webinar)
+        register_rest_route( $this->namespace, '/actives/(?P<category>[a-zA-Z0-9_-]+)', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => [ $active_controller, 'get_items' ],
+            'permission_callback' => [ $active_controller, 'check_permissions' ],
+            'args'                => $actives_args,
+        ] );
+
+        // 7. GET /wp-json/dgw/v1/active/(?P<id>\d+) (Chi tiết 1 bài viết hoạt động theo ID)
+        register_rest_route( $this->namespace, '/active/(?P<id>\d+)', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => [ $active_controller, 'get_item' ],
+            'permission_callback' => [ $active_controller, 'check_permissions' ],
+            'args'                => [
+                'id' => [
+                    'required'          => true,
+                    'validate_callback' => function( $param ) {
+                        return is_numeric( $param ) && $param > 0;
+                    },
+                    'sanitize_callback' => 'absint',
+                ],
+            ],
         ] );
     }
 

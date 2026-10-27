@@ -15,24 +15,26 @@ class Solution_Model {
     const TAXONOMY  = 'solutions_category';
 
     /**
-     * 21/10/2026: Lấy danh sách Solutions theo Category Slug và Ngôn ngữ (vn/cn) với Caching tối ưu hiệu năng
+     * 26/10/2026: Lấy danh sách Solutions theo Category Slug và Ngôn ngữ (vn/cn) hỗ trợ Infinite Scroll (offset/limit) & Transient Cache
      * 
-     * @param string $category_slug Slug danh mục (mặc định: 'tiptop')
-     * @param int    $page          Trang hiện tại
-     * @param int    $per_page      Số lượng bài viết mỗi trang
-     * @param string $lang          Ngôn ngữ ('vn': Tiếng Việt, 'cn': Tiếng Trung)
-     * @return array Dữ liệu bài viết và thông tin phân trang
+     * @param string   $category_slug Slug danh mục (mặc định: 'tiptop')
+     * @param int      $page          Trang hiện tại (fallback nếu không truyền offset)
+     * @param int      $per_page      Số lượng bài viết cần lấy (10 cho lần đầu, 5 cho các lần cuộn tiếp theo)
+     * @param string   $lang          Ngôn ngữ ('vn': Tiếng Việt, 'cn': Tiếng Trung)
+     * @param int|null $offset        Vị trí bắt đầu lấy dữ liệu cho Infinite Scroll (0, 10, 15, 20...)
+     * @return array Dữ liệu bài viết và thông tin phân trang / Infinite Scroll
      */
-    public function get_solutions_by_category( $category_slug = 'tiptop', $page = 1, $per_page = 10, $lang = 'vn' ) {
+    public function get_solutions_by_category( $category_slug = 'tiptop', $page = 1, $per_page = 10, $lang = 'vn', $offset = null ) {
         $category_slug = sanitize_title( $category_slug );
         $page          = max( 1, absint( $page ) );
         $per_page      = max( 1, min( 50, absint( $per_page ) ) );
+        $actual_offset = ( null !== $offset ) ? max( 0, absint( $offset ) ) : ( ( $page - 1 ) * $per_page );
         
         // 21/10/2026: Chuẩn hoá mã ngôn ngữ (hỗ trợ vn/vi -> vn, cn/zh/tw -> cn)
         $lang = in_array( strtolower( $lang ), [ 'cn', 'zh', 'tw' ], true ) ? 'cn' : 'vn';
 
-        // 21/10/2026: Tối ưu hiệu suất bằng Transient Cache theo từng ngôn ngữ
-        $cache_key   = 'dgw_api_sol_' . md5( "{$category_slug}_{$lang}_{$page}_{$per_page}" );
+        // 26/10/2026: Tối ưu hiệu suất bằng Transient Cache theo offset + per_page
+        $cache_key   = 'dgw_api_sol_' . md5( "{$category_slug}_{$lang}_{$actual_offset}_{$per_page}" );
         $cached_data = get_transient( $cache_key );
 
         if ( false !== $cached_data ) {
@@ -43,9 +45,13 @@ class Solution_Model {
             'post_type'      => self::POST_TYPE,
             'post_status'    => 'publish',
             'posts_per_page' => $per_page,
-            'paged'          => $page,
-            'orderby'        => 'date',
-            'order'          => 'DESC',
+            'offset'         => $actual_offset,
+            'orderby'        => [
+                'meta_value_num' => 'DESC',
+                'date'           => 'DESC',
+                'ID'             => 'DESC',
+            ],
+            'meta_key'       => '_metabox_order',
             'tax_query'      => [
                 [
                     'taxonomy' => self::TAXONOMY,
@@ -101,13 +107,22 @@ class Solution_Model {
             wp_reset_postdata();
         }
 
+        $total_items    = (int) $query->found_posts;
+        $returned_count = count( $items );
+        $loaded_total   = $actual_offset + $returned_count;
+        $has_more       = $returned_count > 0 && $loaded_total < $total_items;
+
         $result = [
             'items'      => $items,
             'pagination' => [
-                'total_items'  => (int) $query->found_posts,
-                'total_pages'  => (int) $query->max_num_pages,
-                'current_page' => $page,
-                'per_page'     => $per_page,
+                'total_items'    => $total_items,
+                'offset'         => $actual_offset,
+                'per_page'       => $per_page,
+                'returned_count' => $returned_count,
+                'next_offset'    => $has_more ? $loaded_total : null,
+                'has_more'       => $has_more,
+                'current_page'   => $page,
+                'total_pages'    => (int) ceil( $total_items / max( 1, $per_page ) ),
             ],
         ];
 

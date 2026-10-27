@@ -35,12 +35,14 @@ class Bootstrap {
     }
 
     // 21/10/2026: Nạp các dependency theo mô hình MVC (Models -> Controllers -> Router)
+    // 26/10/2026: Bổ sung Model và Controller cho post_type active
     private function load_dependencies() {
         $plugin_dir = plugin_dir_path( __FILE__ );
 
         // Models
         require_once $plugin_dir . 'includes/models/class-dgw-solution-model.php';
         require_once $plugin_dir . 'includes/models/class-dgw-resource-model.php';
+        require_once $plugin_dir . 'includes/models/class-dgw-active-model.php';
 
         // 21/10/2026: Nạp Auth Middleware bảo mật API Key
         require_once $plugin_dir . 'includes/class-dgw-auth.php';
@@ -48,6 +50,7 @@ class Bootstrap {
         // Controllers
         require_once $plugin_dir . 'includes/controllers/class-dgw-solution-controller.php';
         require_once $plugin_dir . 'includes/controllers/class-dgw-resource-controller.php';
+        require_once $plugin_dir . 'includes/controllers/class-dgw-active-controller.php';
 
         // Routes
         require_once $plugin_dir . 'includes/class-dgw-zalo-api-routes.php';
@@ -65,12 +68,14 @@ class Bootstrap {
             return $headers;
         } );
 
-        // 22/10/2026: Tự động xóa cache transient khi bài viết Solutions hoặc Resources thay đổi
+        // 22/10/2026 & 26/10/2026: Tự động xóa cache transient khi bài viết Solutions, Resources hoặc Active thay đổi
         add_action( 'save_post_solutions', [ '\\DGW_API\\Models\\Solution_Model', 'clear_cache' ] );
         add_action( 'save_post_resources', [ '\\DGW_API\\Models\\Resource_Model', 'clear_cache' ] );
+        add_action( 'save_post_active', [ '\\DGW_API\\Models\\Active_Model', 'clear_cache' ] );
         add_action( 'deleted_post', function( $post_id ) {
             \DGW_API\Models\Solution_Model::clear_cache();
             \DGW_API\Models\Resource_Model::clear_cache();
+            \DGW_API\Models\Active_Model::clear_cache();
         } );
     }
 }

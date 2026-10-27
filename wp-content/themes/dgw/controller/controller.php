@@ -25,9 +25,10 @@ class Controller_Main
             'controller_popup' => true,
             'controller_member' => true,
             'controller_member_download' => true,
+            'controller_seeder' => true,
         );
 
-        $this->_controller_options = get_option($this->_controller_name, $defaultOption);
+        $this->_controller_options = wp_parse_args(get_option($this->_controller_name, $defaultOption), $defaultOption);
 
         $this->page_popup();
         $this->page_information();
@@ -35,6 +36,7 @@ class Controller_Main
         $this->page_logo();
         $this->page_member();
         $this->page_member_download();
+        $this->page_seeder();
 
         $this->post_slider();
         $this->post_solutions();
@@ -77,6 +79,17 @@ class Controller_Main
         if ($this->_controller_options['controller_member_download']) {
             require_once(DIR_CONTROLLER . 'controller-member-download.php');
             new Controller_Member_Download_Report();
+        }
+    }
+
+    /**
+     * [26/10/2026] - Khởi tạo Controller công cụ Tạo Dữ Liệu Test (Dummy Data Seeder) trong WP-Admin
+     */
+    public function page_seeder()
+    {
+        if (is_admin() && !empty($this->_controller_options['controller_seeder'])) {
+            require_once(DIR_CONTROLLER . 'controller-seeder.php');
+            new Controller_Seeder();
         }
     }
 
