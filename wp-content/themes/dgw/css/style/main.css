@@ -868,8 +868,7 @@ hr.style-two {
   aspect-ratio: 4/3 !important;
   width: 100% !important;
   height: auto !important;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: transform 0.7s ease;
 }
 #business-home .item .item-content {
@@ -971,8 +970,7 @@ hr.style-two {
 #industry-home .item .item-img img {
   width: 100% !important;
   height: 100% !important;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   transition: transform 0.6s ease;
 }
 #industry-home .item .item-content {
@@ -1043,8 +1041,7 @@ hr.style-two {
 #active-home .active-item .active-item-img img {
   width: 100%;
   height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   display: block;
 }
 #active-home .active-item .active-item-content {
@@ -1190,7 +1187,7 @@ hr.style-two {
   color: #fff !important;
 }
 #news-home .news-home-title .title-select:hover {
-  background-color: rgb(0.2388059701, 11.7014925373, 15.7611940299);
+  background-color: rgb(0.0936494001%, 4.5888206029%, 6.1808604039%);
 }
 #news-home .news-home-title .title-select:hover h3 {
   color: #fff;
@@ -1373,8 +1370,7 @@ hr.style-two {
   width: 100% !important;
   height: auto !important;
   transition: all 0.4s ease;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   position: relative;
   z-index: 1;
 }
@@ -1489,12 +1485,14 @@ hr.style-two {
 
 @keyframes animationImg {
   0% {
-    opacity: 0; /* IE 9 */
+    opacity: 0;
+    -ms-transform: scale(0.7, 0.7); /* IE 9 */
     transform: scale(0.7, 0.7);
   }
   /*        90%  {width: 90%; opacity: 0.2}*/
   100% {
-    opacity: 1; /* IE 9 */
+    opacity: 1;
+    -ms-transform: scale(1, 1); /* IE 9 */
     transform: scale(1, 1);
   }
 }
@@ -1720,6 +1718,10 @@ hr.style-two {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 0.75rem;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1949,6 +1951,10 @@ html[lang=zh-TW] .has-sub::after {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -1956,6 +1962,10 @@ html[lang=vi-VN] .has-sub::after {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -2721,8 +2731,7 @@ div:has(> .page-img) ~ .menu-sub {
   aspect-ratio: 16/9 !important;
   width: 100% !important;
   height: auto !important;
-  -o-object-fit: cover !important;
-     object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
+  object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
   display: block;
 }
 #slider .active a {
@@ -3152,9 +3161,7 @@ body.home #header-space {
   padding: 2px 3px;
   box-shadow: 0 2px 8px rgba(0, 56, 78, 0.05);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 .languages-container .languages-box:hover {
   border-color: rgba(2, 74, 141, 0.35);
@@ -3183,8 +3190,7 @@ body.home #header-space {
 }
 .languages-container .languages-box__item,
 .languages-container .languages-box .link-languages {
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   -webkit-appearance: none;
   border: none;
   background: transparent;
@@ -3345,8 +3351,7 @@ body.home #header-space {
   max-width: 100%;
   height: auto;
   display: block;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .side-right {
@@ -4474,19 +4479,411 @@ body.home #header-space {
   }
 }
 
-/* ===== LAYOUT CHUNG ===== */
+/* ===== LAYOUT CHUNG & MEMBER CARD ===== */
 .member-space {
-  padding: 100px 20%;
-}
-@media (max-width: 991.98px) {
-  .member-space {
-    padding: 100px 10%;
-  }
+  padding: 100px 15px 100px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 70vh;
+  box-sizing: border-box;
 }
 @media (max-width: 767.98px) {
   .member-space {
-    padding: 100px 2%;
+    padding: 40px 15px 60px 15px;
   }
+}
+.member-space .member-card {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  transition: box-shadow 0.25s ease;
+}
+.member-space .member-card.member-auth-card {
+  max-width: 520px;
+  padding: 36px 32px;
+  transition: max-width 0.25s ease;
+}
+.member-space .member-card.member-auth-card.is-register {
+  max-width: 720px;
+}
+@media (max-width: 767.98px) {
+  .member-space .member-card.member-auth-card {
+    max-width: 100% !important;
+    padding: 24px 18px;
+  }
+}
+.member-space .member-card.member-profile-card {
+  max-width: 860px;
+  padding: 40px 36px;
+}
+@media (max-width: 767.98px) {
+  .member-space .member-card.member-profile-card {
+    padding: 24px 18px;
+  }
+}
+.member-space .member-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 28px;
+}
+.member-space .member-tabs .tab-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.member-space .member-tabs .tab-btn:hover {
+  color: #0f172a;
+}
+.member-space .member-tabs .tab-btn.active {
+  background: #ffffff;
+  color: #1d5ab6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.member-space .member-card-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.member-space .member-card-header__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  background: #eef4ff;
+  color: #1d5ab6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.member-space .member-card-header__icon svg {
+  width: 28px;
+  height: 28px;
+}
+.member-space .member-card-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+.member-space .member-card-header__subtitle {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+.member-space .tab-login,
+.member-space .tab-register,
+.member-space .logged-in {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+.member-space .member-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.member-space .member-input-wrap input {
+  margin-bottom: 0 !important;
+  padding-right: 42px !important;
+}
+.member-space .member-input-wrap .member-toggle-pw {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+.member-space .member-input-wrap .member-toggle-pw:hover {
+  color: #1d5ab6;
+}
+.member-space .member-input-wrap .member-toggle-pw svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.member-space .row-cell {
+  margin-bottom: 16px;
+}
+.member-space .row-cell label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+  margin-left: 2px;
+}
+.member-space .row-cell label .required {
+  color: #e11d48;
+  margin-left: 2px;
+}
+.member-space .row-cell input,
+.member-space .row-cell select {
+  height: 44px;
+  padding: 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #0f172a;
+  background-color: #f8fafc;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+.member-space .row-cell input:focus,
+.member-space .row-cell select:focus {
+  background-color: #ffffff;
+  border-color: #1d5ab6;
+  box-shadow: 0 0 0 3px rgba(29, 90, 182, 0.15);
+}
+.member-space .member-auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+.member-space .member-auth-actions #btn-register,
+.member-space .member-auth-actions #btn-login {
+  width: 100%;
+  height: 46px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1d5ab6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(29, 90, 182, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.member-space .member-auth-actions #btn-register:hover:not(:disabled),
+.member-space .member-auth-actions #btn-login:hover:not(:disabled) {
+  background: #14448e;
+  box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+  transform: translateY(-1px);
+}
+.member-space .member-auth-actions #btn-register:disabled,
+.member-space .member-auth-actions #btn-login:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.member-space .member-auth-actions .member-forgot-link {
+  text-align: right;
+  margin-top: -6px;
+  margin-bottom: 4px;
+}
+.member-space .member-auth-actions .member-forgot-link #btn-forget-password {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d5ab6;
+  cursor: pointer;
+  text-decoration: none;
+  width: auto;
+  transition: color 0.15s ease;
+}
+.member-space .member-auth-actions .member-forgot-link #btn-forget-password:hover {
+  color: #14448e;
+  text-decoration: underline;
+}
+.member-space .member-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #e2e8f0;
+}
+@media (max-width: 767.98px) {
+  .member-space .member-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+}
+.member-space .member-profile-header__user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.member-space .member-profile-header__avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #eef4ff;
+  color: #1d5ab6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.member-space .member-profile-header__avatar svg {
+  width: 26px;
+  height: 26px;
+}
+.member-space .member-profile-header__info .email {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+.member-space .member-profile-header__info .badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+.member-space .member-profile-header .btn-logout {
+  padding: 9px 20px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #dc2626;
+  border: 1.5px solid #fecaca;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+.member-space .member-profile-header .btn-logout svg {
+  width: 16px;
+  height: 16px;
+}
+.member-space .member-profile-header .btn-logout:hover {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+.member-space .member-section {
+  margin-bottom: 30px;
+}
+.member-space .member-section__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+}
+.member-space .member-section__title svg {
+  width: 20px;
+  height: 20px;
+  color: #1d5ab6;
+}
+.member-space .member-section__desc {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0 0 18px 0;
+}
+.member-space .member-section .member-btn-primary {
+  height: 44px;
+  padding: 0 28px;
+  background: #1d5ab6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(29, 90, 182, 0.2);
+  transition: all 0.2s ease;
+}
+@media (max-width: 767.98px) {
+  .member-space .member-section .member-btn-primary {
+    width: 100%;
+  }
+}
+.member-space .member-section .member-btn-primary:hover:not(:disabled) {
+  background: #14448e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(29, 90, 182, 0.3);
+}
+.member-space .member-section .member-btn-primary:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+.member-space .member-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 32px 0;
+}
+.member-space .member-spinner {
+  display: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spinDgw 0.8s linear infinite;
+}
+.member-space .is-loading .member-spinner {
+  display: inline-block;
+}
+.member-space .msg {
+  margin-top: 14px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  display: none;
+}
+.member-space .msg.show {
+  display: block;
+  animation: dwf-slide-up 0.25s ease;
+}
+.member-space .msg.msg--success {
+  background-color: #ecfdf5 !important;
+  color: #065f46 !important;
+  border: 1px solid #a7f3d0;
+}
+.member-space .msg.msg--error {
+  background-color: #fef2f2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fecaca;
 }
 
 .one-columns {
@@ -4618,9 +5015,6 @@ body.home #header-space {
   outline: none;
   margin-bottom: 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.row-cell input::-moz-placeholder {
-  color: #bbb;
 }
 .row-cell input::placeholder {
   color: #bbb;
@@ -4836,20 +5230,246 @@ body.home #header-space {
 .dgw-activate {
   display: grid;
   grid-template-columns: 3fr 1fr;
-  gap: 20px;
-  padding: 60px 0;
+  gap: 30px;
+  padding: 0 0 60px 0;
   align-items: start;
 }
+@media (max-width: 991.98px) {
+  .dgw-activate {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
 .dgw-activate-main {
-  height: 100%;
+  /* [27/10/2026] Căn chỉnh cách top 100px theo yêu cầu, không căn giữa theo chiều dọc */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 100px;
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 767.98px) {
+  .dgw-activate-main {
+    padding-top: 40px;
+  }
+}
+.dgw-activate .reset-password-card,
+.dgw-activate .reset-password-form {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  padding: 40px 36px;
+  text-align: left;
+  box-sizing: border-box;
+}
+@media (max-width: 767.98px) {
+  .dgw-activate .reset-password-card,
+  .dgw-activate .reset-password-form {
+    padding: 30px 20px;
+  }
+}
+.dgw-activate .reset-password-card__header,
+.dgw-activate .reset-password-form__header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.dgw-activate .reset-password-card__icon,
+.dgw-activate .reset-password-form__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: #eef4ff;
+  color: #1d5ab6;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  width: 100%;
 }
-.dgw-activate .reset-password-form {
-  width: 70%;
+.dgw-activate .reset-password-card__icon svg,
+.dgw-activate .reset-password-form__icon svg {
+  width: 28px;
+  height: 28px;
+}
+.dgw-activate .reset-password-card__title,
+.dgw-activate .reset-password-form__title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+.dgw-activate .reset-password-card__subtitle,
+.dgw-activate .reset-password-form__subtitle {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0;
+}
+.dgw-activate .reset-password-card__field,
+.dgw-activate .reset-password-form__field {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.dgw-activate .reset-password-card__label,
+.dgw-activate .reset-password-form__label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+.dgw-activate .reset-password-card__label .required,
+.dgw-activate .reset-password-form__label .required {
+  color: #e11d48;
+  margin-left: 2px;
+}
+.dgw-activate .reset-password-card__input-wrap,
+.dgw-activate .reset-password-form__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.dgw-activate .reset-password-card__input,
+.dgw-activate .reset-password-form__input {
+  width: 100%;
+  height: 46px;
+  padding: 10px 42px 10px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #0f172a;
+  outline: none;
+  background-color: #f8fafc;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.dgw-activate .reset-password-card__input::placeholder,
+.dgw-activate .reset-password-form__input::placeholder {
+  color: #94a3b8;
+}
+.dgw-activate .reset-password-card__input:focus,
+.dgw-activate .reset-password-form__input:focus {
+  background-color: #ffffff;
+  border-color: #1d5ab6;
+  box-shadow: 0 0 0 3px rgba(29, 90, 182, 0.15);
+}
+.dgw-activate .reset-password-card__toggle-pw,
+.dgw-activate .reset-password-form__toggle-pw {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+.dgw-activate .reset-password-card__toggle-pw:hover,
+.dgw-activate .reset-password-form__toggle-pw:hover {
+  color: #1d5ab6;
+}
+.dgw-activate .reset-password-card__toggle-pw svg,
+.dgw-activate .reset-password-form__toggle-pw svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.dgw-activate .reset-password-card__hint,
+.dgw-activate .reset-password-form__hint {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 6px;
+  display: block;
+}
+.dgw-activate .reset-password-card__submit,
+.dgw-activate .reset-password-form__submit {
+  width: 100%;
+  height: 48px;
+  background: #1d5ab6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(29, 90, 182, 0.25);
+  margin-top: 24px;
+}
+.dgw-activate .reset-password-card__submit:hover:not(:disabled),
+.dgw-activate .reset-password-form__submit:hover:not(:disabled) {
+  background: #14448e;
+  box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+  transform: translateY(-1px);
+}
+.dgw-activate .reset-password-card__submit:active:not(:disabled),
+.dgw-activate .reset-password-form__submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+.dgw-activate .reset-password-card__submit:disabled,
+.dgw-activate .reset-password-form__submit:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+.dgw-activate .reset-password-card__spinner,
+.dgw-activate .reset-password-form__spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spinDgw 0.8s linear infinite;
+}
+.dgw-activate .reset-password-card.is-loading .dgw-activate .reset-password-card__spinner,
+.dgw-activate .reset-password-card.is-loading .dgw-activate .reset-password-form__spinner,
+.dgw-activate .reset-password-form.is-loading .dgw-activate .reset-password-card__spinner,
+.dgw-activate .reset-password-form.is-loading .dgw-activate .reset-password-form__spinner {
+  display: inline-block;
+}
+.dgw-activate .reset-password-card__msg,
+.dgw-activate .reset-password-form__msg {
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.4;
+  display: none;
+}
+.dgw-activate .reset-password-card__msg.show,
+.dgw-activate .reset-password-form__msg.show {
+  display: block;
+  animation: dwf-slide-up 0.25s ease;
+}
+.dgw-activate .reset-password-card__msg--success,
+.dgw-activate .reset-password-form__msg--success {
+  background-color: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+.dgw-activate .reset-password-card__msg--error,
+.dgw-activate .reset-password-form__msg--error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 .dgw-activate-sidebar {
   display: flex;
@@ -4891,19 +5511,63 @@ body.home #header-space {
   }
 }
 .dgw-error-box {
-  padding: 20px;
-  background-color: #fff5f5;
-  border: 1px solid #feb2b2;
-  border-radius: 8px;
+  /* [27/10/2026] Cập nhật styling thông báo lỗi khi token không hợp lệ hoặc hết hạn */
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 36px 30px;
+  background-color: #ffffff;
+  border: 1px solid #fecaca;
+  border-radius: 14px;
   text-align: center;
-  width: 90%;
-  height: 100%;
-  margin-top: 2rem;
-  padding-top: 10%;
+  box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.08);
+  box-sizing: border-box;
+}
+.dgw-error-box__icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: #fef2f2;
+  color: #dc2626;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dgw-error-box__icon svg {
+  width: 28px;
+  height: 28px;
 }
 .dgw-error-box h3 {
-  color: #c53030;
-  margin-bottom: 10px;
+  color: #991b1b;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+.dgw-error-box p {
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 24px 0;
+}
+.dgw-error-box .btn-my-style,
+.dgw-error-box .btn-retry {
+  display: inline-block;
+  width: auto;
+  padding: 12px 28px;
+  background-color: #1d5ab6;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.dgw-error-box .btn-my-style:hover,
+.dgw-error-box .btn-retry:hover {
+  background-color: #14448e;
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 /* Hiệu ứng vòng xoay  cho button download*/
