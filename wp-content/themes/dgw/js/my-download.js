@@ -216,7 +216,7 @@ jQuery(document).on("click", "#btn-login", function () {
     success: function (res) {
       if (res.success) {
         console.log("DEBUG:", res.data.debug);
-        jQuery("#login-msg").css("color", "green").text(res.data.message);
+        jQuery("#login-msg").removeClass("msg--error").addClass("show msg--success").css("color", "green").text(res.data.message);
         setTimeout(function () {
           // ✅ 判斷在哪個頁面
           const page = jQuery("#tab-login").data("page");
@@ -251,7 +251,7 @@ jQuery(document).on("click", "#btn-login", function () {
           }
         }, 1000);
       } else {
-        jQuery("#login-msg").css("color", "red").text(res.data.message);
+        jQuery("#login-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(res.data.message);
         $this
           .prop("disabled", false)
           .removeClass("is-loading")
@@ -262,67 +262,101 @@ jQuery(document).on("click", "#btn-login", function () {
 });
 
 // ===== ĐĂNG KÝ =====
-// jQuery(document).on("click", "#btn-register", function () {
-//   const $this = jQuery(this);
-//   const currentLang = document.documentElement.lang;
-//   const sendLang = currentLang === "zh-TW" ? "cn" : "vn";
+// // ===== ĐĂNG KÝ THÀNH VIÊN VỚI DIALOG POPUP =====
+/**
+ * [28/10/2026] Modal Alert Dialog trực quan (dgwAlert)
+ * Hiển thị popup thông báo nổi bật chính giữa màn hình với backdrop mờ
+ * Hỗ trợ trạng thái Thành công / Thất bại, tự đóng đếm ngược hoặc nhấn nút/Escape
+ */
+window.dgwAlert = function (opts) {
+  opts = opts || {};
+  const type = opts.type || "info";
+  const title = opts.title || "";
+  const message = opts.message || "";
+  const currentLang = document.documentElement.lang;
+  const isCn = (currentLang === "zh-TW" || currentLang.indexOf("zh") === 0);
+  const defaultBtnText = isCn ? "確定" : "Đã hiểu";
+  const baseBtnText = opts.btnText || defaultBtnText;
+  let autoCloseSec = typeof opts.autoClose === "number" ? opts.autoClose : 0;
+  const onClose = typeof opts.onClose === "function" ? opts.onClose : null;
 
-//   // Cấu hình ngôn ngữ hiển thị tại client
-//   const uiText = {
-//     vn: { loading: "Đang xử lý...", original: "Đăng ký" },
-//     cn: { loading: "处理中...", original: "注册" },
-//   };
-//   const langSet = uiText[sendLang];
-//   // 1. Vô hiệu hóa button để tránh spam request
-//   $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
+  jQuery("#dgw-alert-overlay").remove();
 
-//   jQuery.ajax({
-//     url: MyAjax.ajax_url,
-//     type: "POST",
-//     data: {
-//       action: "download_member_register",
-//       nonce: MyAjax.nonce,
-//       username: jQuery("#reg-username").val(),
-//       email: jQuery("#reg-email").val(),
-//       password: jQuery("#reg-password").val(),
-//       company: jQuery("#reg-company").val(),
-//       phone: jQuery("#reg-phone").val(),
-//       tax: jQuery("#reg-tax").val(),
-//       industry: jQuery("#reg-industry").val(),
-//       position: jQuery("#reg-position").val(),
-//       department: jQuery("#reg-department").val(),
-//       lang: sendLang,
-//     },
-//     success: function (res) {
-//       if (res.success) {
-//         jQuery("#register-msg").css("color", "green").text(res.data.message);
-//         jQuery("#reg-username").val("");
-//         jQuery("#reg-email").val("");
-//         jQuery("#reg-password").val("");
-//         jQuery("#reg-company").val("");
-//         jQuery("#reg-phone").val("");
-//         jQuery("#reg-tax").val("");
-//         jQuery("#reg-industry").val("");
-//         jQuery("#reg-position").val("");
-//         jQuery("#reg-department").val("");
-//         setTimeout(function () {
-//           jQuery('.tab-btn[data-tab="login"]').click();
-//           jQuery("#register-msg").text("");
-//           $this
-//             .prop("disabled", false)
-//             .removeClass("is-loading")
-//             .text(langSet.original);
-//         }, 5000);
-//       } else {
-//         jQuery("#register-msg").css("color", "red").text(res.data.message);
-//         $this
-//           .prop("disabled", false)
-//           .removeClass("is-loading")
-//           .text(langSet.original);
-//       }
-//     },
-//   });
-// });
+  const successIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+  const errorIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+
+  const iconHtml = (type === "success") ? successIcon : errorIcon;
+  const iconClass = (type === "success") ? "dgw-alert-icon--success" : "dgw-alert-icon--error";
+  const btnClass = (type === "success") ? "dgw-alert-btn--success" : "dgw-alert-btn--error";
+
+  let countdownInterval = null;
+  const initialBtnLabel = autoCloseSec > 0 ? (baseBtnText + " (" + autoCloseSec + "s)") : baseBtnText;
+
+  const html = 
+    '<div id="dgw-alert-overlay" class="dgw-alert-overlay" role="dialog" aria-modal="true">' +
+      '<div class="dgw-alert-card">' +
+        '<button type="button" class="dgw-alert-close" aria-label="Close">&times;</button>' +
+        '<div class="dgw-alert-icon ' + iconClass + '">' +
+          iconHtml +
+        '</div>' +
+        '<h3 class="dgw-alert-title">' + title + '</h3>' +
+        '<p class="dgw-alert-message">' + message + '</p>' +
+        '<button type="button" class="dgw-alert-btn ' + btnClass + '">' +
+          '<span class="dgw-alert-btn-text">' + initialBtnLabel + '</span>' +
+        '</button>' +
+      '</div>' +
+    '</div>';
+
+  const $overlay = jQuery(html).appendTo("body");
+
+  setTimeout(function () {
+    $overlay.addClass("show");
+  }, 10);
+
+  function closeAlert() {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    $overlay.removeClass("show");
+    setTimeout(function () {
+      $overlay.remove();
+      if (onClose) onClose();
+    }, 250);
+  }
+
+  $overlay.on("click", ".dgw-alert-close, .dgw-alert-btn", function (e) {
+    e.preventDefault();
+    closeAlert();
+  });
+
+  $overlay.on("click", function (e) {
+    if (e.target === this) {
+      closeAlert();
+    }
+  });
+
+  jQuery(document).on("keydown.dgwAlert", function (e) {
+    if (e.key === "Escape" && jQuery("#dgw-alert-overlay").length) {
+      jQuery(document).off("keydown.dgwAlert");
+      closeAlert();
+    }
+  });
+
+  if (autoCloseSec > 0) {
+    const $btnText = $overlay.find(".dgw-alert-btn-text");
+    countdownInterval = setInterval(function () {
+      autoCloseSec--;
+      if (autoCloseSec > 0) {
+        $btnText.text(baseBtnText + " (" + autoCloseSec + "s)");
+      } else {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        closeAlert();
+      }
+    }, 1000);
+  }
+};
 
 jQuery(document).on("click", "#btn-register", function () {
   const $this = jQuery(this);
@@ -356,7 +390,7 @@ jQuery(document).on("click", "#btn-register", function () {
     { id: "#reg-department", key: "department" }
   ];
 
-  let hasEmptyField = false; // Đổi thành cờ boolean cho đơn giản
+  let hasEmptyField = false;
   let requestData = {
     action: "download_member_register",
     nonce: MyAjax.nonce,
@@ -370,33 +404,43 @@ jQuery(document).on("click", "#btn-register", function () {
 
     if (val === "") {
       hasEmptyField = true;
-      $input.css("border-color", "red"); // Vẫn giữ viền đỏ để user biết ô nào thiếu
+      $input.css("border-color", "red");
     } else {
       $input.css("border-color", "");
       requestData[field.key] = val;
 
-      // --- 20-07-2026 BẮT ĐẦU CHỈNH SỬA  ---
-      // Nếu là thẻ select, lấy thêm thuộc tính data_content gửi lên server
       if ($input.is("select")) {
         requestData[field.key + "_label"] = $input.find("option:selected").attr("data-content") || val;
       }
-      // --- KẾT THÚC CHỈNH SỬA ---
     }
   });
 
-  // 2. Nếu có bất kỳ ô nào trống, báo lỗi chung và DỪNG
+  // 2. Nếu có bất kỳ ô nào trống, báo lỗi và hiện Popup
   if (hasEmptyField) {
-    jQuery("#register-msg").css("color", "red").text(langSet.emptyMsg);
+    jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(langSet.emptyMsg);
+    dgwAlert({
+      type: "error",
+      title: sendLang === "cn" ? "資料未填寫完整" : "Thông tin chưa đầy đủ",
+      message: langSet.emptyMsg,
+      btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+    });
     return;
   }
 
   // Clear message lỗi cũ nếu có
-  jQuery("#register-msg").text("");
+  jQuery("#register-msg").removeClass("show msg--success msg--error").text("");
 
   // Kiểm tra Cloudflare Turnstile
   const turnstileResponse = jQuery('[name="cf-turnstile-response"]').val();
   if (!turnstileResponse) {
-    jQuery("#register-msg").css("color", "red").text(sendLang === "vn" ? "Vui lòng xác nhận bạn không phải là người máy (Captcha)." : "請驗證您不是機器人 (Captcha)。");
+    const captchaMsg = sendLang === "vn" ? "Vui lòng xác nhận bạn không phải là người máy (Captcha)." : "請驗證您不是機器人 (Captcha)。";
+    jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(captchaMsg);
+    dgwAlert({
+      type: "error",
+      title: sendLang === "cn" ? "驗證提示" : "Xác thực bảo mật",
+      message: captchaMsg,
+      btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+    });
     return;
   }
   requestData['cf-turnstile-response'] = turnstileResponse;
@@ -411,35 +455,52 @@ jQuery(document).on("click", "#btn-register", function () {
     data: requestData,
     success: function (res) {
       if (res.success) {
-        jQuery("#register-msg").css("color", "green").text(res.data.message);
+        // [28/10/2026] Thông báo đăng ký thành công (cả alert inline và Dialog Popup)
+        jQuery("#register-msg").removeClass("msg--error").addClass("show msg--success").css("color", "green").text(res.data.message);
 
         formFields.forEach(function (field) {
           jQuery(field.id).val("");
         });
 
-        setTimeout(function () {
-          jQuery('.tab-btn[data-tab="login"]').click();
-          jQuery("#register-msg").text("");
-          $this
-            .prop("disabled", false)
-            .removeClass("is-loading")
-            .text(langSet.original);
-        }, 5000);
+        dgwAlert({
+          type: "success",
+          title: sendLang === "cn" ? "恭喜您註冊成功" : "Đăng ký thành công",
+          message: res.data.message,
+          btnText: sendLang === "cn" ? "前往登入" : "Đăng nhập ngay",
+          autoClose: 5,
+          onClose: function () {
+            jQuery('.tab-btn[data-tab="login"]').click();
+            jQuery("#register-msg").removeClass("show msg--success msg--error").text("");
+            $this
+              .prop("disabled", false)
+              .removeClass("is-loading")
+              .text(langSet.original);
+          }
+        });
       } else {
-        jQuery("#register-msg").css("color", "red").text(res.data.message);
+        // [28/10/2026] Thông báo lỗi đăng ký: email đã đăng ký trước... (cả alert inline và Dialog Popup)
+        jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(res.data.message);
         $this
           .prop("disabled", false)
           .removeClass("is-loading")
           .text(langSet.original);
+
+        dgwAlert({
+          type: "error",
+          title: sendLang === "cn" ? "註冊失敗" : "Thông báo đăng ký",
+          message: res.data.message,
+          btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+        });
       }
       
-      // Reset Turnstile widget so user can try again if failed
+      // Reset Turnstile widget để thử lại nếu cần
       if (typeof turnstile !== 'undefined') {
           turnstile.reset();
       }
     },
     error: function () {
-      jQuery("#register-msg").css("color", "red").text("Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.");
+      const errMsg = sendLang === "cn" ? "系統錯誤，請稍後再試。" : "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.";
+      jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(errMsg);
       $this
         .prop("disabled", false)
         .removeClass("is-loading")
@@ -448,6 +509,13 @@ jQuery(document).on("click", "#btn-register", function () {
       if (typeof turnstile !== 'undefined') {
           turnstile.reset();
       }
+
+      dgwAlert({
+        type: "error",
+        title: sendLang === "cn" ? "系統錯誤" : "Lỗi hệ thống",
+        message: errMsg,
+        btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+      });
     }
   });
 });

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-06 02:50+0000\n"
-"PO-Revision-Date: 2026-10-19 03:46+0000\n"
+"PO-Revision-Date: 2026-10-28 04:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: 繁體中文\n"
 "Language: zh_TW\n"
@@ -375,6 +375,9 @@ msgstr ""
 msgid "Create Date"
 msgstr "建立日期"
 
+msgid "Create your Digiwin member account to access resources"
+msgstr "建立您的鼎捷會員帳號以獲取資源"
+
 #: page/member.php:83
 msgid "Current Password"
 msgstr "當前密碼"
@@ -532,6 +535,11 @@ msgstr "英文"
 msgid "Enter your email address to reset your password"
 msgstr "請輸入您的電子郵件地址以重設密碼"
 
+#, fuzzy
+#| msgid "Enter your new password below to update your account   "
+msgid "Enter your new password below to update your account"
+msgstr "請在下方輸入新密碼以更新您的帳號"
+
 #: templates/home-cases.php:49
 msgid "Enterprise model success case"
 msgstr "企業典範成功案例"
@@ -559,6 +567,9 @@ msgstr "財務會計"
 #: view/view-setting.php:8
 msgid "First load"
 msgstr ""
+
+msgid "For security reasons, your new password must be at least 6 characters"
+msgstr "為了安全起見，您的新密碼長度必須至少為 6 個字元"
 
 #: page/member.php:57 inc/shortcode/shortcode-member.php:13
 #: inc/shortcode/shortcode-member.php:70
@@ -778,6 +789,9 @@ msgstr ""
 msgid "Metal Processing"
 msgstr "金屬加工"
 
+msgid "Minimum 6 characters"
+msgstr "最少 6 個字元"
+
 #: view/view-setting.php:20
 msgid "More loading"
 msgstr ""
@@ -817,6 +831,9 @@ msgstr ""
 #: inc/admin/admin-add-post-taxonomy-field.php:105
 msgid "Name"
 msgstr "名稱"
+
+msgid "New message"
+msgstr ""
 
 #: page/member.php:88 page/reset-password.php:52
 msgid "New Password"
@@ -1319,7 +1336,7 @@ msgstr "組長"
 
 #: templates/footer.php:244
 msgid "Terms of Use"
-msgstr ""
+msgstr "使用條款"
 
 #: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
@@ -1401,6 +1418,9 @@ msgstr "回收桶"
 msgid "Update"
 msgstr ""
 
+msgid "Update your company profile and contact details"
+msgstr ""
+
 #: metabox/metabox-downloads.php:27
 msgid "Upload File"
 msgstr ""
@@ -1471,6 +1491,9 @@ msgstr ""
 #: controller/controller-setting.php:17 controller/controller-setting.php:18
 msgid "Website Settings"
 msgstr ""
+
+msgid "Welcome back! Please enter your credentials to login"
+msgstr "歡迎回來！請輸入帳號密碼以進行登入"
 
 #: inc/front/front-menu.php:151
 msgid "Wires and Fiber Optics"

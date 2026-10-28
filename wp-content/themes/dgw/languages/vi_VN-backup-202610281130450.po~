@@ -1,14 +1,13 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 03:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"POT-Creation-Date: 2026-10-06 02:50+0000\n"
+"PO-Revision-Date: 2026-10-27 11:02+0000\n"
+"Last-Translator: \n"
+"Language-Team: Vietnamese (Viet Nam)\n"
+"Language: vi_VN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,11 +27,11 @@ msgstr ""
 
 #: comments.php:11
 msgid "1 comment"
-msgstr ""
+msgstr " 1 Bình Luận"
 
 #: inc/front/front-menu.php:45
 msgid "About Digiwin"
-msgstr ""
+msgstr "Giới Thiệu"
 
 #. Name of the template
 #: page/about.php:2
@@ -41,7 +40,7 @@ msgstr ""
 
 #: page/activate-member.php:115
 msgid "Account activated successfully!"
-msgstr ""
+msgstr "Kích hoạt tài khoản thành công!"
 
 #: page/activate-member.php:35
 msgid "Account does not exist"
@@ -49,7 +48,7 @@ msgstr ""
 
 #: page/activate-member.php:58
 msgid "Account verification is in progress, please wait..."
-msgstr ""
+msgstr "Đang xác thực tài khoản, vui lòng đợi..."
 
 #. Name of the template
 #: page/activate-member.php:2
@@ -83,7 +82,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:71
 msgid "Activities"
-msgstr ""
+msgstr "Sự Kiện"
 
 #: controller/controller-active.php:38 controller/controller-active.php:40
 #: controller/controller-case-studies.php:38
@@ -124,7 +123,7 @@ msgstr ""
 
 #: page/about.php:43 view/view-information.php:74 view/view-information.php:128
 msgid "Address"
-msgstr ""
+msgstr "Địa Chỉ"
 
 #: metabox/metabox-solution.php:42
 msgid "Advisory Services"
@@ -159,11 +158,11 @@ msgstr ""
 
 #: inc/front/front-menu.php:114
 msgid "Assistant"
-msgstr ""
+msgstr "Trợ lý"
 
 #: inc/front/front-menu.php:157
 msgid "Associations"
-msgstr ""
+msgstr "Hiệp hội"
 
 #: inc/admin/admin-custom-columns.php:11
 msgid "Author"
@@ -171,15 +170,15 @@ msgstr ""
 
 #: inc/front/front-menu.php:142
 msgid "Automotive Parts"
-msgstr ""
+msgstr "Phụ tùng linh kiện xe"
 
 #: templates/footer.php:66
 msgid "Awards & Certificates"
-msgstr ""
+msgstr "Giải Thưởng & Chứng Chỉ"
 
 #: inc/front/front-menu.php:183
 msgid "Board of Directors"
-msgstr ""
+msgstr "Ban lãnh đạo"
 
 #: templates/home-cases.php:136
 msgid "Bài tiếp theo"
@@ -195,11 +194,11 @@ msgstr ""
 
 #: comments.php:139
 msgid "Cancel"
-msgstr ""
+msgstr "Hủy"
 
 #: page/reset-password.php:83
 msgid "Cannot Reset Password"
-msgstr ""
+msgstr "Không thể đặt lại mật khẩu"
 
 #: model/bk_model-member.php:52
 msgid "Career"
@@ -210,11 +209,11 @@ msgstr ""
 #: controller/controller-case-studies.php:47 templates/footer.php:131
 #: inc/front/front-menu.php:50
 msgid "Case Studies"
-msgstr ""
+msgstr "Dự Án"
 
 #: page/case.php:12 templates/side-cases.php:2
 msgid "cases"
-msgstr ""
+msgstr "Dự Án"
 
 #. Name of the template
 #: page/case.php:2
@@ -250,19 +249,19 @@ msgstr ""
 
 #: inc/front/front-menu.php:107
 msgid "CEO"
-msgstr ""
+msgstr "CEO"
 
 #: page/member.php:174
 msgid "Change Information"
-msgstr ""
+msgstr "Đổi Thông Tin"
 
 #: page/member.php:99
 msgid "Change Password"
-msgstr ""
+msgstr "Đổi Mật Khẩu"
 
 #: inc/front/front-menu.php:153
 msgid "Chemicals"
-msgstr ""
+msgstr "Hóa chất"
 
 #: metabox/bk-metabox-resources.php:27 metabox/bk-metabox-resources.php:35
 #: metabox/bk-metabox-resources.php:45 metabox/metabox-active.php:27
@@ -289,26 +288,25 @@ msgstr ""
 
 #: templates/home-news.php:14
 msgid "Classic Case"
-msgstr ""
+msgstr "Câu chuyện Khách Hàng"
 
 #: templates/home-news.php:11
 msgid "Column Article"
-msgstr ""
+msgstr "DigiKnow"
 
 #: comments.php:100
 msgid "Comment Content"
-msgstr ""
+msgstr "Nội Dung"
 
 #: comments.php:11 entry-footer.php:4
 msgid "Comments"
-msgstr ""
+msgstr "Bình luận"
 
 #: comments.php:34
 msgctxt "comments count"
 msgid "Trackback or Pingback"
 msgid_plural "Trackbacks and Pingbacks"
 msgstr[0] ""
-msgstr[1] ""
 
 #: model/bk_model-member.php:49
 msgid "Company "
@@ -328,7 +326,7 @@ msgstr ""
 #: view/view-information.php:120 view/view-member-download.php:44
 #: inc/front/front-core.php:119
 msgid "Company Name"
-msgstr ""
+msgstr "Tên Công Ty"
 
 #: view/view-information.php:96 view/view-information.php:150
 msgid "Company Operating"
@@ -340,11 +338,11 @@ msgstr ""
 
 #: page/member.php:93 page/reset-password.php:63
 msgid "Confirm Password"
-msgstr ""
+msgstr "Xác Nhận Mật Khẩu"
 
 #: inc/front/front-menu.php:117
 msgid "Consultant"
-msgstr ""
+msgstr "Chuyên viên (tư vấn)"
 
 #: model/model-download.php:63
 msgid "Contact Number"
@@ -352,11 +350,11 @@ msgstr ""
 
 #: templates/footer.php:139 inc/front/front-menu.php:88
 msgid "Contact Us"
-msgstr ""
+msgstr "Liên Hệ"
 
 #: templates/home-business.php:1
 msgid "Corporate management focus"
-msgstr ""
+msgstr "Trọng Tâm Quản Lý Doanh Nghiệp"
 
 #: taxonomy/tag-advertising.php:116 taxonomy/tag-casestudies.php:101
 #: taxonomy/tag-solution.php:101 taxonomy/taxonomy-advertising.php:108
@@ -377,13 +375,16 @@ msgstr ""
 msgid "Create Date"
 msgstr ""
 
+msgid "Create your Digiwin member account to access resources"
+msgstr "Tạo tài khoản thành viên Digiwin để truy cập tài nguyên"
+
 #: page/member.php:83
 msgid "Current Password"
-msgstr ""
+msgstr "Mật Khẩu Hiện Tại"
 
 #: controller/controller-logo.php:16 controller/controller-logo.php:17
 msgid "Customer Trademark"
-msgstr ""
+msgstr "Nhãn hiệu khách hàng"
 
 #: view/view-logo.php:11 view/view-member.php:10 view/view-pop-up.php:11
 msgid "Data Adjustment succeeded"
@@ -402,15 +403,15 @@ msgstr ""
 
 #: page/member.php:158 inc/front/front-core.php:130
 msgid "Department"
-msgstr ""
+msgstr "Phòng Ban"
 
 #: inc/front/front-menu.php:112
 msgid "Deputy Director"
-msgstr ""
+msgstr "Phó Giám đốc"
 
 #: inc/front/front-menu.php:110
 msgid "Deputy General Director"
-msgstr ""
+msgstr "Phó Tổng Giám đốc"
 
 #: model/bk_model-member.php:50
 msgid "Description"
@@ -426,7 +427,7 @@ msgstr ""
 
 #: templates/footer.php:122
 msgid "Digital Transformation in the Plastics Industry"
-msgstr ""
+msgstr "Chuyển Đổi Số Ngành Nhựa"
 
 #. Author of the theme
 msgid "Digiwin"
@@ -434,7 +435,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:111
 msgid "Director"
-msgstr ""
+msgstr "Giám đốc"
 
 #: helper/function.php:105
 msgid "Discuss"
@@ -442,11 +443,11 @@ msgstr ""
 
 #: page/partner.php:13
 msgid "distribution"
-msgstr ""
+msgstr "Đối Tác"
 
 #: templates/footer.php:81
 msgid "Download 2026 Digital Transformation Whitepaper"
-msgstr ""
+msgstr "Tải Whitepaper CĐS 2026"
 
 #: model/model-download.php:64 view/view-member-download.php:17
 msgid "Download Count"
@@ -463,7 +464,7 @@ msgstr ""
 
 #: single-resources.php:43
 msgid "Download File digiwin"
-msgstr ""
+msgstr "Tải Tài Liệu"
 
 #. Name of the template
 #: page/download.php:2
@@ -484,7 +485,7 @@ msgstr ""
 #: view/view-member-download.php:45 inc/front/front-core.php:114
 #: inc/shortcode/shortcode-member.php:54
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #: controller/controller-active.php:39
 #: controller/controller-case-studies.php:39
@@ -504,7 +505,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:145
 msgid "Electronic Parts"
-msgstr ""
+msgstr "Linh kiện điện tử"
 
 #: metabox/bk-metabox-resources.php:29 metabox/bk-metabox-resources.php:81
 #: metabox/bk-metabox-resources.php:91 metabox/metabox-active.php:29
@@ -532,11 +533,16 @@ msgstr ""
 
 #: inc/shortcode/shortcode-member.php:14
 msgid "Enter your email address to reset your password"
-msgstr ""
+msgstr "Nhập email của bạn để thiết lập lại mật khẩu"
+
+#, fuzzy
+#| msgid "Enter your new password below to update your account   "
+msgid "Enter your new password below to update your account"
+msgstr "Nhập mật khẩu mới bên dưới để cập nhật tài khoản của bạn"
 
 #: templates/home-cases.php:49
 msgid "Enterprise model success case"
-msgstr ""
+msgstr "Mô Hình Doanh Nghiệp Thành Công"
 
 #: view/view-member-download.php:36 view/view-member.php:15
 msgid "Export Excel file"
@@ -544,11 +550,11 @@ msgstr ""
 
 #: inc/front/front-menu.php:147
 msgid "F&B"
-msgstr ""
+msgstr "F&B (Thực phẩm & Đồ uống)"
 
 #: page/activate-member.php:120
 msgid "Failed to activate account"
-msgstr ""
+msgstr "Kích hoạt tài khoản thất bại"
 
 #: view/view-information.php:14
 msgid "Fax"
@@ -556,7 +562,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:190
 msgid "Finance and Accounting"
-msgstr ""
+msgstr "Tài chính Kế toán"
 
 #: view/view-setting.php:8
 msgid "First load"
@@ -565,7 +571,7 @@ msgstr ""
 #: page/member.php:57 inc/shortcode/shortcode-member.php:13
 #: inc/shortcode/shortcode-member.php:70
 msgid "Forget Password"
-msgstr ""
+msgstr "Quên Mật Khẩu"
 
 #: metabox/metabox-web.php:36
 msgid "Free Book"
@@ -573,20 +579,20 @@ msgstr ""
 
 #: templates/footer.php:73
 msgid "Free Resources for Businesses"
-msgstr ""
+msgstr "Tài Nguyên miễn phí cho Doanh Nghiệp"
 
 #: model/model-download.php:61 page/member.php:107
 #: view/view-member-download.php:43 inc/front/front-core.php:120
 msgid "Full Name"
-msgstr ""
+msgstr "Họ Tên"
 
 #: inc/front/front-menu.php:109
 msgid "General Director"
-msgstr ""
+msgstr "Tổng Giám đốc"
 
 #: page/activate-member.php:67
 msgid "Go to member page"
-msgstr ""
+msgstr "Đến trang thành viên"
 
 #: metabox/metabox-source.php:15
 msgid "Google Drive file download link"
@@ -597,7 +603,7 @@ msgstr ""
 #: controller/controller-resources.php:88 controller/controller-services.php:88
 #: controller/controller-solutions.php:88 inc/admin/admin-custom-columns.php:13
 msgid "Home Page"
-msgstr ""
+msgstr "Trang chủ"
 
 #: templates/home-side-right.php:29
 msgid "Hotline tư vấn"
@@ -605,7 +611,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:193
 msgid "HR"
-msgstr ""
+msgstr "HR (Nhân sự)"
 
 #. URI of the theme
 #. Author URI of the theme
@@ -614,7 +620,7 @@ msgstr ""
 
 #: inc/front/front-core.php:208
 msgid "I agree with Digiwin's privacy policy"
-msgstr ""
+msgstr "Tôi đồng ý với chính sách bảo mật của Digiwin"
 
 #: model/model-popup.php:55
 msgid "Image"
@@ -622,18 +628,18 @@ msgstr ""
 
 #: inc/front/front-menu.php:194
 msgid "Import and Export"
-msgstr ""
+msgstr "XNK (Xuất nhập khẩu)"
 
 #: controller/controller-industries.php:35
 #: controller/controller-industries.php:36
 #: controller/controller-industries.php:47 metabox/metabox-industries.php:15
 #: inc/front/front-menu.php:16
 msgid "Industries"
-msgstr ""
+msgstr "Ngành Nghề"
 
 #: page/member.php:144 inc/front/front-core.php:128
 msgid "Industry"
-msgstr ""
+msgstr "Ngành Nghề"
 
 #. Name of the template
 #: page/industry.php:2
@@ -642,7 +648,7 @@ msgstr ""
 
 #: templates/home-news.php:17
 msgid "Information Request"
-msgstr ""
+msgstr "Tài Liệu Tải Về"
 
 #: page/activate-member.php:38
 msgid "Invalid request"
@@ -650,15 +656,15 @@ msgstr ""
 
 #: page/reset-password.php:41
 msgid "Invalid request."
-msgstr ""
+msgstr "Yêu cầu không hợp lệ!"
 
 #: page/activate-member.php:32 page/reset-password.php:32
 msgid "Invalid verification code"
-msgstr ""
+msgstr "Mã xác thực không hợp lệ!"
 
 #: inc/front/front-menu.php:187
 msgid "Inventory"
-msgstr ""
+msgstr "Tồn kho"
 
 #: inc/front/front-menu.php:155
 msgid "IoT / Automation"
@@ -666,16 +672,16 @@ msgstr ""
 
 #: inc/front/front-menu.php:156 inc/front/front-menu.php:192
 msgid "IT"
-msgstr ""
+msgstr "IT (Công nghệ thông tin)"
 
 #: page/join.php:13
 msgid "join"
-msgstr ""
+msgstr "Tuyển Dụng"
 
 #: controller/controller-join-us.php:35 controller/controller-join-us.php:36
 #: controller/controller-join-us.php:47 inc/front/front-menu.php:78
 msgid "Join Digiwin"
-msgstr ""
+msgstr "Tuyển Dụng"
 
 #. Name of the template
 #: page/join.php:2
@@ -707,15 +713,15 @@ msgstr ""
 
 #: templates/home-news.php:5
 msgid "Latest Event"
-msgstr ""
+msgstr "Sự Kiện"
 
 #: templates/home-news.php:1
 msgid "Latest News"
-msgstr ""
+msgstr "Cập Nhật Mới Nhất"
 
 #: metabox/metabox-view.php:15 metabox/metabox-view.php:38
 msgid "Like"
-msgstr ""
+msgstr "Thích"
 
 #: metabox/metabox-link.php:15 model/model-logo.php:55 model/model-popup.php:56
 #: view/form-logo.php:34
@@ -724,20 +730,20 @@ msgstr ""
 
 #: page/about.php:31
 msgid "Location"
-msgstr ""
+msgstr "Trung Tâm Dịch Vụ"
 
 #: page/member.php:32 page/member.php:54 inc/shortcode/shortcode-member.php:47
 #: inc/shortcode/shortcode-member.php:67
 msgid "Login"
-msgstr ""
+msgstr "Đăng Nhập"
 
 #: templates/languages.php:72
 msgid "Login-Register"
-msgstr ""
+msgstr "Đăng nhập - Đăng ký"
 
 #: page/member.php:77
 msgid "Logout"
-msgstr ""
+msgstr "Đăng Xuất"
 
 #: templates/view-comment.php:24 templates/view-like.php:43
 msgid "Lượt thích"
@@ -749,7 +755,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:154
 msgid "Machinery Manufacturing"
-msgstr ""
+msgstr "Chế tạo máy"
 
 #: functions.php:100
 msgid "Main Menu"
@@ -761,11 +767,11 @@ msgstr ""
 
 #: inc/front/front-menu.php:115
 msgid "Manager"
-msgstr ""
+msgstr "Trưởng phòng"
 
 #: inc/front/front-menu.php:191
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #: page/member.php:25
 msgid "member login and register"
@@ -778,7 +784,10 @@ msgstr ""
 
 #: inc/front/front-menu.php:141
 msgid "Metal Processing"
-msgstr ""
+msgstr "Gia công kim loại"
+
+msgid "Minimum 6 characters"
+msgstr "Tối thiểu 6 ký tự"
 
 #: view/view-setting.php:20
 msgid "More loading"
@@ -822,7 +831,7 @@ msgstr ""
 
 #: page/member.php:88 page/reset-password.php:52
 msgid "New Password"
-msgstr ""
+msgstr "Mật Khẩu Mới"
 
 #: nav-below.php:3
 #, php-format
@@ -831,7 +840,7 @@ msgstr ""
 
 #: templates/home-news.php:8
 msgid "News Center"
-msgstr ""
+msgstr "Tin Tức"
 
 #. Name of the template
 #: page/news.php:2
@@ -843,8 +852,10 @@ msgid "Nhắn tin cho chúng tôi qua Zalo"
 msgstr ""
 
 #: comments.php:11
+#, fuzzy
+#| msgid "No comments yet"
 msgid "No Comments Yet"
-msgstr ""
+msgstr "Chưa Có Bình Luận"
 
 #: controller/controller-active.php:45
 #: controller/controller-case-studies.php:45
@@ -868,7 +879,7 @@ msgstr ""
 
 #: templates/footer.php:33
 msgid "Office In VietNam"
-msgstr ""
+msgstr "Văn Phòng Digiwin Việt Nam"
 
 #: view/form-pop-up.php:89
 msgid "Open a New Tab"
@@ -876,19 +887,19 @@ msgstr ""
 
 #: page/about.php:26
 msgid "Operating"
-msgstr ""
+msgstr "Kinh Doanh Vững Bền"
 
 #: inc/front/front-menu.php:160 inc/front/front-menu.php:195
 msgid "Other"
-msgstr ""
+msgstr "Khác"
 
 #: inc/front/front-menu.php:159
 msgid "Other Manufacturing"
-msgstr ""
+msgstr "Sản xuất khác"
 
 #: inc/front/front-menu.php:150
 msgid "Packaging"
-msgstr ""
+msgstr "Bao bì"
 
 #: taxonomy/tag-advertising.php:30 taxonomy/tag-advertising.php:31
 #: taxonomy/tag-casestudies.php:30 taxonomy/tag-casestudies.php:31
@@ -911,33 +922,33 @@ msgstr ""
 
 #: inc/front/front-menu.php:83
 msgid "Partners"
-msgstr ""
+msgstr "Đối Tác"
 
 #: page/member.php:47 inc/front/front-core.php:115
 #: inc/shortcode/shortcode-member.php:60
 msgid "Password"
-msgstr ""
+msgstr "Mật Khẩu"
 
 #: comments.php:105
 msgid "Perform Calculations"
-msgstr ""
+msgstr "Thực hiện phép tính"
 
 #: inc/front/front-menu.php:152
 msgid "Pharmaceuticals"
-msgstr ""
+msgstr "Dược phẩm"
 
 #: page/about.php:41 page/member.php:126 view/view-information.php:6
 #: inc/front/front-core.php:125
 msgid "Phone"
-msgstr ""
+msgstr "Điện Thoại"
 
 #: inc/front/front-menu.php:143
 msgid "Plastic Injection"
-msgstr ""
+msgstr "Ép nhựa"
 
 #: comments.php:116
 msgid "Please share your opinions"
-msgstr ""
+msgstr "Phát Biểu Ý Kiến Của Bạn"
 
 #: controller/controller-popup.php:66 controller/controller-popup.php:67
 #: view/form-pop-up.php:68
@@ -946,19 +957,19 @@ msgstr ""
 
 #: page/member.php:111 inc/front/front-core.php:123
 msgid "Position"
-msgstr ""
+msgstr "Chức Vụ"
 
 #: inc/front/front-menu.php:106
 msgid "President"
-msgstr ""
-
-#: inc/front/front-core.php:212
-msgid "Privacy Policy"
-msgstr ""
+msgstr "Chủ tịch"
 
 #: templates/footer.php:244
-msgid "Terms of Use"
-msgstr ""
+msgid "Privacy Policy"
+msgstr "Chính sách bảo mật"
+
+#: inc/front/front-core.php:212
+msgid "privacy policy"
+msgstr "Chính sách bảo mật"
 
 #: taxonomy/tag-casestudies.php:26 taxonomy/tag-casestudies.php:27
 #: taxonomy/tag-casestudies.php:36 taxonomy/tag-solution.php:26
@@ -968,19 +979,19 @@ msgstr ""
 
 #: templates/home-count.php:61 view/view-information.php:49
 msgid "Product Solutions"
-msgstr ""
+msgstr "Giải Pháp Chuyên Sâu"
 
 #: inc/front/front-menu.php:188
 msgid "Production"
-msgstr ""
+msgstr "Sản xuất"
 
 #: templates/footer.php:104
 msgid "Production Management (MES)"
-msgstr ""
+msgstr "Quản Lý Sản Xuất"
 
 #: templates/home-count.php:44 view/view-information.php:41
 msgid "Projects & Clients"
-msgstr ""
+msgstr "Khách Hàng & Dự Án"
 
 #: model/bk_model-member.php:144 model/model-download.php:226
 #: model/model-logo.php:154 model/model-popup.php:157
@@ -989,11 +1000,11 @@ msgstr ""
 
 #: inc/front/front-menu.php:186
 msgid "Purchasing"
-msgstr ""
+msgstr "Thu mua"
 
 #: inc/front/front-menu.php:189
 msgid "Quality Control"
-msgstr ""
+msgstr "Kiểm soát chất lượng (QC)"
 
 #: taxonomy/taxonomy-active.php:62 taxonomy/taxonomy-joinus.php:62
 #: taxonomy/taxonomy-resource.php:62 taxonomy/taxonomy-services.php:64
@@ -1007,18 +1018,18 @@ msgstr ""
 
 #: inc/front/front-menu.php:184
 msgid "R&D"
-msgstr ""
+msgstr "R&D (Nghiên cứu & Phát triển)"
 
 #: templates/home-news.php:45 templates/home-news.php:71
 #: templates/home-news.php:97 templates/home-news.php:123
 #: templates/home-news.php:151
 msgid "Read More"
-msgstr ""
+msgstr "Xem Thêm"
 
 #: page/member.php:33 inc/front/front-core.php:145
 #: inc/shortcode/shortcode-member.php:48
 msgid "Register"
-msgstr ""
+msgstr "Đăng Ký"
 
 #: view/view-member.php:14
 msgid "Registered List"
@@ -1026,15 +1037,15 @@ msgstr ""
 
 #: inc/code/code-custom-comment.php:22
 msgid "Reply"
-msgstr ""
+msgstr "Trả Lời"
 
 #: comments.php:140
 msgid "Reply to"
-msgstr ""
+msgstr "trả lời"
 
 #: page/reset-password.php:90
 msgid "Request a new code"
-msgstr ""
+msgstr "Yêu cầu mã mới"
 
 #. Name of the template
 #: page/reset-password.php:2
@@ -1043,7 +1054,7 @@ msgstr ""
 
 #: page/resource.php:13
 msgid "resource"
-msgstr ""
+msgstr "Tài Liệu"
 
 #: metabox/bk-metabox-resources.php:45 metabox/bk-metabox-resources.php:68
 #: metabox/bk-metabox-resources.php:91
@@ -1064,7 +1075,7 @@ msgstr ""
 #: controller/controller-resources.php:47 metabox/bk-metabox-resources.php:12
 #: inc/front/front-menu.php:64
 msgid "Resources"
-msgstr ""
+msgstr "Tài Liệu"
 
 #. Name of the template
 #: page/resource.php:2
@@ -1085,15 +1096,15 @@ msgstr ""
 
 #: inc/front/front-menu.php:144
 msgid "Rubber"
-msgstr ""
+msgstr "Cao su"
 
 #: inc/front/front-menu.php:185
 msgid "Sales"
-msgstr ""
+msgstr "Kinh doanh"
 
 #: templates/footer.php:191
 msgid "Scan to join Zalo OA & get the latest industry reports"
-msgstr ""
+msgstr "Quét mã tham gia Zalo OA nhận Báo Cáo Ngành mới nhất"
 
 #: controller/controller-active.php:43
 #: controller/controller-case-studies.php:43
@@ -1120,27 +1131,27 @@ msgstr ""
 
 #: inc/front/front-menu.php:113
 msgid "Secretary"
-msgstr ""
+msgstr "Thư ký"
 
 #: page/member.php:161 inc/front/front-core.php:109
 msgid "Select Department"
-msgstr ""
+msgstr "Chọn Phòng Ban"
 
 #: page/member.php:147 inc/front/front-core.php:104
 msgid "Select Industry"
-msgstr ""
+msgstr "Chọn Ngành Nghề"
 
 #: page/member.php:114 inc/front/front-core.php:99
 msgid "Select Position"
-msgstr ""
+msgstr "Chọn Chức Vụ"
 
 #: page/activate-member.php:124
 msgid "Server connection error"
-msgstr ""
+msgstr "Lỗi kết nối máy chủ"
 
 #: inc/front/front-menu.php:18
 msgid "Service"
-msgstr ""
+msgstr "Dịch Vụ"
 
 #: metabox/metabox-service.php:45 metabox/metabox-service.php:68
 #: metabox/metabox-service.php:91
@@ -1156,7 +1167,7 @@ msgstr ""
 #: controller/controller-services.php:47 metabox/metabox-service.php:12
 #: inc/front/front-menu.php:158
 msgid "Services"
-msgstr ""
+msgstr "Dịch vụ"
 
 #. Name of the template
 #: page/service.php:2
@@ -1165,7 +1176,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:149
 msgid "Shoes and Leather"
-msgstr ""
+msgstr "Giày, da"
 
 #: metabox/metabox-home.php:15 metabox/metabox-home.php:42
 msgid "Show In Home Page"
@@ -1234,7 +1245,7 @@ msgstr ""
 
 #: templates/footer.php:113
 msgid "Smart Warehouse (WMS)"
-msgstr ""
+msgstr "Kho Thông Minh"
 
 #: model/bk_model-member.php:51
 msgid "Softwear"
@@ -1261,11 +1272,11 @@ msgstr ""
 #: controller/controller-solutions.php:47 metabox/metabox-solution.php:12
 #: inc/front/front-menu.php:17 inc/front/front-menu.php:57
 msgid "Solutions"
-msgstr ""
+msgstr "Giải Pháp"
 
 #: templates/footer.php:88
 msgid "Solutions & Industries"
-msgstr ""
+msgstr "Giải Pháp & Chuyên Ngành"
 
 #. Name of the template
 #: page/solution.php:2
@@ -1278,11 +1289,11 @@ msgstr ""
 
 #: templates/home-industry.php:1
 msgid "Specialize in the industry"
-msgstr ""
+msgstr "Ngành Nghề Chuyên Môn"
 
 #: inc/front/front-menu.php:118
 msgid "Staff"
-msgstr ""
+msgstr "Nhân viên"
 
 #: model/model-popup.php:54
 msgid "Status"
@@ -1295,35 +1306,39 @@ msgstr ""
 
 #: comments.php:119
 msgid "Submit Comment"
-msgstr ""
+msgstr "Gởi Bình luận"
 
 #: page/reset-password.php:74 inc/shortcode/shortcode-member.php:25
 msgid "Submit Email"
-msgstr ""
+msgstr "Gởi Yêu Cầu"
 
 #: comments.php:215
 msgid "Submitting..."
-msgstr ""
+msgstr "Đang xử lý..."
 
 #: templates/footer.php:95
 msgid "System Administration (ERP)"
-msgstr ""
+msgstr "Quản Trị Hệ Thống (ERP)"
 
 #: page/member.php:137 inc/front/front-core.php:126
 msgid "Tax Number"
-msgstr ""
+msgstr "Mã Số Thuế"
 
 #: inc/front/front-menu.php:116
 msgid "Team Leader"
-msgstr ""
+msgstr "Tổ trưởng"
+
+#: templates/footer.php:244
+msgid "Terms of Use"
+msgstr "Điều Kiện Sử Dụng"
 
 #: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
-msgstr ""
+msgstr "Dệt may"
 
 #: comments.php:193
 msgid "The calculation problem is incorrect. Please enter the correct answer!"
-msgstr ""
+msgstr "Đáp án không chính xác. Vui lòng nhập đáp án đúng!"
 
 #: metabox/metabox-order.php:42
 msgid "The larger the number will show in front"
@@ -1331,11 +1346,11 @@ msgstr ""
 
 #: page/reset-password.php:30
 msgid "The link has expired. Please request a new code"
-msgstr ""
+msgstr "Liên kết đã hết hạn, Vui lòng yêu cầu mã mới"
 
 #: page/reset-password.php:38
 msgid "The user does not exist."
-msgstr ""
+msgstr "Người dùng không tồn tại!"
 
 #. Description of the theme
 msgid "Theme DGW tùy biến chuẩn i18n và tối ưu hiệu suất."
@@ -1343,7 +1358,7 @@ msgstr ""
 
 #: page/activate-member.php:65
 msgid "This account has already been activated"
-msgstr ""
+msgstr "Tài khoản này đã được kích hoạt trước đó"
 
 #: templates/home-side-right.php:21
 msgid "Thu gọn hoặc mở rộng thanh tiện ích"
@@ -1403,7 +1418,7 @@ msgstr ""
 
 #: inc/front/front-menu.php:108
 msgid "Vice President"
-msgstr ""
+msgstr "Phó Chủ tịch"
 
 #: metabox/bk-metabox-resources.php:28 metabox/bk-metabox-resources.php:58
 #: metabox/bk-metabox-resources.php:68 metabox/metabox-active.php:28
@@ -1468,29 +1483,32 @@ msgstr ""
 msgid "Website Settings"
 msgstr ""
 
+msgid "Welcome back! Please enter your credentials to login"
+msgstr "Chào mừng bạn quay lại! Vui lòng nhập thông tin để đăng nhập"
+
 #: inc/front/front-menu.php:151
 msgid "Wires and Fiber Optics"
-msgstr ""
+msgstr "Dây điện, cáp quang"
 
 #: inc/front/front-menu.php:146
 msgid "Wooden Furniture"
-msgstr ""
+msgstr "Nội thất gỗ"
 
 #: templates/home-count.php:25 view/view-information.php:33
 msgid "Years of experience"
-msgstr ""
+msgstr "Năm Kinh Nghiệm"
 
 #: comments.php:93
 msgid "Your E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #: comments.php:89
 msgid "Your Name"
-msgstr ""
+msgstr "Tên"
 
 #: templates/footer.php:183
 msgid "Zalo OA Community"
-msgstr ""
+msgstr "Digiwin Vietnam Zalo OA"
 
 #: templates/home-popup.php:78
 msgid "Đóng thông báo"

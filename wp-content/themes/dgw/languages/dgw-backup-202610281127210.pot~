@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-19 03:41+0000\n"
+"POT-Creation-Date: 2026-10-28 02:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -952,12 +952,12 @@ msgstr ""
 msgid "President"
 msgstr ""
 
-#: inc/front/front-core.php:212
-msgid "privacy policy"
+#: templates/footer.php:244
+msgid "Privacy Policy"
 msgstr ""
 
-#: templates/footer.php:244
-msgid "Terms of Use"
+#: inc/front/front-core.php:212
+msgid "privacy policy"
 msgstr ""
 
 #: taxonomy/tag-casestudies.php:26 taxonomy/tag-casestudies.php:27
@@ -1317,6 +1317,10 @@ msgstr ""
 msgid "Team Leader"
 msgstr ""
 
+#: templates/footer.php:244
+msgid "Terms of Use"
+msgstr ""
+
 #: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
 msgstr ""
@@ -1494,4 +1498,19 @@ msgstr ""
 
 #: templates/home-popup.php:78
 msgid "Đóng thông báo"
+msgstr ""
+
+msgid "Welcome back! Please enter your credentials to login"
+msgstr ""
+
+msgid "Create your Digiwin member account to access resources"
+msgstr ""
+
+msgid "Enter your new password below to update your account"
+msgstr ""
+
+msgid "Minimum 6 characters"
+msgstr ""
+
+msgid "New message"
 msgstr ""

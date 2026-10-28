@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-06 02:50+0000\n"
-"PO-Revision-Date: 2026-10-19 03:44+0000\n"
+"PO-Revision-Date: 2026-10-28 04:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: Vietnamese (Viet Nam)\n"
 "Language: vi_VN\n"
@@ -375,6 +375,9 @@ msgstr ""
 msgid "Create Date"
 msgstr ""
 
+msgid "Create your Digiwin member account to access resources"
+msgstr "Tạo tài khoản thành viên Digiwin để truy cập tài nguyên"
+
 #: page/member.php:83
 msgid "Current Password"
 msgstr "Mật Khẩu Hiện Tại"
@@ -532,6 +535,11 @@ msgstr ""
 msgid "Enter your email address to reset your password"
 msgstr "Nhập email của bạn để thiết lập lại mật khẩu"
 
+#, fuzzy
+#| msgid "Enter your new password below to update your account   "
+msgid "Enter your new password below to update your account"
+msgstr "Nhập mật khẩu mới bên dưới để cập nhật tài khoản của bạn"
+
 #: templates/home-cases.php:49
 msgid "Enterprise model success case"
 msgstr "Mô Hình Doanh Nghiệp Thành Công"
@@ -559,6 +567,9 @@ msgstr "Tài chính Kế toán"
 #: view/view-setting.php:8
 msgid "First load"
 msgstr ""
+
+msgid "For security reasons, your new password must be at least 6 characters"
+msgstr "Vì lý do bảo mật, mật khẩu mới của bạn phải có ít nhất 6 ký tự"
 
 #: page/member.php:57 inc/shortcode/shortcode-member.php:13
 #: inc/shortcode/shortcode-member.php:70
@@ -778,6 +789,9 @@ msgstr ""
 msgid "Metal Processing"
 msgstr "Gia công kim loại"
 
+msgid "Minimum 6 characters"
+msgstr "Tối thiểu 6 ký tự"
+
 #: view/view-setting.php:20
 msgid "More loading"
 msgstr ""
@@ -816,6 +830,9 @@ msgstr ""
 #: inc/admin/admin-add-post-taxonomy-field.php:50
 #: inc/admin/admin-add-post-taxonomy-field.php:105
 msgid "Name"
+msgstr ""
+
+msgid "New message"
 msgstr ""
 
 #: page/member.php:88 page/reset-password.php:52
@@ -1319,7 +1336,7 @@ msgstr "Tổ trưởng"
 
 #: templates/footer.php:244
 msgid "Terms of Use"
-msgstr ""
+msgstr "Điều Kiện Sử Dụng"
 
 #: inc/front/front-menu.php:148
 msgid "Textiles and Garments"
@@ -1401,6 +1418,9 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
+msgid "Update your company profile and contact details"
+msgstr ""
+
 #: metabox/metabox-downloads.php:27
 msgid "Upload File"
 msgstr ""
@@ -1471,6 +1491,9 @@ msgstr ""
 #: controller/controller-setting.php:17 controller/controller-setting.php:18
 msgid "Website Settings"
 msgstr ""
+
+msgid "Welcome back! Please enter your credentials to login"
+msgstr "Chào mừng bạn quay lại! Vui lòng nhập thông tin để đăng nhập"
 
 #: inc/front/front-menu.php:151
 msgid "Wires and Fiber Optics"

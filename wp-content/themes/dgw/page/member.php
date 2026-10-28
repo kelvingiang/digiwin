@@ -58,7 +58,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 </div>
                 <h2 class="member-card-header__title"><?php echo __('Login', 'dgw'); ?></h2>
                 <p class="member-card-header__subtitle">
-                    <?php echo __('Welcome back! Please enter your credentials to login.', 'dgw'); ?>
+                    <?php echo __('Welcome back! Please enter your credentials to login', 'dgw'); ?>
                 </p>
             </div>
 
@@ -134,7 +134,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 </div>
                 <h2 class="member-card-header__title"><?php echo __('Register', 'dgw'); ?></h2>
                 <p class="member-card-header__subtitle">
-                    <?php echo __('Create your Digiwin member account to access resources.', 'dgw'); ?>
+                    <?php echo __('Create your Digiwin member account to access resources', 'dgw'); ?>
                 </p>
             </div>
 
@@ -146,10 +146,11 @@ $user_department = $data ? ($data->department ?? '') : '';
     <!-- =========================================================================
          2. TRẠNG THÁI ĐÃ ĐĂNG NHẬP (PROFILE & ACCOUNT MANAGEMENT CARD)
          ========================================================================= -->
-    <div id="ui-logged-in" class="member-card member-profile-card logged-in" style="display:none;">
+    <div id="ui-logged-in" class="member-card member-profile-card logged-in" 
+    style="display:none">
 
         <!-- [27/10/2026] Thanh thông tin tài khoản & Nút Đăng xuất -->
-        <div class="member-profile-header">
+        <div class="member-profile-header" style="padding: 1rem;">
             <div class="member-profile-header__user">
                 <div class="member-profile-header__avatar" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -174,7 +175,7 @@ $user_department = $data ? ($data->department ?? '') : '';
         </div>
 
         <!-- SECTION 1: ĐỔI MẬT KHẨU (SECURITY) -->
-        <div class="member-section">
+        <div class="member-section" style="padding: 1rem;">
             <h4 class="member-section__title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -183,7 +184,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 <span><?php echo __('Change Password', 'dgw'); ?></span>
             </h4>
             <p class="member-section__desc">
-                <?php echo __('For security reasons, your new password must be at least 6 characters.', 'dgw'); ?>
+                <?php echo __('For security reasons, your new password must be at least 6 characters', 'dgw'); ?>
             </p>
 
             <div class="three-columns">
@@ -248,7 +249,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 </div>
             </div>
 
-            <div class="btn-space" style="text-align: left; margin-top: 6px;">
+            <div class="btn-space" style="text-align: center; margin-top: 6px;">
                 <button id="btn-change-password" class="btn-my-style member-btn-primary" type="button">
                     <span class="member-spinner"></span>
                     <span class="btn-text"><?php echo __('Change Password', 'dgw'); ?></span>
@@ -260,7 +261,7 @@ $user_department = $data ? ($data->department ?? '') : '';
         <div class="member-divider"></div>
 
         <!-- SECTION 2: THÔNG TIN DOANH NGHIỆP & CÁ NHÂN -->
-        <div class="member-section">
+        <div class="member-section" style="padding: 1rem;">
             <h4 class="member-section__title">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -269,7 +270,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 <span><?php echo __('Change Information', 'dgw'); ?></span>
             </h4>
             <p class="member-section__desc">
-                <?php echo __('Update your company profile and contact details.', 'dgw'); ?>
+                <?php echo __('Update your company profile and contact details', 'dgw'); ?>
             </p>
 
             <div class="three-columns">
@@ -336,7 +337,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 </div>
             </div>
 
-            <div class="btn-space" style="text-align: left; margin-top: 6px;">
+            <div class="btn-space" style="text-align: center; margin-top: 6px;">
                 <button id="btn-change-info" class="btn-my-style member-btn-primary" type="button">
                     <span class="member-spinner"></span>
                     <span class="btn-text"><?php echo __('Change Information', 'dgw'); ?></span>
@@ -383,6 +384,8 @@ jQuery(document).ready(function($) {
         } else {
             $('#ui-login-form').removeClass('is-register');
         }
+        // [28/10/2026] Reset thông báo đăng nhập/đăng ký khi chuyển qua lại giữa các tab
+        $('#login-msg, #register-msg').removeClass('show msg--success msg--error').text('').removeAttr('style');
     });
 
     // Helper hiển thị message

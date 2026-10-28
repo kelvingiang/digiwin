@@ -59,7 +59,7 @@ if ($email && $token) {
                         </div>
                         <h1 class="reset-password-card__title"><?php echo __('Change Password', 'dgw'); ?></h1>
                         <p class="reset-password-card__subtitle">
-                            <?php echo __('Enter your new password below to update your account.', 'dgw'); ?>
+                            <?php echo __('Enter your new password below to update your account', 'dgw'); ?>
                         </p>
                     </div>
 

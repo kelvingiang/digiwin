@@ -499,18 +499,26 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
         text-align: center;
         display: none;
 
+        // [28/10/2026] Tự động hiển thị khi có class .show hoặc khi thẻ có nội dung (:not(:empty))
+        &:not(:empty),
         &.show {
             display: block;
             animation: dwf-slide-up 0.25s ease;
         }
 
-        &.msg--success {
+        // [28/10/2026] Định dạng thông báo thành công (hỗ trợ cả class và style inline color green)
+        &.msg--success,
+        &[style*="color: green"],
+        &[style*="color: rgb(0, 128, 0)"] {
             background-color: #ecfdf5 !important;
             color: #065f46 !important;
             border: 1px solid #a7f3d0;
         }
 
-        &.msg--error {
+        // [28/10/2026] Định dạng thông báo thất bại/cảnh báo (hỗ trợ cả class và style inline color red)
+        &.msg--error,
+        &[style*="color: red"],
+        &[style*="color: rgb(255, 0, 0)"] {
             background-color: #fef2f2 !important;
             color: #991b1b !important;
             border: 1px solid #fecaca;
@@ -1283,6 +1291,154 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
             color: #0451c4;
             text-decoration: none;
            
+        }
+    }
+}
+
+/* ==========================================================================
+   [28/10/2026] DIALOG POPUP THÔNG BÁO AUTHENTICATION (ALERT MODAL DGW)
+   - Thiết kế dạng Modal Dialog nổi bật ngay giữa màn hình với backdrop mờ
+   - Phân biệt trực quan trạng thái Thành công (Icon xanh) và Thất bại/Cảnh báo (Icon đỏ)
+   - Tối ưu UX/UI với hiệu ứng xuất hiện mềm mại, hỗ trợ phím Escape và đếm ngược tự đóng
+   ========================================================================== */
+.dgw-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+
+        .dgw-alert-card {
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .dgw-alert-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 440px;
+        padding: 36px 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transform: scale(0.92) translateY(12px);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+
+        .dgw-alert-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+            }
+        }
+
+        .dgw-alert-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 36px;
+                height: 36px;
+            }
+
+            &--success {
+                background-color: #ecfdf5;
+                color: #10b981;
+                border: 2px solid #a7f3d0;
+            }
+
+            &--error {
+                background-color: #fef2f2;
+                color: #ef4444;
+                border: 2px solid #fecaca;
+            }
+        }
+
+        .dgw-alert-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+        }
+
+        .dgw-alert-message {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.5;
+            margin: 0 0 26px 0;
+            word-break: break-word;
+        }
+
+        .dgw-alert-btn {
+            display: block;
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+            &--success {
+                background-color: #10b981;
+                color: #ffffff;
+
+                &:hover {
+                    background-color: #059669;
+                    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+                }
+            }
+
+            &--error {
+                background-color: #1d5ab6;
+                color: #ffffff;
+
+                &:hover {
+                    background-color: #14448e;
+                    box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+                }
+            }
         }
     }
 }
