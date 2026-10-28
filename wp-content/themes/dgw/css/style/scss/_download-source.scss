@@ -61,15 +61,468 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     }
 }
 
-/* ===== LAYOUT CHUNG ===== */
+/* ===== LAYOUT CHUNG & MEMBER CARD ===== */
+// [27/10/2026] Redesign trang member.php đồng bộ phong cách với reset-password.php:
+// - Căn cách top 100px, căn giữa cân đối, card trắng hiện đại bo góc 16px, shadow mềm.
+// - Hỗ trợ Eye Toggle mật khẩu, Segmented Tabs, nút bấm chuẩn UX với loading spinner.
 .member-space {
-    padding: 100px 20%;
+    padding: 100px 15px 100px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 70vh;
+    box-sizing: border-box;
 
-    @include Respond(md) {
-        padding: 100px 10%;
-    }
     @include Respond(sm) {
-        padding: 100px 2%;
+        padding: 40px 15px 60px 15px;
+    }
+
+    .member-card {
+        width: 100%;
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+        transition: box-shadow 0.25s ease;
+
+        &.member-auth-card {
+            max-width: 520px;
+            padding: 36px 32px;
+            transition: max-width 0.25s ease;
+
+            &.is-register {
+                max-width: 720px;
+            }
+
+            @include Respond(sm) {
+                max-width: 100% !important;
+                padding: 24px 18px;
+            }
+        }
+
+        &.member-profile-card {
+            max-width: 860px;
+            padding: 40px 36px;
+
+            @include Respond(sm) {
+                padding: 24px 18px;
+            }
+        }
+    }
+
+    .member-tabs {
+        display: flex;
+        background: #f1f5f9;
+        border-radius: 10px;
+        padding: 4px;
+        gap: 4px;
+        margin-bottom: 28px;
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                color: #0f172a;
+            }
+
+            &.active {
+                background: #ffffff;
+                color: #1d5ab6;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            }
+        }
+    }
+
+    .member-card-header {
+        text-align: center;
+        margin-bottom: 24px;
+
+        &__icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            background: #eef4ff;
+            color: #1d5ab6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        &__title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+            line-height: 1.3;
+        }
+
+        &__subtitle {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin: 0;
+        }
+    }
+
+    .tab-login,
+    .tab-register,
+    .logged-in {
+        background: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .member-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+
+        input {
+            margin-bottom: 0 !important;
+            padding-right: 42px !important;
+        }
+
+        .member-toggle-pw {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: #1d5ab6;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+        }
+    }
+
+    .row-cell {
+        margin-bottom: 16px;
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 6px;
+            margin-left: 2px;
+
+            .required {
+                color: #e11d48;
+                margin-left: 2px;
+            }
+        }
+
+        input,
+        select {
+            height: 44px;
+            padding: 10px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #0f172a;
+            background-color: #f8fafc;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+
+            &:focus {
+                background-color: #ffffff;
+                border-color: #1d5ab6;
+                box-shadow: 0 0 0 3px rgba(29, 90, 182, 0.15);
+            }
+        }
+    }
+
+    .member-auth-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 20px;
+
+        #btn-register,
+        #btn-login {
+            width: 100%;
+            height: 46px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1d5ab6;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(29, 90, 182, 0.25);
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover:not(:disabled) {
+                background: #14448e;
+                box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+                transform: translateY(-1px);
+            }
+
+            &:disabled {
+                background: #94a3b8;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
+            }
+        }
+
+        .member-forgot-link {
+            text-align: right;
+            margin-top: -6px;
+            margin-bottom: 4px;
+
+            #btn-forget-password {
+                background: none;
+                border: none;
+                padding: 0;
+                font-size: 13px;
+                font-weight: 500;
+                color: #1d5ab6;
+                cursor: pointer;
+                text-decoration: none;
+                width: auto;
+                transition: color 0.15s ease;
+
+                &:hover {
+                    color: #14448e;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+
+    .member-profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        margin-bottom: 28px;
+        border-bottom: 1px solid #e2e8f0;
+
+        @include Respond(sm) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        &__user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        &__avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #eef4ff;
+            color: #1d5ab6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+
+        &__info {
+            .email {
+                font-size: 16px;
+                font-weight: 700;
+                color: #0f172a;
+                margin: 0 0 4px 0;
+            }
+            .badge {
+                display: inline-block;
+                padding: 2px 10px;
+                border-radius: 12px;
+                font-size: 12px;
+                font-weight: 600;
+                background: #ecfdf5;
+                color: #065f46;
+                border: 1px solid #a7f3d0;
+            }
+        }
+
+        .btn-logout {
+            padding: 9px 20px;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #dc2626;
+            border: 1.5px solid #fecaca;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+
+            svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            &:hover {
+                background: #fef2f2;
+                border-color: #dc2626;
+            }
+        }
+    }
+
+    .member-section {
+        margin-bottom: 30px;
+
+        &__title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 6px 0;
+
+            svg {
+                width: 20px;
+                height: 20px;
+                color: #1d5ab6;
+            }
+        }
+
+        &__desc {
+            font-size: 13px;
+            color: #64748b;
+            margin: 0 0 18px 0;
+        }
+
+        .member-btn-primary {
+            height: 44px;
+            padding: 0 28px;
+            background: #1d5ab6;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(29, 90, 182, 0.2);
+            transition: all 0.2s ease;
+
+            @include Respond(sm) {
+                width: 100%;
+            }
+
+            &:hover:not(:disabled) {
+                background: #14448e;
+                transform: translateY(-1px);
+                box-shadow: 0 6px 16px rgba(29, 90, 182, 0.3);
+            }
+
+            &:disabled {
+                background: #94a3b8;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    }
+
+    .member-divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 32px 0;
+    }
+
+    .member-spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spinDgw 0.8s linear infinite;
+    }
+
+    .is-loading .member-spinner {
+        display: inline-block;
+    }
+
+    .msg {
+        margin-top: 14px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+        text-align: center;
+        display: none;
+
+        // [28/10/2026] Tự động hiển thị khi có class .show hoặc khi thẻ có nội dung (:not(:empty))
+        &:not(:empty),
+        &.show {
+            display: block;
+            animation: dwf-slide-up 0.25s ease;
+        }
+
+        // [28/10/2026] Định dạng thông báo thành công (hỗ trợ cả class và style inline color green)
+        &.msg--success,
+        &[style*="color: green"],
+        &[style*="color: rgb(0, 128, 0)"] {
+            background-color: #ecfdf5 !important;
+            color: #065f46 !important;
+            border: 1px solid #a7f3d0;
+        }
+
+        // [28/10/2026] Định dạng thông báo thất bại/cảnh báo (hỗ trợ cả class và style inline color red)
+        &.msg--error,
+        &[style*="color: red"],
+        &[style*="color: rgb(255, 0, 0)"] {
+            background-color: #fef2f2 !important;
+            color: #991b1b !important;
+            border: 1px solid #fecaca;
+        }
     }
 }
 
@@ -430,28 +883,249 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
     }
 }
 
-//============= GIAO DIỆN THÀNH VIÊN ĐANG HOẠT ĐỘNG ============================
-// _active-member.scss
-
-// Tối ưu theo cấu trúc module, dễ bảo trì
+//============= GIAO DIỆN THÀNH VIÊN ĐANG HOẠT ĐỘNG & ĐẶT LẠI MẬT KHẨU ============================
+// [27/10/2026] Redesign giao diện reset-password.php và activate-member.php:
+// - Căn chỉnh .dgw-activate-main cách top 100px theo yêu cầu (bỏ align-items: center dọc).
+// - Chuẩn hóa giao diện form đặt lại mật khẩu dạng card hiện đại, responsive, trực quan.
 .dgw-activate {
     display: grid;
     grid-template-columns: 3fr 1fr;
-    gap: 20px;
-    padding: 60px 0;
+    gap: 30px;
+    padding: 0 0 60px 0;
     align-items: start;
 
-    &-main {
-        height: 100%;
-        // Kỹ thuật căn giữa tuyệt đối nội dung bên trong
-        display: flex;
-        align-items: center; // Căn giữa theo chiều dọc
-        justify-content: center; // Căn giữa theo chiều ngang
-        text-align: center;
-        width: 100%;
+    @include Respond(md) {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
+
+    &-main {
+        /* [27/10/2026] Căn chỉnh cách top 100px theo yêu cầu, không căn giữa theo chiều dọc */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-top: 100px;
+        width: 100%;
+        box-sizing: border-box;
+
+        @include Respond(sm) {
+            padding-top: 40px;
+        }
+    }
+
+    // Card đặt lại mật khẩu hiện đại (tương thích cả class cũ reset-password-form và class mới)
+    .reset-password-card,
     .reset-password-form {
-        width: 70%;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        padding: 40px 36px;
+        text-align: left;
+        box-sizing: border-box;
+
+        @include Respond(sm) {
+            padding: 30px 20px;
+        }
+
+        &__header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        &__icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            background: #eef4ff;
+            color: #1d5ab6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        &__title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        &__subtitle {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        &__field {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        &__label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+
+            .required {
+                color: #e11d48;
+                margin-left: 2px;
+            }
+        }
+
+        &__input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        &__input {
+            width: 100%;
+            height: 46px;
+            padding: 10px 42px 10px 14px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #0f172a;
+            outline: none;
+            background-color: #f8fafc;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+
+            &::placeholder {
+                color: #94a3b8;
+            }
+
+            &:focus {
+                background-color: #ffffff;
+                border-color: #1d5ab6;
+                box-shadow: 0 0 0 3px rgba(29, 90, 182, 0.15);
+            }
+        }
+
+        &__toggle-pw {
+            position: absolute;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: #1d5ab6;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+            }
+        }
+
+        &__hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
+            display: block;
+        }
+
+        &__submit {
+            width: 100%;
+            height: 48px;
+            background: #1d5ab6;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(29, 90, 182, 0.25);
+            margin-top: 24px;
+
+            &:hover:not(:disabled) {
+                background: #14448e;
+                box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+                transform: translateY(-1px);
+            }
+
+            &:active:not(:disabled) {
+                transform: translateY(0);
+            }
+
+            &:disabled {
+                background: #94a3b8;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
+            }
+        }
+
+        &__spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spinDgw 0.8s linear infinite;
+        }
+
+        &.is-loading &__spinner {
+            display: inline-block;
+        }
+
+        &__msg {
+            margin-top: 18px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            line-height: 1.4;
+            display: none;
+
+            &.show {
+                display: block;
+                animation: dwf-slide-up 0.25s ease;
+            }
+
+            &--success {
+                background-color: #ecfdf5;
+                color: #065f46;
+                border: 1px solid #a7f3d0;
+            }
+
+            &--error {
+                background-color: #fef2f2;
+                color: #991b1b;
+                border: 1px solid #fecaca;
+            }
+        }
     }
 
     &-sidebar {
@@ -499,20 +1173,70 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
 }
 
 .dgw-error-box {
-    padding: 20px;
-    background-color: #fff5f5;
-    border: 1px solid #feb2b2;
-    border-radius: 8px;
+    /* [27/10/2026] Cập nhật styling thông báo lỗi khi token không hợp lệ hoặc hết hạn */
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 36px 30px;
+    background-color: #ffffff;
+    border: 1px solid #fecaca;
+    border-radius: 14px;
     text-align: center;
-    width: 90%;
-    height: 100%;
-    margin-top: 2rem;
-    padding-top: 10%;
+    box-shadow: 0 10px 25px -5px rgba(220, 38, 38, 0.08);
+    box-sizing: border-box;
+
+    &__icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 16px;
+        background: #fef2f2;
+        color: #dc2626;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            width: 28px;
+            height: 28px;
+        }
+    }
+
     h3 {
-        color: #c53030;
-        margin-bottom: 10px;
+        color: #991b1b;
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 0 10px 0;
+    }
+
+    p {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0 0 24px 0;
+    }
+
+    .btn-my-style,
+    .btn-retry {
+        display: inline-block;
+        width: auto;
+        padding: 12px 28px;
+        background-color: #1d5ab6;
+        color: #ffffff;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+
+        &:hover {
+            background-color: #14448e;
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
     }
 }
+
 
 /* Hiệu ứng vòng xoay  cho button download*/
 .my-download-spinner {
@@ -567,6 +1291,154 @@ $btn-gray-hover: #727374; // Màu xám đậm hơn một chút khi hover
             color: #0451c4;
             text-decoration: none;
            
+        }
+    }
+}
+
+/* ==========================================================================
+   [28/10/2026] DIALOG POPUP THÔNG BÁO AUTHENTICATION (ALERT MODAL DGW)
+   - Thiết kế dạng Modal Dialog nổi bật ngay giữa màn hình với backdrop mờ
+   - Phân biệt trực quan trạng thái Thành công (Icon xanh) và Thất bại/Cảnh báo (Icon đỏ)
+   - Tối ưu UX/UI với hiệu ứng xuất hiện mềm mại, hỗ trợ phím Escape và đếm ngược tự đóng
+   ========================================================================== */
+.dgw-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 9999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+
+    &.show {
+        opacity: 1;
+        visibility: visible;
+
+        .dgw-alert-card {
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    .dgw-alert-card {
+        background: #ffffff;
+        width: 100%;
+        max-width: 440px;
+        padding: 36px 30px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+        position: relative;
+        transform: scale(0.92) translateY(12px);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-sizing: border-box;
+
+        .dgw-alert-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            cursor: pointer;
+            font-size: 22px;
+            line-height: 1;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background: #e2e8f0;
+                color: #0f172a;
+            }
+        }
+
+        .dgw-alert-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            svg {
+                width: 36px;
+                height: 36px;
+            }
+
+            &--success {
+                background-color: #ecfdf5;
+                color: #10b981;
+                border: 2px solid #a7f3d0;
+            }
+
+            &--error {
+                background-color: #fef2f2;
+                color: #ef4444;
+                border: 2px solid #fecaca;
+            }
+        }
+
+        .dgw-alert-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+        }
+
+        .dgw-alert-message {
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.5;
+            margin: 0 0 26px 0;
+            word-break: break-word;
+        }
+
+        .dgw-alert-btn {
+            display: block;
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+            &--success {
+                background-color: #10b981;
+                color: #ffffff;
+
+                &:hover {
+                    background-color: #059669;
+                    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+                }
+            }
+
+            &--error {
+                background-color: #1d5ab6;
+                color: #ffffff;
+
+                &:hover {
+                    background-color: #14448e;
+                    box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
+                }
+            }
         }
     }
 }

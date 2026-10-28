@@ -1,10 +1,22 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-// Khởi tạo session đúng cách thông qua hook init
+// [22/10/2026] - Kích hoạt output buffering sớm để ngăn ký tự thừa/BOM làm flush headers trước hook init
+if (!ob_get_level()) {
+    ob_start();
+}
+
+// [22/10/2026] - Khởi tạo session an toàn, kiểm tra headers_sent() để tránh cảnh báo headers already sent trên hosting
 add_action('init', function() {
     if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+        if (!headers_sent($file, $line)) {
+            session_start();
+        } else {
+            // Ghi log để định vị chính xác file/dòng gây flush headers nếu đang bật WP_DEBUG
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log(sprintf('[Theme Session] Headers already sent in %s on line %d. Session start skipped.', $file, $line));
+            }
+        }
     }
 }, 1); // Độ ưu tiên là 1 để chạy sớm nhất có thể
 

@@ -58,10 +58,10 @@ class Model_Download extends WP_List_Table
         $arr = array(
             'cb' => '<input type="checkbox" />',
             'member_email' => __('E-mail', 'dgw'),
-            'member_name' => __('Full Name','dgw'),
+            'member_name' => __('Full Name', 'dgw'),
             'member_company' => __('Company Name', 'dgw'),
-            'member_phone' => __('Contact Number','dgw'),
-            'member_download_count' => __('Download Count','dgw'),
+            'member_phone' => __('Contact Number', 'dgw'),
+            'member_download_count' => __('Download Count', 'dgw'),
             'create_date' => __('Create Date', 'dgw'),
         );
         return $arr;
@@ -85,7 +85,7 @@ class Model_Download extends WP_List_Table
     private function table_data()
     {
         global $wpdb;
- 
+
         // [13/07/2026] Fix: Thay thế cách lấy biến $_GET trực tiếp bằng hàm getParams() để an toàn hơn
         // và tránh lỗi "Undefined array key" trên PHP 8+.
         $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
@@ -146,9 +146,9 @@ class Model_Download extends WP_List_Table
 
         // This is almost the same as table_data(), but without pagination.
 
-            $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
+        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
         $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
-        
+
         // $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
         // $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
 
@@ -274,10 +274,13 @@ class Model_Download extends WP_List_Table
         $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['email'] . '</a> </strong>' . $this->row_actions($actions);
         return $html;
     }
-    
+
     public function column_member_name($item)
     {
-        echo $item['username'];
+        $username = isset($item['username']) ? esc_html($item['username']) : '';
+        $status   = isset($item['status']) && (int) $item['status'] === 1 ? ' * ' : ' ';
+
+        return $username . ' ' . $status;
     }
 
     public function column_member_company($item)
