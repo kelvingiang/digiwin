@@ -98,6 +98,9 @@ class Solution_Model {
                     'excerpt'    => wp_strip_all_tags( get_the_excerpt() ),
                     'content'    => apply_filters( 'the_content', get_the_content() ),
                     'thumbnail'  => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
+                    // 28/10/2026: Tr廕?v廙?th廙?t廙?s廕皰 x廕穆 _metabox_order cho Frontend
+                    'order'          => (int) get_post_meta( $post_id, '_metabox_order', true ),
+                    '_metabox_order' => (int) get_post_meta( $post_id, '_metabox_order', true ),
                     'language'   => $lang,
                     'permalink'  => get_permalink( $post_id ),
                     'date'       => get_the_date( 'c', $post_id ),
