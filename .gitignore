@@ -56,6 +56,11 @@ vendor/
 node_modules/
 _database/
 
+
+# Loại trừ Composer vendor, dependencies và credentials
+wp-content/themes/dgw/vendor/
+wp-content/themes/dgw/class/*.json
+*.bk
 # --- 7. 開發工具與系統快取 ---
 
 et-cache/
