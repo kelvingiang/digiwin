@@ -96,6 +96,20 @@ add_action('init', function () {
     unregister_post_type('project');
 }, 1000);
 
+/**
+ * [2026-10-30] - @author: Senior Full-Stack Developer
+ * Ép kích hoạt hỗ trợ Divi Builder & Frontend Visual Builder cho toàn bộ Custom Post Types của DGW
+ */
+add_filter('et_builder_post_types', function (array $post_types): array {
+    $custom_types = ['solutions', 'casestudies', 'services', 'resources', 'active', 'industries', 'joinus'];
+    return array_unique(array_merge($post_types, $custom_types));
+});
+
+add_filter('et_fb_post_types', function (array $post_types): array {
+    $custom_types = ['solutions', 'casestudies', 'services', 'resources', 'active', 'industries', 'joinus'];
+    return array_unique(array_merge($post_types, $custom_types));
+});
+
 /* =======================================  
   FUNCTION OF THIS TEMPLATE
   ======================================= */
@@ -282,7 +296,3 @@ add_action('init', function (): void {
         }
     }
 });
-
-
-
-

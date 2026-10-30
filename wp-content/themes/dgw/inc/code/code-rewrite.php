@@ -24,9 +24,9 @@ if (!defined('ABSPATH')) {
 final class Rewrite_Url
 {
     /**
-     * [2026-10-13] - Tăng version để tự động flush rewrite rules duy nhất 1 lần khi cập nhật
+     * [2026-10-30] - Tăng version để tự động flush rewrite rules duy nhất 1 lần trên môi trường Apache
      */
-    private const REWRITE_VERSION = '1.0.5';
+    private const REWRITE_VERSION = '1.0.6';
 
     /**
      * [2026-10-13] - Bảng cấu hình ánh xạ URL chuẩn cho tất cả module:
@@ -129,11 +129,22 @@ final class Rewrite_Url
     }
 
     /**
-     * [2026-10-13] - Tự động định dạng lại permalink khi gọi get_permalink() hoặc the_permalink()
+     * [2026-10-30] - @author: Senior Full-Stack Developer - Tự động định dạng lại permalink khi gọi get_permalink() hoặc the_permalink()
      * Đưa link bài viết về dạng: /{url_base}/cate/{term_slug}/{post_slug}/
+     * Fix lỗi Divi Builder: Không can thiệp nếu bài viết chưa có slug (draft/auto-draft) hoặc chưa publish để Divi load đúng ID bài viết
      */
     public function filter_dynamic_post_type_link(string $post_link, WP_Post $post): string
     {
+        // 1. Nếu post_name rỗng (bài viết mới tạo, auto-draft hoặc draft chưa có slug) -> giữ nguyên permalink gốc của WP
+        if (empty($post->post_name)) {
+            return $post_link;
+        }
+
+        // 2. Nếu bài viết chưa xuất bản (draft, pending, auto-draft) -> giữ link preview mặc định (?p=ID&post_type=...) cho Divi Builder
+        if (!in_array($post->post_status, ['publish', 'private'], true)) {
+            return $post_link;
+        }
+
         $matched_config = null;
         $matched_base   = null;
 
@@ -157,11 +168,16 @@ final class Rewrite_Url
     }
 
     /**
-     * [2026-10-13] - Technical SEO: 301 Redirect tự động từ URL cũ không có phân cấp sang URL phân cấp mới
-     * Ví dụ: /casestudies/sample-post/ -> /cases/cate/circulation/sample-post/
+     * [2026-10-30] - @author: Senior Full-Stack Developer - Technical SEO: 301 Redirect tự động từ URL cũ không có phân cấp sang URL phân cấp mới
+     * Bỏ qua chuyển hướng nếu đang mở Divi Builder (et_fb, et_bfb) hoặc preview để tránh mất tham số và lỗi iframe builder
      */
     public function redirect_legacy_module_urls(): void
     {
+        // Bỏ qua chuyển hướng nếu là request của Divi Builder hoặc Preview
+        if (isset($_GET['et_fb']) || isset($_GET['et_bfb']) || is_preview()) {
+            return;
+        }
+
         $current_post_type = get_post_type();
         if (!$current_post_type || !is_singular($current_post_type)) {
             return;
@@ -177,6 +193,11 @@ final class Rewrite_Url
                     $canonical_url = get_permalink($post_id);
 
                     if (!empty($canonical_url) && untrailingslashit($canonical_url) !== untrailingslashit(home_url($request_uri))) {
+                        // Bảo lưu toàn bộ query string (nếu có) khi thực hiện 301 redirect
+                        $query_string = $_SERVER['QUERY_STRING'] ?? '';
+                        if (!empty($query_string)) {
+                            $canonical_url .= '?' . $query_string;
+                        }
                         wp_safe_redirect($canonical_url, 301);
                         exit;
                     }
