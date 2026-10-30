@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-// [2026-10-05] - @author: Kelvin - Quản lý CPT Active và chuẩn hóa Admin Columns theo chuẩn WordPress OOP & Security
+// [2026-10-05] - @author: Gia Minh - Quản lý CPT Active và chuẩn hóa Admin Columns theo chuẩn WordPress OOP & Security
 
 if (!defined('ABSPATH')) {
     exit;
@@ -10,12 +11,15 @@ if (!defined('ABSPATH')) {
 class Controller_Active
 {
     /**
-     * [2026-10-05] - @author: Kelvin - Khởi tạo hooks cho CPT Active và bảng quản trị WP-Admin
+     * [2026-10-30] - @author: Gia Minh - Khởi tạo hooks cho CPT Active, bảng quản trị WP-Admin và sửa lỗi Permalink cho Divi Builder
      */
     public function __construct()
     {
         // 1. Đăng ký CPT Active
         add_action('init', [$this, 'register_custom_post']);
+
+        // [2026-10-30] - @author: Senior Full-Stack Developer
+        // Cơ chế Permalink đã được chuẩn hóa tập trung tại inc/code/code-rewrite.php (Rewrite_Url), không can thiệp riêng lẻ để tránh xung đột
 
         // 2. Tùy biến bảng dữ liệu trong WP-Admin (chỉ chạy trong admin để tối ưu hiệu năng)
         if (is_admin()) {
@@ -27,7 +31,7 @@ class Controller_Active
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Đăng ký Custom Post Type Active
+     * [2026-10-05] - @author: Gia Minh - Đăng ký Custom Post Type Active
      */
     public function register_custom_post(): void
     {
@@ -50,7 +54,7 @@ class Controller_Active
         $args = [
             'labels'              => $labels,
             'public'              => true,
-            'exclude_from_search' => true,
+            'exclude_from_search' => false, // [2026-10-30] Đổi thành false để Divi Visual Builder và REST API truy vấn được preview
             'publicly_queryable'  => true,
             'show_ui'             => true,
             'show_in_menu'        => true,
@@ -62,13 +66,14 @@ class Controller_Active
             'hierarchical'        => false,
             'menu_position'       => 6,
             'supports'            => ['thumbnail', 'editor', 'title', 'comments'],
+            'show_in_rest'        => true,
         ];
 
         register_post_type('active', $args);
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết
+     * [2026-10-05] - @author: Gia Minh - Quản lý các cột hiển thị trong danh sách bài viết
      */
     public function manage_columns(array $columns): array
     {
@@ -83,7 +88,6 @@ class Controller_Active
             $columns['create-date']
         );
 
-        // Đặt Category ngay sau Title, sau đó là các cột chung nằm sát bên phải
         $columns['category']    = __('Category', 'dgw');
         $columns['home']        = __('Home Page', 'dgw');
         $columns['language']    = __('Language', 'dgw');
@@ -94,7 +98,7 @@ class Controller_Active
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột an toàn, chống lỗ hổng XSS
+     * [2026-10-05] - @author: Gia Minh - Hiển thị nội dung cột an toàn, chống lỗ hổng XSS
      */
     public function render_columns(string $column, int $post_id): void
     {
@@ -124,7 +128,7 @@ class Controller_Active
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Thiết lập các cột cho phép sắp xếp
+     * [2026-10-05] - @author: Gia Minh - Thiết lập các cột cho phép sắp xếp
      */
     public function sortable_views_column(array $columns): array
     {
@@ -134,7 +138,7 @@ class Controller_Active
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Tối ưu query sắp xếp thứ tự theo số (meta_value_num)
+     * [2026-10-05] - @author: Gia Minh - Tối ưu query sắp xếp thứ tự theo số (meta_value_num)
      */
     public function sort_views_column(array $vars): array
     {
