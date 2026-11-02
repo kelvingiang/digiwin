@@ -126,6 +126,8 @@ final class Rewrite_Url
             'index.php?pagename=$matches[1]&sp=$matches[2]',
             'top'
         );
+
+        
     }
 
     /**

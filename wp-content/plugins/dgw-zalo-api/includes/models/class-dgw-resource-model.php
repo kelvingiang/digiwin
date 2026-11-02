@@ -1,6 +1,8 @@
 <?php
 namespace DGW_API\Models;
 
+use DGW_API\Helpers\Content_Cleaner;
+
 // 21/10/2026: Ngăn chặn truy cập trực tiếp bảo vệ an ninh hệ thống
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -8,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * 21/10/2026: Model xử lý truy vấn dữ liệu Post Type resources theo chuẩn MVC
+ * 30/10/2026: Tích hợp Content_Cleaner để lọc sạch class Divi cho Zalo Mini App
  */
 class Resource_Model {
 
@@ -16,6 +19,7 @@ class Resource_Model {
 
     /**
      * 26/10/2026: Lấy danh sách Resources theo Category Slug và Ngôn ngữ (vn/cn) hỗ trợ Infinite Scroll (offset/limit) & Transient Cache
+     * 30/10/2026: Lọc sạch class Divi trong content và excerpt
      * 
      * @param string   $category_slug Slug danh mục (mặc định: 'download')
      * @param int      $page          Trang hiện tại (fallback nếu không truyền offset)
@@ -33,8 +37,8 @@ class Resource_Model {
         // 21/10/2026: Chuẩn hoá mã ngôn ngữ (hỗ trợ vn/vi -> vn, cn/zh/tw -> cn)
         $lang = in_array( strtolower( $lang ), [ 'cn', 'zh', 'tw' ], true ) ? 'cn' : 'vn';
 
-        // 26/10/2026: Tối ưu hiệu năng bằng Transient Cache theo offset + per_page
-        $cache_key   = 'dgw_api_res_' . md5( "{$category_slug}_{$lang}_{$actual_offset}_{$per_page}" );
+        // 30/10/2026: Tối ưu hiệu năng bằng Transient Cache theo offset + per_page (v2 hỗ trợ content_blocks)
+        $cache_key   = 'dgw_api_res_v2_' . md5( "{$category_slug}_{$lang}_{$actual_offset}_{$per_page}" );
         $cached_data = get_transient( $cache_key );
 
         if ( false !== $cached_data ) {
@@ -95,19 +99,26 @@ class Resource_Model {
                 $language     = get_post_meta( $post_id, '_metabox_langguage', true );
                 $view_count   = get_post_meta( $post_id, '_metabox_view', true );
 
+                $raw_content  = get_the_content();
+                $post_excerpt = get_post_field( 'post_excerpt', $post_id );
+                $excerpt      = ! empty( $post_excerpt ) 
+                    ? wp_strip_all_tags( $post_excerpt ) 
+                    : Content_Cleaner::clean_excerpt( $raw_content, 35 );
+
                 $items[] = [
-                    'id'           => $post_id,
-                    'title'        => get_the_title(),
-                    'slug'         => get_post_field( 'post_name', $post_id ),
-                    'excerpt'      => wp_strip_all_tags( get_the_excerpt() ),
-                    'content'      => apply_filters( 'the_content', get_the_content() ),
-                    'thumbnail'    => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
-                    'download_url' => ! empty( $download_url ) ? esc_url_raw( $download_url ) : null,
-                    'language'     => ! empty( $language ) ? sanitize_text_field( $language ) : null,
-                    'views'        => ! empty( $view_count ) ? absint( $view_count ) : 0,
-                    'permalink'    => get_permalink( $post_id ),
-                    'date'         => get_the_date( 'c', $post_id ),
-                    'categories'   => $categories,
+                    'id'             => $post_id,
+                    'title'          => get_the_title(),
+                    'slug'           => get_post_field( 'post_name', $post_id ),
+                    'excerpt'        => $excerpt,
+                    'content'        => Content_Cleaner::clean_html( $raw_content ),
+                    'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_content ),
+                    'thumbnail'      => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
+                    'download_url'   => ! empty( $download_url ) ? esc_url_raw( $download_url ) : null,
+                    'language'       => ! empty( $language ) ? sanitize_text_field( $language ) : null,
+                    'views'          => ! empty( $view_count ) ? absint( $view_count ) : 0,
+                    'permalink'      => get_permalink( $post_id ),
+                    'date'           => get_the_date( 'c', $post_id ),
+                    'categories'     => $categories,
                 ];
             }
             wp_reset_postdata();

@@ -1,6 +1,8 @@
 <?php
 namespace DGW_API\Models;
 
+use DGW_API\Helpers\Content_Cleaner;
+
 // 26/10/2026: Ngăn chặn truy cập trực tiếp bảo vệ an ninh hệ thống WordPress
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -8,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * 26/10/2026: Model xử lý truy vấn dữ liệu Post Type active (hoạt động/sự kiện) theo mô hình MVC
+ * 30/10/2026: Tích hợp Content_Cleaner để bóc tách class Divi và giữ lại HTML chuẩn cho Zalo Mini App
  */
 class Active_Model {
 
@@ -16,6 +19,7 @@ class Active_Model {
 
     /**
      * 26/10/2026: Lấy danh sách Active theo danh mục (active_category) và ngôn ngữ (vn/cn/en) hỗ trợ Infinite Scroll (offset/limit) & Transient Cache
+     * 30/10/2026: Tự động lọc sạch class Divi trong nội dung và excerpt
      *
      * @param string   $category_slug Slug danh mục (ví dụ: 'event', 'webinar', hoặc rỗng/all để lấy tất cả)
      * @param int      $page          Trang hiện tại (fallback nếu không truyền offset)
@@ -42,8 +46,8 @@ class Active_Model {
             $lang = 'vn';
         }
 
-        // 26/10/2026: Tối ưu hoá hiệu suất và giảm tải DB bằng Transient Cache theo offset + per_page
-        $cache_key   = 'dgw_api_act_' . md5( "{$category_slug}_{$lang}_{$actual_offset}_{$per_page}" );
+        // 30/10/2026: Tối ưu hoá hiệu suất và giảm tải DB bằng Transient Cache theo offset + per_page (v2 hỗ trợ content_blocks)
+        $cache_key   = 'dgw_api_act_v2_' . md5( "{$category_slug}_{$lang}_{$actual_offset}_{$per_page}" );
         $cached_data = get_transient( $cache_key );
 
         if ( false !== $cached_data ) {
@@ -116,45 +120,57 @@ class Active_Model {
                 $title   = ! empty( $active_name ) ? $active_name : get_the_title( $post_id );
                 $content = ! empty( $active_desc ) ? $active_desc : get_post_field( 'post_content', $post_id );
 
-                // Tạo excerpt an toàn, không bị lỗi filter đối tượng
+                // 30/10/2026: Tạo excerpt an toàn loại bỏ shortcode Divi và HTML
                 $post_excerpt = get_post_field( 'post_excerpt', $post_id );
                 $excerpt      = ! empty( $post_excerpt ) 
                     ? wp_strip_all_tags( $post_excerpt ) 
-                    : wp_trim_words( wp_strip_all_tags( $content ), 35, '...' );
+                    : Content_Cleaner::clean_excerpt( $content, 35 );
 
                 $view_count = get_post_meta( $post_id, '_metabox_view', true );
                 $like_count = get_post_meta( $post_id, '_metabox_like', true );
                 $order      = get_post_meta( $post_id, '_metabox_order', true );
                 $is_home    = get_post_meta( $post_id, '_metabox_home', true );
 
+                // 30/10/2026: Bóc tách làm sạch class Divi, giữ lại nội dung HTML chuẩn và tách khối content_blocks (nhận diện Tabs)
+                $clean_content  = Content_Cleaner::clean_html( $content );
+                $content_blocks = Content_Cleaner::parse_content_blocks( $content );
+
+                $raw_vn = get_post_meta( $post_id, '_active_content_vn', true ) ?: '';
+                $raw_cn = get_post_meta( $post_id, '_active_content_cn', true ) ?: '';
+                $raw_en = get_post_meta( $post_id, '_active_content_en', true ) ?: '';
+
                 $items[] = [
-                    'id'          => $post_id,
-                    'title'       => html_entity_decode( $title, ENT_QUOTES, 'UTF-8' ),
-                    'slug'        => get_post_field( 'post_name', $post_id ),
-                    'excerpt'     => $excerpt,
-                    'content'     => apply_filters( 'the_content', $content ),
-                    'thumbnail'   => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
-                    'language'    => sanitize_text_field( $post_lang ),
-                    'views'       => ! empty( $view_count ) ? absint( $view_count ) : 0,
-                    'likes'       => ! empty( $like_count ) ? absint( $like_count ) : 0,
+                    'id'             => $post_id,
+                    'title'          => html_entity_decode( $title, ENT_QUOTES, 'UTF-8' ),
+                    'slug'           => get_post_field( 'post_name', $post_id ),
+                    'excerpt'        => $excerpt,
+                    'content'        => $clean_content,
+                    'content_blocks' => $content_blocks,
+                    'thumbnail'      => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
+                    'language'       => sanitize_text_field( $post_lang ),
+                    'views'          => ! empty( $view_count ) ? absint( $view_count ) : 0,
+                    'likes'          => ! empty( $like_count ) ? absint( $like_count ) : 0,
                     'order'          => ! empty( $order ) ? absint( $order ) : 0,
                     '_metabox_order' => ! empty( $order ) ? absint( $order ) : 0,
-                    'is_home'     => ! empty( $is_home ) ? (bool) $is_home : false,
-                    'permalink'   => get_permalink( $post_id ),
-                    'date'        => get_the_date( 'c', $post_id ),
-                    'categories'  => $categories,
-                    'translations'=> [
+                    'is_home'        => ! empty( $is_home ) ? (bool) $is_home : false,
+                    'permalink'      => get_permalink( $post_id ),
+                    'date'           => get_the_date( 'c', $post_id ),
+                    'categories'     => $categories,
+                    'translations'   => [
                         'vn' => [
-                            'name'    => get_post_meta( $post_id, '_active_name_vn', true ) ?: '',
-                            'content' => get_post_meta( $post_id, '_active_content_vn', true ) ?: '',
+                            'name'           => get_post_meta( $post_id, '_active_name_vn', true ) ?: '',
+                            'content'        => Content_Cleaner::clean_html( $raw_vn ),
+                            'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_vn ),
                         ],
                         'cn' => [
-                            'name'    => get_post_meta( $post_id, '_active_name_cn', true ) ?: '',
-                            'content' => get_post_meta( $post_id, '_active_content_cn', true ) ?: '',
+                            'name'           => get_post_meta( $post_id, '_active_name_cn', true ) ?: '',
+                            'content'        => Content_Cleaner::clean_html( $raw_cn ),
+                            'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_cn ),
                         ],
                         'en' => [
-                            'name'    => get_post_meta( $post_id, '_active_name_en', true ) ?: '',
-                            'content' => get_post_meta( $post_id, '_active_content_en', true ) ?: '',
+                            'name'           => get_post_meta( $post_id, '_active_name_en', true ) ?: '',
+                            'content'        => Content_Cleaner::clean_html( $raw_en ),
+                            'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_en ),
                         ],
                     ],
                 ];
@@ -189,6 +205,7 @@ class Active_Model {
 
     /**
      * 26/10/2026: Lấy chi tiết một bài viết active theo ID
+     * 30/10/2026: Tích hợp Content_Cleaner để làm sạch Divi classes
      *
      * @param int $post_id ID bài viết
      * @return array|null Dữ liệu chi tiết hoặc null nếu không tồn tại
@@ -216,38 +233,51 @@ class Active_Model {
             }
         }
 
+        // 30/10/2026: Tạo excerpt sạch loại bỏ shortcode Divi và HTML
         $post_excerpt = get_post_field( 'post_excerpt', $post_id );
         $excerpt      = ! empty( $post_excerpt ) 
             ? wp_strip_all_tags( $post_excerpt ) 
-            : wp_trim_words( wp_strip_all_tags( $post->post_content ), 35, '...' );
+            : Content_Cleaner::clean_excerpt( $post->post_content, 35 );
+
+        // 30/10/2026: Làm sạch HTML loại bỏ class Divi và tách khối content_blocks (nhận diện Tabs)
+        $clean_content  = Content_Cleaner::clean_html( $post->post_content );
+        $content_blocks = Content_Cleaner::parse_content_blocks( $post->post_content );
+
+        $raw_vn = get_post_meta( $post_id, '_active_content_vn', true ) ?: '';
+        $raw_cn = get_post_meta( $post_id, '_active_content_cn', true ) ?: '';
+        $raw_en = get_post_meta( $post_id, '_active_content_en', true ) ?: '';
 
         return [
-            'id'          => $post_id,
-            'title'       => html_entity_decode( get_the_title( $post_id ), ENT_QUOTES, 'UTF-8' ),
-            'slug'        => $post->post_name,
-            'excerpt'     => $excerpt,
-            'content'     => apply_filters( 'the_content', $post->post_content ),
-            'thumbnail'   => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
-            'language'    => get_post_meta( $post_id, '_metabox_langguage', true ) ?: 'vn',
-            'views'       => absint( get_post_meta( $post_id, '_metabox_view', true ) ),
-            'likes'       => absint( get_post_meta( $post_id, '_metabox_like', true ) ),
-            'order'       => absint( get_post_meta( $post_id, '_metabox_order', true ) ),
-            'is_home'     => (bool) get_post_meta( $post_id, '_metabox_home', true ),
-            'permalink'   => get_permalink( $post_id ),
-            'date'        => get_the_date( 'c', $post_id ),
-            'categories'  => $categories,
-            'translations'=> [
+            'id'             => $post_id,
+            'title'          => html_entity_decode( get_the_title( $post_id ), ENT_QUOTES, 'UTF-8' ),
+            'slug'           => $post->post_name,
+            'excerpt'        => $excerpt,
+            'content'        => $clean_content,
+            'content_blocks' => $content_blocks,
+            'thumbnail'      => get_the_post_thumbnail_url( $post_id, 'full' ) ?: null,
+            'language'       => get_post_meta( $post_id, '_metabox_langguage', true ) ?: 'vn',
+            'views'          => absint( get_post_meta( $post_id, '_metabox_view', true ) ),
+            'likes'          => absint( get_post_meta( $post_id, '_metabox_like', true ) ),
+            'order'          => absint( get_post_meta( $post_id, '_metabox_order', true ) ),
+            'is_home'        => (bool) get_post_meta( $post_id, '_metabox_home', true ),
+            'permalink'      => get_permalink( $post_id ),
+            'date'           => get_the_date( 'c', $post_id ),
+            'categories'     => $categories,
+            'translations'   => [
                 'vn' => [
-                    'name'    => get_post_meta( $post_id, '_active_name_vn', true ) ?: '',
-                    'content' => get_post_meta( $post_id, '_active_content_vn', true ) ?: '',
+                    'name'           => get_post_meta( $post_id, '_active_name_vn', true ) ?: '',
+                    'content'        => Content_Cleaner::clean_html( $raw_vn ),
+                    'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_vn ),
                 ],
                 'cn' => [
-                    'name'    => get_post_meta( $post_id, '_active_name_cn', true ) ?: '',
-                    'content' => get_post_meta( $post_id, '_active_content_cn', true ) ?: '',
+                    'name'           => get_post_meta( $post_id, '_active_name_cn', true ) ?: '',
+                    'content'        => Content_Cleaner::clean_html( $raw_cn ),
+                    'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_cn ),
                 ],
                 'en' => [
-                    'name'    => get_post_meta( $post_id, '_active_name_en', true ) ?: '',
-                    'content' => get_post_meta( $post_id, '_active_content_en', true ) ?: '',
+                    'name'           => get_post_meta( $post_id, '_active_name_en', true ) ?: '',
+                    'content'        => Content_Cleaner::clean_html( $raw_en ),
+                    'content_blocks' => Content_Cleaner::parse_content_blocks( $raw_en ),
                 ],
             ],
         ];

@@ -36,8 +36,12 @@ class Bootstrap {
 
     // 21/10/2026: Nạp các dependency theo mô hình MVC (Models -> Controllers -> Router)
     // 26/10/2026: Bổ sung Model và Controller cho post_type active
+    // 30/10/2026: Bổ sung Helper xử lý làm sạch HTML/Class của Divi Builder cho API Zalo
     private function load_dependencies() {
         $plugin_dir = plugin_dir_path( __FILE__ );
+
+        // Helpers
+        require_once $plugin_dir . 'includes/helpers/class-dgw-content-cleaner.php';
 
         // Models
         require_once $plugin_dir . 'includes/models/class-dgw-solution-model.php';
@@ -61,6 +65,40 @@ class Bootstrap {
         $api_routes = new Routes();
         // Hook khởi tạo REST API
         add_action( 'rest_api_init', [ $api_routes, 'register_endpoints' ] );
+
+        // 30/10/2026: Khởi tạo các module Divi Builder trong môi trường REST API để render shortcode et_pb_*
+        add_action( 'rest_api_init', [ '\\DGW_API\\Helpers\\Content_Cleaner', 'init_divi_in_rest' ], 5 );
+
+        // 30/10/2026: Đăng ký thêm trường 'content_blocks' vào các REST API mặc định của WordPress (/wp-json/wp/v2/...)
+        add_action( 'rest_api_init', function() {
+            $post_types = [ 'post', 'page', 'solutions', 'casestudies', 'resources', 'active', 'services', 'industries' ];
+            register_rest_field( $post_types, 'content_blocks', [
+                'get_callback' => function( $post_arr ) {
+                    $post_id = (int) ( $post_arr['id'] ?? 0 );
+                    if ( ! $post_id ) {
+                        return [];
+                    }
+                    $raw_content = get_post_field( 'post_content', $post_id );
+                    return \DGW_API\Helpers\Content_Cleaner::parse_content_blocks( $raw_content );
+                },
+                'schema'       => null,
+            ] );
+        }, 15 );
+
+        // 30/10/2026: Tự động lọc sạch class Divi trong the_content và the_excerpt khi gọi qua REST API
+        add_filter( 'the_content', function( $content ) {
+            if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) ) {
+                return \DGW_API\Helpers\Content_Cleaner::clean_html( $content );
+            }
+            return $content;
+        }, 999 );
+
+        add_filter( 'the_excerpt', function( $excerpt ) {
+            if ( ( defined( 'REST_REQUEST' ) && REST_REQUEST ) || ( function_exists( 'wp_is_json_request' ) && wp_is_json_request() ) ) {
+                return \DGW_API\Helpers\Content_Cleaner::clean_excerpt( $excerpt );
+            }
+            return $excerpt;
+        }, 999 );
 
         // 22/10/2026: Cho phép header bảo mật X-DGW-Key trong CORS Preflight request cho Zalo Mini App
         add_filter( 'rest_allowed_cors_headers', function( $headers ) {
