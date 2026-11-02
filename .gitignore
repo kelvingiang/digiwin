@@ -20,7 +20,7 @@ error_log
 /wp-content/backups/
 #/wp-content/languages/
 #/wp-content/upgrade/
-#/wp-content/uploads/
+/wp-content/uploads/
 
 # --- 4. 插件與主題管理 ---
 /wp-content/themes/*
