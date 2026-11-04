@@ -621,6 +621,32 @@ hr.style-two {
   cursor: wait;
 }
 
+#youtube-space {
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#youtube-space img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  filter: brightness(0.97) contrast(1.02);
+  will-change: transform, box-shadow, filter, border-color;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), filter 0.3s ease, border-color 0.3s ease;
+}
+#youtube-space img:hover {
+  transform: translateY(-1px) scale(1.01);
+  filter: brightness(1.05) contrast(1.01);
+  border-color: #ffffff;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.25), 0 0 50px rgba(0, 195, 255, 0.2);
+}
+
 @keyframes cardFadeInUp {
   from {
     opacity: 0;
@@ -868,7 +894,8 @@ hr.style-two {
   aspect-ratio: 4/3 !important;
   width: 100% !important;
   height: auto !important;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   transition: transform 0.7s ease;
 }
 #business-home .item .item-content {
@@ -970,7 +997,8 @@ hr.style-two {
 #industry-home .item .item-img img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   transition: transform 0.6s ease;
 }
 #industry-home .item .item-content {
@@ -1041,7 +1069,8 @@ hr.style-two {
 #active-home .active-item .active-item-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   display: block;
 }
 #active-home .active-item .active-item-content {
@@ -1187,7 +1216,7 @@ hr.style-two {
   color: #fff !important;
 }
 #news-home .news-home-title .title-select:hover {
-  background-color: rgb(0.0936494001%, 4.5888206029%, 6.1808604039%);
+  background-color: rgb(0.2388059701, 11.7014925373, 15.7611940299);
 }
 #news-home .news-home-title .title-select:hover h3 {
   color: #fff;
@@ -1370,7 +1399,8 @@ hr.style-two {
   width: 100% !important;
   height: auto !important;
   transition: all 0.4s ease;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
   position: relative;
   z-index: 1;
 }
@@ -1485,14 +1515,12 @@ hr.style-two {
 
 @keyframes animationImg {
   0% {
-    opacity: 0;
-    -ms-transform: scale(0.7, 0.7); /* IE 9 */
+    opacity: 0; /* IE 9 */
     transform: scale(0.7, 0.7);
   }
   /*        90%  {width: 90%; opacity: 0.2}*/
   100% {
-    opacity: 1;
-    -ms-transform: scale(1, 1); /* IE 9 */
+    opacity: 1; /* IE 9 */
     transform: scale(1, 1);
   }
 }
@@ -1718,10 +1746,6 @@ hr.style-two {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
   font-size: 0.75rem;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1951,10 +1975,6 @@ html[lang=zh-TW] .has-sub::after {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -1962,10 +1982,6 @@ html[lang=vi-VN] .has-sub::after {
   content: "❯";
   margin-left: 10px;
   display: inline-block;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
   transform: rotate(90deg);
 }
 
@@ -2731,7 +2747,8 @@ div:has(> .page-img) ~ .menu-sub {
   aspect-ratio: 16/9 !important;
   width: 100% !important;
   height: auto !important;
-  object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
+  -o-object-fit: cover !important;
+     object-fit: cover !important; /* Giúp ảnh không bị méo khi tỷ lệ thực khác với 16:9 */
   display: block;
 }
 #slider .active a {
@@ -3161,7 +3178,9 @@ body.home #header-space {
   padding: 2px 3px;
   box-shadow: 0 2px 8px rgba(0, 56, 78, 0.05);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 .languages-container .languages-box:hover {
   border-color: rgba(2, 74, 141, 0.35);
@@ -3190,7 +3209,8 @@ body.home #header-space {
 }
 .languages-container .languages-box__item,
 .languages-container .languages-box .link-languages {
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   -webkit-appearance: none;
   border: none;
   background: transparent;
@@ -3351,7 +3371,8 @@ body.home #header-space {
   max-width: 100%;
   height: auto;
   display: block;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .side-right {
@@ -5016,6 +5037,9 @@ body.home #header-space {
   margin-bottom: 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+.row-cell input::-moz-placeholder {
+  color: #bbb;
+}
 .row-cell input::placeholder {
   color: #bbb;
 }
@@ -5348,6 +5372,9 @@ body.home #header-space {
   background-color: #f8fafc;
   box-sizing: border-box;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.dgw-activate .reset-password-card__input::-moz-placeholder, .dgw-activate .reset-password-form__input::-moz-placeholder {
+  color: #94a3b8;
 }
 .dgw-activate .reset-password-card__input::placeholder,
 .dgw-activate .reset-password-form__input::placeholder {
@@ -5748,5 +5775,3 @@ body.home #header-space {
   background-color: #14448e;
   box-shadow: 0 6px 16px rgba(29, 90, 182, 0.35);
 }
-
-/*# sourceMappingURL=main.css.map */

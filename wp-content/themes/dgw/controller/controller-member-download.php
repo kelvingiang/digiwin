@@ -48,7 +48,8 @@ class Controller_Member_Download_Report
 
         require_once(DIR_MODEL . 'model-download-function.php');
         $model = new Model_Download_Function();
-        $downloads = $model->get_all_downloads();
+        // [03/11/2026] - Chỉ lấy dữ liệu download file (kid = 1) để xuất báo cáo Excel
+        $downloads = $model->get_all_downloads(1);
 
         if (!empty($downloads)) {
             $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();

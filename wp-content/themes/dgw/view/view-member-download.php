@@ -1,27 +1,27 @@
 <?php
 require_once(DIR_MODEL . 'model-download-function.php');
 $model = new Model_Download_Function();
-$downloads = $model->get_all_downloads();
-$data =  $model->get_download_stats_by_title();
+// [03/11/2026] - Chỉ liệt kê và thống kê dữ liệu download file (kid = 1)
+$downloads = $model->get_all_downloads(1);
+$data = $model->get_download_stats_by_title(1);
 $count = 1;
 $page = getParams('page');
 ?>
 <div>
-    <h2><?php echo __('Download Statistics','dgw') ?></h2>
+    <h2><?php echo __('Download Statistics', 'dgw') ?></h2>
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
-
                 <tr>
-                    <th style="width: 300px;"><?php echo __('Resource Name','dgw')?></th>
-                    <th style="width: 100px;"><?php echo __('Download Count', 'dgw')?></th>
+                    <th style="width: 300px;"><?php echo __('Resource Name', 'dgw') ?></th>
+                    <th style="width: 100px; text-align:center"><?php echo __('Download Count', 'dgw') ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($data as $item) : ?>
                     <tr>
                         <td style="width: 300px; font-weight:bold"><?php echo esc_html($item['title']); ?></td>
-                        <td style="width: 100px; text-align:left; padding-right: 20px;"><?php echo esc_html($item['download_count']); ?></td>
+                        <td style="width: 100px; text-align:center;"><?php echo esc_html($item['download_count']); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -32,7 +32,6 @@ $page = getParams('page');
 
 <div style="margin-top: 1.5rem;">
     <div class="wrap" style="display: inline-block;">
-        <h1 class="wp-heading-inline"><?php echo __('Download Report','dgw') ?></h1> 
         <a href="<?php echo admin_url('admin.php?page=' . $page . '&action=export_download_excel'); ?>" class="page-title-action"><?php echo __('Export Excel file', 'dgw'); ?></a>
     </div>
     <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
@@ -40,10 +39,10 @@ $page = getParams('page');
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
                     <th style="width:20px"></th>
-                    <th style="width: 100px;"><?php echo __('Full Name','dgw') ?></th>
+                    <th style="width: 100px;"><?php echo __('Full Name', 'dgw') ?></th>
                     <th style="width: 200px;"><?php echo __('Company Name', 'dgw') ?></th>
                     <th style="width: 200px;"><?php echo __('E-mail', 'dgw') ?></th>
-                    <th style="width: 250px;"><?php echo __('Resource Name', 'dgw')?></th>
+                    <th style="width: 250px;"><?php echo __('Resource Name', 'dgw') ?></th>
                     <th style="width: 100px;"><?php echo __('Download Date', 'dgw') ?></th>
                 </tr>
             </thead>

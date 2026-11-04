@@ -25,6 +25,7 @@ class Controller_Main
             'controller_popup' => true,
             'controller_member' => true,
             'controller_member_download' => true,
+            'controller_member_view' => true,
         );
 
         $this->_controller_options = get_option($this->_controller_name, $defaultOption);
@@ -35,6 +36,7 @@ class Controller_Main
         $this->page_logo();
         $this->page_member();
         $this->page_member_download();
+        $this->page_member_view();
 
         $this->post_slider();
         $this->post_solutions();
@@ -77,6 +79,15 @@ class Controller_Main
         if ($this->_controller_options['controller_member_download']) {
             require_once(DIR_CONTROLLER . 'controller-member-download.php');
             new Controller_Member_Download_Report();
+        }
+    }
+
+    // [03/11/2026] - Khởi tạo Controller thống kê lượt xem video YouTube (kid = 2)
+    public function page_member_view()
+    {
+        if ($this->_controller_options['controller_member_view'] ?? true) {
+            require_once(DIR_CONTROLLER . 'controller-member-view.php');
+            new Controller_Member_View_Report();
         }
     }
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-06 02:50+0000\n"
-"PO-Revision-Date: 2026-10-28 04:30+0000\n"
+"PO-Revision-Date: 2026-11-03 08:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: 繁體中文\n"
 "Language: zh_TW\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.9; wp-6.9; php-8.2.33\n"
+"X-Loco-Version: 2.8.9; wp-7.1.3; php-8.3.36\n"
 "X-Domain: dgw"
 
 #: nav-below.php:2
@@ -965,6 +965,9 @@ msgstr "彈出視窗"
 msgid "Position"
 msgstr "職位"
 
+msgid "Post Title"
+msgstr "貼文標題"
+
 #: inc/front/front-menu.php:106
 msgid "President"
 msgstr "總裁"
@@ -1429,6 +1432,9 @@ msgstr ""
 msgid "Vice President"
 msgstr "副總裁"
 
+msgid "Video View Statistics"
+msgstr "看片數據"
+
 #: metabox/bk-metabox-resources.php:28 metabox/bk-metabox-resources.php:58
 #: metabox/bk-metabox-resources.php:68 metabox/metabox-active.php:28
 #: metabox/metabox-active.php:58 metabox/metabox-active.php:68
@@ -1472,6 +1478,9 @@ msgstr "越文直式圖片 (VN)"
 msgid "View"
 msgstr "瀏覽"
 
+msgid "View Count"
+msgstr "觀看次數"
+
 #: controller/controller-active.php:42
 #: controller/controller-case-studies.php:42
 #: controller/controller-industries.php:42 controller/controller-join-us.php:42
@@ -1479,6 +1488,9 @@ msgstr "瀏覽"
 #: controller/controller-slider.php:42 controller/controller-solutions.php:42
 msgid "View Item"
 msgstr ""
+
+msgid "Watch Date"
+msgstr "觀看日期"
 
 #: metabox/metabox-web.php:25
 msgid "Web Site"

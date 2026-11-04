@@ -245,9 +245,16 @@ jQuery(document).on("click", "#btn-login", function () {
               success: function (res) {
                 if (res.success) {
                   window.location.href = res.data.post_source;
+                  // [02/11/2026] - Refresh lại trang sau khi bắt đầu tải để cập nhật thông tin người đăng nhập
+                  setTimeout(function () {
+                    window.location.reload();
+                  }, 1500);
                 }
               },
             });
+          } else {
+            // [02/11/2026] - Refresh lại trang khi đăng nhập bằng popup để cập nhật thông tin người đăng nhập
+            window.location.reload();
           }
         }, 1000);
       } else {

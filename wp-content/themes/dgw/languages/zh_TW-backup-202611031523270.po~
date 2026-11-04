@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-06 02:50+0000\n"
-"PO-Revision-Date: 2026-10-27 11:02+0000\n"
+"PO-Revision-Date: 2026-11-03 08:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: 繁體中文\n"
 "Language: zh_TW\n"
@@ -568,6 +568,9 @@ msgstr "財務會計"
 msgid "First load"
 msgstr ""
 
+msgid "For security reasons, your new password must be at least 6 characters"
+msgstr "為了安全起見，您的新密碼長度必須至少為 6 個字元"
+
 #: page/member.php:57 inc/shortcode/shortcode-member.php:13
 #: inc/shortcode/shortcode-member.php:70
 msgid "Forget Password"
@@ -829,6 +832,9 @@ msgstr ""
 msgid "Name"
 msgstr "名稱"
 
+msgid "New message"
+msgstr ""
+
 #: page/member.php:88 page/reset-password.php:52
 msgid "New Password"
 msgstr "新密碼"
@@ -958,6 +964,9 @@ msgstr "彈出視窗"
 #: page/member.php:111 inc/front/front-core.php:123
 msgid "Position"
 msgstr "職位"
+
+msgid "Post Title"
+msgstr "貼文標題"
 
 #: inc/front/front-menu.php:106
 msgid "President"
@@ -1412,6 +1421,9 @@ msgstr "回收桶"
 msgid "Update"
 msgstr ""
 
+msgid "Update your company profile and contact details"
+msgstr "更新您的公司資料與聯絡資訊"
+
 #: metabox/metabox-downloads.php:27
 msgid "Upload File"
 msgstr ""
@@ -1419,6 +1431,9 @@ msgstr ""
 #: inc/front/front-menu.php:108
 msgid "Vice President"
 msgstr "副總裁"
+
+msgid "Video View Statistics"
+msgstr "看片數據"
 
 #: metabox/bk-metabox-resources.php:28 metabox/bk-metabox-resources.php:58
 #: metabox/bk-metabox-resources.php:68 metabox/metabox-active.php:28
@@ -1463,12 +1478,18 @@ msgstr "越文直式圖片 (VN)"
 msgid "View"
 msgstr "瀏覽"
 
+msgid "View Count"
+msgstr "看片次數"
+
 #: controller/controller-active.php:42
 #: controller/controller-case-studies.php:42
 #: controller/controller-industries.php:42 controller/controller-join-us.php:42
 #: controller/controller-resources.php:42 controller/controller-services.php:42
 #: controller/controller-slider.php:42 controller/controller-solutions.php:42
 msgid "View Item"
+msgstr ""
+
+msgid "Watch Date"
 msgstr ""
 
 #: metabox/metabox-web.php:25

@@ -23,6 +23,7 @@ class Metabox_Main
             'metabox_home' => TRUE,
             'metabox_link' => TRUE,
             'metabox_sidebar' => TRUE,
+            'metabox_youtube' => TRUE,
         );
 
         $this->_controller_options = get_option($this->_controller_name, $defaultOption);
@@ -40,9 +41,18 @@ class Metabox_Main
         $this->metabox_seo();
         $this->metabox_link();
         $this->metabox_sidebar();
+        $this->metabox_youtube();
         add_action('admin_init', array($this, 'do_output_buffer'));
     }
 
+    
+     public function metabox_youtube()
+    {
+        if ($this->_controller_options['metabox_youtube']) {
+            require_once(DIR_METABOX . 'metabox-youtube.php');
+            new Metabox_Youtube();
+        }
+    }
 
      public function metabox_source()
     {

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DGW\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-28 04:28+0000\n"
+"POT-Creation-Date: 2026-11-03 08:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1519,4 +1519,16 @@ msgid "For security reasons, your new password must be at least 6 characters"
 msgstr ""
 
 msgid "Update your company profile and contact details"
+msgstr ""
+
+msgid "View Count"
+msgstr ""
+
+msgid "Video View Statistics"
+msgstr ""
+
+msgid "Post Title"
+msgstr ""
+
+msgid "Watch Date"
 msgstr ""

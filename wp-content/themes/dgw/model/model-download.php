@@ -62,6 +62,7 @@ class Model_Download extends WP_List_Table
             'member_company' => __('Company Name', 'dgw'),
             'member_phone' => __('Contact Number', 'dgw'),
             'member_download_count' => __('Download Count', 'dgw'),
+            'member_view_count' => __('View Count', 'dgw'),
             'create_date' => __('Create Date', 'dgw'),
         );
         return $arr;
@@ -92,7 +93,10 @@ class Model_Download extends WP_List_Table
         $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
 
         // 基本 SELECT 與 JOIN
-        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+        // [03/11/2026] - Thống kê riêng tổng lượt tải tài liệu (kid = 1) và tổng lượt xem video YouTube (kid = 2)
+        $sql = "SELECT m.*, 
+                COUNT(CASE WHEN d.kid = 1 THEN 1 END) AS download_count,
+                COUNT(CASE WHEN d.kid = 2 THEN 1 END) AS view_count
             FROM {$this->table} AS m 
             LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
 
@@ -151,8 +155,10 @@ class Model_Download extends WP_List_Table
 
         // $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
         // $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
-
-        $sql = "SELECT m.*, COUNT(d.ID) AS download_count 
+        // [03/11/2026] - Thống kê riêng tổng lượt tải tài liệu (kid = 1) và tổng lượt xem video YouTube (kid = 2)
+        $sql = "SELECT m.*, 
+                COUNT(CASE WHEN d.kid = 1 THEN 1 END) AS download_count,
+                COUNT(CASE WHEN d.kid = 2 THEN 1 END) AS view_count
             FROM {$this->table} AS m 
             LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
 
@@ -293,9 +299,16 @@ class Model_Download extends WP_List_Table
         echo $item['phone'];
     }
 
+    // [03/11/2026] - Hiển thị tổng số lượt tải file (kid = 1)
     public function column_member_download_count($item)
     {
-        echo $item['download_count'];
+        echo (int) ($item['download_count'] ?? 0);
+    }
+
+    // [03/11/2026] - Hiển thị tổng số lượt xem video YouTube (kid = 2)
+    public function column_member_view_count($item)
+    {
+        echo (int) ($item['view_count'] ?? 0);
     }
 
     public function column_create_date($item)

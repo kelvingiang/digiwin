@@ -15,6 +15,9 @@ class Model_Download_Function
     }
 
 
+    /**
+     * [03/11/2026] - Bổ sung trường kid vào bảng download_detail (1: Download file, 2: Xem video YouTube)
+     */
     public function insert_download_detail($data)
     {
         $inserted = $this->_db->insert(
@@ -23,14 +26,16 @@ class Model_Download_Function
                 'user_id'       => $data['user_id'],
                 'title'         => $data['title'],
                 'resource'      => $data['resource'],
+                'kid'           => isset($data['kid']) ? (int) $data['kid'] : 1,
                 'download_date' => current_time('mysql') // 1. 修正欄位名稱為 download_date
             ],
             [
                 '%d', // user_id 是 int(11)，建議用 %d
                 '%s', // title 是 varchar
                 '%s', // resource 是 varchar
+                '%d', // kid: 1 (download file) hoặc 2 (xem video youtube)
                 '%s'  // download_date 是 datetime，使用 %s
-            ] // 2. 確保這裡有 4 個佔位符對應上面的 4 個欄位
+            ] // 2. 確保這裡有 5 個佔位符對應上面的 5 個欄位
         );
 
         // 如果失敗，可以透過 $this->_db->last_error 查看報錯原因
@@ -273,25 +278,39 @@ class Model_Download_Function
         );
     }
 
-    public function get_all_downloads()
+    /**
+     * [03/11/2026] - Lấy danh sách lịch sử theo loại kid (mặc định kid = 1: Download file, kid = 2: Xem video YouTube)
+     */
+    public function get_all_downloads($kid = 1)
     {
         // d 代表 下載紀錄表 (downloads)
         // m 代表 會員表 (members)
-        $sql = "SELECT d.*, m.username, m.email, m.company, m.phone 
+        $sql = $this->_db->prepare(
+            "SELECT d.*, m.username, m.email, m.company, m.phone 
             FROM {$this->_table_details} AS d
             LEFT JOIN {$this->_table_registry} AS m ON d.user_id = m.ID 
-            ORDER BY d.download_date DESC";
+            WHERE d.kid = %d
+            ORDER BY d.download_date DESC",
+            (int) $kid
+        );
 
         return $this->_db->get_results($sql);
     }
 
-    public function get_download_stats_by_title()
+    /**
+     * [03/11/2026] - Thống kê tổng số lượt theo tiêu đề tài liệu và phân loại kid (mặc định kid = 1: Download file)
+     */
+    public function get_download_stats_by_title($kid = 1)
     {
         // 撰寫統計 SQL：選取標題，並計算每個標題出現的次數
-        $sql = "SELECT title, COUNT(ID) AS download_count 
+        $sql = $this->_db->prepare(
+            "SELECT title, COUNT(ID) AS download_count 
             FROM {$this->_table_details} 
+            WHERE kid = %d
             GROUP BY title 
-            ORDER BY download_count DESC";
+            ORDER BY download_count DESC",
+            (int) $kid
+        );
 
         // 執行查詢並回傳結果 (建議回傳 ARRAY_A 方便你在前端用 foreach 迴圈印出)
         return $this->_db->get_results($sql, ARRAY_A);
