@@ -84,13 +84,24 @@ if (!function_exists('get_current_custom_user')) {
 }
 
 /**
+ * [04/11/2026] - Kiểm tra trạng thái đăng nhập của Member qua cookie session, dùng chung cho cả Frontend, Admin và AJAX
+ */
+if (!function_exists('is_member_logged_in')) {
+    function is_member_logged_in()
+    {
+        return get_current_custom_user() ?: false;
+    }
+}
+
+/**
  * [2026-10-05] - @author: Kelvin - Đăng ký script download tài liệu
  * [20/10/2026] - Tối ưu nạp file nén my-download.min.js kèm dynamic versioning filemtime
  */
 function my_enqueue_scripts(): void
 {
     $download_js_path = get_stylesheet_directory() . '/js/my-download.min.js';
-    $download_ver     = file_exists($download_js_path) ? (string) filemtime($download_js_path) : '1.0.0';
+    // [04/11/2026] - Thêm hậu tố version để chống cache trình duyệt và CDN sau khi cập nhật script
+    $download_ver     = (string) (file_exists($download_js_path) ? filemtime($download_js_path) : '1.0.0') . '.20261104v3';
 
     wp_enqueue_script(
         'my-script',
@@ -100,9 +111,15 @@ function my_enqueue_scripts(): void
         true
     );
 
+    $current_user = function_exists('get_current_custom_user') ? get_current_custom_user() : null;
+
+    // [04/11/2026] - Bổ sung home_url, thông tin đăng nhập và bản dịch Loco Translate cho Login-Register
     wp_localize_script('my-script', 'MyAjax', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce'    => wp_create_nonce('my_nonce'),
+        'ajax_url'     => admin_url('admin-ajax.php'),
+        'nonce'        => wp_create_nonce('my_nonce'),
+        'home_url'     => home_url(),
+        'is_logged_in' => !empty($current_user),
+        'login_text'   => __('Login-Register', 'dgw'),
     ]);
 }
 add_action('wp_enqueue_scripts', 'my_enqueue_scripts');
@@ -147,3 +164,23 @@ add_action('wp_footer', function (): void {
         echo member_forgot_password_form();
     }
 });
+
+/**
+ * [04/11/2026] - Bỏ qua lưu bộ nhớ đệm (LiteSpeed Cache) cho tất cả các trang Single và khi người dùng đang đăng nhập
+ * Đảm bảo các chức năng động: Xem video YouTube, Download tài liệu, Bình luận và thông tin đăng nhập trên Header luôn chính xác thời gian thực
+ */
+add_action('template_redirect', function (): void {
+    $has_session = !empty($_COOKIE['custom_session']);
+    $is_single   = is_single() || is_singular();
+
+    if ($is_single || $has_session) {
+        // 1. Hook dành riêng cho Plugin LiteSpeed Cache
+        do_action('litespeed_control_set_nocache', 'DGW: Single page or logged-in custom user');
+
+        // 2. Gửi HTTP Headers chống cache cho Web Server (LiteSpeed / Apache / Nginx / CDN)
+        if (!headers_sent()) {
+            header('X-LiteSpeed-Cache-Control: no-cache');
+            nocache_headers();
+        }
+    }
+}, 5);

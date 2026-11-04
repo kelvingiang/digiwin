@@ -15,18 +15,16 @@ add_action('wp_ajax_nopriv_my_download_file', 'my_download_file');
  */
 function my_download_file(): void
 {
-    // 1. Kiểm tra Nonce bảo mật
-    if (!check_ajax_referer('my_nonce', 'nonce', false)) {
-        wp_send_json_error(['message' => 'Yêu cầu không hợp lệ (Invalid Nonce)']);
-    }
+    // [04/11/2026] - Chống cache cho phản hồi AJAX và kiểm tra phiên đăng nhập thực tế từ Cookie/DB trước tiên (tương thích LiteSpeed Cache)
+    nocache_headers();
 
-    // 2. Kiểm tra đăng nhập
+    // 1. Kiểm tra đăng nhập
     $user = is_member_logged_in();
     if (!$user) {
         wp_send_json_error(['code' => 'not_logged_in', 'message' => 'Vui lòng đăng nhập trước khi tải tài liệu']);
     }
 
-    // 3. Nhận và làm sạch dữ liệu
+    // 2. Nhận và làm sạch dữ liệu
     $post_id     = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
     $post_title  = isset($_POST['post_title']) ? sanitize_text_field(wp_unslash($_POST['post_title'])) : '';
     $post_source = (string) get_post_meta($post_id, '_metabox_source', true);
@@ -90,18 +88,16 @@ add_action('wp_ajax_nopriv_my_watch_youtube', 'my_watch_youtube');
  */
 function my_watch_youtube(): void
 {
-    // 1. Kiểm tra Nonce bảo mật
-    if (!check_ajax_referer('my_nonce', 'nonce', false)) {
-        wp_send_json_error(['message' => 'Yêu cầu không hợp lệ (Invalid Nonce)']);
-    }
+    // [04/11/2026] - Chống cache cho phản hồi AJAX và kiểm tra phiên đăng nhập thực tế từ Cookie/DB trước tiên (tương thích LiteSpeed Cache)
+    nocache_headers();
 
-    // 2. Kiểm tra đăng nhập thành viên
+    // 1. Kiểm tra đăng nhập thành viên
     $user = is_member_logged_in();
     if (!$user) {
         wp_send_json_error(['code' => 'not_logged_in', 'message' => 'Vui lòng đăng nhập trước khi xem video']);
     }
 
-    // 3. Nhận và làm sạch dữ liệu đầu vào
+    // 2. Nhận và làm sạch dữ liệu đầu vào
     $post_id      = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
     $post_title   = isset($_POST['post_title']) ? sanitize_text_field(wp_unslash($_POST['post_title'])) : '';
     $youtube_link = (string) get_post_meta($post_id, '_metabox_youtube', true);
@@ -144,7 +140,7 @@ function my_watch_youtube(): void
         error_log('AJAX YouTube Watch: Đồng bộ Google Sheets (wytList) thất bại cho bài viết ID: ' . $post_id);
     }
 
-    // 7. Trả kết quả JSON về cho frontend
+    // 7. Trả kết quả JSON về cho frontend để mở Popup YouTube
     wp_send_json_success([
         'post_id'      => $post_id,
         'post_title'   => $post_title,

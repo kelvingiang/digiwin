@@ -11,7 +11,7 @@ class Metabox_Youtube
 
     public function create()
     {
-        $id = 'admin-metabox-source';
+        $id = 'admin-metabox-youtube';
         $title = __('Youtube video link', 'dgw');
         $callback = array($this, 'display');
         add_meta_box($id, $title, $callback, array('solutions','services', 'industries', 'active', 'casestudies'));
@@ -45,9 +45,29 @@ class Metabox_Youtube
 
     public function save($post_id)
     {
+        // 1. Kiểm tra Nonce bảo mật
+        if (!isset($_POST['admin-metabox-data-nonce']) || !wp_verify_nonce($_POST['admin-metabox-data-nonce'], 'admin-metabox-data')) {
+            return;
+        }
 
-        if (!empty($_POST['txt-youtube'])) {
-            update_post_meta($post_id, '_metabox_youtube', sanitize_text_field(wp_unslash($_POST['txt-youtube'])));
+        // 2. Bỏ qua nếu là autosave của WordPress
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+            return;
+        }
+
+        // 3. Kiểm tra quyền hạn người dùng
+        if (!current_user_can('edit_post', $post_id)) {
+            return;
+        }
+
+        // 4. [04/11/2026] - Hỗ trợ cập nhật link mới hoặc xóa rỗng (xóa post meta) khi người dùng để trống ô input
+        if (isset($_POST['txt-youtube'])) {
+            $youtube_link = trim(sanitize_text_field(wp_unslash($_POST['txt-youtube'])));
+            if ($youtube_link !== '') {
+                update_post_meta($post_id, '_metabox_youtube', $youtube_link);
+            } else {
+                delete_post_meta($post_id, '_metabox_youtube');
+            }
         }
     }
 }

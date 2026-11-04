@@ -72,6 +72,11 @@ async function handleLogout() {
         const result = await res.json();
 
         if (result.success && result.data.logged_out) {
+            // [04/11/2026] - Xóa dữ liệu thành viên trong localStorage khi đăng xuất
+            try {
+                localStorage.removeItem('dgw_member');
+            } catch (e) {}
+
             // Tùy chọn: Thêm hiệu ứng loading hoặc thông báo trước khi refresh
             console.log('✅ Logout thành công, đang làm mới trang...');
             

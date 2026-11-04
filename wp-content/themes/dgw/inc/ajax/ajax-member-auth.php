@@ -133,20 +133,21 @@ function handle_member_login(): void
 
     get_model()->update_login($user->ID, $session_key, $ip_address);
 
-    setcookie(
-        'custom_session',
-        $session_key,
-        [
-            'expires'  => time() + (7 * 24 * 60 * 60),
-            'path'     => '/',
-            'domain'   => '',
-            'secure'   => is_ssl(),
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]
-    );
+    // [04/11/2026] - Thiết lập Cookie tương thích 100% mọi phiên bản PHP và môi trường hosting (cPanel, Nginx, Cloudflare)
+    $cookie_expire = time() + (7 * 24 * 60 * 60);
+    setcookie('custom_session', $session_key, $cookie_expire, '/');
+    $_COOKIE['custom_session'] = $session_key;
 
-    wp_send_json_success(['message' => $msg['success']]);
+    // [04/11/2026] - Bổ sung thông tin user và đường dẫn member để frontend cập nhật Header và mở Popup video tức thì không cần reload trang
+    wp_send_json_success([
+        'message'    => $msg['success'],
+        'user'       => [
+            'id'       => $user->ID,
+            'username' => $user->username,
+            'email'    => $user->email,
+        ],
+        'member_url' => home_url('/member'),
+    ]);
 }
 
 /* =========================================================
@@ -325,16 +326,22 @@ add_action('wp_ajax_check_member_login',        'handle_check_member_login');
 add_action('wp_ajax_nopriv_check_member_login', 'handle_check_member_login');
 function handle_check_member_login(): void
 {
-    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
-        wp_send_json_error('Invalid nonce', 403);
-    }
+    // [04/11/2026] - Chống cache cho phản hồi kiểm tra trạng thái đăng nhập (tương thích LiteSpeed Cache)
+    nocache_headers();
 
     $user = is_member_logged_in();
 
+    // [04/11/2026] - Trả về đầy đủ thông tin username và member_url để đồng bộ hiển thị Header và trang profile
     wp_send_json_success([
-        'logged_in' => (bool) $user,
-        'email'     => $user->email ?? '',
-        'name'      => $user->name ?? '',
+        'logged_in'  => (bool) $user,
+        'email'      => $user->email ?? '',
+        'name'       => $user->username ?? '',
+        'user'       => $user ? [
+            'id'       => $user->ID,
+            'username' => $user->username,
+            'email'    => $user->email,
+        ] : null,
+        'member_url' => home_url('/member'),
     ]);
 }
 
@@ -345,15 +352,16 @@ add_action('wp_ajax_member_logout',        'handle_member_logout');
 add_action('wp_ajax_nopriv_member_logout', 'handle_member_logout');
 function handle_member_logout(): void
 {
-    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'member_auth_nonce')) {
-        wp_send_json_error('Invalid nonce', 403);
-    }
+    // [04/11/2026] - Đảm bảo luôn xóa session trong DB và hủy cookie đồng bộ tham số với lúc login (tương thích LiteSpeed Cache)
+    nocache_headers();
 
     if (!empty($_COOKIE['custom_session'])) {
         $session_key = sanitize_text_field($_COOKIE['custom_session']);
         get_model()->clear_session($session_key);
+        unset($_COOKIE['custom_session']);
     }
 
+    // [04/11/2026] - Hủy cookie tương thích toàn diện mọi môi trường và phiên bản PHP
     setcookie('custom_session', '', time() - 3600, '/');
 
     wp_send_json_success([

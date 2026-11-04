@@ -16,19 +16,21 @@ if (empty($youtube_link)) {
     return;
 }
 
-// Chuyển đổi mọi định dạng link YouTube (watch?v=, youtu.be/, embed/, shorts/) sang link nhúng embed chuẩn
+// [04/11/2026] - Tự động trích xuất Video ID để tạo link embed chuẩn và link ảnh đại diện (Thumbnail) trực tiếp từ YouTube CDN
 $youtube_embed_url = $youtube_link;
+$youtube_thumb_url = PART_IMAGES . 'digiwin-youtube.webp'; // Fallback nếu không khớp định dạng
 if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?|shorts)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_link, $match)) {
-    $youtube_embed_url = 'https://www.youtube.com/embed/' . $match[1] . '?autoplay=1&rel=0';
+    $video_id          = $match[1];
+    $youtube_embed_url = 'https://www.youtube.com/embed/' . $video_id . '?autoplay=1&rel=0';
+    $youtube_thumb_url = 'https://img.youtube.com/vi/' . $video_id . '/hqdefault.jpg';
 }
 
-$post_title   = get_the_title($post_id);
-$current_user = function_exists('get_current_custom_user') ? get_current_custom_user() : null;
-$is_logged_in = !empty($current_user);
+$post_title = get_the_title($post_id);
 ?>
 
 <div id="youtube-space">
     <!-- [03/11/2026] - Gắn thêm data-post-id và data-post-title để truyền qua AJAX đồng bộ Google Sheets (sheet wytList) -->
+    <!-- [04/11/2026] - Hiển thị ảnh bìa thực tế của video YouTube kèm nút Play nổi bật, giữ nguyên toàn bộ cơ chế xác thực và popup -->
     <a href="<?php echo esc_url($youtube_link); ?>" 
        class="youtube-space__trigger" 
        data-embed="<?php echo esc_url($youtube_embed_url); ?>"
@@ -36,10 +38,18 @@ $is_logged_in = !empty($current_user);
        data-post-title="<?php echo esc_attr($post_title); ?>"
        aria-haspopup="dialog"
        aria-controls="youtube-popup-modal">
-        <img src="<?php echo esc_url(PART_IMAGES . 'digiwin-youtube.webp'); ?>" 
-             alt="<?php echo esc_attr($post_title); ?>" 
-             loading="lazy" 
-             decoding="async" />
+        <div class="youtube-space__thumb-wrap">
+            <img src="<?php echo esc_url($youtube_thumb_url); ?>" 
+                 alt="<?php echo esc_attr($post_title); ?>" 
+                 loading="lazy" 
+                 decoding="async" />
+            <span class="youtube-space__play-btn" aria-hidden="true">
+                <svg viewBox="0 0 68 48" width="60" height="42">
+                    <path class="youtube-space__play-bg" d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#ff0000"/>
+                    <path d="M45 24L27 14v20" fill="#ffffff"/>
+                </svg>
+            </span>
+        </div>
     </a>
 </div>
 
@@ -71,15 +81,69 @@ $is_logged_in = !empty($current_user);
 
 <style>
     /* [02/11/2026] - Style chuẩn BEM cho #youtube-space và Popup Video 16:9 */
+    /* [04/11/2026] - Style cho khung ảnh Thumbnail YouTube và nút Play chính giữa */
+    #youtube-space {
+        margin: 1.5rem 0;
+    }
     #youtube-space .youtube-space__trigger {
         display: inline-block;
+        position: relative;
         cursor: pointer;
-        margin: 1rem;
+        max-width: 680px;
+        width: 100%;
+        text-decoration: none;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    #youtube-space .youtube-space__trigger img {
-        max-width: 100%;
-        height: auto;
+    #youtube-space .youtube-space__trigger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+    #youtube-space .youtube-space__thumb-wrap {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%; /* Tỷ lệ chuẩn 16:9 */
+        height: 0;
+        background-color: #000;
+        overflow: hidden;
+    }
+    #youtube-space .youtube-space__thumb-wrap img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         display: block;
+        transition: transform 0.3s ease;
+    }
+    #youtube-space .youtube-space__trigger:hover .youtube-space__thumb-wrap img {
+        transform: scale(1.03);
+    }
+    #youtube-space .youtube-space__play-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        transition: transform 0.2s ease, filter 0.2s ease;
+        filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+    #youtube-space .youtube-space__trigger:hover .youtube-space__play-btn {
+        transform: translate(-50%, -50%) scale(1.1);
+        filter: drop-shadow(0 4px 12px rgba(255, 0, 0, 0.5));
+    }
+    #youtube-space .youtube-space__play-bg {
+        transition: fill 0.2s ease;
+    }
+    #youtube-space .youtube-space__trigger:hover .youtube-space__play-bg {
+        fill: #cc0000;
     }
     .youtube-popup {
         position: fixed;
@@ -144,57 +208,67 @@ $is_logged_in = !empty($current_user);
     .youtube-popup__close:hover svg {
         fill: #000000;
     }
+    /* [04/11/2026] - Hiệu ứng trạng thái đang kiểm tra đăng nhập trên nút mở video */
+    #youtube-space .youtube-space__trigger.is-loading {
+        pointer-events: none;
+        opacity: 0.65;
+    }
 </style>
 
 <script>
-    // [02/11/2026] - Kiểm tra đăng nhập trước khi mở Popup YouTube; nếu đăng nhập bằng popup thì refresh lại trang để bắt thông tin user
+    // [04/11/2026] - Kiểm tra đăng nhập thời gian thực qua AJAX trước khi mở Popup YouTube để tương thích với LiteSpeed Cache và Browser Back-Forward Cache (BFCache)
     jQuery(document).ready(function($) {
-        var $modal = $('#youtube-popup-modal');
-        var $iframe = $('#youtube-popup-iframe');
-        var isMemberLoggedIn = <?php echo $is_logged_in ? 'true' : 'false'; ?>;
+        var $modal       = $('#youtube-popup-modal');
+        var $iframe      = $('#youtube-popup-iframe');
+        var isRequesting = false;
 
+        // [04/11/2026] - Mở Modal Popup và nạp link embed YouTube sau khi đã xác thực đăng nhập thành công
         function openYoutubePopup(embedUrl) {
             if (!embedUrl) return;
             $iframe.attr('src', embedUrl);
             $modal.addClass('is-visible').attr('aria-hidden', 'false');
             $('body').css('overflow', 'hidden');
         }
+        window.openYoutubePopup = openYoutubePopup;
 
+        // [04/11/2026] - Đóng Modal Popup và ngắt luồng phát video YouTube
         function closeYoutubePopup() {
             $modal.removeClass('is-visible').attr('aria-hidden', 'true');
             $iframe.attr('src', '');
             $('body').css('overflow', '');
         }
+        window.closeYoutubePopup = closeYoutubePopup;
 
-        // [03/11/2026] - Xử lý sự kiện click xem video YouTube: kiểm tra đăng nhập, mở Popup phát video và gọi AJAX ghi lịch sử vào Google Sheets (sheet wytList)
+        // [04/11/2026] - Đảm bảo đóng Popup video khi người dùng nhấn nút Back/Forward trên trình duyệt (khôi phục từ BFCache)
+        $(window).on('pageshow', function(e) {
+            if (e.originalEvent && e.originalEvent.persisted) {
+                closeYoutubePopup();
+                isRequesting = false;
+                $('#youtube-space .youtube-space__trigger').removeClass('is-loading');
+            }
+        });
+
+        // [04/11/2026] - Xử lý click xem video: Gửi AJAX xác thực phiên đăng nhập thực tế trên server trước khi bật Popup phát video
         $('#youtube-space').on('click', '.youtube-space__trigger', function(e) {
             e.preventDefault();
+            if (isRequesting) return;
+
             var $trigger  = $(this);
             var embedUrl  = $trigger.attr('data-embed');
             var postId    = $trigger.attr('data-post-id');
             var postTitle = $trigger.attr('data-post-title');
             if (!embedUrl) return;
 
-            // Nếu chưa đăng nhập -> bật Popup yêu cầu đăng nhập
-            if (!isMemberLoggedIn) {
-                if (typeof showLoginPopup === 'function') {
-                    showLoginPopup();
-                } else {
-                    $('#auth-popup-overlay').addClass('show');
-                }
-                return;
-            }
-
-            // Mở ngay Popup phát video để đảm bảo trải nghiệm mượt mà
-            openYoutubePopup(embedUrl);
-
-            // Gửi AJAX bất đồng bộ ghi nhận thông tin xem video vào Google Sheets (wytList)
             var ajaxUrl   = (typeof MyAjax !== 'undefined' && MyAjax.ajax_url) ? MyAjax.ajax_url : '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
             var ajaxNonce = (typeof MyAjax !== 'undefined' && MyAjax.nonce) ? MyAjax.nonce : '<?php echo esc_js(wp_create_nonce('my_nonce')); ?>';
+
+            isRequesting = true;
+            $trigger.addClass('is-loading');
 
             $.ajax({
                 url: ajaxUrl,
                 type: 'POST',
+                cache: false,
                 data: {
                     action: 'my_watch_youtube',
                     nonce: ajaxNonce,
@@ -202,7 +276,18 @@ $is_logged_in = !empty($current_user);
                     post_title: postTitle
                 },
                 success: function(res) {
-                    if (!res.success && res.data && res.data.code === 'not_logged_in') {
+                    if (res && res.success) {
+                        window.pendingVideoWatch = null;
+                        // Chỉ mở Popup phát video khi server xác nhận còn phiên đăng nhập hợp lệ
+                        openYoutubePopup(embedUrl);
+                    } else {
+                        // [04/11/2026] - Ghi nhận video đang chờ xem để tự động mở Popup phát ngay sau khi đăng nhập thành công
+                        window.pendingVideoWatch = {
+                            embedUrl: embedUrl,
+                            postId: postId,
+                            postTitle: postTitle
+                        };
+                        // Nếu đã đăng xuất hoặc chưa đăng nhập -> đóng video (nếu có) và bật ngay Popup đăng nhập
                         closeYoutubePopup();
                         if (typeof showLoginPopup === 'function') {
                             showLoginPopup();
@@ -210,6 +295,24 @@ $is_logged_in = !empty($current_user);
                             $('#auth-popup-overlay').addClass('show');
                         }
                     }
+                },
+                error: function() {
+                    // [04/11/2026] - Ghi nhận video đang chờ xem để tự động mở Popup phát ngay sau khi đăng nhập thành công
+                    window.pendingVideoWatch = {
+                        embedUrl: embedUrl,
+                        postId: postId,
+                        postTitle: postTitle
+                    };
+                    closeYoutubePopup();
+                    if (typeof showLoginPopup === 'function') {
+                        showLoginPopup();
+                    } else {
+                        $('#auth-popup-overlay').addClass('show');
+                    }
+                },
+                complete: function() {
+                    isRequesting = false;
+                    $trigger.removeClass('is-loading');
                 }
             });
         });

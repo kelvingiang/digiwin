@@ -1,6 +1,78 @@
 var pendingDownload = null;
+window.pendingVideoWatch = null;
+
+// [04/11/2026] - Hàm cập nhật giao diện người dùng đăng nhập tức thì trên thanh Header (áp dụng cả menu chính và menu cuộn header-scroll)
+function updateHeaderUser(userData, memberUrl) {
+  if (!userData || !userData.username) return;
+  try {
+    localStorage.setItem("dgw_member", JSON.stringify(userData));
+  } catch (e) {}
+
+  const memberLink = memberUrl || ((typeof MyAjax !== "undefined" && MyAjax.home_url) ? (MyAjax.home_url + "/member") : "/member");
+  const safeUsername = jQuery("<div>").text(userData.username).html();
+  const welcomeHtml = '<div class="link-login-welcome">' +
+    '<a href="' + memberLink + '">' +
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="15" height="15" aria-hidden="true">' +
+    '<path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"/>' +
+    '</svg> ' +
+    safeUsername +
+    '</a>' +
+    '</div>';
+  jQuery(".login-box").html(welcomeHtml);
+}
+window.updateHeaderUser = updateHeaderUser;
+
+// [04/11/2026] - Khôi phục nút Đăng nhập trên Header khi chưa đăng nhập hoặc vừa đăng xuất
+function resetHeaderGuest(memberUrl) {
+  try {
+    localStorage.removeItem("dgw_member");
+  } catch (e) {}
+
+  // Nếu trên Header đã có sẵn thẻ .link-login chuẩn từ Loco Translate (PHP) thì giữ nguyên
+  if (jQuery(".login-box .link-login").length > 0) {
+    return;
+  }
+
+  const memberLink = memberUrl || ((typeof MyAjax !== "undefined" && MyAjax.home_url) ? (MyAjax.home_url + "/member") : "/member");
+  const isCn = (document.documentElement.lang === "zh-TW" || document.documentElement.lang.indexOf("zh") === 0);
+  const defaultText = isCn ? "登入 - 註冊" : "Đăng nhập - Đăng ký";
+  const loginText = (typeof MyAjax !== "undefined" && MyAjax.login_text) ? MyAjax.login_text : defaultText;
+  const guestHtml = '<a href="' + memberLink + '" class="link-login">' + loginText + '</a>';
+  jQuery(".login-box").html(guestHtml);
+}
+window.resetHeaderGuest = resetHeaderGuest;
+
+// [04/11/2026] - Bắt sự kiện khi người dùng click đăng xuất để xóa sạch cache client
+jQuery(document).on("click", "#btn-logout", function () {
+  resetHeaderGuest();
+});
 
 jQuery(document).ready(function ($) {
+  // [04/11/2026] - Tự động đồng bộ tên người dùng từ localStorage chỉ khi server xác nhận đang đăng nhập
+  try {
+    const cachedMember = JSON.parse(localStorage.getItem("dgw_member"));
+    if (cachedMember && cachedMember.username && typeof MyAjax !== "undefined" && MyAjax.is_logged_in) {
+      updateHeaderUser(cachedMember);
+    }
+  } catch (e) {}
+
+  // [04/11/2026] - Tự động kiểm tra trạng thái phiên thực tế với server qua AJAX
+  jQuery.ajax({
+    url: MyAjax.ajax_url,
+    type: "POST",
+    cache: false,
+    data: {
+      action: "check_member_login",
+    },
+    success: function (checkRes) {
+      if (checkRes && checkRes.success && checkRes.data && checkRes.data.logged_in && checkRes.data.user) {
+        updateHeaderUser(checkRes.data.user, checkRes.data.member_url);
+      } else {
+        // [04/11/2026] - Server xác nhận không có phiên đăng nhập -> đảm bảo khôi phục ngay trạng thái khách trên Header
+        resetHeaderGuest();
+      }
+    },
+  });
   jQuery("#my-load-data").on("click", function (e) {
     e.preventDefault();
 
@@ -215,48 +287,103 @@ jQuery(document).on("click", "#btn-login", function () {
     },
     success: function (res) {
       if (res.success) {
-        console.log("DEBUG:", res.data.debug);
+        // [04/11/2026] - Cập nhật ngay tên người đăng nhập trên Header tức thì (có fallback an toàn)
+        const userData = (res.data && res.data.user) ? res.data.user : {
+          username: (jQuery("#login-email").val() || "").split("@")[0]
+        };
+        const memberUrl = (res.data && res.data.member_url) ? res.data.member_url : "";
+        updateHeaderUser(userData, memberUrl);
+
         jQuery("#login-msg").removeClass("msg--error").addClass("show msg--success").css("color", "green").text(res.data.message);
         setTimeout(function () {
-          // ✅ 判斷在哪個頁面
+          // ✅ Phán đoán nếu đang ở trang /member thì tải lại trang để render dashboard
           const page = jQuery("#tab-login").data("page");
-
-          if (page === "member") {
-            window.location.href = window.location.href;
-            // window.location.href = "/"; // ← member page 轉首頁
+          if (page === "member" || window.location.pathname.indexOf("/member") !== -1) {
+            window.location.reload();
             return;
           }
+
           $this
             .prop("disabled", false)
             .removeClass("is-loading")
             .text(langSet.original);
-          jQuery("#auth-popup-overlay").remove();
+
+          // [04/11/2026] - Đóng popup đăng nhập và reset form, không xóa khỏi DOM để có thể mở lại khi cần
+          jQuery("#auth-popup-overlay").removeClass("show");
+          jQuery("#login-email").val("");
+          jQuery("#login-password").val("");
+          jQuery("#login-msg").removeClass("show msg--success msg--error").text("");
+
+          // [04/11/2026] - Tự động nhận diện video trên trang nếu người dùng đăng nhập trong lúc đang ở trang có video
+          const $ytTrigger = jQuery("#youtube-space .youtube-space__trigger");
+          if (!window.pendingVideoWatch && $ytTrigger.length > 0 && $ytTrigger.attr("data-embed")) {
+            window.pendingVideoWatch = {
+              embedUrl: $ytTrigger.attr("data-embed"),
+              postId: $ytTrigger.attr("data-post-id") || "",
+              postTitle: $ytTrigger.attr("data-post-title") || ""
+            };
+          }
+
+          // 1. [04/11/2026] - Nếu đang có yêu cầu xem video YouTube: Mở Popup video tức thì và gọi AJAX ghi nhận lịch sử (wytList)
+          if (window.pendingVideoWatch) {
+            const pendingVideo = window.pendingVideoWatch;
+            window.pendingVideoWatch = null;
+
+            if (typeof window.openYoutubePopup === "function") {
+              window.openYoutubePopup(pendingVideo.embedUrl);
+            } else {
+              const $iframe = jQuery("#youtube-popup-iframe");
+              const $modal = jQuery("#youtube-popup-modal");
+              if ($iframe.length && $modal.length) {
+                $iframe.attr("src", pendingVideo.embedUrl);
+                $modal.addClass("is-visible").attr("aria-hidden", "false");
+                jQuery("body").css("overflow", "hidden");
+              }
+            }
+
+            jQuery.ajax({
+              url: MyAjax.ajax_url,
+              type: "POST",
+              cache: false,
+              data: {
+                action: "my_watch_youtube",
+                nonce: MyAjax.nonce,
+                post_id: pendingVideo.postId,
+                post_title: pendingVideo.postTitle,
+              },
+            });
+            return;
+          }
+
+          // 2. [04/11/2026] - Nếu đang có yêu cầu tải tài liệu: Tiến hành tải file ngay lập tức
           if (pendingDownload) {
+            const curDownload = pendingDownload;
+            pendingDownload = null;
             jQuery.ajax({
               url: MyAjax.ajax_url,
               type: "POST",
               data: {
                 action: "my_download_file",
                 nonce: MyAjax.nonce,
-                post_id: pendingDownload.post_id,
-                post_title: pendingDownload.post_title,
-                post_source: pendingDownload.post_source,
+                post_id: curDownload.post_id,
+                post_title: curDownload.post_title,
+                post_source: curDownload.post_source,
               },
-              success: function (res) {
-                if (res.success) {
-                  window.location.href = res.data.post_source;
-                  // [02/11/2026] - Refresh lại trang sau khi bắt đầu tải để cập nhật thông tin người đăng nhập
+              success: function (dlRes) {
+                if (dlRes && dlRes.success && dlRes.data && dlRes.data.post_source) {
+                  const iframe = document.createElement("iframe");
+                  iframe.style.display = "none";
+                  iframe.src = dlRes.data.post_source;
+                  document.body.appendChild(iframe);
                   setTimeout(function () {
-                    window.location.reload();
-                  }, 1500);
+                    document.body.removeChild(iframe);
+                  }, 5000);
                 }
               },
             });
-          } else {
-            // [02/11/2026] - Refresh lại trang khi đăng nhập bằng popup để cập nhật thông tin người đăng nhập
-            window.location.reload();
+            return;
           }
-        }, 1000);
+        }, 600);
       } else {
         jQuery("#login-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(res.data.message);
         $this
