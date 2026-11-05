@@ -1,10 +1,10 @@
 <?php
 /**
  * 29/06/2026: Gộp và refactor các file xử lý AJAX Language thành chuẩn WordPress.
- * Các hàm bao gồm: change_language, change_languages
+ * [05/11/2026]: Loại bỏ chức năng đổi ngôn ngữ bằng Session cũ (change_language), hệ thống sử dụng đồng bộ Cookie site_lang.
  */
 
-// 1. Chức năng Đổi ngôn ngữ (Dùng Cookie - từ file change_languages.php)
+// Chức năng Đổi ngôn ngữ (Dùng Cookie site_lang)
 add_action('wp_ajax_change_languages', 'dgw_ajax_change_languages_handler');
 add_action('wp_ajax_nopriv_change_languages', 'dgw_ajax_change_languages_handler');
 function dgw_ajax_change_languages_handler() {
@@ -32,23 +32,6 @@ function dgw_ajax_change_languages_handler() {
             'status'       => 'ok',
             'current_lang' => $lang,
         ];
-    }
-
-    wp_send_json($response);
-}
-
-// 2. Chức năng Đổi ngôn ngữ (Dùng Session - từ file bk.change_language.php / change_language.php)
-add_action('wp_ajax_change_language', 'dgw_ajax_change_language_handler');
-add_action('wp_ajax_nopriv_change_language', 'dgw_ajax_change_language_handler');
-function dgw_ajax_change_language_handler() {
-    // 29/06/2026: Xử lý thay đổi ngôn ngữ bằng Session (Dự phòng cho bản cũ)
-    if (!session_id()) session_start();
-    
-    $response = array('status' => 'error');
-
-    if (isset($_POST['type'])) {
-        $_SESSION['languages'] = sanitize_text_field($_POST['type']);
-        $response = array('status' => 'ok');
     }
 
     wp_send_json($response);

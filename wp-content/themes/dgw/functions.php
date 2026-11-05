@@ -8,12 +8,22 @@ if (!ob_get_level()) {
 
 // [22/10/2026] - Khởi tạo session an toàn, kiểm tra headers_sent() để tránh cảnh báo headers already sent trên hosting
 add_action('init', function() {
+    // [05/11/2026] - Bo qua session o cac tien trinh ngam (Cron, REST API, CLI) khong can session
+    if (
+        (function_exists('wp_doing_cron') && wp_doing_cron()) ||
+        (defined('DOING_CRON') && DOING_CRON) ||
+        (defined('REST_REQUEST') && REST_REQUEST) ||
+        (defined('WP_CLI') && WP_CLI)
+    ) {
+        return;
+    }
     if (session_status() === PHP_SESSION_NONE) {
         if (!headers_sent($file, $line)) {
             session_start();
         } else {
             // Ghi log để định vị chính xác file/dòng gây flush headers nếu đang bật WP_DEBUG
-            if (defined('WP_DEBUG') && WP_DEBUG) {
+            // [05/11/2026] - Chi log khi co file va line cu the gay flush, tranh log rac khi server flush/redirect (line 0)
+            if (defined('WP_DEBUG') && WP_DEBUG && !empty($file) && $line > 0) {
                 error_log(sprintf('[Theme Session] Headers already sent in %s on line %d. Session start skipped.', $file, $line));
             }
         }
