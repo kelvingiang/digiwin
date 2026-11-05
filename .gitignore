@@ -12,6 +12,9 @@
 wp-config.php
 wp-config-hosting.php
 error_log
+# 05/11/2026: Loai bo file debug.log va cac file log khoi Git tracking
+*.log
+debug.log
 .htaccess
 
 # --- 3. 排除 wp-content 中的非開發內容 ---
