@@ -9,7 +9,8 @@ if (!empty($_COOKIE['custom_session'])) {
     $data = get_member_information($_COOKIE['custom_session']);
 }
 // Xác định ngôn ngữ hiện tại từ cookie, mặc định là 'vn'
-$current_lang = (!empty($_COOKIE['site_lang']) && in_array($_COOKIE['site_lang'], ['cn', 'vn'], true)) ? $_COOKIE['site_lang'] : 'vn';
+// [05/11/2026] - Lấy ngôn ngữ hiện hành ưu tiên qua dgw_get_lang() để đồng bộ với Single Post
+$current_lang = function_exists('dgw_get_lang') ? dgw_get_lang() : ((!empty($_COOKIE['site_lang']) && in_array($_COOKIE['site_lang'], ['cn', 'vn'], true)) ? $_COOKIE['site_lang'] : 'vn');
 
 /**
  * [15/10/2026] - @author: Senior Full-Stack Developer

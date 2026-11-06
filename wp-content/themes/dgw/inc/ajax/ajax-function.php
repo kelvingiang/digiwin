@@ -14,6 +14,7 @@ add_action('wp_ajax_nopriv_load_more_posts', 'ajax_load_more_posts');  // 未登
 function ajax_load_more_posts()
 {
     // 🔒 [2026-10-09] - @author: Kelvin - Hỗ trợ lọc category theo cả slug lẫn term_id, tránh bị intval ép về 0
+    // 🔒 [2026-11-05] - Hỗ trợ gom nhóm Translation Group và giữ thẻ gốc div.item tương thích selector scroll
     $lastID   = isset($_POST['lastID']) ? intval($_POST['lastID']) : 0;
     $post     = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
     $raw_cate = isset($_POST['cateID']) ? sanitize_text_field(wp_unslash($_POST['cateID'])) : '';
@@ -38,13 +39,42 @@ function ajax_load_more_posts()
         ),
     );
 
-    // ✅ [2026-10-09]: Nếu có phân loại, tự động phân biệt term_id số hoặc slug chuỗi
+    // ✅ [2026-10-09 / 2026-11-05]: Hỗ trợ gom nhóm Translation Group khi lọc theo category
     if (!empty($cateID)) {
+        $target_terms = array($cateID);
+        $field = is_numeric($cateID) ? 'term_id' : 'slug';
+
+        $term_obj = is_numeric($cateID)
+            ? get_term((int) $cateID, $cate)
+            : get_term_by('slug', (string) $cateID, $cate);
+
+        if ($term_obj && !is_wp_error($term_obj)) {
+            $group_id = get_term_meta($term_obj->term_id, 'translation_group', true);
+            if (!empty($group_id)) {
+                $group_terms = get_terms(array(
+                    'taxonomy'   => $cate,
+                    'fields'     => 'ids',
+                    'hide_empty' => false,
+                    'meta_query' => array(
+                        array(
+                            'key'     => 'translation_group',
+                            'value'   => $group_id,
+                            'compare' => '=',
+                        ),
+                    ),
+                ));
+                if (!empty($group_terms) && !is_wp_error($group_terms)) {
+                    $target_terms = $group_terms;
+                    $field        = 'term_id';
+                }
+            }
+        }
+
         $args['tax_query'] = array(
             array(
                 'taxonomy' => $cate,
-                'field'    => is_numeric($cateID) ? 'term_id' : 'slug',
-                'terms'    => $cateID,
+                'field'    => $field,
+                'terms'    => $target_terms,
             ),
         );
     }
@@ -60,21 +90,26 @@ function ajax_load_more_posts()
 
         while ($wp_query->have_posts()) :
             $wp_query->the_post();
-            $thumb_id = get_post_thumbnail_id(get_the_ID());
+            $post_id  = get_the_ID();
+            $thumb_id = get_post_thumbnail_id($post_id);
             $url_data = wp_get_attachment_image_src($thumb_id, 'medium');
-            $srcset = wp_get_attachment_image_srcset($thumb_id, 'medium');
+            $srcset   = wp_get_attachment_image_srcset($thumb_id, 'medium');
+            $permalink = get_the_permalink($post_id);
+
+            // [2026-11-05] Thẻ div.item chuẩn SEO kèm link a bên trong
             $html .= "<div class='item'  
-                           data-id='" . esc_attr($stt) . "' 
-                           data-link ='" . esc_url(get_the_permalink()) . "' 
-                           data-post='" . esc_attr(get_the_ID()) . "'>";
+                           data-id='" . esc_attr((string) $stt) . "' 
+                           data-link='" . esc_url($permalink) . "' 
+                           data-post='" . esc_attr((string) $post_id) . "'>";
             $html .= "<div>";
+            $html .= "<a href='" . esc_url($permalink) . "' style='display:block; text-decoration:none; color:inherit;'>";
             if (has_post_thumbnail()) {
                 $html .= "<img class='item-img' 
                          src='" . esc_url($url_data[0]) . "' 
-                         srcset='" . esc_attr($srcset) . "'
+                         srcset='" . esc_attr((string) $srcset) . "'
                          fetchpriority='high'
-                         width='" . esc_attr($url_data[1]) . "'
-                         height='" .  esc_attr($url_data[2]) . "' 
+                         width='" . esc_attr((string) $url_data[1]) . "'
+                         height='" .  esc_attr((string) $url_data[2]) . "' 
                          alt='" . esc_attr(get_the_title()) . "' />";
             } else {
                 $html .= "<img class='item-img' 
@@ -85,6 +120,7 @@ function ajax_load_more_posts()
                          height='270'
                          alt='" . esc_attr(get_the_title()) . "' />";
             }
+            $html .= "</a>";
             // 取得 template part 的輸出（用 buffer 捕獲）
             ob_start();
             get_template_part('templates/view-comment');
@@ -92,7 +128,7 @@ function ajax_load_more_posts()
             $html .= $comment_html;
             $html .= "</div>";
 
-            $html .= "<div class='item-title'><h3>" . esc_html(get_the_title()) . "</h3></div>";
+            $html .= "<div class='item-title'><a href='" . esc_url($permalink) . "' style='text-decoration:none; color:inherit; display:block; width:100%;'><h3>" . esc_html(get_the_title()) . "</h3></a></div>";
             $html .= "</div>";
 
             $stt++;
@@ -170,16 +206,3 @@ function check_math_captcha()
         wp_send_json(['status' => 'fail']);
     }
 }
-
-// lấy IP của mạng =========================
-// function getUserIP() {
-//     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-//         $ip = $_SERVER['HTTP_CLIENT_IP'];
-//     } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-//         // 可能有多個IP，用第一個
-//         $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-//     } else {
-//         $ip = $_SERVER['REMOTE_ADDR'];
-//     }
-//     return trim($ip);
-// }

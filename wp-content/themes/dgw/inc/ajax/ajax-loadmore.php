@@ -2,6 +2,7 @@
 /**
  * 29/06/2026: Gộp và refactor các file xử lý AJAX Load More thành chuẩn WordPress.
  * Các hàm bao gồm: load_more_post, load_more_in_group, bk_load_more.
+ * 05/11/2026: Hỗ trợ gom nhóm Translation Group khi load more theo category.
  */
 
 // 1. Chức năng Load More cơ bản (bk-load-more)
@@ -16,7 +17,8 @@ function dgw_ajax_bk_load_more_handler() {
     $cate = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
 
     if (!session_id()) session_start();
-    $lang = isset($_SESSION['languages']) ? $_SESSION['languages'] : dgw_get_lang();
+    // [05/11/2026] - Ưu tiên dgw_get_lang() để đồng bộ chuẩn xác ngôn ngữ
+    $lang = function_exists('dgw_get_lang') ? dgw_get_lang() : (isset($_SESSION['languages']) ? $_SESSION['languages'] : 'vn');
 
     $args = array(
         'post_type' => $post_type,
@@ -35,12 +37,33 @@ function dgw_ajax_bk_load_more_handler() {
     );
 
     if (!empty($cateID) && !empty($cate)) {
+        $target_terms = array($cateID);
+        // [05/11/2026] Hỗ trợ gom toàn bộ term trong Translation Group
+        $group_id = get_term_meta($cateID, 'translation_group', true);
+        if (!empty($group_id)) {
+            $group_terms = get_terms(array(
+                'taxonomy'   => $cate,
+                'fields'     => 'ids',
+                'hide_empty' => false,
+                'meta_query' => array(
+                    array(
+                        'key'     => 'translation_group',
+                        'value'   => $group_id,
+                        'compare' => '=',
+                    ),
+                ),
+            ));
+            if (!empty($group_terms) && !is_wp_error($group_terms)) {
+                $target_terms = $group_terms;
+            }
+        }
+
         $args['tax_query'] = array(
             array(
                 'taxonomy' => $cate,
-                'field' => 'term_id',
-                'terms' => $cateID,
-            )
+                'field'    => 'term_id',
+                'terms'    => $target_terms,
+            ),
         );
     }
 
@@ -157,8 +180,6 @@ function dgw_ajax_load_more_in_group_handler() {
             ),
         ),
     );
-
-    // Ở file gốc $taxonomy bị undefined, nên ở đây tạm bỏ tax_query nếu $taxonomy không tồn tại hoặc giữ nguyên nếu đang chạy sai
 
     $wp_query = new WP_Query($args);
     $html = '';

@@ -48,7 +48,8 @@
                         $link_download = home_url('/resources/chuyen-doi-so-white-book-download');
 
                         $allowed_langs = ['vn', 'cn'];
-                        $lang = isset($_COOKIE['site_lang']) ? $_COOKIE['site_lang'] : '';
+                        // [05/11/2026] - Đồng bộ lấy ngôn ngữ qua dgw_get_lang() thay vì chỉ đọc cookie
+                        $lang = function_exists('dgw_get_lang') ? dgw_get_lang() : (isset($_COOKIE['site_lang']) ? $_COOKIE['site_lang'] : 'vn');
 
                         // Chỉ xử lý nếu giá trị hợp lệ
                         if (in_array($lang, $allowed_langs, true)) {

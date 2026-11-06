@@ -1,17 +1,16 @@
 <?php
 /**
- * [2026-10-09] - @author: Kelvin
- * Template Name: Solutions Page
- * Description: Tối ưu bảo mật (Late Escaping/Sanitize), lấy chuẩn posts_per_page và tải nhanh mượt mà qua requestAnimationFrame
+ * 2026-10-09 - @author: Kelvin - Tối ưu danh sách Solutions: Layout Modern Corporate Card, Phân trang SEO URL cate/tag, Infinite Scroll mượt mà 60fps
+ * 2026-11-05 - Hỗ trợ selector .item linh hoạt và click chuyển hướng thẻ bài viết
  */
 get_header(); ?>
 
-<div>
-    <?php pageImg(get_the_ID()); ?>
+<div class="banner">
+    <?php
+    get_template_part('templates/slider-owl');
+    ?>
 </div>
-<div class="page-title-h1">
-    <h1><?php echo esc_html__('solution', 'dgw'); ?></h1> 
-</div>
+
 <div class="menu-sub">
     <?php
     $menu_category = 'solutions_category';
@@ -52,6 +51,7 @@ get_header(); ?>
 
 <script>
     // [2026-10-09] - @author: Kelvin - Xử lý tải thêm Solutions khi cuộn chuột mượt mà 60fps qua requestAnimationFrame
+    // [2026-11-05] - Hỗ trợ selector .item linh hoạt (cả div.item và a.item)
     jQuery(document).ready(function($) {
         var isLoading = false;
         var hasMore = true;
@@ -67,10 +67,24 @@ get_header(); ?>
         var cate = '<?php echo esc_js($tax); ?>';
         var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
 
+        // Cho phép click vào bất kỳ đâu trên card để chuyển trang
+        $(document).on('click', '.data-list .item', function(e) {
+            if ($(e.target).closest('.view_comment_area, a').length) {
+                return;
+            }
+            var link = $(this).attr('data-link');
+            if (link) {
+                window.location.href = link;
+            }
+        });
+
         function loadMoreSolutions() {
             if (isLoading || !hasMore) return;
 
-            var $lastItem = $(".data-list > div:last-child");
+            var $lastItem = $(".data-list > .item:last-child");
+            if ($lastItem.length === 0) {
+                $lastItem = $(".data-list > div:last-child, .data-list > *:last-child");
+            }
             if ($lastItem.length === 0) return;
 
             // Kiểm tra nếu cuộn cách phần tử cuối cùng 50px

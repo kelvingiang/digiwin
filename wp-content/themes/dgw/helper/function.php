@@ -16,6 +16,7 @@ add_action('get_template_part_templates/template', function ($slug, $name = null
 
 
 // [2026-07-09] - Refactor dgw_get_lang and locale mapping for AJAX/get/cookie consistency
+// [05/11/2026] - Ưu tiên nhận diện ngôn ngữ theo bài viết chi tiết (Single Post)
 function dgw_get_lang()
 {
     $default = 'vn';
@@ -28,6 +29,17 @@ function dgw_get_lang()
             }
             if ($lang === 'vi-VN' || $lang === 'vn') {
                 return 'vn';
+            }
+        }
+    }
+
+    // [05/11/2026] - Ưu tiên ngôn ngữ bài viết tuyệt đối khi đang xem trang chi tiết (Single Post)
+    if (!is_admin() && is_singular()) {
+        $queried_id = get_queried_object_id();
+        if ($queried_id) {
+            $post_lang = get_post_meta($queried_id, '_metabox_langguage', true);
+            if ($post_lang === 'cn' || $post_lang === 'vn') {
+                return $post_lang;
             }
         }
     }
@@ -47,6 +59,74 @@ function dgw_get_lang()
 
     return $default;
 }
+
+/**
+ * [05/11/2026] - Nạp lại textdomain theo locale chỉ định
+ * Hỗ trợ load chính xác file .l10n.php và .mo trong thư mục languages/ của theme
+ *
+ * @param string $locale
+ */
+function dgw_reload_theme_textdomain(string $locale): void
+{
+    $lang_dir = get_template_directory() . '/languages';
+    $php_file = $lang_dir . '/' . $locale . '.l10n.php';
+    $mo_file  = $lang_dir . '/' . $locale . '.mo';
+
+    unload_textdomain('dgw');
+    if (file_exists($php_file)) {
+        load_textdomain('dgw', $php_file, $locale);
+    } elseif (file_exists($mo_file)) {
+        load_textdomain('dgw', $mo_file, $locale);
+    } else {
+        load_theme_textdomain('dgw', $lang_dir);
+    }
+}
+
+/**
+ * [05/11/2026] - Tự động đồng bộ Cookie, Session và Locale theo bài viết Single
+ * Khi truy cập bài viết chi tiết, hệ thống lập tức đồng bộ Cookie site_lang,
+ * Session và nạp lại textdomain theo ngôn ngữ bài viết để toàn bộ Menu, Footer,
+ * Submenu và gettext i18n chuyển đổi đồng bộ ngay lập tức.
+ */
+add_action('template_redirect', function () {
+    if (is_admin() || wp_doing_ajax()) {
+        return;
+    }
+
+    if (is_singular()) {
+        $queried_id = get_queried_object_id();
+        if ($queried_id) {
+            $post_lang = get_post_meta($queried_id, '_metabox_langguage', true);
+            if ($post_lang === 'cn' || $post_lang === 'vn') {
+                // 1. Cập nhật cookie runtime và gửi header setcookie
+                $_COOKIE['site_lang'] = $post_lang;
+                if (!headers_sent()) {
+                    setcookie(
+                        'site_lang',
+                        $post_lang,
+                        time() + YEAR_IN_SECONDS,
+                        COOKIEPATH ? COOKIEPATH : '/',
+                        COOKIE_DOMAIN,
+                        is_ssl(),
+                        false
+                    );
+                }
+
+                // 2. Đồng bộ Session nếu có
+                if (session_status() === PHP_SESSION_ACTIVE || !empty($_SESSION)) {
+                    $_SESSION['languages'] = $post_lang;
+                }
+
+                // 3. Chuyển đổi locale và nạp lại textdomain tương ứng
+                $target_locale = ($post_lang === 'cn') ? 'zh_TW' : 'vi_VN';
+                if (function_exists('switch_to_locale')) {
+                    switch_to_locale($target_locale);
+                }
+                dgw_reload_theme_textdomain($target_locale);
+            }
+        }
+    }
+}, 1);
 
 /**
  * [2026-10-07] - Thiết lập cấu hình ngôn ngữ hệ thống:
