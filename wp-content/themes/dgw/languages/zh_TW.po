@@ -1131,7 +1131,7 @@ msgstr "查詢"
 #: taxonomy/taxonomy-resource.php:29 taxonomy/taxonomy-services.php:30
 #: taxonomy/taxonomy-solution.php:99
 msgid "Search Categories"
-msgstr ""
+msgstr "搜尋分類"
 
 #: search.php:5
 #, php-format
@@ -1250,7 +1250,7 @@ msgstr "圖片輪播"
 #: taxonomy/taxonomy-solution.php:31 inc/admin/admin-add-post-tag-field.php:101
 #: inc/admin/admin-add-post-taxonomy-field.php:106
 msgid "Slug"
-msgstr ""
+msgstr "別名 (Slug)"
 
 #: templates/footer.php:113
 msgid "Smart Warehouse (WMS)"
@@ -1534,3 +1534,96 @@ msgstr "越南鼎捷 Zalo OA"
 #: templates/home-popup.php:78
 msgid "Đóng thông báo"
 msgstr ""
+
+msgid "Services Category"
+msgstr "服務分類"
+
+msgid "Solutions Category"
+msgstr "解決方案分類"
+
+msgid "All Categories"
+msgstr "所有分類"
+
+msgid "Parent Category"
+msgstr "父級分類"
+
+msgid "Parent Category:"
+msgstr "父級分類："
+
+msgid "Edit Category"
+msgstr "編輯分類"
+
+msgid "Update Category"
+msgstr "更新分類"
+
+msgid "Add New Category"
+msgstr "新增分類"
+
+msgid "New Category Name"
+msgstr "新分類名稱"
+
+msgid "Term Language"
+msgstr "分類語言"
+
+msgid "Chinese (CN)"
+msgstr "繁體中文 (CN)"
+
+msgid "Vietnamese (VN)"
+msgstr "越南語 (VN)"
+
+msgid "Select the language this term represents."
+msgstr "選擇此分類所代表的語言。"
+
+msgid "Translation Group ID"
+msgstr "翻譯分組 ID"
+
+msgid "Enter the shared group ID, or select the corresponding term below to link automatically."
+msgstr "輸入共享分組 ID，或在下方選擇對應分類以自動關聯。"
+
+msgid "Or link translation with Term:"
+msgstr "或與分類建立翻譯關聯："
+
+msgid "-- Do not link (Create new group) --"
+msgstr "-- 不建立關聯（建立新分組）--"
+
+msgid "Display Order"
+msgstr "顯示順序"
+
+msgid "Terms with the same ID will be linked together as translations."
+msgstr "具有相同 ID 的分類將作為翻譯互相關聯。"
+
+msgid "Current linked translations:"
+msgstr "目前關聯的翻譯："
+
+msgid "Category Name"
+msgstr "分類名稱"
+
+msgid "Translation Group"
+msgstr "翻譯分組"
+
+msgid "Order"
+msgstr "順序"
+
+msgid "Posts"
+msgstr "文章數量"
+
+msgid "-- All Languages --"
+msgstr "-- 所有語言 --"
+
+msgid "Activities Category"
+msgstr "活動分類"
+
+msgid "Resources Category"
+msgstr "資料分類"
+
+msgid "Case Studies Category"
+msgstr "成功案例分類"
+
+msgid "Advertising Category"
+msgstr "廣告分類"
+
+msgid "Industries Category"
+msgstr "行業分類"
+
+msgid "Join Us Category"
+msgstr "招募分類"

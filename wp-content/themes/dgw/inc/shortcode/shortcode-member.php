@@ -39,7 +39,8 @@ function member_login_register_form()
     ob_start(); ?>
     <div id="auth-popup-overlay">
         <div id="auth-popup-box">
-            <button id="auth-popup-close">✕</button>
+            <!-- [09/11/2026] - Bổ sung type="button" và aria-label chuẩn Accessibility để tránh button bị hiểu nhầm là submit -->
+            <button type="button" id="auth-popup-close" aria-label="<?php esc_attr_e('Close', 'dgw'); ?>">✕</button>
 
             <div class="popup-logo"></div>
 

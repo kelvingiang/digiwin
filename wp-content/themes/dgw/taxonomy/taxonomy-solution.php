@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 /**
  * Ngày thực hiện: 05/11/2026
+ * Cập nhật: 06/11/2026 - Chuẩn hóa toàn bộ text gốc (source strings) sang Tiếng Anh để quản lý dịch tập trung qua Loco Translate
  * Chức năng: Đăng ký 1 Taxonomy duy nhất 'solutions_category' theo cơ chế Translation Group
  * Kiến trúc: Các term đa ngôn ngữ (CN, VN) lưu chung bảng wp_terms, liên kết với nhau bằng 'translation_group' trong wp_termmeta
  * Tối ưu: Ngăn chặn khởi tạo lặp (chỉ đăng ký hook 1 lần duy nhất) để không bị trùng lặp trường trên giao diện
@@ -14,8 +15,8 @@ if (!defined('ABSPATH')) {
 
 class Taxonomy_Solution
 {
-    public const TAXONOMY     = 'solutions_category';
-    public const POST_TYPE    = 'solutions';
+    public const TAXONOMY      = 'solutions_category';
+    public const POST_TYPE     = 'solutions';
     private const NONCE_ACTION = 'dgw_solution_group_action';
     private const NONCE_NAME   = 'dgw_solution_group_nonce';
 
@@ -61,22 +62,23 @@ class Taxonomy_Solution
 
     /**
      * Ngày thực hiện: 05/11/2026
+     * Cập nhật: 06/11/2026 - Chuẩn hóa i18n text sang English
      * Đăng ký 1 taxonomy duy nhất cho Solutions
      */
     public function register_taxonomy(): void
     {
         $labels = [
-            'name'              => __('Chuyên mục Giải pháp', 'dgw'),
-            'singular_name'     => __('Chuyên mục Giải pháp', 'dgw'),
-            'search_items'      => __('Tìm chuyên mục', 'dgw'),
-            'all_items'         => __('Tất cả chuyên mục', 'dgw'),
-            'parent_item'       => __('Chuyên mục cha', 'dgw'),
-            'parent_item_colon' => __('Chuyên mục cha:', 'dgw'),
-            'edit_item'         => __('Chỉnh sửa chuyên mục', 'dgw'),
-            'update_item'       => __('Cập nhật chuyên mục', 'dgw'),
-            'add_new_item'      => __('Thêm chuyên mục mới', 'dgw'),
-            'new_item_name'     => __('Tên chuyên mục mới', 'dgw'),
-            'menu_name'         => __('Chuyên mục Giải pháp', 'dgw'),
+            'name'              => __('Category', 'dgw'),
+            'singular_name'     => __('Category', 'dgw'),
+            'search_items'      => __('Search Categories', 'dgw'),
+            'all_items'         => __('All Categories', 'dgw'),
+            'parent_item'       => __('Parent Category', 'dgw'),
+            'parent_item_colon' => __('Parent Category:', 'dgw'),
+            'edit_item'         => __('Edit Category', 'dgw'),
+            'update_item'       => __('Update Category', 'dgw'),
+            'add_new_item'      => __('Add New Category', 'dgw'),
+            'new_item_name'     => __('New Category Name', 'dgw'),
+            'menu_name'         => __('Category', 'dgw'),
         ];
 
         register_taxonomy(self::TAXONOMY, self::POST_TYPE, [
@@ -96,6 +98,7 @@ class Taxonomy_Solution
 
     /**
      * Ngày thực hiện: 05/11/2026
+     * Cập nhật: 06/11/2026 - i18n English
      * Render các trường khi Thêm mới Term: Ngôn ngữ, Translation Group, Order
      */
     public function render_add_fields(): void
@@ -109,25 +112,25 @@ class Taxonomy_Solution
         ]);
         ?>
         <div class="form-field">
-            <label for="term_lang"><strong><?php esc_html_e('Ngôn ngữ của Term', 'dgw'); ?></strong></label>
+            <label for="term_lang"><strong><?php esc_html_e('Term Language', 'dgw'); ?></strong></label>
             <select name="term_lang" id="term_lang">
-                <option value="cn"><?php esc_html_e('Tiếng Trung (CN)', 'dgw'); ?></option>
-                <option value="vn" selected><?php esc_html_e('Tiếng Việt (VN)', 'dgw'); ?></option>
+                <option value="cn"><?php esc_html_e('Chinese (CN)', 'dgw'); ?></option>
+                <option value="vn" selected><?php esc_html_e('Vietnamese (VN)', 'dgw'); ?></option>
             </select>
-            <p><?php esc_html_e('Chọn ngôn ngữ mà term này đại diện.', 'dgw'); ?></p>
+            <p><?php esc_html_e('Select the language this term represents.', 'dgw'); ?></p>
         </div>
 
         <div class="form-field">
             <label for="translation_group"><strong><?php esc_html_e('Translation Group ID', 'dgw'); ?></strong></label>
-            <input type="number" name="translation_group" id="translation_group" value="" placeholder="Ví dụ: 10 (Để trống sẽ tự tạo nhóm mới)" />
-            <p><?php esc_html_e('Nhập ID nhóm dịch chung, hoặc chọn term đối ứng bên dưới để tự động liên kết.', 'dgw'); ?></p>
+            <input type="number" name="translation_group" id="translation_group" value="" placeholder="Ví dụ: 10" />
+            <p><?php esc_html_e('Enter the shared group ID, or select the corresponding term below to link automatically.', 'dgw'); ?></p>
         </div>
 
         <?php if (!empty($existing_terms) && !is_wp_error($existing_terms)) : ?>
             <div class="form-field">
-                <label for="link_with_term"><?php esc_html_e('Hoặc liên kết bản dịch với Term:', 'dgw'); ?></label>
+                <label for="link_with_term"><?php esc_html_e('Or link translation with Term:', 'dgw'); ?></label>
                 <select name="link_with_term" id="link_with_term">
-                    <option value=""><?php esc_html_e('-- Không liên kết (Tạo nhóm mới) --', 'dgw'); ?></option>
+                    <option value=""><?php esc_html_e('-- Do not link (Create new group) --', 'dgw'); ?></option>
                     <?php foreach ($existing_terms as $t) : 
                         $t_lang  = get_term_meta($t->term_id, 'term_lang', true) ?: 'cn';
                         $t_group = get_term_meta($t->term_id, 'translation_group', true) ?: $t->term_id;
@@ -151,7 +154,7 @@ class Taxonomy_Solution
         <?php endif; ?>
 
         <div class="form-field">
-            <label for="cate_order"><?php esc_html_e('Thứ tự hiển thị', 'dgw'); ?></label>
+            <label for="cate_order"><?php esc_html_e('Display Order', 'dgw'); ?></label>
             <input type="number" name="cate_order" id="cate_order" value="0" />
         </div>
         <?php
@@ -159,6 +162,7 @@ class Taxonomy_Solution
 
     /**
      * Ngày thực hiện: 05/11/2026
+     * Cập nhật: 06/11/2026 - i18n English
      * Render các trường khi Chỉnh sửa Term
      */
     public function render_edit_fields(WP_Term $term): void
@@ -184,11 +188,11 @@ class Taxonomy_Solution
         ]);
         ?>
         <tr class="form-field">
-            <th scope="row"><label for="term_lang"><strong><?php esc_html_e('Ngôn ngữ của Term', 'dgw'); ?></strong></label></th>
+            <th scope="row"><label for="term_lang"><strong><?php esc_html_e('Term Language', 'dgw'); ?></strong></label></th>
             <td>
                 <select name="term_lang" id="term_lang">
-                    <option value="cn" <?php selected($term_lang, 'cn'); ?>><?php esc_html_e('Tiếng Trung (CN)', 'dgw'); ?></option>
-                    <option value="vn" <?php selected($term_lang, 'vn'); ?>><?php esc_html_e('Tiếng Việt (VN)', 'dgw'); ?></option>
+                    <option value="cn" <?php selected($term_lang, 'cn'); ?>><?php esc_html_e('Chinese (CN)', 'dgw'); ?></option>
+                    <option value="vn" <?php selected($term_lang, 'vn'); ?>><?php esc_html_e('Vietnamese (VN)', 'dgw'); ?></option>
                 </select>
             </td>
         </tr>
@@ -198,9 +202,9 @@ class Taxonomy_Solution
             <td>
                 <input type="number" name="translation_group" id="translation_group" value="<?php echo esc_attr((string)$translation_group); ?>" />
                 <p class="description">
-                    <?php esc_html_e('Các term có cùng ID này sẽ được liên kết bản dịch với nhau.', 'dgw'); ?>
+                    <?php esc_html_e('Terms with the same ID will be linked together as translations.', 'dgw'); ?>
                     <?php if (!empty($linked_terms) && !is_wp_error($linked_terms)) : ?>
-                        <br><strong><?php esc_html_e('Bản dịch liên kết hiện tại:', 'dgw'); ?></strong>
+                        <br><strong><?php esc_html_e('Current linked translations:', 'dgw'); ?></strong>
                         <?php foreach ($linked_terms as $lt) : 
                             $lt_lang = get_term_meta($lt->term_id, 'term_lang', true) ?: 'cn';
                         ?>
@@ -214,7 +218,7 @@ class Taxonomy_Solution
         </tr>
 
         <tr class="form-field">
-            <th scope="row"><label for="cate_order"><?php esc_html_e('Thứ tự hiển thị', 'dgw'); ?></label></th>
+            <th scope="row"><label for="cate_order"><?php esc_html_e('Display Order', 'dgw'); ?></label></th>
             <td>
                 <input type="number" name="cate_order" id="cate_order" value="<?php echo esc_attr($cate_order !== '' ? $cate_order : 0); ?>" />
             </td>
@@ -262,18 +266,19 @@ class Taxonomy_Solution
 
     /**
      * Ngày thực hiện: 05/11/2026
+     * Cập nhật: 06/11/2026 - i18n English
      * Khai báo cấu trúc các cột hiển thị trong danh sách Term
      */
     public function customize_columns(array $columns): array
     {
         return [
             'cb'                => '<input type="checkbox" />',
-            'name'              => __('Tên chuyên mục', 'dgw'),
+            'name'              => __('Category Name', 'dgw'),
             'slug'              => __('Slug', 'dgw'),
-            'term_lang'         => __('Ngôn ngữ', 'dgw'),
+            'term_lang'         => __('Language', 'dgw'),
             'translation_group' => __('Translation Group', 'dgw'),
-            'cate_order'        => __('Thứ tự', 'dgw'),
-            'posts'             => __('Số bài viết', 'dgw'),
+            'cate_order'        => __('Order', 'dgw'),
+            'posts'             => __('Posts', 'dgw'),
         ];
     }
 
@@ -381,6 +386,7 @@ class Taxonomy_Solution
 
     /**
      * Ngày thực hiện: 05/11/2026
+     * Cập nhật: 06/11/2026 - i18n English
      * Dropdown lọc danh sách term theo ngôn ngữ trên trang edit-tags.php
      */
     public function render_admin_language_filter(string $post_type): void
@@ -393,9 +399,9 @@ class Taxonomy_Solution
         $selected = isset($_GET['term_lang_filter']) ? sanitize_text_field($_GET['term_lang_filter']) : '';
         ?>
         <select name="term_lang_filter">
-            <option value=""><?php esc_html_e('-- Tất cả ngôn ngữ --', 'dgw'); ?></option>
-            <option value="cn" <?php selected($selected, 'cn'); ?>><?php esc_html_e('Tiếng Trung (CN)', 'dgw'); ?></option>
-            <option value="vn" <?php selected($selected, 'vn'); ?>><?php esc_html_e('Tiếng Việt (VN)', 'dgw'); ?></option>
+            <option value=""><?php esc_html_e('-- All Languages --', 'dgw'); ?></option>
+            <option value="cn" <?php selected($selected, 'cn'); ?>><?php esc_html_e('Chinese (CN)', 'dgw'); ?></option>
+            <option value="vn" <?php selected($selected, 'vn'); ?>><?php esc_html_e('Vietnamese (VN)', 'dgw'); ?></option>
         </select>
         <?php
     }

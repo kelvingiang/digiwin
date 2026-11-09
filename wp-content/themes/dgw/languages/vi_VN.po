@@ -708,7 +708,7 @@ msgstr ""
 #: taxonomy/tag-advertising.php:27 taxonomy/tag-advertising.php:36
 #: inc/admin/admin-custom-columns.php:14
 msgid "Language"
-msgstr ""
+msgstr "Ngôn ngữ"
 
 #: templates/languages.php:78
 msgid "Language Switcher"
@@ -1128,7 +1128,7 @@ msgstr ""
 #: taxonomy/taxonomy-resource.php:29 taxonomy/taxonomy-services.php:30
 #: taxonomy/taxonomy-solution.php:99
 msgid "Search Categories"
-msgstr ""
+msgstr "Tìm chuyên mục"
 
 #: search.php:5
 #, php-format
@@ -1247,7 +1247,7 @@ msgstr ""
 #: taxonomy/taxonomy-solution.php:31 inc/admin/admin-add-post-tag-field.php:101
 #: inc/admin/admin-add-post-taxonomy-field.php:106
 msgid "Slug"
-msgstr ""
+msgstr "Slug"
 
 #: templates/footer.php:113
 msgid "Smart Warehouse (WMS)"
@@ -1522,3 +1522,96 @@ msgstr "Digiwin Vietnam Zalo OA"
 #: templates/home-popup.php:78
 msgid "Đóng thông báo"
 msgstr ""
+
+msgid "Services Category"
+msgstr "Chuyên mục Dịch vụ"
+
+msgid "Solutions Category"
+msgstr "Chuyên mục Giải pháp"
+
+msgid "All Categories"
+msgstr "Tất cả chuyên mục"
+
+msgid "Parent Category"
+msgstr "Chuyên mục cha"
+
+msgid "Parent Category:"
+msgstr "Chuyên mục cha:"
+
+msgid "Edit Category"
+msgstr "Chỉnh sửa chuyên mục"
+
+msgid "Update Category"
+msgstr "Cập nhật chuyên mục"
+
+msgid "Add New Category"
+msgstr "Thêm chuyên mục mới"
+
+msgid "New Category Name"
+msgstr "Tên chuyên mục mới"
+
+msgid "Term Language"
+msgstr "Ngôn ngữ của Term"
+
+msgid "Chinese (CN)"
+msgstr "Tiếng Trung (CN)"
+
+msgid "Vietnamese (VN)"
+msgstr "Tiếng Việt (VN)"
+
+msgid "Select the language this term represents."
+msgstr "Chọn ngôn ngữ mà term này đại diện."
+
+msgid "Translation Group ID"
+msgstr "Translation Group ID"
+
+msgid "Enter the shared group ID, or select the corresponding term below to link automatically."
+msgstr "Nhập ID nhóm dịch chung, hoặc chọn term đối ứng bên dưới để tự động liên kết."
+
+msgid "Or link translation with Term:"
+msgstr "Hoặc liên kết bản dịch với Term:"
+
+msgid "-- Do not link (Create new group) --"
+msgstr "-- Không liên kết (Tạo nhóm mới) --"
+
+msgid "Display Order"
+msgstr "Thứ tự hiển thị"
+
+msgid "Terms with the same ID will be linked together as translations."
+msgstr "Các term có cùng ID này sẽ được liên kết bản dịch với nhau."
+
+msgid "Current linked translations:"
+msgstr "Bản dịch liên kết hiện tại:"
+
+msgid "Category Name"
+msgstr "Tên chuyên mục"
+
+msgid "Translation Group"
+msgstr "Translation Group"
+
+msgid "Order"
+msgstr "Thứ tự"
+
+msgid "Posts"
+msgstr "Số bài viết"
+
+msgid "-- All Languages --"
+msgstr "-- Tất cả ngôn ngữ --"
+
+msgid "Activities Category"
+msgstr "Chuyên mục Hoạt động"
+
+msgid "Resources Category"
+msgstr "Chuyên mục Tài liệu"
+
+msgid "Case Studies Category"
+msgstr "Chuyên mục Dự án"
+
+msgid "Advertising Category"
+msgstr "Chuyên mục Quảng cáo"
+
+msgid "Industries Category"
+msgstr "Chuyên mục Ngành nghề"
+
+msgid "Join Us Category"
+msgstr "Chuyên mục Tuyển dụng"

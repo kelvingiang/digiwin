@@ -14,7 +14,7 @@ class Metabox_Youtube
         $id = 'admin-metabox-youtube';
         $title = __('Youtube video link', 'dgw');
         $callback = array($this, 'display');
-        add_meta_box($id, $title, $callback, array('solutions','services', 'industries', 'active', 'casestudies'));
+        add_meta_box($id, $title, $callback, array('solutions','services', 'industries', 'active', 'casestudies', 'resources'));
     }
 
     public function display($post)

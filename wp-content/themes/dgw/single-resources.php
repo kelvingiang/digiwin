@@ -1,11 +1,13 @@
 <?php
+
 /**
  * [2026-10-12] - @author: Kelvin - Đồng bộ cấu trúc chuẩn với single-casestudies.php: Technical SEO, Semantic HTML, download button và sidebar
  */
 get_header(); ?>
 <div class="container-fluid">
     <!-- <div class="page-title-h1">
-        <h1><?php //echo esc_html(get_the_title()); ?></h1>
+        <h1><?php //echo esc_html(get_the_title()); 
+            ?></h1>
     </div> -->
     <div class="menu-sub">
         <?php
@@ -21,20 +23,21 @@ get_header(); ?>
             ?>
                     <article id="post-<?php the_ID(); ?>" <?php post_class('single-space'); ?>>
                         <!-- <h2 class="single-space-title">
-                            <?php // echo esc_html(get_the_title()); ?>
+                            <?php // echo esc_html(get_the_title()); 
+                            ?>
                         </h2> -->
                         <div class="single-space-content entry-content">
-                            <?php the_content(); ?>
+                            <?php the_content();?>
                         </div>
                         <?php if ($source) : ?>
-                            <!-- [2026-10-14] - @author: Kelvin - Gán trực tiếp post ID và Title vào nút tải, tránh bị sai lệch ID từ query sidebar -->
+                            <!-- [09/11/2026] - Chuyển href sang javascript:void(0) và loại bỏ thuộc tính download để ngăn trình duyệt tự ý chuyển trang khi chưa đăng nhập hoặc link lỗi -->
                             <div class="single-space-download-btn">
-                                <a class="btn-download" 
-                                   id="my-load-data" 
-                                   href="<?php echo esc_url($source); ?>" 
-                                   data-post-id="<?php the_ID(); ?>" 
-                                   data-post-title="<?php echo esc_attr(get_the_title()); ?>" 
-                                   download>
+                                <a class="btn-download"
+                                    id="my-load-data"
+                                    href="javascript:void(0);"
+                                    data-post-id="<?php the_ID(); ?>"
+                                    data-post-title="<?php echo esc_attr(get_the_title()); ?>"
+                                    role="button">
                                     <svg class="icon" width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -43,8 +46,10 @@ get_header(); ?>
                                     <?php echo esc_html__('Download File digiwin', 'dgw'); ?>
                                 </a>
                             </div>
-                        <?php endif; ?>
-                        <?php get_template_part('templates/view-like'); ?>
+                        <?php endif;
+                        // [02/11/2026] - Gọi template hiển thị div#youtube-space kèm Popup xem video YouTube tại chỗ
+                        get_template_part('templates/youtube-popup');
+                        get_template_part('templates/view-like'); ?>
                     </article>
             <?php
                 endwhile;

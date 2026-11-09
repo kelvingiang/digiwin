@@ -69,6 +69,7 @@ class Controller_Join_Us
 
     /**
      * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết Join Us
+     * [09/11/2026] - Loại bỏ cột category thủ công, sử dụng chuẩn native 'show_admin_column' => true trong taxonomy-joinus.php
      */
     public function manage_columns(array $columns): array
     {
@@ -83,8 +84,7 @@ class Controller_Join_Us
             $columns['create-date']
         );
 
-        // Đặt Category ngay sau Title, sau đó là các cột chung nằm sát bên phải
-        $columns['category']    = __('Category', 'dgw');
+        // [09/11/2026] - Cột Category do WordPress Native ('show_admin_column' => true trong taxonomy-joinus.php) tự động quản lý
         $columns['language']    = __('Language', 'dgw');
         $columns['order']       = __('Show Order', 'dgw');
         $columns['create-date'] = __('Create Date', 'dgw');
@@ -93,33 +93,13 @@ class Controller_Join_Us
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột Category cho Join Us an toàn
+     * [09/11/2026] - Loại bỏ render cột category thủ công (đã dùng show_admin_column trong taxonomy-joinus.php)
+     * Các cột chung (language, order, create-date) đã được Custom_post_RenderCols xử lý toàn cục
      */
     public function render_columns(string $column, int $post_id): void
     {
-        switch ($column) {
-            case 'category':
-                $terms = wp_get_post_terms($post_id, 'joinus_category');
-                if (!empty($terms) && !is_wp_error($terms)) {
-                    $links = [];
-                    foreach ($terms as $term) {
-                        $term_link = add_query_arg([
-                            'post_type'     => 'joinus',
-                            $term->taxonomy => $term->slug,
-                        ], admin_url('edit.php'));
-
-                        $links[] = sprintf(
-                            '<a href="%s">%s</a>',
-                            esc_url($term_link),
-                            esc_html($term->name)
-                        );
-                    }
-                    echo implode('<br>', $links);
-                } else {
-                    echo '—';
-                }
-                break;
-        }
+        // Cột Category do WordPress Native xử lý (taxonomy-joinus.php: show_admin_column => true)
+        // Các cột chung (language, order, create-date) do Custom_post_RenderCols xử lý toàn cục
     }
 
     /**

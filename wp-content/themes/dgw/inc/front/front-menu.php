@@ -228,3 +228,57 @@ function working_form_list()
     );
     return $arr;
 }
+
+// [09/11/2026] - Khôi phục danh sách ngành nghề (industry_sector_list) với static cache để tránh lỗi fatal khi render form thành viên
+function industry_sector_list()
+{
+    static $arr = null;
+    if ($arr !== null) {
+        return $arr;
+    }
+    $arr = array(
+        "Metal Processing"        => __('Metal Processing', 'dgw'),
+        "Automotive Parts"        => __('Automotive Parts', 'dgw'),
+        "Plastic Injection"       => __('Plastic Injection', 'dgw'),
+        "Rubber"                  => __('Rubber', 'dgw'),
+        "Electronic Parts"        => __('Electronic Parts', 'dgw'),
+        "Wooden Furniture"        => __('Wooden Furniture', 'dgw'),
+        "F&B"                     => __('F&B', 'dgw'),
+        "Textiles and Garments"   => __('Textiles and Garments', 'dgw'),
+        "Shoes and Leather"       => __('Shoes and Leather', 'dgw'),
+        "Packaging"               => __('Packaging', 'dgw'),
+        "Wires and Fiber Optics"  => __('Wires and Fiber Optics', 'dgw'),
+        "Pharmaceuticals"         => __('Pharmaceuticals', 'dgw'),
+        "Chemicals"               => __('Chemicals', 'dgw'),
+        "Machinery Manufacturing" => __('Machinery Manufacturing', 'dgw'),
+        "IoT / Automation"        => __('IoT / Automation', 'dgw'),
+        "IT"                      => __('IT', 'dgw'),
+        "Associations"            => __('Associations', 'dgw'),
+        "Services"                => __('Services', 'dgw'),
+        "Other Manufacturing"     => __('Other Manufacturing', 'dgw'),
+        "Other"                   => __('Other', 'dgw'),
+    );
+    return $arr;
+}
+
+// [09/11/2026] - Hàm lấy tên ngành nghề theo key
+function get_industry_sector($key)
+{
+    $arr = industry_sector_list();
+    return $arr[$key] ?? '';
+}
+
+// [09/11/2026] - Hàm lấy tên chức vụ theo key
+function get_member_position($key)
+{
+    $arr = member_position_list();
+    return $arr[$key] ?? '';
+}
+
+// [09/11/2026] - Hàm lấy tên phòng ban theo key
+function get_department_name($key)
+{
+    $arr = department_list();
+    return $arr[$key] ?? '';
+}
+

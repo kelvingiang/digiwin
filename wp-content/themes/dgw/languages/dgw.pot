@@ -1532,3 +1532,96 @@ msgstr ""
 
 msgid "Watch Date"
 msgstr ""
+
+msgid "Services Category"
+msgstr ""
+
+msgid "Solutions Category"
+msgstr ""
+
+msgid "All Categories"
+msgstr ""
+
+msgid "Parent Category"
+msgstr ""
+
+msgid "Parent Category:"
+msgstr ""
+
+msgid "Edit Category"
+msgstr ""
+
+msgid "Update Category"
+msgstr ""
+
+msgid "Add New Category"
+msgstr ""
+
+msgid "New Category Name"
+msgstr ""
+
+msgid "Term Language"
+msgstr ""
+
+msgid "Chinese (CN)"
+msgstr ""
+
+msgid "Vietnamese (VN)"
+msgstr ""
+
+msgid "Select the language this term represents."
+msgstr ""
+
+msgid "Translation Group ID"
+msgstr ""
+
+msgid "Enter the shared group ID, or select the corresponding term below to link automatically."
+msgstr ""
+
+msgid "Or link translation with Term:"
+msgstr ""
+
+msgid "-- Do not link (Create new group) --"
+msgstr ""
+
+msgid "Display Order"
+msgstr ""
+
+msgid "Terms with the same ID will be linked together as translations."
+msgstr ""
+
+msgid "Current linked translations:"
+msgstr ""
+
+msgid "Category Name"
+msgstr ""
+
+msgid "Translation Group"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Posts"
+msgstr ""
+
+msgid "-- All Languages --"
+msgstr ""
+
+msgid "Activities Category"
+msgstr ""
+
+msgid "Resources Category"
+msgstr ""
+
+msgid "Case Studies Category"
+msgstr ""
+
+msgid "Advertising Category"
+msgstr ""
+
+msgid "Industries Category"
+msgstr ""
+
+msgid "Join Us Category"
+msgstr ""

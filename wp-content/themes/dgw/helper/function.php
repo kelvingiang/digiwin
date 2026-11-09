@@ -14,9 +14,153 @@ add_action('get_template_part_templates/template', function ($slug, $name = null
     get_template_part('templates/' . $cleanName, null, $args);
 }, 10, 3);
 
+/**
+ * Ngày thực hiện: 06/11/2026
+ * Chức năng: Nhận diện an toàn category slug hiện tại của trang
+ * Mục đích: Hỗ trợ phát hiện URL danh mục (vd: /solution/cate/tiptop_vn/, /cases/cate/...)
+ *           ngay cả trước khi WP_Query hoàn tất hoặc trong các hook locale/template_redirect
+ *
+ * @return string|null Slug của category hoặc null nếu không phải trang cate
+ */
+function dgw_detect_current_category_slug(): ?string
+{
+    // 1. Kiểm tra query var 'cate' nếu đã được WordPress parse
+    $cate = get_query_var('cate');
+    if (!empty($cate)) {
+        return (string) $cate;
+    }
+
+    // 2. Kiểm tra nếu đang ở trang taxonomy archive trực tiếp
+    if (!is_admin() && (is_tax() || is_category())) {
+        $queried = get_queried_object();
+        if ($queried instanceof WP_Term) {
+            return (string) $queried->slug;
+        }
+    }
+
+    // 3. Fallback trích xuất trực tiếp từ REQUEST_URI (chuẩn URL /{page}/cate/{slug}/...)
+    if (!empty($_SERVER['REQUEST_URI'])) {
+        $request_path = (string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if (preg_match('@/(?:cate|category)/([^/?#]+)(?:/(?:tag(?:/[^/?#]*)?)?)?/?$@i', $request_path, $matches)) {
+            return urldecode($matches[1]);
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Ngày thực hiện: 06/11/2026
+ * Chức năng: Nhận diện ngôn ngữ ('vn' hoặc 'cn') của category dựa trên slug hoặc Term Meta (term_lang)
+ * Mục đích: Tự động phát hiện và đồng bộ ngôn ngữ hệ thống theo link danh mục được dán vào
+ *
+ * @param string|int|null $cate_param Slug hoặc Term ID của category. Nếu null sẽ tự lấy theo trang hiện hành
+ * @return string|null 'vn'|'cn' nếu xác định được, hoặc null nếu không mang ngôn ngữ chuyên biệt
+ */
+function dgw_detect_category_language($cate_param = null): ?string
+{
+    if (empty($cate_param)) {
+        $cate_param = dgw_detect_current_category_slug();
+    }
+
+    if (empty($cate_param)) {
+        return null;
+    }
+
+    // 1. Kiểm tra hậu tố slug rõ ràng (_vn, -vn, _cn, -cn, _tw, -tw, _vi, -vi)
+    if (is_string($cate_param)) {
+        $clean_slug = strtolower(trim($cate_param));
+        if (preg_match('/[_-](vn|vi)$/', $clean_slug)) {
+            return 'vn';
+        }
+        if (preg_match('/[_-](cn|tw|zh)$/', $clean_slug)) {
+            return 'cn';
+        }
+    }
+
+    // 2. Tìm term trong taxonomy và kiểm tra Term Meta 'term_lang'
+    if (function_exists('dgw_get_category_by_param')) {
+        $term_obj = dgw_get_category_by_param($cate_param);
+        if ($term_obj instanceof WP_Term) {
+            $term_lang = get_term_meta($term_obj->term_id, 'term_lang', true);
+            if ($term_lang === 'vn' || $term_lang === 'cn') {
+                return $term_lang;
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Ngày thực hiện: 06/11/2026
+ * Chức năng: Tìm đối tượng term bản dịch tương ứng theo Translation Group
+ * Mục đích: Chuyển đổi URL mượt mà giữa các ngôn ngữ cho cùng một danh mục (vd: tiptop_vn <-> tiptop_cn)
+ *
+ * @param WP_Term|int|string $term Đối tượng term, term_id hoặc slug
+ * @param string $target_lang Ngôn ngữ đích cần tìm ('cn' hoặc 'vn')
+ * @param string $taxonomy Tên Taxonomy tương ứng (mặc định 'solutions_category')
+ * @return WP_Term|null
+ */
+function dgw_get_translated_term($term, string $target_lang, string $taxonomy = 'solutions_category'): ?WP_Term
+{
+    $term_obj = null;
+    if ($term instanceof WP_Term) {
+        $term_obj = $term;
+    } elseif (is_numeric($term)) {
+        $term_obj = get_term((int) $term, $taxonomy);
+    } elseif (is_string($term)) {
+        if (!empty($taxonomy)) {
+            $term_obj = get_term_by('slug', $term, $taxonomy);
+        }
+        if (!$term_obj && function_exists('dgw_get_category_by_param')) {
+            $term_obj = dgw_get_category_by_param($term);
+        }
+    }
+
+    if (!$term_obj || is_wp_error($term_obj)) {
+        return null;
+    }
+
+    $current_lang = get_term_meta($term_obj->term_id, 'term_lang', true);
+    if ($current_lang === $target_lang) {
+        return $term_obj;
+    }
+
+    $group_id = get_term_meta($term_obj->term_id, 'translation_group', true) ?: $term_obj->term_id;
+    if (empty($group_id)) {
+        return null;
+    }
+
+    $tax = !empty($term_obj->taxonomy) ? $term_obj->taxonomy : $taxonomy;
+
+    $linked_terms = get_terms([
+        'taxonomy'   => $tax,
+        'hide_empty' => false,
+        'meta_query' => [
+            [
+                'key'     => 'translation_group',
+                'value'   => $group_id,
+                'compare' => '=',
+            ],
+            [
+                'key'     => 'term_lang',
+                'value'   => $target_lang,
+                'compare' => '=',
+            ],
+        ],
+    ]);
+
+    if (!empty($linked_terms) && !is_wp_error($linked_terms)) {
+        return reset($linked_terms);
+    }
+
+    return null;
+}
 
 // [2026-07-09] - Refactor dgw_get_lang and locale mapping for AJAX/get/cookie consistency
 // [05/11/2026] - Ưu tiên nhận diện ngôn ngữ theo bài viết chi tiết (Single Post)
+// [06/11/2026] - Ưu tiên nhận diện ngôn ngữ theo link trang danh mục (Category/Cate) khi link mang định danh ngôn ngữ cụ thể
 function dgw_get_lang()
 {
     $default = 'vn';
@@ -41,6 +185,14 @@ function dgw_get_lang()
             if ($post_lang === 'cn' || $post_lang === 'vn') {
                 return $post_lang;
             }
+        }
+    }
+
+    // [06/11/2026] - Ưu tiên ngôn ngữ theo link trang danh mục (Category/Cate) khi link dán vào mang ngôn ngữ cụ thể
+    if (!is_admin()) {
+        $cate_lang = dgw_detect_category_language();
+        if ($cate_lang === 'cn' || $cate_lang === 'vn') {
+            return $cate_lang;
         }
     }
 
@@ -84,47 +236,65 @@ function dgw_reload_theme_textdomain(string $locale): void
 
 /**
  * [05/11/2026] - Tự động đồng bộ Cookie, Session và Locale theo bài viết Single
- * Khi truy cập bài viết chi tiết, hệ thống lập tức đồng bộ Cookie site_lang,
- * Session và nạp lại textdomain theo ngôn ngữ bài viết để toàn bộ Menu, Footer,
- * Submenu và gettext i18n chuyển đổi đồng bộ ngay lập tức.
+ * [06/11/2026] - Tự động đồng bộ Cookie, Session và Locale theo trang danh mục (Category/Cate) khi link dán vào khác ngôn ngữ hiện tại
+ * Khi truy cập bài viết chi tiết hoặc trang danh mục (vd: /solution/cate/tiptop_vn/), nếu ngôn ngữ khác ngôn ngữ hiện tại,
+ * hệ thống lập tức đồng bộ Cookie site_lang, Session và nạp lại textdomain theo ngôn ngữ của link
+ * để toàn bộ Menu, Footer, Submenu, bài viết và switcher chuyển đổi đồng bộ ngay lập tức.
  */
 add_action('template_redirect', function () {
     if (is_admin() || wp_doing_ajax()) {
         return;
     }
 
+    $target_lang = null;
+
+    // 1. Kiểm tra ngôn ngữ từ bài viết chi tiết (Single Post)
     if (is_singular()) {
         $queried_id = get_queried_object_id();
         if ($queried_id) {
             $post_lang = get_post_meta($queried_id, '_metabox_langguage', true);
             if ($post_lang === 'cn' || $post_lang === 'vn') {
-                // 1. Cập nhật cookie runtime và gửi header setcookie
-                $_COOKIE['site_lang'] = $post_lang;
-                if (!headers_sent()) {
-                    setcookie(
-                        'site_lang',
-                        $post_lang,
-                        time() + YEAR_IN_SECONDS,
-                        COOKIEPATH ? COOKIEPATH : '/',
-                        COOKIE_DOMAIN,
-                        is_ssl(),
-                        false
-                    );
-                }
-
-                // 2. Đồng bộ Session nếu có
-                if (session_status() === PHP_SESSION_ACTIVE || !empty($_SESSION)) {
-                    $_SESSION['languages'] = $post_lang;
-                }
-
-                // 3. Chuyển đổi locale và nạp lại textdomain tương ứng
-                $target_locale = ($post_lang === 'cn') ? 'zh_TW' : 'vi_VN';
-                if (function_exists('switch_to_locale')) {
-                    switch_to_locale($target_locale);
-                }
-                dgw_reload_theme_textdomain($target_locale);
+                $target_lang = $post_lang;
             }
         }
+    }
+
+    // 2. [06/11/2026] Kiểm tra ngôn ngữ từ trang danh mục (Cate) nếu không phải Single
+    if (!$target_lang) {
+        $cate_lang = dgw_detect_category_language();
+        if ($cate_lang === 'cn' || $cate_lang === 'vn') {
+            $target_lang = $cate_lang;
+        }
+    }
+
+    if ($target_lang) {
+        $current_cookie_lang = $_COOKIE['site_lang'] ?? '';
+
+        // 1. Cập nhật cookie runtime và gửi header setcookie
+        $_COOKIE['site_lang'] = $target_lang;
+        if (!headers_sent() && $current_cookie_lang !== $target_lang) {
+            setcookie(
+                'site_lang',
+                $target_lang,
+                time() + YEAR_IN_SECONDS,
+                COOKIEPATH ? COOKIEPATH : '/',
+                COOKIE_DOMAIN,
+                is_ssl(),
+                false
+            );
+        }
+
+        // 2. Đồng bộ Session nếu có
+        if (session_status() === PHP_SESSION_ACTIVE || !empty($_SESSION)) {
+            $_SESSION['languages'] = $target_lang;
+        }
+
+        // 3. Chuyển đổi locale và nạp lại textdomain tương ứng
+        $target_locale = ($target_lang === 'cn') ? 'zh_TW' : 'vi_VN';
+        if (function_exists('switch_to_locale')) {
+            switch_to_locale($target_locale);
+        }
+        dgw_reload_theme_textdomain($target_locale);
     }
 }, 1);
 
@@ -299,7 +469,7 @@ add_action('wp_head', 'dgw_seo_meta_tags');
 
 /**
  * [02/10/2026] - Lay doi tuong WP_Term an toan theo slug hoac term_id
- * Tranh loi WP_Error khi truyen slug vao get_category(intval($cate)).
+ * [06/11/2026] - Bổ sung đầy đủ các taxonomy của theme: active_category, industries_category, joinus_category
  */
 function dgw_get_category_by_param($cate)
 {
@@ -313,7 +483,17 @@ function dgw_get_category_by_param($cate)
     }
 
     $slug = sanitize_title((string) $cate);
-    $taxonomies = array('solutions_category', 'casestudies_category', 'resources_category', 'services_category', 'category');
+    $taxonomies = array(
+        'solutions_category',
+        'casestudies_category',
+        'resources_category',
+        'active_category',
+        'services_category',
+        'industries_category',
+        'joinus_category',
+        'advertising_category',
+        'category'
+    );
 
     foreach ($taxonomies as $taxonomy) {
         $term = get_term_by('slug', $slug, $taxonomy);

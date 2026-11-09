@@ -281,12 +281,16 @@ $post_title = get_the_title($post_id);
                         // Chỉ mở Popup phát video khi server xác nhận còn phiên đăng nhập hợp lệ
                         openYoutubePopup(embedUrl);
                     } else {
-                        // [04/11/2026] - Ghi nhận video đang chờ xem để tự động mở Popup phát ngay sau khi đăng nhập thành công
+                        // [09/11/2026] - Ghi nhận video đang chờ xem và hủy bỏ cờ download nếu có để không bị nhầm lẫn
                         window.pendingVideoWatch = {
                             embedUrl: embedUrl,
                             postId: postId,
                             postTitle: postTitle
                         };
+                        window.pendingDownload = null;
+                        if (typeof pendingDownload !== 'undefined') {
+                            pendingDownload = null;
+                        }
                         // Nếu đã đăng xuất hoặc chưa đăng nhập -> đóng video (nếu có) và bật ngay Popup đăng nhập
                         closeYoutubePopup();
                         if (typeof showLoginPopup === 'function') {
@@ -297,12 +301,16 @@ $post_title = get_the_title($post_id);
                     }
                 },
                 error: function() {
-                    // [04/11/2026] - Ghi nhận video đang chờ xem để tự động mở Popup phát ngay sau khi đăng nhập thành công
+                    // [09/11/2026] - Ghi nhận video đang chờ xem và hủy bỏ cờ download nếu có để không bị nhầm lẫn
                     window.pendingVideoWatch = {
                         embedUrl: embedUrl,
                         postId: postId,
                         postTitle: postTitle
                     };
+                    window.pendingDownload = null;
+                    if (typeof pendingDownload !== 'undefined') {
+                        pendingDownload = null;
+                    }
                     closeYoutubePopup();
                     if (typeof showLoginPopup === 'function') {
                         showLoginPopup();
@@ -317,15 +325,35 @@ $post_title = get_the_title($post_id);
             });
         });
 
+        // [04/11/2026] - Đóng Modal Popup video khi click nút close hoặc click ra ngoài vùng đen overlay
         $modal.on('click', function(e) {
             if (e.target === this || $(e.target).closest('.youtube-popup__close').length) {
                 closeYoutubePopup();
             }
         });
 
+        // [09/11/2026] - Xử lý đóng Popup yêu cầu đăng nhập (#auth-popup-overlay) khi người dùng click vào button close hoặc click ngoài overlay
+        $(document).on('click', '#auth-popup-close', function(e) {
+            e.preventDefault();
+            $('#auth-popup-overlay').removeClass('show').hide().removeAttr('style');
+        });
+
+        $(document).on('click', '#auth-popup-overlay', function(e) {
+            if (e.target === this) {
+                $(this).removeClass('show').hide().removeAttr('style');
+            }
+        });
+
+        // [09/11/2026] - Bổ sung phím Escape để đóng nhanh cả Popup phát video và Popup yêu cầu đăng nhập
         $(document).on('keydown', function(e) {
-            if (e.key === 'Escape' && $modal.hasClass('is-visible')) {
-                closeYoutubePopup();
+            if (e.key === 'Escape') {
+                if ($modal.hasClass('is-visible')) {
+                    closeYoutubePopup();
+                }
+                var $authOverlay = $('#auth-popup-overlay');
+                if ($authOverlay.hasClass('show') || $authOverlay.is(':visible')) {
+                    $authOverlay.removeClass('show').hide().removeAttr('style');
+                }
             }
         });
     });

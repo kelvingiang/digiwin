@@ -69,6 +69,7 @@ class Controller_Industries
 
     /**
      * [2026-10-05] - @author: Kelvin - Quản lý các cột hiển thị trong danh sách bài viết Industries
+     * [09/11/2026] - Không dùng cột category thủ công, sử dụng chuẩn native 'show_admin_column' => true trong taxonomy-industries.php
      */
     public function manage_columns(array $columns): array
     {
@@ -79,6 +80,7 @@ class Controller_Industries
             // $columns['author']
         );
 
+        // [09/11/2026] - Cột Category do WordPress Native ('show_admin_column' => true trong taxonomy-industries.php) tự động quản lý
         $columns['order']       = __('Show Order', 'dgw');
         $columns['create-date'] = __('Create Date', 'dgw');
 
@@ -86,11 +88,13 @@ class Controller_Industries
     }
 
     /**
-     * [2026-10-05] - @author: Kelvin - Hiển thị nội dung cột cho Industries
+     * [09/11/2026] - Cột Category do WordPress Native xử lý (taxonomy-industries.php: show_admin_column => true)
+     * Các cột chung (order, create-date) đã được Custom_post_RenderCols xử lý toàn cục
      */
     public function render_columns(string $column, int $post_id): void
     {
-        // Các cột chung (order, create-date) đã được Custom_post_RenderCols xử lý toàn cục
+        // Cột Category do WordPress Native xử lý (taxonomy-industries.php: show_admin_column => true)
+        // Các cột chung (order, create-date) do Custom_post_RenderCols xử lý toàn cục
     }
 
     /**

@@ -44,7 +44,8 @@
 }
 
 .column-category,
-.column-categories {
+.column-categories,
+[class*=column-taxonomy-] {
   width: 140px !important;
   text-align: center;
 }

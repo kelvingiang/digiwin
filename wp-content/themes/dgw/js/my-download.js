@@ -1,4 +1,5 @@
 var pendingDownload = null;
+window.pendingDownload = null;
 window.pendingVideoWatch = null;
 
 // [04/11/2026] - Hàm cập nhật giao diện người dùng đăng nhập tức thì trên thanh Header (áp dụng cả menu chính và menu cuộn header-scroll)
@@ -73,7 +74,8 @@ jQuery(document).ready(function ($) {
       }
     },
   });
-  jQuery("#my-load-data").on("click", function (e) {
+  // [09/11/2026] - Xử lý click nút tải tài liệu #my-load-data: kiểm tra đăng nhập bắt buộc và xử lý lỗi link bằng popup thông báo thay vì chuyển trang
+  jQuery(document).on("click", "#my-load-data", function (e) {
     e.preventDefault();
 
     var $btn = jQuery(this); // Lưu lại đối tượng nút bấm
@@ -87,89 +89,111 @@ jQuery(document).ready(function ($) {
         processing: "Đang xử lý...",
         downloading: "Đang tải xuống...",
         noFile: "Không có file để tải!",
-        error: "Đã có lỗi xảy ra!",
+        error: "Đã có lỗi xảy ra trong quá trình tải tài liệu!",
+        alertTitle: "Thông báo tải tài liệu",
+        btnText: "Đã hiểu",
       },
       cn: {
         processing: "正在處理...", // Tiếng Hoa Phồn thể
         downloading: "正在下載...",
         noFile: "沒有可供下載的檔案！",
-        error: "發生錯誤！",
+        error: "下載檔案時發生錯誤！",
+        alertTitle: "檔案下載提示",
+        btnText: "確定",
       },
     };
     // Lấy bộ chữ tương ứng với ngôn ngữ hiện tại
     const text = i18n[sendLang];
 
-    // Lưu lại thông tin trước khi gửi AJAX
+    // [09/11/2026] - Lưu lại thông tin download và xóa sạch cờ xem video để đảm bảo sau khi đăng nhập chỉ tải file, không bật video
     pendingDownload = {
       post_id: jQuery(this).attr("data-post-id"),
       post_title: jQuery(this).attr("data-post-title"),
     };
+    window.pendingDownload = pendingDownload;
+    window.pendingVideoWatch = null;
 
-    // Gửi AJAX lên server
+    // Gửi AJAX lên server kiểm tra quyền và lấy link tải an toàn
     jQuery.ajax({
       url: MyAjax.ajax_url,
       type: "POST",
+      cache: false,
       data: {
-        action: "my_download_file", // phải khớp với PHP
+        action: "my_download_file",
         nonce: MyAjax.nonce,
         post_id: pendingDownload.post_id,
         post_title: pendingDownload.post_title,
-        //post_source: pendingDownload.post_source,
       },
-      // ---- THÊM HIỆU ỨNG LOADING Ở ĐÂY ----
       beforeSend: function () {
-        // Khóa nút và đổi nội dung thành hiệu ứng loading
-        $btn.prop("disabled", true);
+        $btn.prop("disabled", true).addClass("is-loading");
         $btn.html(
           '<span class="my-download-spinner"></span>' + text.processing,
         );
-
-        // Nếu bạn muốn làm mờ toàn bộ trang hoặc hiện popup loading, có thể gọi hàm ở đây
-        // jQuery('#loading-overlay').show();
       },
-      // -------------------------------------
-
       success: function (res) {
-        if (res.success) {
-          // cách load file mở trang mới
-          //  window.open(res.data.post_source, '_blank');
-          var url = res.data.post_source;
-          // Báo cho user biết bắt đầu tải
+        if (res && res.success && res.data && (res.data.download_url || res.data.post_source)) {
+          var downloadTarget = res.data.download_url || res.data.post_source;
+          var fileName = res.data.file_name || "";
           $btn.html(
             '<span class="my-download-spinner"></span>' + text.downloading,
           );
-          // Tạo iframe ẩn → download mà không rời trang
-          var iframe = document.createElement("iframe");
-          iframe.style.display = "none";
-          iframe.src = url;
-          document.body.appendChild(iframe);
 
-          // Xóa iframe sau 5 giây
+          // [09/11/2026] - Kích hoạt tải trực tiếp file về máy qua liên kết attachment, không mở tab mới hay viewer (PDF, Excel...)
+          var triggerLink = document.createElement("a");
+          triggerLink.href = downloadTarget;
+          triggerLink.style.display = "none";
+          if (fileName) {
+            triggerLink.setAttribute("download", fileName);
+          }
+          document.body.appendChild(triggerLink);
+          triggerLink.click();
+
           setTimeout(function () {
-            document.body.removeChild(iframe);
-          }, 5000);
+            if (triggerLink.parentNode) {
+              triggerLink.parentNode.removeChild(triggerLink);
+            }
+          }, 2000);
         } else {
-          if (res.data.code === "not_logged_in") {
-            // Chưa đăng nhập → hiện popup
+          // Nếu chưa đăng nhập -> bật popup yêu cầu đăng nhập
+          if (res && res.data && res.data.code === "not_logged_in") {
             showLoginPopup();
           } else {
-            alert(text.noFile);
+            // [09/11/2026] - Nếu link bị lỗi hoặc không có link: Hiển thị thông báo qua dgwAlert thay vì nhảy trang
+            const errMsg = (res && res.data && res.data.message) ? res.data.message : text.noFile;
+            if (typeof dgwAlert === "function") {
+              dgwAlert({
+                type: "error",
+                title: text.alertTitle,
+                message: errMsg,
+                btnText: text.btnText,
+              });
+            } else {
+              alert(errMsg);
+            }
           }
         }
       },
-      error: function () {
-        alert(text.error);
+      error: function (xhr) {
+        let errMsg = text.error;
+        if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+          errMsg = xhr.responseJSON.data.message;
+        }
+        if (typeof dgwAlert === "function") {
+          dgwAlert({
+            type: "error",
+            title: text.alertTitle,
+            message: errMsg,
+            btnText: text.btnText,
+          });
+        } else {
+          alert(errMsg);
+        }
       },
-      // ---- TẮT HIỆU ỨNG LOADING Ở ĐÂY ----
       complete: function () {
-        // Cho dừng 1 chút xíu (khoảng 1.5s) để user kịp nhìn thấy chữ "Đang tải xuống..."
-        // Nếu không cần thiết, bạn có thể bỏ setTimeout và chạy thẳng 2 lệnh bên trong
         setTimeout(function () {
-          $btn.prop("disabled", false); // Mở khóa nút
-          $btn.html(originalHtml); // Trả lại text/icon ban đầu
+          $btn.prop("disabled", false).removeClass("is-loading");
+          $btn.html(originalHtml);
         }, 1500);
-
-        // jQuery('#loading-overlay').hide(); // Tắt popup loading nếu có dùng
       },
     });
   });
@@ -314,17 +338,85 @@ jQuery(document).on("click", "#btn-login", function () {
           jQuery("#login-password").val("");
           jQuery("#login-msg").removeClass("show msg--success msg--error").text("");
 
-          // [04/11/2026] - Tự động nhận diện video trên trang nếu người dùng đăng nhập trong lúc đang ở trang có video
-          const $ytTrigger = jQuery("#youtube-space .youtube-space__trigger");
-          if (!window.pendingVideoWatch && $ytTrigger.length > 0 && $ytTrigger.attr("data-embed")) {
-            window.pendingVideoWatch = {
-              embedUrl: $ytTrigger.attr("data-embed"),
-              postId: $ytTrigger.attr("data-post-id") || "",
-              postTitle: $ytTrigger.attr("data-post-title") || ""
-            };
+          // [09/11/2026] - ƯU TIÊN 1: Nếu người dùng vừa nhấn Download (#my-load-data) -> CHỈ tải file tài liệu, TUYỆT ĐỐI không bật video
+          const curDownload = pendingDownload || window.pendingDownload;
+          if (curDownload) {
+            pendingDownload = null;
+            window.pendingDownload = null;
+            window.pendingVideoWatch = null;
+
+            const isCn = (document.documentElement.lang === "zh-TW" || document.documentElement.lang.indexOf("zh") === 0);
+            const alertTitle = isCn ? "檔案下載提示" : "Thông báo tải tài liệu";
+            const btnText = isCn ? "確定" : "Đã hiểu";
+
+            jQuery.ajax({
+              url: MyAjax.ajax_url,
+              type: "POST",
+              cache: false,
+              data: {
+                action: "my_download_file",
+                nonce: MyAjax.nonce,
+                post_id: curDownload.post_id,
+                post_title: curDownload.post_title,
+                post_source: curDownload.post_source,
+              },
+              success: function (dlRes) {
+                if (dlRes && dlRes.success && dlRes.data && (dlRes.data.download_url || dlRes.data.post_source)) {
+                  const downloadTarget = dlRes.data.download_url || dlRes.data.post_source;
+                  const fileName = dlRes.data.file_name || "";
+
+                  // [09/11/2026] - Kích hoạt tải trực tiếp file về máy sau đăng nhập, không mở tab mới hay viewer
+                  const triggerLink = document.createElement("a");
+                  triggerLink.href = downloadTarget;
+                  triggerLink.style.display = "none";
+                  if (fileName) {
+                    triggerLink.setAttribute("download", fileName);
+                  }
+                  document.body.appendChild(triggerLink);
+                  triggerLink.click();
+
+                  setTimeout(function () {
+                    if (triggerLink.parentNode) {
+                      triggerLink.parentNode.removeChild(triggerLink);
+                    }
+                  }, 2000);
+                } else {
+                  const errText = (dlRes && dlRes.data && dlRes.data.message)
+                    ? dlRes.data.message
+                    : (isCn ? "檔案下載連結失效或不存在！" : "Link tải tài liệu bị lỗi hoặc không tồn tại!");
+                  if (typeof dgwAlert === "function") {
+                    dgwAlert({
+                      type: "error",
+                      title: alertTitle,
+                      message: errText,
+                      btnText: btnText,
+                    });
+                  } else {
+                    alert(errText);
+                  }
+                }
+              },
+              error: function (xhr) {
+                let errText = isCn ? "下載檔案時發生錯誤！" : "Đã có lỗi xảy ra trong quá trình tải tài liệu!";
+                if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                  errText = xhr.responseJSON.data.message;
+                }
+                if (typeof dgwAlert === "function") {
+                  dgwAlert({
+                    type: "error",
+                    title: alertTitle,
+                    message: errText,
+                    btnText: btnText,
+                  });
+                } else {
+                  alert(errText);
+                }
+              }
+            });
+            return;
           }
 
-          // 1. [04/11/2026] - Nếu đang có yêu cầu xem video YouTube: Mở Popup video tức thì và gọi AJAX ghi nhận lịch sử (wytList)
+          // [09/11/2026] - ƯU TIÊN 2: Chỉ khi người dùng thực sự click vào video (.youtube-space__trigger) trước khi đăng nhập thì mới mở Popup phát video
           if (window.pendingVideoWatch) {
             const pendingVideo = window.pendingVideoWatch;
             window.pendingVideoWatch = null;
@@ -350,35 +442,6 @@ jQuery(document).on("click", "#btn-login", function () {
                 nonce: MyAjax.nonce,
                 post_id: pendingVideo.postId,
                 post_title: pendingVideo.postTitle,
-              },
-            });
-            return;
-          }
-
-          // 2. [04/11/2026] - Nếu đang có yêu cầu tải tài liệu: Tiến hành tải file ngay lập tức
-          if (pendingDownload) {
-            const curDownload = pendingDownload;
-            pendingDownload = null;
-            jQuery.ajax({
-              url: MyAjax.ajax_url,
-              type: "POST",
-              data: {
-                action: "my_download_file",
-                nonce: MyAjax.nonce,
-                post_id: curDownload.post_id,
-                post_title: curDownload.post_title,
-                post_source: curDownload.post_source,
-              },
-              success: function (dlRes) {
-                if (dlRes && dlRes.success && dlRes.data && dlRes.data.post_source) {
-                  const iframe = document.createElement("iframe");
-                  iframe.style.display = "none";
-                  iframe.src = dlRes.data.post_source;
-                  document.body.appendChild(iframe);
-                  setTimeout(function () {
-                    document.body.removeChild(iframe);
-                  }, 5000);
-                }
               },
             });
             return;
@@ -654,22 +717,34 @@ jQuery(document).on("click", "#btn-register", function () {
   });
 });
 // ===== HIỆN POPUP =====
+// [09/11/2026] - Chuẩn hóa hiển thị popup yêu cầu đăng nhập, dọn dẹp các giá trị form cũ và style inline tồn dư
 function showLoginPopup() {
   jQuery("#login-email").val("");
   jQuery("#login-password").val("");
   jQuery("#login-msg").text("");
 
-  jQuery("#auth-popup-overlay").addClass("show");
+  jQuery("#auth-popup-overlay").removeAttr("style").addClass("show");
 }
 
-// Đóng popup
-jQuery(document).on("click", "#auth-popup-close", function () {
-  jQuery("#auth-popup-overlay").removeClass("show");
+// [09/11/2026] - Đóng popup yêu cầu đăng nhập khi click button close hoặc click ngoài overlay
+jQuery(document).on("click", "#auth-popup-close", function (e) {
+  if (e) e.preventDefault();
+  jQuery("#auth-popup-overlay").removeClass("show").hide().removeAttr("style");
 });
 
 jQuery(document).on("click", "#auth-popup-overlay", function (e) {
   if (e.target === this) {
-    jQuery("#auth-popup-overlay").removeClass("show");
+    jQuery("#auth-popup-overlay").removeClass("show").hide().removeAttr("style");
+  }
+});
+
+// [09/11/2026] - Hỗ trợ đóng popup đăng nhập bằng phím Escape
+jQuery(document).on("keydown", function (e) {
+  if (e.key === "Escape") {
+    var $authOverlay = jQuery("#auth-popup-overlay");
+    if ($authOverlay.hasClass("show") || $authOverlay.is(":visible")) {
+      $authOverlay.removeClass("show").hide().removeAttr("style");
+    }
   }
 });
 
