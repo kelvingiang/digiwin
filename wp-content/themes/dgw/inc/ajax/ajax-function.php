@@ -96,13 +96,12 @@ function ajax_load_more_posts()
             $srcset   = wp_get_attachment_image_srcset($thumb_id, 'medium');
             $permalink = get_the_permalink($post_id);
 
-            // [2026-11-05] Thẻ div.item chuẩn SEO kèm link a bên trong
+            // [09/11/2026] Thẻ div.item chuẩn Technical SEO & A11y với Stretched Link, đồng bộ với templates/post-item.php
             $html .= "<div class='item'  
                            data-id='" . esc_attr((string) $stt) . "' 
                            data-link='" . esc_url($permalink) . "' 
                            data-post='" . esc_attr((string) $post_id) . "'>";
             $html .= "<div>";
-            $html .= "<a href='" . esc_url($permalink) . "' style='display:block; text-decoration:none; color:inherit;'>";
             if (has_post_thumbnail()) {
                 $html .= "<img class='item-img' 
                          src='" . esc_url($url_data[0]) . "' 
@@ -120,7 +119,6 @@ function ajax_load_more_posts()
                          height='270'
                          alt='" . esc_attr(get_the_title()) . "' />";
             }
-            $html .= "</a>";
             // 取得 template part 的輸出（用 buffer 捕獲）
             ob_start();
             get_template_part('templates/view-comment');
@@ -128,7 +126,7 @@ function ajax_load_more_posts()
             $html .= $comment_html;
             $html .= "</div>";
 
-            $html .= "<div class='item-title'><a href='" . esc_url($permalink) . "' style='text-decoration:none; color:inherit; display:block; width:100%;'><h3>" . esc_html(get_the_title()) . "</h3></a></div>";
+            $html .= "<div class='item-title'><a class='item-link' href='" . esc_url($permalink) . "' title='" . esc_attr(get_the_title()) . "'><h3>" . esc_html(get_the_title()) . "</h3></a></div>";
             $html .= "</div>";
 
             $stt++;

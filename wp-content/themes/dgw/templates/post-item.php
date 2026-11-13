@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 /**
  * [2026-10-05] - @author: Kelvin - View Template: Hiển thị thẻ bài viết (Post Item Card) chuẩn WordPress Late Escaping
- * [2026-11-05] - Giữ thẻ gốc <div class="item"> để tương thích Infinite Scroll selector (.data-list > div:last-child),
- *               đồng thời bọc thẻ <a> chuẩn SEO cho ảnh và tiêu đề để click xem single và hỗ trợ Googlebot crawl link.
+ * [09/11/2026] - Tối ưu Technical SEO & Design: Bọc tiêu đề bằng thẻ <a class="item-link"> kết hợp CSS Stretched Link
+ *               giúp toàn bộ thẻ card click được tự nhiên, tối ưu Anchor Text cho Googlebot, hỗ trợ A11y
+ *               và giữ nguyên 100% selector <div class="item"> tương thích Infinite Scroll.
  */
 
 if (!defined('ABSPATH')) {
@@ -39,15 +40,13 @@ if ($has_thumb && $thumb_id) {
      data-link="<?php echo esc_url($permalink); ?>"
      data-post="<?php echo esc_attr((string) $post_id); ?>">
     <div>
-        <a href="<?php echo esc_url($permalink); ?>" aria-label="<?php echo esc_attr($title); ?>" style="display:block; text-decoration:none; color:inherit;">
-            <img class="item-img"
-                 alt="<?php echo esc_attr($title); ?>"
-                 src="<?php echo esc_url($image_src); ?>"
-                 <?php if ($srcset !== ''): ?>srcset="<?php echo esc_attr($srcset); ?>" sizes="(max-width: 400px) 100vw, 300px"<?php endif; ?>
-                 loading="lazy"
-                 width="<?php echo esc_attr((string) $width); ?>"
-                 height="<?php echo esc_attr((string) $height); ?>" />
-        </a>
+        <img class="item-img"
+             alt="<?php echo esc_attr($title); ?>"
+             src="<?php echo esc_url($image_src); ?>"
+             <?php if ($srcset !== ''): ?>srcset="<?php echo esc_attr($srcset); ?>" sizes="(max-width: 400px) 100vw, 300px"<?php endif; ?>
+             loading="lazy"
+             width="<?php echo esc_attr((string) $width); ?>"
+             height="<?php echo esc_attr((string) $height); ?>" />
 
         <?php
         get_template_part('templates/view-comment');
@@ -55,7 +54,7 @@ if ($has_thumb && $thumb_id) {
     </div>
 
     <div class="item-title">
-        <a href="<?php echo esc_url($permalink); ?>" style="text-decoration:none; color:inherit; display:block; width:100%;">
+        <a href="<?php echo esc_url($permalink); ?>" class="item-link" title="<?php echo esc_attr($title); ?>">
             <h3><?php echo esc_html($title); ?></h3>
         </a>
     </div>

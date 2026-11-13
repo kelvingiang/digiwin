@@ -53,8 +53,21 @@ get_header(); ?>
             </div>
         </div>
         <div>
-            <?php get_template_part('templates/side-active');  ?>
-            <?php get_template_part('templates/side-articles');  ?>
+            <?php
+            // [10/11/2026] - Điều kiện hiển thị Sidebar hỗ trợ đa ngôn ngữ (digiknow_vn & digiknow_cn): Hiển thị side-solution nếu là digiknow, ngược lại hiển thị side-active
+            $current_cate = !empty($cate) ? $cate : (string) get_query_var('cate');
+            $request_uri  = $_SERVER['REQUEST_URI'] ?? '';
+            $is_digiknow  = in_array($current_cate, ['digiknow_vn', 'digiknow_cn'], true)
+                || strpos($current_cate, 'digiknow') === 0
+                || strpos($request_uri, '/resource/cate/digiknow') !== false;
+
+            if ($is_digiknow) :
+                get_template_part('templates/side-solution');
+            else :
+                get_template_part('templates/side-active');
+            endif;
+            ?>
+            <?php get_template_part('templates/side-articles'); ?>
         </div>
     </div>
 </div>

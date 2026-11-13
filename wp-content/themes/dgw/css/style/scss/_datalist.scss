@@ -104,6 +104,22 @@
             display: flex;
             align-items: center;
 
+            .item-link {
+                text-decoration: none;
+                color: inherit;
+                display: block;
+                width: 100%;
+
+                // [09/11/2026] - Stretched Link chuẩn Technical SEO: Mở rộng vùng click của thẻ <a> ra toàn bộ card .item
+                &::after {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    z-index: 1;
+                    pointer-events: auto;
+                }
+            }
+
             h3 {
                 margin: 0;
                 font-size: 1.05rem;

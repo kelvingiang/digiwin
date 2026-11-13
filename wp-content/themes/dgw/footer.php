@@ -70,10 +70,12 @@ wp_footer(); ?>
 
   document.addEventListener('DOMContentLoaded', function() {
     
-    // 禁止右鍵選單，這樣用戶無法透過右鍵選取「複製」功能
-    // document.addEventListener('contextmenu', function(e) {
-    //   e.preventDefault();
-    // });
+    <?php if (is_single()) : ?>
+    // [09/11/2026] - Chặn menu ngữ cảnh chuột phải trên tất cả các trang single bài viết chi tiết
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    }, false);
+    <?php endif; ?>
 
     //禁止快捷鍵，如 Ctrl+C 來複製內容。
     // document.addEventListener('keydown', function(e) {
@@ -96,7 +98,11 @@ wp_footer(); ?>
   });
   //============================================================================================
   // phần click vào item để chuyển đến trang single xem toàn bộ nội dụng bài đăng ==============
-  jQuery(document).on('click', '.item', function() {
+  jQuery(document).on('click', '.item', function(e) {
+    // [09/11/2026] Nếu click vào thẻ <a> (như Stretched Link chuẩn SEO), để trình duyệt chuyển trang tự nhiên tức thì
+    if (jQuery(e.target).closest('a').length || jQuery(this).is('a')) {
+      return;
+    }
     let permalink = jQuery(this).attr("data-link");
     let target = jQuery(this).attr("data-target");
     jQuery.ajax({
