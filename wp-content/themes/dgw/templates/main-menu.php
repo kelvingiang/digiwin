@@ -1,7 +1,6 @@
 <div id="header-space">
     <a class="logo-desktop" href="<?php echo home_url(); ?>">
         <img class="company-logo"
-            alt="digiwin company"
             src="<?php echo PART_IMAGES . 'logo.webp' ?>"
             alt="digiwin viet nam"
             width="150"
@@ -24,7 +23,7 @@
             <div class='<?php echo $val_main['class'] ?>' data-name='<?php echo $classData ?>'>
                 <?php if (isset($val_main['sub'])) : ?>
                     <label class='menu-main-item-link has-sub'>
-                        <?php _e($className); ?>
+                        <?php _e($className, 'dgw'); ?>
                     </label>
                 <?php else : ?>
                     <a href='<?php echo home_url($key_main); ?>' class='menu-main-item-link'>
@@ -38,7 +37,7 @@
                         <?php foreach ($val_main['sub'] as $key_sub => $val_sub) : ?>
                             <div class=' <?php echo $val_sub['class'] ?> '>
                                 <a href="<?php echo home_url($key_main) . '/cate/' . (!empty($val_sub['slug']) ? $val_sub['slug'] : $val_sub['ID']) . '/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
-                                    <?php _e($val_sub['name']) ?></a>
+                                    <?php _e($val_sub['name'], 'dgw') ?></a>
                             </div>
                         <?php endforeach ?>
                     </div>
@@ -77,11 +76,11 @@
             <div class='<?php echo $val_main['class'] ?>' data-name='<?php echo $classData ?>'>
                 <?php if (isset($val_main['sub'])) : ?>
                     <label class='menu-main-item-link has-sub'>
-                        <?php _e($className);  ?>
+                        <?php _e($className, 'dgw');  ?>
                     </label>
                 <?php else : ?>
                     <a href='<?php echo home_url($key_main); ?>' class='menu-main-item-link'>
-                        <?php _e($className);  ?>
+                        <?php _e($className, 'dgw');  ?>
                     </a>
                 <?php endif ?>
 
@@ -91,7 +90,7 @@
                         <?php foreach ($val_main['sub'] as $key_sub => $val_sub) : ?>
                             <div class=' <?php echo $val_sub['class'] ?> '>
                                 <a href="<?php echo home_url($key_main) . '/cate/' . (!empty($val_sub['slug']) ? $val_sub['slug'] : $val_sub['ID']) . '/' ?>" class='menu-main-sub-1-item-link <?php echo $val_sub['sub'] != '' ? 'has-sub' : '' ?>'>
-                                    <?php _e($val_sub['name']) ?></a>
+                                    <?php _e($val_sub['name'], 'dgw') ?></a>
                             </div>
                         <?php endforeach ?>
                     </div>

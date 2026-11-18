@@ -26,7 +26,7 @@ $single_cate_redirect_url = '';
 $current_cate_slug = function_exists('dgw_detect_current_category_slug') ? dgw_detect_current_category_slug() : (get_query_var('cate') ?: '');
 
 if (!empty($current_cate_slug)) {
-    // 1. Đang ở trang Category: Lấy term bản dịch đối ứng
+    // 1. Đang ở trang Category: Lấy term bản dịch đối ứng (fallback về trang danh sách module nếu term không có bản dịch)
     $cpt_page = get_query_var('pagename');
     if (empty($cpt_page) && !empty($_SERVER['REQUEST_URI'])) {
         $path_parts = explode('/', trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
@@ -34,15 +34,20 @@ if (!empty($current_cate_slug)) {
     }
     $cpt_page = !empty($cpt_page) ? $cpt_page : 'solution';
 
-    $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'cn') : null;
-    $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'vn') : null;
+    // [16/11/2026] - Dùng chung dgw_detect_current_module_taxonomy() để ánh xạ đúng taxonomy theo module, tránh trùng lặp cấu hình
+    $cate_taxonomy = function_exists('dgw_detect_current_module_taxonomy')
+        ? (dgw_detect_current_module_taxonomy($cpt_page) ?: 'solutions_category')
+        : 'solutions_category';
 
-    if ($term_cn instanceof WP_Term) {
-        $redirect_url_cn = home_url('/' . $cpt_page . '/cate/' . $term_cn->slug . '/');
-    }
-    if ($term_vn instanceof WP_Term) {
-        $redirect_url_vn = home_url('/' . $cpt_page . '/cate/' . $term_vn->slug . '/');
-    }
+    $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'cn', $cate_taxonomy) : null;
+    $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'vn', $cate_taxonomy) : null;
+
+    $redirect_url_cn = ($term_cn instanceof WP_Term)
+        ? home_url('/' . $cpt_page . '/cate/' . $term_cn->slug . '/')
+        : home_url('/' . $cpt_page . '/');
+    $redirect_url_vn = ($term_vn instanceof WP_Term)
+        ? home_url('/' . $cpt_page . '/cate/' . $term_vn->slug . '/')
+        : home_url('/' . $cpt_page . '/');
 } elseif (is_single()) {
     // 2. Đang ở trang Single Post: Chuyển hướng về cate tương ứng
     $queried_obj = get_queried_object();
@@ -91,6 +96,19 @@ if (!empty($current_cate_slug)) {
                 $redirect_url_cn = $single_cate_redirect_url;
                 $redirect_url_vn = $single_cate_redirect_url;
             }
+        }
+    }
+} elseif (is_page()) {
+    // 3. [16/11/2026] - Ánh xạ URL đối ứng cho trang tách slug theo ngôn ngữ (about-vn <-> about-cn, contact-vn <-> contact-cn)
+    $current_page_slug = function_exists('dgw_detect_paired_page_slug')
+        ? (string) (dgw_detect_paired_page_slug() ?: '')
+        : (string) get_query_var('pagename');
+
+    if ($current_page_slug !== '' && function_exists('dgw_get_paired_page_urls')) {
+        $paired_urls = dgw_get_paired_page_urls($current_page_slug);
+        if (!empty($paired_urls)) {
+            $redirect_url_cn = $paired_urls['cn'] ?? '';
+            $redirect_url_vn = $paired_urls['vn'] ?? '';
         }
     }
 }

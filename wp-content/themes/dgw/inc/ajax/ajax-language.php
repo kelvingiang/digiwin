@@ -16,7 +16,10 @@ function dgw_ajax_change_languages_handler() {
 
     if (!empty($_POST['type'])) {
         $type = sanitize_text_field(wp_unslash($_POST['type']));
-        $lang = ($type === 'cn') ? 'cn' : 'vn';
+        // [17/11/2026] - Chuẩn hóa qua dgw_normalize_lang_code() để hỗ trợ cả 'vn', 'cn' và 'sc'
+        $lang = function_exists('dgw_normalize_lang_code')
+            ? (dgw_normalize_lang_code($type) ?? 'vn')
+            : (($type === 'cn') ? 'cn' : 'vn');
 
         setcookie(
             'site_lang',
