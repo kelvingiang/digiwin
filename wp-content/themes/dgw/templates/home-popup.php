@@ -38,10 +38,10 @@ if (!empty($data)) :
     if (false === $img_sizes) {
         $img_sizes = ['pc' => null, 'mb' => null];
 
-        // Lấy kích thước ảnh Desktop
+        // [2026-11-20] - @author: Kelvin - Dùng trực tiếp DIR_IMAGES + basename() thay cho $_SERVER['DOCUMENT_ROOT'] tránh lệch path
         if ($img_name_pc) {
-            $img_path_pc = $_SERVER['DOCUMENT_ROOT'] . parse_url($img_url_pc, PHP_URL_PATH);
-            if (file_exists($img_path_pc)) {
+            $img_path_pc = DIR_IMAGES . 'pop-up' . DS . basename((string) $img_name_pc);
+            if (is_file($img_path_pc)) {
                 $size_pc = @getimagesize($img_path_pc);
                 if ($size_pc) {
                     $img_sizes['pc'] = ['w' => $size_pc[0], 'h' => $size_pc[1]];
@@ -51,8 +51,8 @@ if (!empty($data)) :
 
         // Lấy kích thước ảnh Mobile
         if ($img_name_mb) {
-            $img_path_mb = $_SERVER['DOCUMENT_ROOT'] . parse_url($img_url_mb, PHP_URL_PATH);
-            if (file_exists($img_path_mb)) {
+            $img_path_mb = DIR_IMAGES . 'pop-up' . DS . basename((string) $img_name_mb);
+            if (is_file($img_path_mb)) {
                 $size_mb = @getimagesize($img_path_mb);
                 if ($size_mb) {
                     $img_sizes['mb'] = ['w' => $size_mb[0], 'h' => $size_mb[1]];

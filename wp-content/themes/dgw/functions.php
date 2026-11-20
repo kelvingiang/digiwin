@@ -44,27 +44,14 @@ add_action('send_headers', function () {
 define('THEME_URL', get_stylesheet_directory());  // hang lay path thu muc theme
 define('THEME_PART', get_stylesheet_directory_uri());
 define('DS', DIRECTORY_SEPARATOR);  // phan nay thay doi dau / theo he dieu hanh khac nhau giua window va linx
-define('DIR_HELPER', THEME_URL . DS . 'helper' . DS);
 
-require_once(DIR_HELPER . 'define.php');
-require_once(DIR_HELPER . 'style.php');
-require_once(DIR_HELPER . 'function.php');
-require_once(DIR_HELPER . 'require.php');
-
-
-
-add_action('init', function () {
-    if (isset($_GET['mail_test'])) {
-        $ok = wp_mail(
-            'giaminh0265@gmail.com',
-            'Test Mail',
-            'This is a test email'
-        );
-
-        echo $ok ? '✅ mail() sent' : '❌ mail() failed';
-        exit;
-    }
-});
+// [18/11/2026] - Nạp Composer PSR-4 autoload, template-tags wrapper global và khởi chạy Bootstrap theme
+$dgw_autoload = THEME_URL . DS . 'vendor' . DS . 'autoload.php';
+if (file_exists($dgw_autoload)) {
+    require_once $dgw_autoload;
+}
+require_once THEME_URL . DS . 'inc' . DS . 'template-tags.php';
+\DGW\Bootstrap::init();
 
 add_action('init', function () {
     // 1. 新增這段：專門處理 AJAX 請求 (POST)

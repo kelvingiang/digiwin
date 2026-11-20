@@ -1,59 +1,66 @@
-<h2 class="h2-home-title"><?php echo __('Specialize in the industry', 'dgw') ?></h2>
+<?php
+declare(strict_types=1);
+
+/**
+ * [2026-11-20] - @author: Kelvin - Tối ưu Home Industry: Không ghi đè global $wp_query, chống lỗi offset bool trên PHP 8.3, bổ sung alt/decoding="async" và Late Escaping
+ */
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
+<h2 class="h2-home-title"><?php echo esc_html__('Specialize in the industry', 'dgw'); ?></h2>
 <div id="industry-home">
     <?php
-    $stt = 1;
-    $wp_query = getCustomPostAtHome('industries', 8);
+    $stt           = 1;
+    $industryQuery = getCustomPostAtHome('industries', 8);
 
-    if ($wp_query->have_posts()) :
-        while ($wp_query->have_posts()) :
-            $wp_query->the_post();
-            $post_id = get_the_ID();
-            $permalink = get_the_permalink();
-            $title = get_the_title();
-            $thumb_id = get_post_thumbnail_id($post_id);
-            $url_desktop = wp_get_attachment_image_src($thumb_id, 'medium');   // Desktop
-            $url_mobile  = wp_get_attachment_image_src($thumb_id, 'thumbnail');  // Mobile
+    if ($industryQuery->have_posts()) :
+        while ($industryQuery->have_posts()) :
+            $industryQuery->the_post();
+            $postId     = (int) get_the_ID();
+            $permalink  = (string) get_the_permalink($postId);
+            $title      = (string) get_the_title($postId);
+            $thumbId    = (int) get_post_thumbnail_id($postId);
+            $urlDesktop = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'medium') : false;
+            $urlMobile  = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'thumbnail') : false;
     ?>
-            <div class="item" data-id="<?php echo $stt; ?>" data-post="<?php echo $post_id; ?>">
-                <a href="<?php echo esc_url($permalink); ?>">
+            <div class="item"
+                data-id="<?php echo esc_attr((string) $stt); ?>"
+                data-post="<?php echo esc_attr((string) $postId); ?>">
+                <a href="<?php echo esc_url($permalink); ?>" title="<?php echo esc_attr($title); ?>">
                     <div class="item-img">
-                        <?php if (has_post_thumbnail()) :?>
+                        <?php if (is_array($urlDesktop) && !empty($urlDesktop[0])) :
+                            $mobileSrc = (is_array($urlMobile) && !empty($urlMobile[0])) ? $urlMobile[0] : $urlDesktop[0];
+                        ?>
                             <picture>
-                                <!-- Mobile <= 768px: dùng thumbnail -->
-                                <source
-                                    media="(max-width: 768px)"
-                                    srcset="<?php echo esc_url($url_mobile[0]); ?>">
-
-                                <!-- Desktop > 768px: dùng medium -->
-                                <source
-                                    media="(min-width: 769px)"
-                                    srcset="<?php echo esc_url($url_desktop[0]); ?>">
-
-                                <!-- Fallback: width/height lấy từ ảnh desktop thực tế -->
-                                <img
-                                    alt=""
-                                    src="<?php echo esc_url($url_desktop[0]); ?>"
+                                <source media="(max-width: 768px)" srcset="<?php echo esc_url((string) $mobileSrc); ?>">
+                                <source media="(min-width: 769px)" srcset="<?php echo esc_url((string) $urlDesktop[0]); ?>">
+                                <img alt="<?php echo esc_attr($title); ?>"
+                                    src="<?php echo esc_url((string) $urlDesktop[0]); ?>"
                                     loading="lazy"
-                                    width="<?php echo $url_desktop[1]; ?>"
-                                    height="<?php echo $url_desktop[2]; ?>" />
+                                    decoding="async"
+                                    width="<?php echo esc_attr((string) ($urlDesktop[1] ?? 410)); ?>"
+                                    height="<?php echo esc_attr((string) ($urlDesktop[2] ?? 270)); ?>" />
                             </picture>
                         <?php else : ?>
-                            <img
-                                src="<?php echo PART_IMAGES . 'no-image.jpg'; ?>"
-                                alt="no image"
+                            <img src="<?php echo esc_url(PART_IMAGES . 'no-image.jpg'); ?>"
+                                alt="<?php echo esc_attr($title !== '' ? $title : 'digiwin industry'); ?>"
+                                loading="lazy"
+                                decoding="async"
                                 width="410"
                                 height="270" />
                         <?php endif; ?>
                     </div>
                     <div class="item-content">
-                       <h3> <?php echo $title; ?></h3>
+                        <h3><?php echo esc_html($title); ?></h3>
                     </div>
                 </a>
             </div>
     <?php
             $stt++;
         endwhile;
-        wp_reset_postdata(); // 必加：重置全域 post 資料
+        wp_reset_postdata();
     endif;
     ?>
 </div>

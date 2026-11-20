@@ -18,11 +18,11 @@ $count_solution = get_post_meta('1', '_info_product_solution', true);
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="<?php echo $count_year; ?>">0</span>
+                        <span class="count-number" data-target="<?php echo esc_attr((string) $count_year); ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
                     <div class="count-label">
-                        <?php echo __('Years of experience', 'dgw'); ?>
+                        <?php echo esc_html__('Years of experience', 'dgw'); ?>
                     </div>
                 </a>
             </div>
@@ -38,10 +38,10 @@ $count_solution = get_post_meta('1', '_info_product_solution', true);
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="<?php echo $count_project ?>">0</span>
+                        <span class="count-number" data-target="<?php echo esc_attr((string) $count_project); ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
-                    <div class="count-label"><?php echo __('Projects & Clients', 'dgw'); ?></div>
+                    <div class="count-label"><?php echo esc_html__('Projects & Clients', 'dgw'); ?></div>
                 </a>
             </div>
 
@@ -55,10 +55,10 @@ $count_solution = get_post_meta('1', '_info_product_solution', true);
                         </svg>
                     </div>
                     <div class="count-number-wrapper">
-                        <span class="count-number" data-target="<?php echo $count_solution ?>">0</span>
+                        <span class="count-number" data-target="<?php echo esc_attr((string) $count_solution); ?>">0</span>
                         <span class="count-plus">+</span>
                     </div>
-                    <div class="count-label"><?php echo __('Product Solutions', 'dgw'); ?></div>
+                    <div class="count-label"><?php echo esc_html__('Product Solutions', 'dgw'); ?></div>
                 </a>
             </div>
 

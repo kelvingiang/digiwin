@@ -1,123 +1,150 @@
 <?php
+declare(strict_types=1);
 
-class Model_Logo_Function
+use DGW\Models\BaseCustomTableModel;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * [2026-11-19] - @author: Kelvin - Model thao tác bảng logo đối tác (kế thừa BaseCustomTableModel, loại bỏ global $wpdb và debug die())
+ * [2026-11-20] - @author: Kelvin - Bổ sung xóa file ảnh logo cũ trên ổ đĩa khi cập nhật hoặc xóa vĩnh viễn bản ghi
+ */
+class Model_Logo_Function extends BaseCustomTableModel
 {
+    private string $table;
 
-    private $table;
-
+    /**
+     * [2026-11-19] - @author: Kelvin - Khởi tạo kết nối DB và tên bảng logo
+     */
     public function __construct()
     {
-        global $wpdb;
-        $this->table = $wpdb->prefix . 'logo';
+        parent::__construct();
+        $this->table = $this->db->prefix . 'logo';
     }
 
+    /**
+     * [18/11/2026] - Lấy danh sách logo dùng prepared statement, sửa lỗi cú pháp khi $status rỗng
+     */
     public function getAll($status = '')
     {
-        global $wpdb;
-        if (empty($status)) {
-            $sql = "SELECT * FROM $this->table WHERE trash = $status";
+        if ($status !== '' && $status !== null) {
+            $sql = $this->db->prepare("SELECT * FROM {$this->table} WHERE trash = %d", (int) $status);
         } else {
-            $sql = "SELECT * FROM $this->table";
+            $sql = "SELECT * FROM {$this->table}";
         }
-        $row = $wpdb->get_results($sql, ARRAY_A);
-        return $row;
+
+        return $this->db->get_results($sql, ARRAY_A);
     }
 
+    /**
+     * [18/11/2026] - Lấy chi tiết logo theo ID dùng $this->db->prepare()
+     */
     public function getItem($id)
     {
-        global $wpdb;
-        $sql = "SELECT * FROM $this->table WHERE ID = $id";
-        $row = $wpdb->get_row($sql, ARRAY_A);
-        return $row;
+        $logoId = absint($id);
+        if ($logoId <= 0) {
+            return null;
+        }
+
+        $sql = $this->db->prepare("SELECT * FROM {$this->table} WHERE ID = %d", $logoId);
+        return $this->db->get_row($sql, ARRAY_A);
     }
 
+    /**
+     * [2026-11-20] - @author: Kelvin - Lưu mới hoặc cập nhật logo với sanitize đầu vào, dọn ảnh cũ và xóa cache trang chủ
+     */
     public function Save($arrData, $option)
     {
         global $current_user;
-        $data = array(
-            'company' => $arrData['txt-company'],
-            'img' => $arrData['txt-img'],
-            'link' => $arrData['txt-link'],
-        );
+        $userLogin = isset($current_user->user_login) ? (string) $current_user->user_login : '';
+        $today     = wp_date('Y-m-d');
 
-        $add = array(
-            'create_date' => date("d-m-Y"),
-            'create_by' => $current_user->user_login,
-        );
+        $data = [
+            'company' => sanitize_text_field((string) ($arrData['txt-company'] ?? '')),
+            'img'     => sanitize_file_name((string) ($arrData['txt-img'] ?? '')),
+            'link'    => esc_url_raw((string) ($arrData['txt-link'] ?? '')),
+        ];
 
-        $update = array(
-            'update_date' => date("d-m-Y"),
-            'update_by' => $current_user->user_login,
-        );
+        if ($option === 'add') {
+            $addData = array_merge($data, [
+                'create_date' => $today,
+                'create_by'   => $userLogin,
+            ]);
+            $this->db->insert($this->table, $addData, ['%s', '%s', '%s', '%s', '%s']);
+        } elseif ($option === 'edit') {
+            $editId = absint($arrData['hid-id'] ?? 0);
+            if ($editId > 0) {
+                $existing = $this->getItem($editId);
+                if (is_array($existing) && !empty($existing['img']) && !empty($data['img']) && $existing['img'] !== $data['img']) {
+                    $this->removeImgByName((string) $existing['img']);
+                }
 
-        global $wpdb;
-        if ($option == 'add') {
-            $AddData = array_merge($data, $add);
-            $wpdb->insert($this->table, $AddData);
-        } elseif ($option == 'edit') {
-            $UpdateData = array_merge($data, $update);
-            $where = array('ID' => $arrData['hid-id']);
-            $wpdb->update($this->table, $UpdateData, $where);
+                $updateData = array_merge($data, [
+                    'update_date' => $today,
+                    'update_by'   => $userLogin,
+                ]);
+                $this->db->update($this->table, $updateData, ['ID' => $editId], ['%s', '%s', '%s', '%s', '%s'], ['%d']);
+            }
         }
-        // [2026-10-08] - Xóa transient cache trang chủ khi cập nhật logo
+
         delete_transient('dgw_home_cases_logos');
     }
 
-    // THAY DOI TRANG THAI 
-    public function toTrash($arrData = array(), $options = array())
+    /**
+     * [18/11/2026] - Chuyển logo vào/ra thùng rác dùng prepared statement cho danh sách ID
+     * [2026-11-19] - @author: Kelvin - Sử dụng helper bulkUpdateByIds() từ BaseCustomTableModel
+     */
+    public function toTrash($arrData = [], $options = [])
     {
-        global $wpdb;
-        $trash = ($options == 'trash') ? 1 : 0;
-
-        // KIEM TRA PHAN UPFDATE CÓ PHAN DANG CHUOI HAY KHONG
-
-        if (!is_array($arrData['id'])) {
-            $data = array('trash' => $trash);
-            $where = array('ID' => absint($arrData['id']));
-            $wpdb->update($this->table, $data, $where);
-        } else {
-            $arrData['id'] = array_map('absint', $arrData['id']);
-            $ids = join(',', $arrData['id']);
-            $sql = "UPDATE $this->table SET trash = $trash  WHERE ID IN ($ids)";
-            $wpdb->query($sql);
-        }
-        // [2026-10-08] - Xóa transient cache trang chủ khi thay đổi trạng thái trash
+        $trash = ($options === 'trash') ? 1 : 0;
+        $this->bulkUpdateByIds($this->table, ['trash' => $trash], ['%d'], $arrData['id'] ?? null);
         delete_transient('dgw_home_cases_logos');
     }
 
-    // THAY DOI TRANG THAI 
-    public function toActive($arrData = array(), $options = array())
+    /**
+     * [2026-11-20] - @author: Kelvin - Xóa vĩnh viễn logo kèm xóa file ảnh vật lý trên ổ đĩa và làm mới cache trang chủ
+     */
+    public function toDelete($arrData = [], $options = [])
     {
-        global $wpdb;
-        $status = ($options == 'status') ? 1 : 0;
-        echo $status;
-        echo '<pre>';
-        print_r($arrData);
-        echo '</pre>';
-        die();
-        // KIEM TRA PHAN UPFDATE CÓ PHAN DANG CHUOI HAY KHONG
-        $data = array('status' => $status);
-        $where = array('ID' => absint($arrData['id']));
-        $wpdb->update($this->table, $data, $where);
+        $ids = $this->normalizeIds($arrData['id'] ?? null);
+        if (empty($ids)) {
+            return;
+        }
+
+        foreach ($ids as $id) {
+            $this->removeImg($id);
+        }
+
+        $this->bulkDeleteByIds($this->table, $ids);
+        delete_transient('dgw_home_cases_logos');
     }
 
-    // XOA DATA
-    public function toDelete($arrData = array(), $options = array())
+    /**
+     * [2026-11-20] - @author: Kelvin - Xóa file ảnh logo trên ổ đĩa theo ID bản ghi
+     */
+    public function removeImg($id): void
     {
-        global $wpdb;
-        // KIEM TRA PHAN DELETE CÓ PHAN DANG CHUOI HAY KHONG
-
-        if (!is_array($arrData['id'])) {
-            $where = array('ID' => absint($arrData['id']));
-            $wpdb->delete($this->table, $where);
-        } else {
-            $arrData['id'] = array_map('absint', $arrData['id']);
-            $ids = join(',', $arrData['id']);
-            // echo '<br>' . $ids;
-            $sql = "DELETE FROM $this->table WHERE ID IN ($ids)";
-            $wpdb->query($sql);
+        $data = $this->getItem($id);
+        if (is_array($data) && !empty($data['img'])) {
+            $this->removeImgByName((string) $data['img']);
         }
-        // [2026-10-08] - Xóa transient cache trang chủ khi xóa logo
-        delete_transient('dgw_home_cases_logos');
+    }
+
+    /**
+     * [2026-11-20] - @author: Kelvin - Xóa file ảnh logo an toàn bằng basename() chống Path Traversal
+     */
+    public function removeImgByName(string $name): void
+    {
+        $filename = basename($name);
+        if ($filename === '' || $filename === '.' || $filename === '..') {
+            return;
+        }
+
+        $filePath = DIR_IMAGES . 'logo' . DS . $filename;
+        if (is_file($filePath)) {
+            unlink($filePath);
+        }
     }
 }

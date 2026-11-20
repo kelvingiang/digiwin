@@ -1,318 +1,187 @@
 <?php
+declare(strict_types=1);
 
-if (!class_exists('WP_List_Table')) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+use DGW\Models\BaseListTableModel;
+
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-class Model_Download extends WP_List_Table
+/**
+ * [2026-11-19] - @author: Kelvin - Bảng quản trị Thành viên & Thống kê Download/View (kế thừa BaseListTableModel, tối ưu COUNT và vá Stored XSS)
+ */
+class Model_Download extends BaseListTableModel
 {
+    private string $download_table = '';
 
-    private $_pre_page = 30;
-    private $_sql;
-    private $_stt = 1;
-    private $table;
-    private $download_table;
-
-    public function __construct($args = array())
+    /**
+     * [2026-11-19] - @author: Kelvin - Khởi tạo cấu hình bảng thành viên và bảng chi tiết download
+     */
+    public function __construct($args = [])
     {
-        // 1. FIX LỖI FATAL ERROR: Nạp các thư viện Admin bắt buộc trước khi gọi parent
-        if (! function_exists('convert_to_screen')) {
+        if (!function_exists('convert_to_screen')) {
             require_once ABSPATH . 'wp-admin/includes/template.php';
             require_once ABSPATH . 'wp-admin/includes/screen.php';
         }
-        $args = array(
-            'plural' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
-            'singular' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
-            'ajax' => FALSE,
-            'screen' => null,
-        );
-        parent::__construct($args);
-        global $wpdb;
-        $this->table = $wpdb->prefix . 'download_registrations';
-        $this->download_table = $wpdb->prefix . 'download_detail';
+
+        parent::__construct('download_registrations', is_array($args) ? $args : []);
+        $this->download_table = $this->db->prefix . 'download_detail';
     }
 
-    public function prepare_items()
+    /**
+     * [2026-11-19] - @author: Kelvin - Khai báo danh sách cột hiển thị
+     */
+    public function get_columns(): array
     {
-        $columns = $this->get_columns();  // NHUNG GI CAN HIEN THI TREN BANG 
-        $hidden = $this->get_hidden_columns(); // NHUNG COT TA SE AN DI
-        $sorttable = $this->get_sortable_columns(); // CAC COT DC SAP XEP TANG HOAC GIAM DAN
-
-        $this->_column_headers = array($columns, $hidden, $sorttable); //DUA 3 GIA TRI TREN VAO DAY DE SHOW DU LIEU
-        $this->items = $this->table_data(); // LAY DU LIEU TU DATABASE
-
-        $total_items = $this->total_items(); // TONG SO DONG DA LIEU
-        $per_page = $this->_pre_page; // SO TRANG 
-        $total_pages = ceil($total_items / $per_page); // TONG SO TRANG
-        // PHAN TRANG
-        $args = array(
-            'total_items' => $total_items,
-            'per_page' => $per_page,
-            'total_pages' => $total_pages
-        );
-        $this->set_pagination_args($args);
-    }
-
-    public function get_columns()
-    {
-        $arr = array(
-            'cb' => '<input type="checkbox" />',
-            'member_email' => __('E-mail', 'dgw'),
-            'member_name' => __('Full Name', 'dgw'),
-            'member_company' => __('Company Name', 'dgw'),
-            'member_phone' => __('Contact Number', 'dgw'),
+        return [
+            'cb'                    => '<input type="checkbox" />',
+            'member_email'          => __('E-mail', 'dgw'),
+            'member_name'           => __('Full Name', 'dgw'),
+            'member_company'        => __('Company Name', 'dgw'),
+            'member_phone'          => __('Contact Number', 'dgw'),
             'member_download_count' => __('Download Count', 'dgw'),
-            'member_view_count' => __('View Count', 'dgw'),
-            'create_date' => __('Create Date', 'dgw'),
-        );
-        return $arr;
+            'member_view_count'     => __('View Count', 'dgw'),
+            'create_date'           => __('Create Date', 'dgw'),
+        ];
     }
 
-    // ====KHAI  BAO CAC COT BI AN DI TREN GRIDVIEW=====================================
-    public function get_hidden_columns()
+    /**
+     * [2026-11-19] - @author: Kelvin - Danh sách cột sắp xếp (giữ cấu hình hiện hành)
+     */
+    public function get_sortable_columns(): array
     {
-        return array();
+        return [];
     }
 
-    // ==== CAC COT AP DUNG  SAP XEP  ============================================
-    public function get_sortable_columns()
+    /**
+     * [18/11/2026] - Helper dựng truy vấn danh sách thành viên dùng chung cho bảng và export, bọc $this->db->prepare() và whitelist ORDER BY
+     * [2026-11-19] - @author: Kelvin - Tạo song song _count_sql không cần JOIN download_detail để tối ưu tốc độ đếm phân trang
+     */
+    private function build_list_query(bool $withPagination = false): string
     {
-        return array(
-            // 'company' => array('company', true),
-            //'create_date' => array('create_date', true),
-        );
-    }
+        [$orderby, $order] = $this->resolveOrdering(['ID', 'email', 'username', 'company', 'phone', 'create_date'], 'ID');
 
-    private function table_data()
-    {
-        global $wpdb;
+        $trash  = $this->isTrashView() ? 1 : 0;
+        $where  = ['m.trash = %d'];
+        $params = [$trash];
+        $search = function_exists('getParams') ? trim((string) getParams('s')) : '';
 
-        // [13/07/2026] Fix: Thay thế cách lấy biến $_GET trực tiếp bằng hàm getParams() để an toàn hơn
-        // và tránh lỗi "Undefined array key" trên PHP 8+.
-        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
-        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
+        if ($search !== '') {
+            $where[]  = 'm.company LIKE %s';
+            $params[] = '%' . $this->db->esc_like($search) . '%';
+        }
 
-        // 基本 SELECT 與 JOIN
-        // [03/11/2026] - Thống kê riêng tổng lượt tải tài liệu (kid = 1) và tổng lượt xem video YouTube (kid = 2)
-        $sql = "SELECT m.*, 
+        $whereClause      = implode(' AND ', $where);
+        $this->_count_sql = $this->db->prepare("SELECT COUNT(*) FROM {$this->table} AS m WHERE {$whereClause}", ...$params);
+
+        $baseSql = "SELECT m.*,
                 COUNT(CASE WHEN d.kid = 1 THEN 1 END) AS download_count,
                 COUNT(CASE WHEN d.kid = 2 THEN 1 END) AS view_count
-            FROM {$this->table} AS m 
-            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
+            FROM {$this->table} AS m
+            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id
+            WHERE {$whereClause}
+            GROUP BY m.ID
+            ORDER BY m.{$orderby} {$order}";
 
-        $whereArr = array();  // TAO MANG WHERE ============
+        $this->_sql = $this->db->prepare($baseSql, ...$params);
 
-        // 修正 1：加上 m. 前綴
-        if (getParams('customvar') == 'trash') {
-            $whereArr[] = "(m.trash = 1)";
+        if (!$withPagination) {
+            return $this->_sql;
+        }
+
+        return $this->buildPagedQuery($baseSql, $params);
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Lấy dữ liệu thành viên phân trang cho bảng quản trị
+     */
+    protected function table_data(): array
+    {
+        return $this->db->get_results($this->build_list_query(true), ARRAY_A) ?: [];
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Lấy toàn bộ dữ liệu thành viên phục vụ xuất Excel
+     */
+    public function get_export_data(): array
+    {
+        return $this->db->get_results($this->build_list_query(false), ARRAY_A) ?: [];
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Render cột email kèm row actions với Late Escaping
+     */
+    public function column_member_email($item): string
+    {
+        $page  = function_exists('getParams') ? sanitize_key((string) getParams('page')) : '';
+        $id    = absint($item['ID'] ?? 0);
+        $email = esc_html((string) ($item['email'] ?? ''));
+
+        if ($this->isTrashView()) {
+            $actions = [
+                'restore' => $this->buildActionLink($page, 'restore', $id, __('Restore', 'dgw')),
+                'delete'  => $this->buildActionLink($page, 'delete', $id, __('Delete Permanently', 'dgw')),
+            ];
         } else {
-            $whereArr[] = "(m.trash = 0)";
+            $actions = [
+                'edit'  => $this->buildActionLink($page, 'edit', $id, __('Edit', 'dgw')),
+                'trash' => $this->buildActionLink($page, 'trash', $id, __('Trash', 'dgw')),
+            ];
         }
 
-        if (getParams('s') != ' ') {
-            $s = esc_sql(getParams('s'));
-            $whereArr[] = "(m.company LIKE '%$s%')";
-        }
+        $editUrl = add_query_arg(['page' => $page, 'action' => 'edit', 'id' => $id], admin_url('admin.php'));
 
-        // CHUYEN CAC GIA TRI where KET VOI NHAU BOI and
-        if (count($whereArr) > 0) {
-            $sql .= " WHERE " . join(" AND ", $whereArr);
-        }
-
-        // 推薦加上 GROUP BY，防止同一個會員因為多筆下載紀錄而重複顯示
-        $sql .= " GROUP BY m.ID ";
-
-        // 修正 2：在 ORDER BY 前面加上一個「空格」
-        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
-
-        $this->_sql = $sql;
-
-        // LAY GIA TRI PHAN TRANG PAGEING
-        $paged = max(1, @$_REQUEST['paged']);
-        $offset = ($paged - 1) * $this->_pre_page;
-
-        // 這裡的 LIMIT 前面我也幫你確認好空格了
-        $sql .= " LIMIT " . $this->_pre_page . " OFFSET " . $offset;
-
-        // LAY KET QUA THONG QUA CAU sql
-        $data = $wpdb->get_results($sql, ARRAY_A);
-
-        // 💡【除錯小技巧】如果還是沒資料，把下面兩行註解拿掉，看看印出什麼錯誤！
-        // var_dump($sql);
-        // var_dump($wpdb->last_error);
-
-        return $data;
+        return sprintf('<strong><a href="%s">%s</a></strong>%s', esc_url($editUrl), $email, $this->row_actions($actions));
     }
 
-    public function get_export_data()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render tên thành viên và trạng thái kích hoạt
+     */
+    public function column_member_name($item): string
     {
-        global $wpdb;
+        $username = esc_html((string) ($item['username'] ?? ''));
+        $status   = ((int) ($item['status'] ?? 0) === 1) ? ' * ' : ' ';
 
-        // This is almost the same as table_data(), but without pagination.
-
-        $orderby = !empty($_GET['orderby']) ? $_GET['orderby'] : 'ID';
-        $order = !empty($_GET['order']) ? $_GET['order'] : 'DESC';
-
-        // $orderby = (getParams('orderby') == ' ') ? 'ID' : $_GET['orderby'];
-        // $order = (getParams('order') == ' ') ? 'DESC' : $_GET['order'];
-        // [03/11/2026] - Thống kê riêng tổng lượt tải tài liệu (kid = 1) và tổng lượt xem video YouTube (kid = 2)
-        $sql = "SELECT m.*, 
-                COUNT(CASE WHEN d.kid = 1 THEN 1 END) AS download_count,
-                COUNT(CASE WHEN d.kid = 2 THEN 1 END) AS view_count
-            FROM {$this->table} AS m 
-            LEFT JOIN {$this->download_table} AS d ON m.ID = d.user_id ";
-
-        $whereArr = array();
-
-        if (getParams('customvar') == 'trash') {
-            $whereArr[] = "(m.trash = 1)";
-        } else {
-            $whereArr[] = "(m.trash = 0)";
-        }
-
-        if (getParams('s') != ' ') {
-            $s = esc_sql(getParams('s'));
-            $whereArr[] = "(m.company LIKE '%$s%')";
-        }
-
-        if (count($whereArr) > 0) {
-            $sql .= " WHERE " . join(" AND ", $whereArr);
-        }
-
-        $sql .= " GROUP BY m.ID ";
-        $sql .= " ORDER BY m." . esc_sql($orderby) . " " . esc_sql($order);
-
-        // No pagination for export
-        $data = $wpdb->get_results($sql, ARRAY_A);
-
-        return $data;
+        return $username . $status;
     }
 
-    // TINH TONG SO DONG DU LIEU  DE AP DUNG CHO VIEC PHAN TRANG
-    public function total_items()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render tên công ty với Late Escaping chống Stored XSS
+     */
+    public function column_member_company($item): string
     {
-        global $wpdb;
-        return $wpdb->query($this->_sql);
+        return esc_html((string) ($item['company'] ?? ''));
     }
 
-    // SO TONG ITEM DUNG DE PHAN TRANG
-    public function total_list()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render số điện thoại với Late Escaping
+     */
+    public function column_member_phone($item): string
     {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table");
+        return esc_html((string) ($item['phone'] ?? ''));
     }
 
-    // SO TONG ITEM TRONG TRASH(SO RAC)
-    public function total_trash()
+    /**
+     * [03/11/2026] - Hiển thị tổng số lượt tải file (kid = 1)
+     */
+    public function column_member_download_count($item): int
     {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 1");
+        return (int) ($item['download_count'] ?? 0);
     }
 
-    // SO TONG ITEM HIEN HANH
-    public function total_publish()
+    /**
+     * [03/11/2026] - Hiển thị tổng số lượt xem video YouTube (kid = 2)
+     */
+    public function column_member_view_count($item): int
     {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 0");
+        return (int) ($item['view_count'] ?? 0);
     }
 
-    function get_views()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render ngày tạo tài khoản với Late Escaping
+     */
+    public function column_create_date($item): string
     {
-        $views = array();
-        $current = (!empty($_REQUEST['customvar']) ? $_REQUEST['customvar'] : 'all');
-
-        //All link
-        $class = ($current == 'all' ? ' class="current"' : '');
-        $all_url = remove_query_arg('customvar');
-        $views['all'] = "<strong>" . __('All', 'dgw') . " (" . $this->total_list() . ")</strong>";
-
-        //Foo link
-        $foo_url = add_query_arg('customvar', 'published');
-        $class = ($current == 'foo' ? ' class="current"' : '');
-        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published', 'dgw') . " (" . $this->total_publish() . ")</a>";
-
-        //Bar link
-        $bar_url = add_query_arg('customvar', 'trash');
-        $class = ($current == 'bar' ? ' class="current"' : '');
-        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash', 'dgw') . "(" . $this->total_trash() . ")</a>";
-
-        return $views;
-    }
-
-    // CAC ITEM TRONG SELECT BOX CHUC NANG 'UNG DUNG'
-    public function get_bulk_actions()
-    {
-        if (@$_GET['customvar'] == 'trash') {
-            $actions = array(
-                'restore' => __('Restore', 'dgw'),
-                'delete' => __('Delete Permanently', 'dgw')
-            );
-        } else {
-            $actions = array(
-                'trash' => __('Trash', 'dgw'),
-            );
-        }
-        return $actions;
-    }
-
-    //  NOI DUNG HIEN THI CUA COT TRONG GRID
-    public function column_cb($item)
-    {
-        $singular = $this->_args['singular'];
-        $html = '<input type="checkbox" name="' . $singular . '[]" value="' . $item['ID'] . '"/>';
-        return $html;
-    }
-
-    public function column_member_email($item)
-    {
-        $page = getParams('page');
-        if (@$_GET['customvar'] == 'trash') {
-            $actions = array(
-                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore', 'dgw') . '</a>',
-                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently', 'dgw') . ' </a>',
-            );
-        } else {
-            $actions = array(
-                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit', 'dgw') . '</a>',
-                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash', 'dgw') . '</a>',
-            );
-        }
-        $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['email'] . '</a> </strong>' . $this->row_actions($actions);
-        return $html;
-    }
-
-    public function column_member_name($item)
-    {
-        $username = isset($item['username']) ? esc_html($item['username']) : '';
-        $status   = isset($item['status']) && (int) $item['status'] === 1 ? ' * ' : ' ';
-
-        return $username . ' ' . $status;
-    }
-
-    public function column_member_company($item)
-    {
-        echo $item['company'];
-    }
-
-    public function column_member_phone($item)
-    {
-        echo $item['phone'];
-    }
-
-    // [03/11/2026] - Hiển thị tổng số lượt tải file (kid = 1)
-    public function column_member_download_count($item)
-    {
-        echo (int) ($item['download_count'] ?? 0);
-    }
-
-    // [03/11/2026] - Hiển thị tổng số lượt xem video YouTube (kid = 2)
-    public function column_member_view_count($item)
-    {
-        echo (int) ($item['view_count'] ?? 0);
-    }
-
-    public function column_create_date($item)
-    {
-        echo $item['create_date'];
+        return esc_html((string) ($item['create_date'] ?? ''));
     }
 }

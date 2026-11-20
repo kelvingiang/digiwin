@@ -1,185 +1,85 @@
 <?php
+declare(strict_types=1);
 
+use DGW\Controllers\CompanyInformationController;
+use DGW\Controllers\LogoController;
+use DGW\Controllers\MemberController;
+use DGW\Controllers\MemberDownloadReportController;
+use DGW\Controllers\MemberViewReportController;
+use DGW\Controllers\PopupController;
+use DGW\Controllers\PostTypeRegistry;
+use DGW\Controllers\WebSettingController;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * [2026-11-20] - @author: Kelvin - Bộ điều phối trung tâm khởi tạo CPT và Admin Controllers theo chuẩn PSR-4
+ */
 class Controller_Main
 {
+    private string $_controller_name = 'main_controller_options';
 
-    private $_controller_name = 'main_controller_options';
-    private $_controller_options = array();
+    /**
+     * @var array<string, bool>
+     */
+    private array $_controller_options = [];
 
+    /**
+     * [2026-11-20] - @author: Kelvin - Khởi tạo CPT trên mọi request và chỉ nạp Admin Controllers khi ở WP-Admin
+     */
     public function __construct()
     {
-
-        $defaultOption = array(
-
-            'controller_setting' => false,
-            'controller_case_study' => true,
-            'controller_resources' => true,
-            'controller_active' => true,
-            'controller_industries' => true,
-            'controller_solutions' => true,
-            'controller_services' => true,
-            'controller_information' => true,
-            'controller_slider' => true,
-            'controller_join_us' => true,
-            'controller_logo' => true,
-            'controller_popup' => true,
-            'controller_member' => true,
+        $defaultOption = [
+            'controller_setting'         => false,
+            'controller_case_study'      => true,
+            'controller_resources'       => true,
+            'controller_active'          => true,
+            'controller_industries'      => true,
+            'controller_solutions'       => true,
+            'controller_services'        => true,
+            'controller_information'     => true,
+            'controller_slider'          => true,
+            'controller_join_us'         => true,
+            'controller_logo'            => true,
+            'controller_popup'           => true,
+            'controller_member'          => true,
             'controller_member_download' => true,
-            'controller_member_view' => true,
-        );
+            'controller_member_view'     => true,
+        ];
 
-        $this->_controller_options = get_option($this->_controller_name, $defaultOption);
+        $savedOptions              = get_option($this->_controller_name, $defaultOption);
+        $this->_controller_options = wp_parse_args(is_array($savedOptions) ? $savedOptions : [], $defaultOption);
 
-        $this->page_popup();
-        $this->page_information();
-        $this->page_setting();
-        $this->page_logo();
-        $this->page_member();
-        $this->page_member_download();
-        $this->page_member_view();
+        // 1. Đăng ký các Custom Post Type đang bật
+        PostTypeRegistry::registerEnabled($this->_controller_options);
 
-        $this->post_slider();
-        $this->post_solutions();
-        $this->post_services();
-        $this->post_industries();
-        $this->post_active();
-        $this->post_resources();
-        $this->post_cases_studues();
-        $this->post_join_us();
-
-        add_action('admin_init', array($this, 'do_output_buffer'));
-    }
-
-    public function page_popup()
-    {
-        if ($this->_controller_options['controller_popup']) {
-            require_once(DIR_CONTROLLER . 'controller-popup.php');
-            new Controller_Popup();
+        // 2. Chỉ khởi tạo các Admin Page Controller trong WP-Admin để tối ưu TTFB ở Frontend
+        if (is_admin()) {
+            $this->registerAdminControllers();
         }
     }
 
-    public function page_logo()
+    /**
+     * [2026-11-20] - @author: Kelvin - Khởi tạo các trang quản trị WP-Admin theo bản đồ cấu hình
+     */
+    private function registerAdminControllers(): void
     {
-        if ($this->_controller_options['controller_logo']) {
-            require_once(DIR_CONTROLLER . 'controller-logo.php');
-            new Controller_logo();
+        $adminControllers = [
+            'controller_popup'           => PopupController::class,
+            'controller_information'     => CompanyInformationController::class,
+            'controller_setting'         => WebSettingController::class,
+            'controller_logo'            => LogoController::class,
+            'controller_member'          => MemberController::class,
+            'controller_member_download' => MemberDownloadReportController::class,
+            'controller_member_view'     => MemberViewReportController::class,
+        ];
+
+        foreach ($adminControllers as $optionKey => $controllerClass) {
+            if (!empty($this->_controller_options[$optionKey])) {
+                new $controllerClass();
+            }
         }
-    }
-
-    public function page_member()
-    {
-        if ($this->_controller_options['controller_member']) {
-            require_once(DIR_CONTROLLER . 'controller-member.php');
-            new Controller_Member();
-        }
-    }
-
-      public function page_member_download()
-    {
-        if ($this->_controller_options['controller_member_download']) {
-            require_once(DIR_CONTROLLER . 'controller-member-download.php');
-            new Controller_Member_Download_Report();
-        }
-    }
-
-    // [03/11/2026] - Khởi tạo Controller thống kê lượt xem video YouTube (kid = 2)
-    public function page_member_view()
-    {
-        if ($this->_controller_options['controller_member_view'] ?? true) {
-            require_once(DIR_CONTROLLER . 'controller-member-view.php');
-            new Controller_Member_View_Report();
-        }
-    }
-
-
-
-    public function page_setting()
-    {
-        if ($this->_controller_options['controller_setting']) {
-            require_once(DIR_CONTROLLER . 'controller-setting.php');
-            new Controller_Web_Setting();
-        }
-    }
-
-    public function page_information()
-    {
-        if ($this->_controller_options['controller_information']) {
-            require_once(DIR_CONTROLLER . 'controller-information.php');
-            new Controller_Company_Information();
-        }
-    }
-
-
-    public function post_join_us()
-    {
-        if ($this->_controller_options['controller_join_us'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-join-us.php');
-            new Controller_Join_Us();
-        }
-    }
-
-
-
-    public function post_cases_studues()
-    {
-        if ($this->_controller_options['controller_case_study'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-case-studies.php');
-            new Controller_Case_Studies();
-        }
-    }
-
-
-    public function post_resources()
-    {
-        if ($this->_controller_options['controller_resources'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-resources.php');
-            new Controller_Resources();
-        }
-    }
-
-    public function post_active()
-    {
-        if ($this->_controller_options['controller_active'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-active.php');
-            new Controller_Active();
-        }
-    }
-
-    public function post_industries()
-    {
-        if ($this->_controller_options['controller_industries'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-industries.php');
-            new Controller_Industries();
-        }
-    }
-
-    public function post_solutions()
-    {
-        if ($this->_controller_options['controller_solutions'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-solutions.php');
-            new Controller_Solutions();
-        }
-    }
-
-    public function post_services()
-    {
-        if ($this->_controller_options['controller_services'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-services.php');
-            new Controller_Services();
-        }
-    }
-
-    public function post_slider()
-    {
-        if ($this->_controller_options['controller_slider'] == true) {
-            require_once(DIR_CONTROLLER . 'controller-slider.php');
-            new Controller_Slider();
-        }
-    }
-
-    //=== FUNCTION NAY GIAI QUYET CHUYEN TRANG BI LOI 
-    public function do_output_buffer()
-    {
-        ob_start();
     }
 }

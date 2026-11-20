@@ -11,33 +11,35 @@ $company =  $data['company'] ?? null;
 $link    =  $data['link'] ?? null;
 ?>
 <form name="f1" id="f1" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="hid-id" id="hid-id" value="<?php echo $ID ?>" />
-    <input type="hidden" name="hid-img" id="hid-img" value="<?php echo $img ?>" />
+    <?php // [2026-11-20] - @author: Kelvin - Bổ sung Nonce bảo vệ form logo và Late Escaping ?>
+    <?php wp_nonce_field('dgw_logo_save_action', 'dgw_logo_nonce'); ?>
+    <input type="hidden" name="hid-id" id="hid-id" value="<?php echo esc_attr((string) $ID); ?>" />
+    <input type="hidden" name="hid-img" id="hid-img" value="<?php echo esc_attr((string) $img); ?>" />
     <div style="margin-top:1rem">
         <div class="row-two-column">
 
             <div class="col">
                 <div class="cell-title">
-                    <label> <?php echo __('Company Name', 'dgw') ?> </label>
+                    <label> <?php echo esc_html__('Company Name', 'dgw'); ?> </label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-company"
                         id="txt-company"
                         class="my-input"
-                        value="<?php echo $company ?>"
+                        value="<?php echo esc_attr((string) $company); ?>"
                         required />
                 </div>
             </div>
 
             <div class="col">
                 <div class="cell-title">
-                    <label> <?php echo __('Link', 'dgw') ?> </label>
+                    <label> <?php echo esc_html__('Link', 'dgw'); ?> </label>
                 </div>
                 <div class="cell-text">
                     <input type="text" name="txt-link"
                         id="txt-link"
                         class="my-input"
-                        value="<?php echo $link ?>" />
+                        value="<?php echo esc_attr((string) $link); ?>" />
                 </div>
             </div>
         </div>
@@ -45,14 +47,14 @@ $link    =  $data['link'] ?? null;
         <div class="row-four-column" style="height: 250px; margin-top:2rem">
             <div class="col">
                 <div class="cell-title">
-                    <label><?php echo __('Trademark', 'dgw') ?> <i class="error"> <?php echo getParams('e') ?> </i></label>
+                    <label><?php echo esc_html__('Trademark', 'dgw'); ?> <i class="error"> <?php echo esc_html((string) getParams('e')); ?> </i></label>
                 </div>
                 <div class="cell-text">
                     <input type="file" name="file-logo" id="file-logo" accept="image/*" class="my-input" />
                 </div>
             </div>
             <div class="col">
-                <div id="show-img" style=" background-image: url('<?php echo PART_IMAGES . 'logo/' . $img ?>');">
+                <div id="show-img" style=" background-image: url('<?php echo esc_url(PART_IMAGES . 'logo/' . $img); ?>');">
                 </div>
             </div>
             <div class="col"></div>
@@ -88,7 +90,6 @@ $link    =  $data['link'] ?? null;
                 reader.onloadend = function() { // set image data as background of div
                     jQuery("#show-img").css("background-image", "url(" + this.result + ")");
                 };
-                console.log(result);
             }
         });
     });

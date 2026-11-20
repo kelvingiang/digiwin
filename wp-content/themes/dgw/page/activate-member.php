@@ -55,16 +55,16 @@ if ($email && $token) {
                     <div class="dgw-loading-state">
                         <div class="dgw-loader"></div>
                         <h2 id="dgw-status-msg">
-                            <?php __('Account verification is in progress, please wait...', 'dgw'); ?>
+                            <?php echo esc_html__('Account verification is in progress, please wait...', 'dgw'); ?>
                         </h2>
                     </div>
                 </div>
             <?php else : ?>
                 <?php if ($is_valid && $user_data && (int)$user_data->status !== 0) : ?>
                     <div class="dgw-status-box">
-                        <p class="msg msg--info"><?php __('This account has already been activated', 'dgw'); ?></p>
+                        <p class="msg msg--info"><?php echo esc_html__('This account has already been activated', 'dgw'); ?></p>
                         <a href="<?php echo esc_url(home_url('/member/')); ?>" class="btn-dgw">
-                            <?php __('Go to member page', 'dgw'); ?>
+                            <?php echo esc_html__('Go to member page', 'dgw'); ?>
                         </a>
                     </div>
                 <?php else : ?>
@@ -85,6 +85,7 @@ if ($email && $token) {
 <script>
     /**
      * Sử dụng ES6 và xử lý dữ liệu qua JSON để tránh lỗi Unexpected token
+     * [2026-11-20] - @author: Kelvin - Bổ sung echo + esc_js cho toàn bộ thông báo trạng thái kích hoạt tài khoản
      */
     document.addEventListener('DOMContentLoaded', () => {
         const trigger = document.getElementById('dgw-auto-activate-trigger');
@@ -112,16 +113,16 @@ if ($email && $token) {
                     },
                     success: (res) => {
                         if (res.success) {
-                            msgBox.innerHTML = `<span class="txt-success"><?php __('Account activated successfully!', 'dgw'); ?></span>`;
+                            msgBox.innerHTML = `<span class="txt-success"><?php echo esc_js(__('Account activated successfully!', 'dgw')); ?></span>`;
                             setTimeout(() => {
                                 window.location.href = config.redirect;
                             }, 3000);
                         } else {
-                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php __('Failed to activate account', 'dgw'); ?>'}</span>`;
+                            msgBox.innerHTML = `<span class="txt-error">${res.data || '<?php echo esc_js(__('Failed to activate account', 'dgw')); ?>'}</span>`;
                         }
                     },
                     error: () => {
-                        msgBox.innerHTML = `<span class="txt-error"><?php __('Server connection error', 'dgw'); ?></span>`;
+                        msgBox.innerHTML = `<span class="txt-error"><?php echo esc_js(__('Server connection error', 'dgw')); ?></span>`;
                     }
                 });
             };

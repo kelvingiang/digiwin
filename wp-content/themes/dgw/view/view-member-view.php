@@ -5,7 +5,8 @@
 require_once(DIR_MODEL . 'model-download-function.php');
 $model = new Model_Download_Function();
 // Chỉ liệt kê và thống kê dữ liệu xem video YouTube (kid = 2)
-$views = $model->get_all_downloads(2);
+// [2026-11-20] - @author: Kelvin - Giới hạn 500 bản ghi gần nhất trên giao diện HTML để đảm bảo tốc độ render
+$views = $model->get_all_downloads(2, 500);
 $data  = $model->get_download_stats_by_title(2);
 $count = 1;
 $page  = getParams('page');
@@ -34,7 +35,14 @@ $page  = getParams('page');
 
 <div style="margin-top: 1.5rem;">
     <div class="wrap" style="display: inline-block;">
-        <a href="<?php echo esc_url(admin_url('admin.php?page=' . $page . '&action=export_view_excel')); ?>" class="page-title-action"><?php echo __('Export Excel file', 'dgw'); ?></a>
+        <?php
+        // [2026-11-20] - @author: Kelvin - Bổ sung Nonce bảo vệ liên kết xuất Excel
+        $exportUrl = wp_nonce_url(
+            admin_url('admin.php?page=' . $page . '&action=export_view_excel'),
+            'dgw_export_view_excel'
+        );
+        ?>
+        <a href="<?php echo esc_url($exportUrl); ?>" class="page-title-action"><?php echo esc_html__('Export Excel file', 'dgw'); ?></a>
     </div>
     <div style="max-height: 500px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">

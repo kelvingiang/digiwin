@@ -1,222 +1,133 @@
 <?php
+declare(strict_types=1);
 
-if (!class_exists('WP_List_Table')) {
-    require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php ';
+use DGW\Models\BaseListTableModel;
+
+if (!defined('ABSPATH')) {
+    exit;
 }
 
-class Model_Logo extends WP_List_Table
+/**
+ * [2026-11-19] - @author: Kelvin - Bảng quản trị Logo đối tác (kế thừa BaseListTableModel, tối ưu COUNT và escape XSS)
+ */
+class Model_Logo extends BaseListTableModel
 {
-
-    private $_pre_page = 30;
-    private $_sql;
-    private $_stt = 1;
-    private $table;
-
-    public function __construct($args = array())
+    /**
+     * [2026-11-19] - @author: Kelvin - Khởi tạo cấu hình bảng wp_logo
+     */
+    public function __construct($args = [])
     {
-        $args = array(
-            'plural' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
-            'singular' => 'ID', // GIA TRI NAY TUONG UNG VOI key TRONG table
-            'ajax' => FALSE,
-            'screen' => null,
-        );
-        parent::__construct($args);
-        global $wpdb;
-        $this->table = $wpdb->prefix . 'logo';
+        parent::__construct('logo', is_array($args) ? $args : []);
     }
 
-    public function prepare_items()
+    /**
+     * [2026-11-19] - @author: Kelvin - Khai báo danh sách cột hiển thị
+     */
+    public function get_columns(): array
     {
-        $columns = $this->get_columns();  // NHUNG GI CAN HIEN THI TREN BANG 
-        $hidden = $this->get_hidden_columns(); // NHUNG COT TA SE AN DI
-        $sorttable = $this->get_sortable_columns(); // CAC COT DC SAP XEP TANG HOAC GIAM DAN
-
-        $this->_column_headers = array($columns, $hidden, $sorttable); //DUA 3 GIA TRI TREN VAO DAY DE SHOW DU LIEU
-        $this->items = $this->table_data(); // LAY DU LIEU TU DATABASE
-
-        $total_items = $this->total_items(); // TONG SO DONG DA LIEU
-        $per_page = $this->_pre_page; // SO TRANG 
-        $total_pages = ceil($total_items / $per_page); // TONG SO TRANG
-        // PHAN TRANG
-        $args = array(
-            'total_items' => $total_items,
-            'per_page' => $per_page,
-            'total_pages' => $total_pages
-        );
-        $this->set_pagination_args($args);
-    }
-
-    public function get_columns()
-    {
-        $arr = array(
-            'cb' => '<input type="checkbox" />',
+        return [
+            'cb'      => '<input type="checkbox" />',
             'company' => __('Company Name', 'dgw'),
-            'img' => __('Trademark', 'dgw'),
-            'link' => __('Link', 'dgw'),
-            'date' => __('Create Date', 'dgw'),
+            'img'     => __('Trademark', 'dgw'),
+            'link'    => __('Link', 'dgw'),
+            'date'    => __('Create Date', 'dgw'),
+        ];
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Khai báo các cột hỗ trợ sắp xếp
+     */
+    public function get_sortable_columns(): array
+    {
+        return [
+            'company' => ['company', true],
+            'date'    => ['create_date', true],
+        ];
+    }
+
+    /**
+     * [18/11/2026] - Truy vấn danh sách logo dùng $this->db->prepare(), whitelist ORDER BY và esc_like()
+     * [2026-11-19] - @author: Kelvin - Tạo song song _count_sql tối ưu đếm tổng dòng
+     */
+    protected function table_data(): array
+    {
+        [$orderby, $order] = $this->resolveOrdering(['ID', 'company', 'create_date', 'update_date'], 'ID');
+
+        $trash  = $this->isTrashView() ? 1 : 0;
+        $where  = ['m.trash = %d'];
+        $params = [$trash];
+        $search = function_exists('getParams') ? trim((string) getParams('s')) : '';
+
+        if ($search !== '') {
+            $where[]  = 'm.company LIKE %s';
+            $params[] = '%' . $this->db->esc_like($search) . '%';
+        }
+
+        $whereClause      = implode(' AND ', $where);
+        $this->_count_sql = $this->db->prepare("SELECT COUNT(*) FROM {$this->table} AS m WHERE {$whereClause}", ...$params);
+
+        $baseSql    = "SELECT m.* FROM {$this->table} AS m WHERE {$whereClause} ORDER BY m.{$orderby} {$order}";
+        $this->_sql = $this->db->prepare($baseSql, ...$params);
+
+        return $this->db->get_results($this->buildPagedQuery($baseSql, $params), ARRAY_A) ?: [];
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Render cột tên công ty kèm row actions với Late Escaping
+     */
+    public function column_company($item): string
+    {
+        $page    = function_exists('getParams') ? sanitize_key((string) getParams('page')) : '';
+        $id      = absint($item['ID'] ?? 0);
+        $company = esc_html((string) ($item['company'] ?? ''));
+
+        if ($this->isTrashView()) {
+            $actions = [
+                'restore' => $this->buildActionLink($page, 'restore', $id, __('Restore', 'dgw')),
+                'delete'  => $this->buildActionLink($page, 'delete', $id, __('Delete Permanently', 'dgw')),
+            ];
+        } else {
+            $actions = [
+                'edit'  => $this->buildActionLink($page, 'edit', $id, __('Edit', 'dgw')),
+                'trash' => $this->buildActionLink($page, 'trash', $id, __('Trash', 'dgw')),
+            ];
+        }
+
+        $editUrl = add_query_arg(['page' => $page, 'action' => 'edit', 'id' => $id], admin_url('admin.php'));
+
+        return sprintf('<strong><a href="%s">%s</a></strong>%s', esc_url($editUrl), $company, $this->row_actions($actions));
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Render cột hình ảnh logo với Late Escaping
+     */
+    public function column_img($item): string
+    {
+        $filename = sanitize_file_name((string) ($item['img'] ?? ''));
+        if ($filename === '') {
+            return '';
+        }
+
+        return sprintf(
+            '<img src="%s" alt="%s" />',
+            esc_url(PART_IMAGES . 'logo/' . $filename),
+            esc_attr((string) ($item['company'] ?? 'logo image'))
         );
-        return $arr;
     }
 
-    // ====KHAI  BAO CAC COT BI AN DI TREN GRIDVIEW=====================================
-    public function get_hidden_columns()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render cột liên kết với Late Escaping
+     */
+    public function column_link($item): string
     {
-        return array();
+        return esc_html((string) ($item['link'] ?? ''));
     }
 
-    // ==== CAC COT AP DUNG  SAP XEP  ============================================
-    public function get_sortable_columns()
+    /**
+     * [2026-11-19] - @author: Kelvin - Render cột ngày tạo với Late Escaping
+     */
+    public function column_date($item): string
     {
-        return array(
-            'company' => array('company', true),
-            'date' => array('create_date', true),
-        );
-    }
-
-    private function table_data()
-    {
-        global $wpdb;
-        // LAY GIA TRI SAP XEP DU LIEU TREN COT - Fix lỗi Undefined array key
-        $orderby = !empty($_GET['orderby']) ? sanitize_sql_orderby($_GET['orderby']) : 'ID';
-        $order = !empty($_GET['order']) ? sanitize_key($_GET['order']) : 'DESC';
-        $sql = 'SELECT m.* FROM ' . $this->table . ' AS m  ';
-        $whereArr = array();  // TAO MANG WHERE ============
-
-        if (getParams('customvar') == 'trash') {
-            $whereArr[] = "(trash = 1)";
-        } else {
-            $whereArr[] = "(trash = 0)";
-        }
-
-        if (getParams('s') != ' ') {
-            $s = esc_sql(getParams('s'));
-            $whereArr[] = "(m.company  LIKE '%$s%')";
-        }
-
-        // CHUYEN CAC GIA TRI where KET VOI NHAU BOI and ==========================
-        if (count($whereArr) > 0) {
-            $sql .= " WHERE " . join(" AND ", $whereArr);
-        }
-        // orderby
-        $sql .= 'ORDER BY m.' . esc_sql($orderby) . ' ' . esc_sql($order);
-        $this->_sql = $sql;
-        //LAY GIA TRI PHAN TRANG PAGEING
-        $paged = max(1, @$_REQUEST['paged']);
-        $offset = ($paged - 1) * $this->_pre_page;
-
-        $sql .= ' LIMIT  ' . $this->_pre_page . ' OFFSET ' . $offset;
-        // LAY KET QUA  THONG QUA CAU sql
-        $data = $wpdb->get_results($sql, ARRAY_A);
-        return $data;
-    }
-
-    // TINH TONG SO DONG DU LIEU  DE AP DUNG CHO VIEC PHAN TRANG
-    public function total_items()
-    {
-        global $wpdb;
-        return $wpdb->query($this->_sql);
-    }
-
-    // SO TONG ITEM DUNG DE PHAN TRANG
-    public function total_list()
-    {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table");
-    }
-
-    // SO TONG ITEM TRONG TRASH(SO RAC)
-    public function total_trash()
-    {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 1");
-    }
-
-    // SO TONG ITEM HIEN HANH
-    public function total_publish()
-    {
-        global $wpdb;
-        return $wpdb->get_var("SELECT COUNT(*) FROM $this->table WHERE trash = 0");
-    }
-
-    function get_views()
-    {
-        $views = array();
-        $current = (!empty($_REQUEST['customvar']) ? $_REQUEST['customvar'] : 'all');
-
-        //All link
-        $class = ($current == 'all' ? ' class="current"' : '');
-        $all_url = remove_query_arg('customvar');
-        $views['all'] = "<strong>" . __('All', 'dgw') . " (" . $this->total_list() . ")</strong>";
-
-        //Foo link
-        $foo_url = add_query_arg('customvar', 'published');
-        $class = ($current == 'foo' ? ' class="current"' : '');
-        $views['foo'] = "<a href='{$foo_url}' {$class} > " . __('Published', 'dgw') . " (" . $this->total_publish() . ")</a>";
-
-        //Bar link
-        $bar_url = add_query_arg('customvar', 'trash');
-        $class = ($current == 'bar' ? ' class="current"' : '');
-        $views['bar'] = "<a href='{$bar_url}' {$class} >" . __('Trash', 'dgw') . "(" . $this->total_trash() . ")</a>";
-
-        return $views;
-    }
-
-    // CAC ITEM TRONG SELECT BOX CHUC NANG 'UNG DUNG'
-    public function get_bulk_actions()
-    {
-        if (@$_GET['customvar'] == 'trash') {
-            $actions = array(
-                'restore' => __('Restore', 'dgw'),
-                'delete' => __('Delete Permanently', 'dgw')
-            );
-        } else {
-            $actions = array(
-                'trash' => __('Trash', 'dgw'),
-            );
-        }
-        return $actions;
-    }
-
-    //  NOI DUNG HIEN THI CUA COT TRONG GRID
-    public function column_cb($item)
-    {
-        $singular = $this->_args['singular'];
-        $html = '<input type="checkbox" name="' . $singular . '[]" value="' . $item['ID'] . '"/>';
-        return $html;
-    }
-
-    public function column_company($item)
-    {
-
-        $page = getParams('page');
-
-        if (@$_GET['customvar'] == 'trash') {
-            $actions = array(
-                'restore' => '<a href=" ?page=' . $page . '&action=restore&id=' . $item['ID'] . ' " >' . __('Restore', 'dgw') . '</a>',
-                'delete' => '<a href=" ?page=' . $page . '&action=delete&id=' . $item['ID'] . ' " >' . __('Delete Permanently', 'dgw') . ' </a>',
-            );
-        } else {
-            $actions = array(
-                'edit' => '<a href=" ?page=' . $page . '&action=edit&id=' . $item['ID'] . ' " >' . __('Edit', 'dgw') . '</a>',
-                'trash' => '<a href=" ?page=' . $page . '&action=trash&id=' . $item['ID'] . ' " >' . __('Trash', 'dgw') . '</a>',
-            );
-        }
-        $html = '<strong> <a href="?page=' . $page . '&action=edit&id=' . $item['ID'] . ' ">' . $item['company'] . '</a> </strong>' . $this->row_actions($actions);
-        return $html;
-    }
-
-    public function column_img($item)
-    {
-        echo "<img src=" . PART_IMAGES . "logo/" . $item['img'] . " alt='logo image' />";
-    }
-
-    public function column_link($item)
-    {
-        echo $item['link'];
-    }
-
-    public function column_date($item)
-    {
-        echo $item['create_date'];
+        return esc_html((string) ($item['create_date'] ?? ''));
     }
 }

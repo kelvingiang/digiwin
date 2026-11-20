@@ -53,17 +53,18 @@ jQuery(function ($) {
   }
 });
 
-// 選取 #trackheader 內所有的 img 標籤
+// [18/11/2026] - Chỉ gán alt và ngắt MutationObserver sau khi #trackheader đã có ít nhất 1 thẻ img để tránh theo dõi DOM toàn trang vô thời hạn
 const observer = new MutationObserver((mutations, obs) => {
   const trackHeader = document.querySelector("#trackheader");
 
   if (trackHeader) {
     const images = trackHeader.querySelectorAll("img");
-    images.forEach((img) => {
-      img.alt = "trackheader-img";
-    });
-    // 如果只需要執行一次，可以在改完後停止監聽
-    // obs.disconnect();
+    if (images.length > 0) {
+      images.forEach((img) => {
+        img.alt = "trackheader-img";
+      });
+      obs.disconnect();
+    }
   }
 });
 

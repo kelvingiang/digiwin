@@ -1,196 +1,206 @@
 <?php
+declare(strict_types=1);
 
-class Model_Popup_Function
+use DGW\Models\BaseCustomTableModel;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * [2026-11-19] - @author: Kelvin - Model thao tác bảng pop-up (kế thừa BaseCustomTableModel, vá Path Traversal, đồng bộ xóa ảnh mobile và format SQL)
+ */
+class Model_Popup_Function extends BaseCustomTableModel
 {
+    private string $table;
 
-    private $table;
-
+    /**
+     * [2026-11-19] - @author: Kelvin - Khởi tạo kết nối DB và tên bảng pop_up
+     */
     public function __construct()
     {
-        global $wpdb;
-        $this->table = $wpdb->prefix . 'pop_up';
+        parent::__construct();
+        $this->table = $this->db->prefix . 'pop_up';
     }
 
+    /**
+     * [18/11/2026] - Lấy danh sách pop-up dùng prepared statement, sửa lỗi cú pháp khi $status rỗng
+     */
     public function getAll($status = '')
     {
-        global $wpdb;
-        if (empty($status)) {
-            $sql = "SELECT * FROM $this->table WHERE status = $status";
+        if ($status !== '' && $status !== null) {
+            $sql = $this->db->prepare("SELECT * FROM {$this->table} WHERE status = %d", (int) $status);
         } else {
-            $sql = "SELECT * FROM $this->table";
+            $sql = "SELECT * FROM {$this->table}";
         }
-        $row = $wpdb->get_results($sql, ARRAY_A);
-        return $row;
+
+        return $this->db->get_results($sql, ARRAY_A);
     }
 
+    /**
+     * [18/11/2026] - Lấy chi tiết pop-up theo ID dùng $this->db->prepare()
+     */
     public function getItem($id)
     {
-        global $wpdb;
-        $sql = "SELECT * FROM $this->table WHERE ID = $id";
-        $row = $wpdb->get_row($sql, ARRAY_A);
-        return $row;
+        $popupId = absint($id);
+        if ($popupId <= 0) {
+            return null;
+        }
+
+        $sql = $this->db->prepare("SELECT * FROM {$this->table} WHERE ID = %d", $popupId);
+        return $this->db->get_row($sql, ARRAY_A);
     }
 
+    /**
+     * [18/11/2026] - Lấy pop-up đang kích hoạt dùng $this->db->prepare()
+     */
     public function getActive()
     {
-        global $wpdb;
-        $sql = "SELECT * FROM $this->table WHERE status = 1";
-        $row = $wpdb->get_row($sql, ARRAY_A);
-        return $row;
+        $sql = $this->db->prepare("SELECT * FROM {$this->table} WHERE status = %d", 1);
+        return $this->db->get_row($sql, ARRAY_A);
     }
 
+    /**
+     * [2026-11-19] - @author: Kelvin - Lưu mới hoặc cập nhật pop-up với sanitize đầu vào, format chuẩn SQL và xóa đủ 4 ảnh cũ khi thay thế
+     */
     public function Save($arrData, $option)
     {
-        global $current_user;
-        $target = (!empty($arrData['chk-target']) && $arrData['chk-target'] == 1) ? 1 : 0;
+        $target = (!empty($arrData['chk-target']) && (int) $arrData['chk-target'] === 1) ? 1 : 0;
 
-        // echo '<pre>'; print_r($arrData); echo '</pre>';
-        // die();
-        $data = array(
-            'title' => $arrData['txt-title'],
-            'link_cn' => $arrData['txt-link-cn'],
-            'link_vn' => $arrData['txt-link-vn'],
-            'id_cn' => $arrData['txt-id-cn'] ?? '',
-            'id_vn' => $arrData['txt-id-vn'] ?? '',
-            'target' => $target,
-        );
+        $data = [
+            'title'   => sanitize_text_field((string) ($arrData['txt-title'] ?? '')),
+            'link_cn' => esc_url_raw((string) ($arrData['txt-link-cn'] ?? '')),
+            'link_vn' => esc_url_raw((string) ($arrData['txt-link-vn'] ?? '')),
+            'id_cn'   => sanitize_text_field((string) ($arrData['txt-id-cn'] ?? '')),
+            'id_vn'   => sanitize_text_field((string) ($arrData['txt-id-vn'] ?? '')),
+            'target'  => $target,
+        ];
+        $formats = ['%s', '%s', '%s', '%s', '%s', '%d'];
 
-        if (!empty($arrData['file-img-cn'])) {
-            $img1['img_cn'] = $arrData['file-img-cn'];
-            $data = array_merge($data, $img1);
-        }
+        $imageFieldMap = [
+            'file-img-cn'          => 'img_cn',
+            'file-img-vertical-cn' => 'img_mobile_cn',
+            'file-img-vn'          => 'img_vn',
+            'file-img-vertical-vn' => 'img_mobile_vn',
+        ];
 
-        if (!empty($arrData['file-img-vertical-cn'])) {
-            $img1['img_mobile_cn'] = $arrData['file-img-vertical-cn'];
-            $data = array_merge($data, $img1);
-        }
-
-        if (!empty($arrData['file-img-vn'])) {
-            $img2['img_vn'] = $arrData['file-img-vn'];
-            $data = array_merge($data, $img2);
-        }
-
-        if (!empty($arrData['file-img-vertical-vn'])) {
-            $img1['img_mobile_vn'] = $arrData['file-img-vertical-vn'];
-            $data = array_merge($data, $img1);
-        }
-
-        if (empty($arrData['hid-id'])) {
-            $date['create_date'] = date("Y-d-m");
-            $data = array_merge($data, $date);
-        }
-
-        // xoa hinh cu khi cap nhat hinh moi
-        if (!empty($arrData['hid-id'])) {
-            // lay data da co trong database so sanh gia upload img moi 
-            $item = $this->getItem($arrData['hid-id']);
-
-            // neu co khac se xoa file anh cu 
-            if (isset($arrData['file-img-vn']) && $item['img_vn'] != $arrData['file-img-vn']) {
-                $this->removeImgByName($item['img_vn']);
-            }
-
-            if (isset($arrData['file-img-cn']) && $item['img_cn'] != $arrData['file-img-cn']) {
-                $this->removeImgByName($item['img_cn']);
+        foreach ($imageFieldMap as $inputKey => $dbColumn) {
+            if (!empty($arrData[$inputKey])) {
+                $data[$dbColumn] = sanitize_file_name((string) $arrData[$inputKey]);
+                $formats[]       = '%s';
             }
         }
 
-        global $wpdb;
-        if ($option == 'add') {
-            $wpdb->insert($this->table, $data);
-        } elseif ($option == 'edit') {
-            $where = array('ID' => $arrData['hid-id']);
-            $wpdb->update($this->table, $data, $where);
-        }
-    }
+        $editId = absint($arrData['hid-id'] ?? 0);
 
-
-
-    // THAY DOI TRANG THAI 
-    public function toTrash($arrData = array(), $options = array())
-    {
-        global $wpdb;
-        $trash = ($options == 'trash') ? 1 : 0;
-
-        // KIEM TRA PHAN UPFDATE CÓ PHAN DANG CHUOI HAY KHONG
-
-        if (!is_array($arrData['id'])) {
-            $data = array('trash' => $trash);
-            $where = array('ID' => absint($arrData['id']));
-            $wpdb->update($this->table, $data, $where);
+        if ($editId === 0) {
+            $data['create_date'] = wp_date('Y-m-d');
+            $formats[]           = '%s';
         } else {
-            $arrData['id'] = array_map('absint', $arrData['id']);
-            $ids = join(',', $arrData['id']);
-            $sql = "UPDATE $this->table SET trash = $trash  WHERE id IN ($ids)";
-            $wpdb->query($sql);
-        }
-    }
-
-    // THAY DOI TRANG THAI 
-    public function toActive($arrData = array(), $options = array())
-    {
-        global $wpdb;
-        $id = (int) $arrData['id']; // 記得轉型避免 SQL Injection
-
-        $sql = $wpdb->prepare("
-                UPDATE $this->table
-                SET status = CASE 
-                WHEN id = %d THEN 1
-                ELSE 0
-                END", $id);
-
-        $wpdb->query($sql);
-    }
-
-    // THAY DOI TRANG THAI 
-    public function toPassive($arrData = array(), $options = array())
-    {
-        global $wpdb;
-        $id = (int) $arrData['id']; // 記得轉型避免 SQL Injection
-
-        $sql = $wpdb->prepare("
-                UPDATE $this->table
-                SET status = 0 
-                WHERE id = %d ", $id);
-        $wpdb->query($sql);
-    }
-
-    // XOA DATA
-    public function toDelete($arrData = array(), $options = array())
-    {
-        global $wpdb;
-
-        // KIEM TRA PHAN DELETE CÓ PHAN DANG CHUOI HAY KHONG
-        $ids = (array) $arrData['id'];               // 確保是陣列
-        $ids = array_map('absint', $ids);            // 安全轉型
-
-        foreach ($ids as $id) {
-            $this->removeImg($id);                   // 逐一刪除圖片
-        }
-
-        $ids_sql = join(',', $ids);
-        $sql = "DELETE FROM $this->table WHERE ID IN ($ids_sql)";
-        $wpdb->query($sql);
-    }
-
-    public function removeImg($id)
-    {
-        $data = $this->getItem($id);
-        $path = DIR_IMAGES . 'pop-up' . DS;
-        foreach ($data as $key => $val) {
-            if ($key == "img_vn" || $key == "img_cn") {
-                if (is_file($path . $val)) {
-                    unlink($path . $val);
+            $item = $this->getItem($editId);
+            if (is_array($item)) {
+                foreach ($imageFieldMap as $inputKey => $dbColumn) {
+                    if (isset($arrData[$inputKey]) && !empty($item[$dbColumn]) && $item[$dbColumn] !== $arrData[$inputKey]) {
+                        $this->removeImgByName((string) $item[$dbColumn]);
+                    }
                 }
             }
         }
+
+        if ($option === 'add') {
+            $this->db->insert($this->table, $data, $formats);
+        } elseif ($option === 'edit' && $editId > 0) {
+            $this->db->update($this->table, $data, ['ID' => $editId], $formats, ['%d']);
+        }
     }
 
+    /**
+     * [18/11/2026] - Chuyển pop-up vào/ra thùng rác dùng prepared statement cho danh sách ID
+     * [2026-11-19] - @author: Kelvin - Sử dụng helper bulkUpdateByIds() từ BaseCustomTableModel
+     */
+    public function toTrash($arrData = [], $options = [])
+    {
+        $trash = ($options === 'trash') ? 1 : 0;
+        $this->bulkUpdateByIds($this->table, ['trash' => $trash], ['%d'], $arrData['id'] ?? null);
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Kích hoạt duy nhất pop-up được chọn
+     */
+    public function toActive($arrData = [], $options = [])
+    {
+        $id = absint($arrData['id'] ?? 0);
+        if ($id <= 0) {
+            return;
+        }
+
+        $sql = $this->db->prepare(
+            "UPDATE {$this->table} SET status = CASE WHEN ID = %d THEN 1 ELSE 0 END",
+            $id
+        );
+        $this->db->query($sql);
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Ngưng kích hoạt pop-up theo ID
+     */
+    public function toPassive($arrData = [], $options = [])
+    {
+        $id = absint($arrData['id'] ?? 0);
+        if ($id <= 0) {
+            return;
+        }
+
+        $this->db->update($this->table, ['status' => 0], ['ID' => $id], ['%d'], ['%d']);
+    }
+
+    /**
+     * [18/11/2026] - Xóa vĩnh viễn pop-up và ảnh liên quan dùng prepared statement cho danh sách ID
+     */
+    public function toDelete($arrData = [], $options = [])
+    {
+        $ids = $this->normalizeIds($arrData['id'] ?? null);
+        if (empty($ids)) {
+            return;
+        }
+
+        foreach ($ids as $id) {
+            $this->removeImg($id);
+        }
+
+        $this->bulkDeleteByIds($this->table, $ids);
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Xóa toàn bộ 4 file ảnh desktop/mobile của pop-up khi xóa bản ghi
+     */
+    public function removeImg($id)
+    {
+        $data = $this->getItem($id);
+        if (!is_array($data)) {
+            return;
+        }
+
+        foreach (['img_vn', 'img_cn', 'img_mobile_vn', 'img_mobile_cn'] as $column) {
+            if (!empty($data[$column])) {
+                $this->removeImgByName((string) $data[$column]);
+            }
+        }
+    }
+
+    /**
+     * [2026-11-19] - @author: Kelvin - Xóa file ảnh an toàn bằng basename() chống Path Traversal
+     */
     public function removeImgByName($name)
     {
-        $path = DIR_IMAGES . 'pop-up' . DS;
-        if (is_file($path . $name)) {
-            unlink($path . $name);
+        $filename = basename((string) $name);
+        if ($filename === '' || $filename === '.' || $filename === '..') {
+            return;
+        }
+
+        $filePath = DIR_IMAGES . 'pop-up' . DS . $filename;
+        if (is_file($filePath)) {
+            unlink($filePath);
         }
     }
 }

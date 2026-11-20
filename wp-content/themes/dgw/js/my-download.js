@@ -9,16 +9,23 @@ function updateHeaderUser(userData, memberUrl) {
     localStorage.setItem("dgw_member", JSON.stringify(userData));
   } catch (e) {}
 
-  const memberLink = memberUrl || ((typeof MyAjax !== "undefined" && MyAjax.home_url) ? (MyAjax.home_url + "/member") : "/member");
+  const memberLink =
+    memberUrl ||
+    (typeof MyAjax !== "undefined" && MyAjax.home_url
+      ? MyAjax.home_url + "/member"
+      : "/member");
   const safeUsername = jQuery("<div>").text(userData.username).html();
-  const welcomeHtml = '<div class="link-login-welcome">' +
-    '<a href="' + memberLink + '">' +
+  const welcomeHtml =
+    '<div class="link-login-welcome">' +
+    '<a href="' +
+    memberLink +
+    '">' +
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="15" height="15" aria-hidden="true">' +
     '<path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"/>' +
-    '</svg> ' +
+    "</svg> " +
     safeUsername +
-    '</a>' +
-    '</div>';
+    "</a>" +
+    "</div>";
   jQuery(".login-box").html(welcomeHtml);
 }
 window.updateHeaderUser = updateHeaderUser;
@@ -34,11 +41,21 @@ function resetHeaderGuest(memberUrl) {
     return;
   }
 
-  const memberLink = memberUrl || ((typeof MyAjax !== "undefined" && MyAjax.home_url) ? (MyAjax.home_url + "/member") : "/member");
-  const isCn = (document.documentElement.lang === "zh-TW" || document.documentElement.lang.indexOf("zh") === 0);
+  const memberLink =
+    memberUrl ||
+    (typeof MyAjax !== "undefined" && MyAjax.home_url
+      ? MyAjax.home_url + "/member"
+      : "/member");
+  const isCn =
+    document.documentElement.lang === "zh-TW" ||
+    document.documentElement.lang.indexOf("zh") === 0;
   const defaultText = isCn ? "登入 - 註冊" : "Đăng nhập - Đăng ký";
-  const loginText = (typeof MyAjax !== "undefined" && MyAjax.login_text) ? MyAjax.login_text : defaultText;
-  const guestHtml = '<a href="' + memberLink + '" class="link-login">' + loginText + '</a>';
+  const loginText =
+    typeof MyAjax !== "undefined" && MyAjax.login_text
+      ? MyAjax.login_text
+      : defaultText;
+  const guestHtml =
+    '<a href="' + memberLink + '" class="link-login">' + loginText + "</a>";
   jQuery(".login-box").html(guestHtml);
 }
 window.resetHeaderGuest = resetHeaderGuest;
@@ -49,31 +66,50 @@ jQuery(document).on("click", "#btn-logout", function () {
 });
 
 jQuery(document).ready(function ($) {
-  // [04/11/2026] - Tự động đồng bộ tên người dùng từ localStorage chỉ khi server xác nhận đang đăng nhập
-  try {
-    const cachedMember = JSON.parse(localStorage.getItem("dgw_member"));
-    if (cachedMember && cachedMember.username && typeof MyAjax !== "undefined" && MyAjax.is_logged_in) {
-      updateHeaderUser(cachedMember);
-    }
-  } catch (e) {}
+  // [18/11/2026] - Chỉ kiểm tra phiên đăng nhập với server khi MyAjax.is_logged_in = true hoặc có cookie custom_session
+  const isServerLoggedIn =
+    typeof MyAjax !== "undefined" && Boolean(MyAjax.is_logged_in);
+  const hasSessionCookie = document.cookie.includes("custom_session=");
+  const shouldCheckSession = isServerLoggedIn || hasSessionCookie;
 
-  // [04/11/2026] - Tự động kiểm tra trạng thái phiên thực tế với server qua AJAX
-  jQuery.ajax({
-    url: MyAjax.ajax_url,
-    type: "POST",
-    cache: false,
-    data: {
-      action: "check_member_login",
-    },
-    success: function (checkRes) {
-      if (checkRes && checkRes.success && checkRes.data && checkRes.data.logged_in && checkRes.data.user) {
-        updateHeaderUser(checkRes.data.user, checkRes.data.member_url);
-      } else {
-        // [04/11/2026] - Server xác nhận không có phiên đăng nhập -> đảm bảo khôi phục ngay trạng thái khách trên Header
-        resetHeaderGuest();
+  // [04/11/2026] - Tự động đồng bộ tên người dùng từ localStorage khi có dấu hiệu phiên đăng nhập
+  if (shouldCheckSession) {
+    try {
+      const cachedMember = JSON.parse(localStorage.getItem("dgw_member"));
+      if (cachedMember && cachedMember.username) {
+        updateHeaderUser(cachedMember);
       }
-    },
-  });
+    } catch (e) {}
+  } else {
+    // [18/11/2026] - Khách chưa đăng nhập: bỏ qua AJAX check_member_login và dọn cache localStorage cũ nếu còn
+    resetHeaderGuest();
+  }
+
+  // [18/11/2026] - Chỉ gửi AJAX check_member_login khi có dấu hiệu đăng nhập để giảm tải server và giữ hiệu quả Page Cache
+  if (shouldCheckSession && typeof MyAjax !== "undefined" && MyAjax.ajax_url) {
+    jQuery.ajax({
+      url: MyAjax.ajax_url,
+      type: "POST",
+      cache: false,
+      data: {
+        action: "check_member_login",
+      },
+      success: function (checkRes) {
+        if (
+          checkRes &&
+          checkRes.success &&
+          checkRes.data &&
+          checkRes.data.logged_in &&
+          checkRes.data.user
+        ) {
+          updateHeaderUser(checkRes.data.user, checkRes.data.member_url);
+        } else {
+          // [04/11/2026] - Server xác nhận không có phiên đăng nhập -> đảm bảo khôi phục ngay trạng thái khách trên Header
+          resetHeaderGuest();
+        }
+      },
+    });
+  }
   // [09/11/2026] - Xử lý click nút tải tài liệu #my-load-data: kiểm tra đăng nhập bắt buộc và xử lý lỗi link bằng popup thông báo thay vì chuyển trang
   jQuery(document).on("click", "#my-load-data", function (e) {
     e.preventDefault();
@@ -131,7 +167,12 @@ jQuery(document).ready(function ($) {
         );
       },
       success: function (res) {
-        if (res && res.success && res.data && (res.data.download_url || res.data.post_source)) {
+        if (
+          res &&
+          res.success &&
+          res.data &&
+          (res.data.download_url || res.data.post_source)
+        ) {
           var downloadTarget = res.data.download_url || res.data.post_source;
           var fileName = res.data.file_name || "";
           $btn.html(
@@ -159,7 +200,10 @@ jQuery(document).ready(function ($) {
             showLoginPopup();
           } else {
             // [09/11/2026] - Nếu link bị lỗi hoặc không có link: Hiển thị thông báo qua dgwAlert thay vì nhảy trang
-            const errMsg = (res && res.data && res.data.message) ? res.data.message : text.noFile;
+            const errMsg =
+              res && res.data && res.data.message
+                ? res.data.message
+                : text.noFile;
             if (typeof dgwAlert === "function") {
               dgwAlert({
                 type: "error",
@@ -175,7 +219,12 @@ jQuery(document).ready(function ($) {
       },
       error: function (xhr) {
         let errMsg = text.error;
-        if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+        if (
+          xhr &&
+          xhr.responseJSON &&
+          xhr.responseJSON.data &&
+          xhr.responseJSON.data.message
+        ) {
           errMsg = xhr.responseJSON.data.message;
         }
         if (typeof dgwAlert === "function") {
@@ -312,17 +361,28 @@ jQuery(document).on("click", "#btn-login", function () {
     success: function (res) {
       if (res.success) {
         // [04/11/2026] - Cập nhật ngay tên người đăng nhập trên Header tức thì (có fallback an toàn)
-        const userData = (res.data && res.data.user) ? res.data.user : {
-          username: (jQuery("#login-email").val() || "").split("@")[0]
-        };
-        const memberUrl = (res.data && res.data.member_url) ? res.data.member_url : "";
+        const userData =
+          res.data && res.data.user
+            ? res.data.user
+            : {
+                username: (jQuery("#login-email").val() || "").split("@")[0],
+              };
+        const memberUrl =
+          res.data && res.data.member_url ? res.data.member_url : "";
         updateHeaderUser(userData, memberUrl);
 
-        jQuery("#login-msg").removeClass("msg--error").addClass("show msg--success").css("color", "green").text(res.data.message);
+        jQuery("#login-msg")
+          .removeClass("msg--error")
+          .addClass("show msg--success")
+          .css("color", "green")
+          .text(res.data.message);
         setTimeout(function () {
           // ✅ Phán đoán nếu đang ở trang /member thì tải lại trang để render dashboard
           const page = jQuery("#tab-login").data("page");
-          if (page === "member" || window.location.pathname.indexOf("/member") !== -1) {
+          if (
+            page === "member" ||
+            window.location.pathname.indexOf("/member") !== -1
+          ) {
             window.location.reload();
             return;
           }
@@ -336,7 +396,9 @@ jQuery(document).on("click", "#btn-login", function () {
           jQuery("#auth-popup-overlay").removeClass("show");
           jQuery("#login-email").val("");
           jQuery("#login-password").val("");
-          jQuery("#login-msg").removeClass("show msg--success msg--error").text("");
+          jQuery("#login-msg")
+            .removeClass("show msg--success msg--error")
+            .text("");
 
           // [09/11/2026] - ƯU TIÊN 1: Nếu người dùng vừa nhấn Download (#my-load-data) -> CHỈ tải file tài liệu, TUYỆT ĐỐI không bật video
           const curDownload = pendingDownload || window.pendingDownload;
@@ -345,7 +407,9 @@ jQuery(document).on("click", "#btn-login", function () {
             window.pendingDownload = null;
             window.pendingVideoWatch = null;
 
-            const isCn = (document.documentElement.lang === "zh-TW" || document.documentElement.lang.indexOf("zh") === 0);
+            const isCn =
+              document.documentElement.lang === "zh-TW" ||
+              document.documentElement.lang.indexOf("zh") === 0;
             const alertTitle = isCn ? "檔案下載提示" : "Thông báo tải tài liệu";
             const btnText = isCn ? "確定" : "Đã hiểu";
 
@@ -361,8 +425,14 @@ jQuery(document).on("click", "#btn-login", function () {
                 post_source: curDownload.post_source,
               },
               success: function (dlRes) {
-                if (dlRes && dlRes.success && dlRes.data && (dlRes.data.download_url || dlRes.data.post_source)) {
-                  const downloadTarget = dlRes.data.download_url || dlRes.data.post_source;
+                if (
+                  dlRes &&
+                  dlRes.success &&
+                  dlRes.data &&
+                  (dlRes.data.download_url || dlRes.data.post_source)
+                ) {
+                  const downloadTarget =
+                    dlRes.data.download_url || dlRes.data.post_source;
                   const fileName = dlRes.data.file_name || "";
 
                   // [09/11/2026] - Kích hoạt tải trực tiếp file về máy sau đăng nhập, không mở tab mới hay viewer
@@ -381,9 +451,12 @@ jQuery(document).on("click", "#btn-login", function () {
                     }
                   }, 2000);
                 } else {
-                  const errText = (dlRes && dlRes.data && dlRes.data.message)
-                    ? dlRes.data.message
-                    : (isCn ? "檔案下載連結失效或不存在！" : "Link tải tài liệu bị lỗi hoặc không tồn tại!");
+                  const errText =
+                    dlRes && dlRes.data && dlRes.data.message
+                      ? dlRes.data.message
+                      : isCn
+                        ? "檔案下載連結失效或不存在！"
+                        : "Link tải tài liệu bị lỗi hoặc không tồn tại!";
                   if (typeof dgwAlert === "function") {
                     dgwAlert({
                       type: "error",
@@ -397,8 +470,15 @@ jQuery(document).on("click", "#btn-login", function () {
                 }
               },
               error: function (xhr) {
-                let errText = isCn ? "下載檔案時發生錯誤！" : "Đã có lỗi xảy ra trong quá trình tải tài liệu!";
-                if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                let errText = isCn
+                  ? "下載檔案時發生錯誤！"
+                  : "Đã có lỗi xảy ra trong quá trình tải tài liệu!";
+                if (
+                  xhr &&
+                  xhr.responseJSON &&
+                  xhr.responseJSON.data &&
+                  xhr.responseJSON.data.message
+                ) {
                   errText = xhr.responseJSON.data.message;
                 }
                 if (typeof dgwAlert === "function") {
@@ -411,7 +491,7 @@ jQuery(document).on("click", "#btn-login", function () {
                 } else {
                   alert(errText);
                 }
-              }
+              },
             });
             return;
           }
@@ -448,7 +528,11 @@ jQuery(document).on("click", "#btn-login", function () {
           }
         }, 600);
       } else {
-        jQuery("#login-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(res.data.message);
+        jQuery("#login-msg")
+          .removeClass("msg--success")
+          .addClass("show msg--error")
+          .css("color", "red")
+          .text(res.data.message);
         $this
           .prop("disabled", false)
           .removeClass("is-loading")
@@ -471,7 +555,7 @@ window.dgwAlert = function (opts) {
   const title = opts.title || "";
   const message = opts.message || "";
   const currentLang = document.documentElement.lang;
-  const isCn = (currentLang === "zh-TW" || currentLang.indexOf("zh") === 0);
+  const isCn = currentLang === "zh-TW" || currentLang.indexOf("zh") === 0;
   const defaultBtnText = isCn ? "確定" : "Đã hiểu";
   const baseBtnText = opts.btnText || defaultBtnText;
   let autoCloseSec = typeof opts.autoClose === "number" ? opts.autoClose : 0;
@@ -479,30 +563,45 @@ window.dgwAlert = function (opts) {
 
   jQuery("#dgw-alert-overlay").remove();
 
-  const successIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
-  const errorIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+  const successIcon =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>';
+  const errorIcon =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
 
-  const iconHtml = (type === "success") ? successIcon : errorIcon;
-  const iconClass = (type === "success") ? "dgw-alert-icon--success" : "dgw-alert-icon--error";
-  const btnClass = (type === "success") ? "dgw-alert-btn--success" : "dgw-alert-btn--error";
+  const iconHtml = type === "success" ? successIcon : errorIcon;
+  const iconClass =
+    type === "success" ? "dgw-alert-icon--success" : "dgw-alert-icon--error";
+  const btnClass =
+    type === "success" ? "dgw-alert-btn--success" : "dgw-alert-btn--error";
 
   let countdownInterval = null;
-  const initialBtnLabel = autoCloseSec > 0 ? (baseBtnText + " (" + autoCloseSec + "s)") : baseBtnText;
+  const initialBtnLabel =
+    autoCloseSec > 0 ? baseBtnText + " (" + autoCloseSec + "s)" : baseBtnText;
 
-  const html = 
+  const html =
     '<div id="dgw-alert-overlay" class="dgw-alert-overlay" role="dialog" aria-modal="true">' +
-      '<div class="dgw-alert-card">' +
-        '<button type="button" class="dgw-alert-close" aria-label="Close">&times;</button>' +
-        '<div class="dgw-alert-icon ' + iconClass + '">' +
-          iconHtml +
-        '</div>' +
-        '<h3 class="dgw-alert-title">' + title + '</h3>' +
-        '<p class="dgw-alert-message">' + message + '</p>' +
-        '<button type="button" class="dgw-alert-btn ' + btnClass + '">' +
-          '<span class="dgw-alert-btn-text">' + initialBtnLabel + '</span>' +
-        '</button>' +
-      '</div>' +
-    '</div>';
+    '<div class="dgw-alert-card">' +
+    '<button type="button" class="dgw-alert-close" aria-label="Close">&times;</button>' +
+    '<div class="dgw-alert-icon ' +
+    iconClass +
+    '">' +
+    iconHtml +
+    "</div>" +
+    '<h3 class="dgw-alert-title">' +
+    title +
+    "</h3>" +
+    '<p class="dgw-alert-message">' +
+    message +
+    "</p>" +
+    '<button type="button" class="dgw-alert-btn ' +
+    btnClass +
+    '">' +
+    '<span class="dgw-alert-btn-text">' +
+    initialBtnLabel +
+    "</span>" +
+    "</button>" +
+    "</div>" +
+    "</div>";
 
   const $overlay = jQuery(html).appendTo("body");
 
@@ -565,12 +664,12 @@ jQuery(document).on("click", "#btn-register", function () {
     vn: {
       loading: "Đang xử lý...",
       original: "Đăng ký",
-      emptyMsg: "Vui lòng điền đầy đủ thông tin."
+      emptyMsg: "Vui lòng điền đầy đủ thông tin.",
     },
     cn: {
       loading: "處理中...",
       original: "註冊",
-      emptyMsg: "請填寫完整資訊。"
+      emptyMsg: "請填寫完整資訊。",
     },
   };
   const langSet = uiText[sendLang];
@@ -584,7 +683,7 @@ jQuery(document).on("click", "#btn-register", function () {
     { id: "#reg-tax", key: "tax" },
     { id: "#reg-industry", key: "industry" },
     { id: "#reg-position", key: "position" },
-    { id: "#reg-department", key: "department" }
+    { id: "#reg-department", key: "department" },
   ];
 
   let hasEmptyField = false;
@@ -607,19 +706,24 @@ jQuery(document).on("click", "#btn-register", function () {
       requestData[field.key] = val;
 
       if ($input.is("select")) {
-        requestData[field.key + "_label"] = $input.find("option:selected").attr("data-content") || val;
+        requestData[field.key + "_label"] =
+          $input.find("option:selected").attr("data-content") || val;
       }
     }
   });
 
   // 2. Nếu có bất kỳ ô nào trống, báo lỗi và hiện Popup
   if (hasEmptyField) {
-    jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(langSet.emptyMsg);
+    jQuery("#register-msg")
+      .removeClass("msg--success")
+      .addClass("show msg--error")
+      .css("color", "red")
+      .text(langSet.emptyMsg);
     dgwAlert({
       type: "error",
       title: sendLang === "cn" ? "資料未填寫完整" : "Thông tin chưa đầy đủ",
       message: langSet.emptyMsg,
-      btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+      btnText: sendLang === "cn" ? "確定" : "Đã hiểu",
     });
     return;
   }
@@ -630,17 +734,24 @@ jQuery(document).on("click", "#btn-register", function () {
   // Kiểm tra Cloudflare Turnstile
   const turnstileResponse = jQuery('[name="cf-turnstile-response"]').val();
   if (!turnstileResponse) {
-    const captchaMsg = sendLang === "vn" ? "Vui lòng xác nhận bạn không phải là người máy (Captcha)." : "請驗證您不是機器人 (Captcha)。";
-    jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(captchaMsg);
+    const captchaMsg =
+      sendLang === "vn"
+        ? "Vui lòng xác nhận bạn không phải là người máy (Captcha)."
+        : "請驗證您不是機器人 (Captcha)。";
+    jQuery("#register-msg")
+      .removeClass("msg--success")
+      .addClass("show msg--error")
+      .css("color", "red")
+      .text(captchaMsg);
     dgwAlert({
       type: "error",
       title: sendLang === "cn" ? "驗證提示" : "Xác thực bảo mật",
       message: captchaMsg,
-      btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+      btnText: sendLang === "cn" ? "確定" : "Đã hiểu",
     });
     return;
   }
-  requestData['cf-turnstile-response'] = turnstileResponse;
+  requestData["cf-turnstile-response"] = turnstileResponse;
 
   // 3. Vô hiệu hóa button để tránh spam request
   $this.prop("disabled", true).addClass("is-loading").text(langSet.loading);
@@ -653,7 +764,11 @@ jQuery(document).on("click", "#btn-register", function () {
     success: function (res) {
       if (res.success) {
         // [28/10/2026] Thông báo đăng ký thành công (cả alert inline và Dialog Popup)
-        jQuery("#register-msg").removeClass("msg--error").addClass("show msg--success").css("color", "green").text(res.data.message);
+        jQuery("#register-msg")
+          .removeClass("msg--error")
+          .addClass("show msg--success")
+          .css("color", "green")
+          .text(res.data.message);
 
         formFields.forEach(function (field) {
           jQuery(field.id).val("");
@@ -667,16 +782,22 @@ jQuery(document).on("click", "#btn-register", function () {
           autoClose: 5,
           onClose: function () {
             jQuery('.tab-btn[data-tab="login"]').click();
-            jQuery("#register-msg").removeClass("show msg--success msg--error").text("");
+            jQuery("#register-msg")
+              .removeClass("show msg--success msg--error")
+              .text("");
             $this
               .prop("disabled", false)
               .removeClass("is-loading")
               .text(langSet.original);
-          }
+          },
         });
       } else {
         // [28/10/2026] Thông báo lỗi đăng ký: email đã đăng ký trước... (cả alert inline và Dialog Popup)
-        jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(res.data.message);
+        jQuery("#register-msg")
+          .removeClass("msg--success")
+          .addClass("show msg--error")
+          .css("color", "red")
+          .text(res.data.message);
         $this
           .prop("disabled", false)
           .removeClass("is-loading")
@@ -686,34 +807,41 @@ jQuery(document).on("click", "#btn-register", function () {
           type: "error",
           title: sendLang === "cn" ? "註冊失敗" : "Thông báo đăng ký",
           message: res.data.message,
-          btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+          btnText: sendLang === "cn" ? "確定" : "Đã hiểu",
         });
       }
-      
+
       // Reset Turnstile widget để thử lại nếu cần
-      if (typeof turnstile !== 'undefined') {
-          turnstile.reset();
+      if (typeof turnstile !== "undefined") {
+        turnstile.reset();
       }
     },
     error: function () {
-      const errMsg = sendLang === "cn" ? "系統錯誤，請稍後再試。" : "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.";
-      jQuery("#register-msg").removeClass("msg--success").addClass("show msg--error").css("color", "red").text(errMsg);
+      const errMsg =
+        sendLang === "cn"
+          ? "系統錯誤，請稍後再試。"
+          : "Đã xảy ra lỗi hệ thống, vui lòng thử lại sau.";
+      jQuery("#register-msg")
+        .removeClass("msg--success")
+        .addClass("show msg--error")
+        .css("color", "red")
+        .text(errMsg);
       $this
         .prop("disabled", false)
         .removeClass("is-loading")
         .text(langSet.original);
-        
-      if (typeof turnstile !== 'undefined') {
-          turnstile.reset();
+
+      if (typeof turnstile !== "undefined") {
+        turnstile.reset();
       }
 
       dgwAlert({
         type: "error",
         title: sendLang === "cn" ? "系統錯誤" : "Lỗi hệ thống",
         message: errMsg,
-        btnText: sendLang === "cn" ? "確定" : "Đã hiểu"
+        btnText: sendLang === "cn" ? "確定" : "Đã hiểu",
       });
-    }
+    },
   });
 });
 // ===== HIỆN POPUP =====
@@ -734,7 +862,10 @@ jQuery(document).on("click", "#auth-popup-close", function (e) {
 
 jQuery(document).on("click", "#auth-popup-overlay", function (e) {
   if (e.target === this) {
-    jQuery("#auth-popup-overlay").removeClass("show").hide().removeAttr("style");
+    jQuery("#auth-popup-overlay")
+      .removeClass("show")
+      .hide()
+      .removeAttr("style");
   }
 });
 

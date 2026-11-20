@@ -5,94 +5,139 @@
  * Tương thích ngược toàn bộ AJAX handler change_languages và hỗ trợ Accessibility (A11y)
  * [05/11/2026] - Lấy ngôn ngữ hiện hành ưu tiên qua dgw_get_lang() để đồng bộ với Single Post
  * [06/11/2026] - Hỗ trợ tự động ánh xạ URL bản dịch đối ứng cho cả trang Category lẫn Single Post
+ * [2026-11-20] - @author: Kelvin - Memoization dữ liệu switcher trong request, tránh query DB và in <script> lặp 2 lần khi main-menu.php gọi template ở cả #header-space và #header-scroll
  */
-$data = null;
-if (!empty($_COOKIE['custom_session'])) {
-    $data = get_member_information($_COOKIE['custom_session']);
-}
-// Xác định ngôn ngữ hiện tại từ dgw_get_lang(), mặc định là 'vn'
-$current_lang = function_exists('dgw_get_lang') ? dgw_get_lang() : ((!empty($_COOKIE['site_lang']) && in_array($_COOKIE['site_lang'], ['cn', 'vn'], true)) ? $_COOKIE['site_lang'] : 'vn');
+global $dgw_lang_switcher_ctx, $dgw_lang_switcher_script_printed;
 
-/**
- * [06/11/2026] - @author: Senior Full-Stack Developer
- * Mục đích: Nhận diện URL điều hướng chuẩn xác khi đổi ngôn ngữ:
- * 1. Nếu đang ở trang danh mục (cate): Ánh xạ sang term đối ứng trong cùng Translation Group (vd: tiptop_vn <-> tiptop_cn)
- * 2. Nếu đang ở trang chi tiết bài viết (single page): Chuyển hướng về trang danh mục tương ứng theo ngôn ngữ đích.
- */
-$redirect_url_cn = '';
-$redirect_url_vn = '';
-$single_cate_redirect_url = '';
-
-$current_cate_slug = function_exists('dgw_detect_current_category_slug') ? dgw_detect_current_category_slug() : (get_query_var('cate') ?: '');
-
-if (!empty($current_cate_slug)) {
-    // 1. Đang ở trang Category: Lấy term bản dịch đối ứng
-    $cpt_page = get_query_var('pagename');
-    if (empty($cpt_page) && !empty($_SERVER['REQUEST_URI'])) {
-        $path_parts = explode('/', trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-        $cpt_page = $path_parts[0] ?? 'solution';
+if (!is_array($dgw_lang_switcher_ctx)) {
+    $data = null;
+    if (!empty($_COOKIE['custom_session'])) {
+        $data = get_member_information($_COOKIE['custom_session']);
     }
-    $cpt_page = !empty($cpt_page) ? $cpt_page : 'solution';
+    $current_lang = function_exists('dgw_get_lang') ? dgw_get_lang() : ((!empty($_COOKIE['site_lang']) && in_array($_COOKIE['site_lang'], ['cn', 'vn'], true)) ? $_COOKIE['site_lang'] : 'vn');
 
-    $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'cn') : null;
-    $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'vn') : null;
+    $redirect_url_cn          = '';
+    $redirect_url_vn          = '';
+    $single_cate_redirect_url = '';
 
-    if ($term_cn instanceof WP_Term) {
-        $redirect_url_cn = home_url('/' . $cpt_page . '/cate/' . $term_cn->slug . '/');
-    }
-    if ($term_vn instanceof WP_Term) {
-        $redirect_url_vn = home_url('/' . $cpt_page . '/cate/' . $term_vn->slug . '/');
-    }
-} elseif (is_single()) {
-    // 2. Đang ở trang Single Post: Chuyển hướng về cate tương ứng
-    $queried_obj = get_queried_object();
-    if ($queried_obj instanceof WP_Post) {
-        $cpt_modules = [
-            'casestudies' => ['page' => 'cases',      'tax' => 'casestudies_category'],
-            'solutions'   => ['page' => 'solution',   'tax' => 'solutions_category'],
-            'resources'   => ['page' => 'resource',   'tax' => 'resources_category'],
-            'active'      => ['page' => 'activities', 'tax' => 'active_category'],
-            'services'    => ['page' => 'services',   'tax' => 'services_category'],
-            'industries'  => ['page' => 'industries', 'tax' => 'industries_category'],
-            'joinus'      => ['page' => 'joinus',     'tax' => 'joinus_category'],
-        ];
+    $current_cate_slug = function_exists('dgw_detect_current_category_slug') ? dgw_detect_current_category_slug() : (get_query_var('cate') ?: '');
 
-        $post_type = $queried_obj->post_type;
-        if (isset($cpt_modules[$post_type])) {
-            $conf      = $cpt_modules[$post_type];
-            $cate_slug = get_query_var('cate');
+    /**
+     * [2026-11-20] - @author: Kelvin - Bản đồ ánh xạ page slug -> taxonomy chính xác để tránh lấy nhầm term trùng slug giữa solutions_category và casestudies_category
+     */
+    $page_to_tax_map = [
+        'cases'      => 'casestudies_category',
+        'solution'   => 'solutions_category',
+        'resource'   => 'resources_category',
+        'activities' => 'active_category',
+        'services'   => 'services_category',
+        'industries' => 'industries_category',
+        'joinus'     => 'joinus_category',
+    ];
 
-            if (empty($cate_slug)) {
-                $terms = wp_get_object_terms($queried_obj->ID, $conf['tax']);
-                if (!empty($terms) && !is_wp_error($terms)) {
-                    $cate_slug = $terms[0]->slug;
+    if (!empty($current_cate_slug)) {
+        $cpt_page = get_query_var('pagename');
+        if (empty($cpt_page) && !empty($_SERVER['REQUEST_URI'])) {
+            $path_parts = explode('/', trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
+            $cpt_page   = $path_parts[0] ?? 'solution';
+        }
+        $cpt_page = !empty($cpt_page) ? $cpt_page : 'solution';
+        $curr_tax = $page_to_tax_map[$cpt_page] ?? '';
+
+        $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'cn', $curr_tax) : null;
+        $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($current_cate_slug, 'vn', $curr_tax) : null;
+
+        /**
+         * [2026-11-20] - @author: Kelvin - Nếu danh mục hiện tại chưa được gắn cặp dịch đối ứng, fallback về trang tổng module (/cases/, /solution/...) để không bị kẹt ngôn ngữ do URL cate_cn/cate_vn
+         */
+        $redirect_url_cn = ($term_cn instanceof WP_Term)
+            ? home_url('/' . $cpt_page . '/cate/' . $term_cn->slug . '/')
+            : home_url('/' . $cpt_page . '/');
+
+        $redirect_url_vn = ($term_vn instanceof WP_Term)
+            ? home_url('/' . $cpt_page . '/cate/' . $term_vn->slug . '/')
+            : home_url('/' . $cpt_page . '/');
+    } elseif (is_single()) {
+        $queried_obj = get_queried_object();
+        if ($queried_obj instanceof WP_Post) {
+            $cpt_modules = [
+                'casestudies' => ['page' => 'cases',      'tax' => 'casestudies_category'],
+                'solutions'   => ['page' => 'solution',   'tax' => 'solutions_category'],
+                'resources'   => ['page' => 'resource',   'tax' => 'resources_category'],
+                'active'      => ['page' => 'activities', 'tax' => 'active_category'],
+                'services'    => ['page' => 'services',   'tax' => 'services_category'],
+                'industries'  => ['page' => 'industries', 'tax' => 'industries_category'],
+                'joinus'      => ['page' => 'joinus',     'tax' => 'joinus_category'],
+            ];
+
+            $post_type = $queried_obj->post_type;
+            if (isset($cpt_modules[$post_type])) {
+                $conf      = $cpt_modules[$post_type];
+                $cate_slug = get_query_var('cate');
+
+                if (empty($cate_slug)) {
+                    $terms = wp_get_object_terms($queried_obj->ID, $conf['tax']);
+                    if (!empty($terms) && !is_wp_error($terms)) {
+                        $cate_slug = $terms[0]->slug;
+                    }
+                }
+
+                if (!empty($cate_slug)) {
+                    $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($cate_slug, 'cn', $conf['tax']) : null;
+                    $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($cate_slug, 'vn', $conf['tax']) : null;
+
+                    $redirect_url_cn = ($term_cn instanceof WP_Term)
+                        ? home_url('/' . $conf['page'] . '/cate/' . $term_cn->slug . '/')
+                        : home_url('/' . $conf['page'] . '/');
+                    $redirect_url_vn = ($term_vn instanceof WP_Term)
+                        ? home_url('/' . $conf['page'] . '/cate/' . $term_vn->slug . '/')
+                        : home_url('/' . $conf['page'] . '/');
+                    $single_cate_redirect_url = ($current_lang === 'cn') ? $redirect_url_cn : $redirect_url_vn;
+                } else {
+                    $redirect_url_cn          = home_url('/' . $conf['page'] . '/');
+                    $redirect_url_vn          = home_url('/' . $conf['page'] . '/');
+                    $single_cate_redirect_url = home_url('/' . $conf['page'] . '/');
+                }
+            } elseif ($post_type === 'post') {
+                $categories = get_the_category($queried_obj->ID);
+                if (!empty($categories) && !is_wp_error($categories)) {
+                    $single_cate_redirect_url = get_category_link($categories[0]->term_id);
+                    $redirect_url_cn          = $single_cate_redirect_url;
+                    $redirect_url_vn          = $single_cate_redirect_url;
                 }
             }
-
-            if (!empty($cate_slug)) {
-                $term_cn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($cate_slug, 'cn', $conf['tax']) : null;
-                $term_vn = function_exists('dgw_get_translated_term') ? dgw_get_translated_term($cate_slug, 'vn', $conf['tax']) : null;
-
-                $slug_cn = ($term_cn instanceof WP_Term) ? $term_cn->slug : $cate_slug;
-                $slug_vn = ($term_vn instanceof WP_Term) ? $term_vn->slug : $cate_slug;
-
-                $redirect_url_cn = home_url('/' . $conf['page'] . '/cate/' . $slug_cn . '/');
-                $redirect_url_vn = home_url('/' . $conf['page'] . '/cate/' . $slug_vn . '/');
-                $single_cate_redirect_url = ($current_lang === 'cn') ? $redirect_url_cn : $redirect_url_vn;
-            } else {
-                $redirect_url_cn = home_url('/' . $conf['page'] . '/');
-                $redirect_url_vn = home_url('/' . $conf['page'] . '/');
-                $single_cate_redirect_url = home_url('/' . $conf['page'] . '/');
-            }
-        } elseif ($post_type === 'post') {
-            $categories = get_the_category($queried_obj->ID);
-            if (!empty($categories) && !is_wp_error($categories)) {
-                $single_cate_redirect_url = get_category_link($categories[0]->term_id);
-                $redirect_url_cn = $single_cate_redirect_url;
-                $redirect_url_vn = $single_cate_redirect_url;
-            }
+        }
+    } else {
+        /**
+         * [2026-11-20] - @author: Kelvin - Ánh xạ tự động cặp trang tĩnh song ngữ (/about-vn <-> /about-cn, /contact-vn <-> /contact-cn)
+         */
+        $current_page_slug = get_query_var('pagename');
+        if (empty($current_page_slug) && !empty($_SERVER['REQUEST_URI'])) {
+            $path_parts        = explode('/', trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
+            $current_page_slug = end($path_parts) ?: '';
+        }
+        if (in_array($current_page_slug, ['about-vn', 'about-cn'], true)) {
+            $redirect_url_cn = home_url('/about-cn/');
+            $redirect_url_vn = home_url('/about-vn/');
+        } elseif (in_array($current_page_slug, ['contact-vn', 'contact-cn'], true)) {
+            $redirect_url_cn = home_url('/contact-cn/');
+            $redirect_url_vn = home_url('/contact-vn/');
         }
     }
+
+    $dgw_lang_switcher_ctx = [
+        'data'                     => $data,
+        'current_lang'             => $current_lang,
+        'redirect_url_cn'          => $redirect_url_cn,
+        'redirect_url_vn'          => $redirect_url_vn,
+        'single_cate_redirect_url' => $single_cate_redirect_url,
+    ];
+} else {
+    $data                     = $dgw_lang_switcher_ctx['data'];
+    $current_lang             = $dgw_lang_switcher_ctx['current_lang'];
+    $redirect_url_cn          = $dgw_lang_switcher_ctx['redirect_url_cn'];
+    $redirect_url_vn          = $dgw_lang_switcher_ctx['redirect_url_vn'];
+    $single_cate_redirect_url = $dgw_lang_switcher_ctx['single_cate_redirect_url'];
 }
 ?>
 <div class="languages-container">
@@ -140,6 +185,9 @@ if (!empty($current_cate_slug)) {
     </div>
 </div>
 
+<?php if (empty($dgw_lang_switcher_script_printed)) :
+    $dgw_lang_switcher_script_printed = true;
+?>
 <script>
     /**
      * [15/10/2026] - @author: Senior Full-Stack Developer
@@ -147,6 +195,7 @@ if (!empty($current_cate_slug)) {
      * - Nếu có URL đích chuyên biệt (data-redirect của term đối ứng hoặc data-redirect-cate): chuyển hướng trực tiếp
      * - Nếu đang ở URL chi tiết bài viết: chuyển hướng về trang cate
      * - Các trang khác: tự động reload để bảo toàn ngữ cảnh và cập nhật cookie mới
+     * [2026-11-20] - @author: Kelvin - Ghi trực tiếp cookie site_lang tại client, dùng relative AJAX URL chống lỗi lệch domain (digiwin.test vs localhost) và đảm bảo luôn điều hướng
      */
     if (typeof window.changeLanguages === 'undefined') {
         window.changeLanguages = function(el) {
@@ -155,7 +204,7 @@ if (!empty($current_cate_slug)) {
             var currentLang = "<?php echo esc_js($current_lang); ?>";
 
             // Nếu đang chọn ngôn ngữ hiện tại hoặc đang loading thì không thực hiện lại
-            if (type === currentLang || $el.hasClass('is-active') || $el.hasClass('is-loading')) {
+            if (!type || type === currentLang || $el.hasClass('is-active') || $el.hasClass('is-loading')) {
                 return;
             }
 
@@ -168,41 +217,44 @@ if (!empty($current_cate_slug)) {
             // Hiệu ứng visual loading tức thì cho UX
             $el.addClass('is-loading');
 
+            // Ghi trực tiếp cookie site_lang tại trình duyệt để đảm bảo ngôn ngữ đổi ngay cả khi khác host
+            document.cookie = 'site_lang=' + encodeURIComponent(type) + '; path=/; max-age=31536000; SameSite=Lax';
+
+            var performNavigation = function() {
+                // 1. Nếu có URL chuyển hướng hợp lệ (term đối ứng hoặc cate): chuyển hướng ngay
+                if (redirectCateUrl && redirectCateUrl.trim() !== '') {
+                    window.location.href = redirectCateUrl;
+                    return;
+                }
+
+                // 2. Fallback kiểm tra URL nếu đang ở URL dạng /{module}/cate/{term}/{post_slug}/
+                var currentPath = window.location.pathname;
+                var cateMatch = currentPath.match(/^(\/.*?\/(?:cate|category)\/[^\/]+)\/.+/);
+                if (cateMatch && cateMatch[1]) {
+                    window.location.href = window.location.origin + cateMatch[1] + '/';
+                    return;
+                }
+
+                // 3. Trường hợp ở trang chủ hoặc trang thường khác thì reload
+                window.location.reload();
+            };
+
             jQuery.ajax({
-                url: '<?php echo esc_url(admin_url('admin-ajax.php')); ?>',
+                url: '<?php echo esc_js(wp_make_link_relative(admin_url('admin-ajax.php'))); ?>',
                 type: 'POST',
                 dataType: 'json',
                 data: {
                     action: 'change_languages',
                     type: type
                 },
-                success: function(res) {
-                    if (res && res.status === 'ok') {
-                        // 1. Nếu có URL chuyển hướng hợp lệ (term đối ứng hoặc cate): chuyển hướng ngay
-                        if (redirectCateUrl && redirectCateUrl.trim() !== '') {
-                            window.location.href = redirectCateUrl;
-                            return;
-                        }
-
-                        // 2. Fallback kiểm tra URL nếu đang ở URL dạng /{module}/cate/{term}/{post_slug}/
-                        var currentPath = window.location.pathname;
-                        var cateMatch = currentPath.match(/^(\/.*?\/(?:cate|category)\/[^\/]+)\/.+/);
-                        if (cateMatch && cateMatch[1]) {
-                            window.location.href = window.location.origin + cateMatch[1] + '/';
-                            return;
-                        }
-
-                        // 3. Trường hợp ở trang chủ hoặc trang thường khác thì reload
-                        window.location.reload();
-                    } else {
-                        $el.removeClass('is-loading');
-                    }
+                success: function() {
+                    performNavigation();
                 },
-                error: function(err) {
-                    console.error('AJAX Error:', err);
-                    $el.removeClass('is-loading');
+                error: function() {
+                    performNavigation();
                 }
             });
         };
     }
 </script>
+<?php endif; ?>

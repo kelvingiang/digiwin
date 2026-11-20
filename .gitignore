@@ -80,3 +80,7 @@ google-credentials.json
 .DS_Store?
 .vscode/
 *.code-workspace
+
+# [2026-11-20] - @author: Kelvin - Loại trừ file tạm khoá của Microsoft Office (~$*) và file báo cáo local để tránh lỗi Permission denied khi git add
+~$*
+BAO_CAO_REFACTOR_THEME_DGW_*
