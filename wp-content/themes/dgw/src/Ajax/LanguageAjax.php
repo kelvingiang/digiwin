@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace DGW\Ajax;
 
+use DGW\Helpers\LanguageHelper;
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -22,15 +24,16 @@ class LanguageAjax
     }
 
     /**
-     * [18/11/2026] - Lưu cookie site_lang ('cn' hoặc 'vn')
+     * [18/11/2026] - Lưu cookie site_lang ('cn', 'vn' hoặc 'sc')
+     * [2026-11-20] - @author: Kelvin - Chuẩn hóa mã ngôn ngữ qua LanguageHelper::normalizeLangCode()
      */
     public static function handleChangeLanguages(): void
     {
         $response = ['status' => 'error'];
 
         if (!empty($_POST['type'])) {
-            $type = sanitize_text_field(wp_unslash($_POST['type']));
-            $lang = ($type === 'cn') ? 'cn' : 'vn';
+            $type = sanitize_text_field(wp_unslash((string) $_POST['type']));
+            $lang = LanguageHelper::normalizeLangCode($type) ?? 'vn';
 
             setcookie(
                 'site_lang',

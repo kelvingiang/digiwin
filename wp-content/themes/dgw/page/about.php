@@ -8,7 +8,12 @@ declare(strict_types=1);
  * [2026-11-20] - @author: Kelvin - Sửa lỗi in trùng 2 Header/Footer, bổ sung echo cho __(), thẻ H1 chuẩn SEO và Late Escaping đầy đủ
  */
 get_header();
-get_template_part('templates/header');
+// [2026-11-16] - @author: Kelvin - Chỉ nạp templates/header và templates/footer khi header.php/footer.php chưa tự động nạp theo pagename (tránh trùng lặp HTML)
+$current_pagename = (string) get_query_var('pagename', 1);
+$has_auto_layout  = in_array($current_pagename, ['', 'about-cn', 'about-sc', 'about-zh', 'about-vn'], true);
+if (!$has_auto_layout) {
+    get_template_part('templates/header');
+}
 $lang = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
 ?>
 <div>
@@ -66,5 +71,7 @@ $lang = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
     </div>
 </div>
 <?php
-get_template_part('templates/footer');
+if (!$has_auto_layout) {
+    get_template_part('templates/footer');
+}
 get_footer();

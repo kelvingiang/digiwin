@@ -212,6 +212,55 @@ if (!function_exists('custom_phpmailer_smtp_config')) {
 }
 
 // ===== LANGUAGE & TRANSLATION =====
+if (!function_exists('dgw_get_supported_locales_map')) {
+    function dgw_get_supported_locales_map(): array
+    {
+        return LanguageHelper::getSupportedLocalesMap();
+    }
+}
+
+if (!function_exists('dgw_normalize_lang_code')) {
+    function dgw_normalize_lang_code(string $raw_lang): ?string
+    {
+        return LanguageHelper::normalizeLangCode($raw_lang);
+    }
+}
+
+if (!function_exists('dgw_has_simplified_chinese_locale')) {
+    function dgw_has_simplified_chinese_locale(): bool
+    {
+        return LanguageHelper::hasSimplifiedChineseLocale();
+    }
+}
+
+if (!function_exists('dgw_get_paired_pages_map')) {
+    function dgw_get_paired_pages_map(): array
+    {
+        return LanguageHelper::getPairedPagesMap();
+    }
+}
+
+if (!function_exists('dgw_detect_paired_page_slug')) {
+    function dgw_detect_paired_page_slug(): ?string
+    {
+        return LanguageHelper::detectPairedPageSlug();
+    }
+}
+
+if (!function_exists('dgw_detect_paired_page_language')) {
+    function dgw_detect_paired_page_language(): ?string
+    {
+        return LanguageHelper::detectPairedPageLanguage();
+    }
+}
+
+if (!function_exists('dgw_get_paired_page_urls')) {
+    function dgw_get_paired_page_urls(string $page_slug): array
+    {
+        return LanguageHelper::getPairedPageUrls($page_slug);
+    }
+}
+
 if (!function_exists('dgw_detect_current_category_slug')) {
     function dgw_detect_current_category_slug(): ?string
     {
@@ -298,10 +347,38 @@ if (!function_exists('toBack')) {
 }
 
 // ===== SEO & THEME TWEAKS =====
-if (!function_exists('dgw_get_category_by_param')) {
-    function dgw_get_category_by_param($cate)
+if (!function_exists('dgw_detect_current_module_taxonomy')) {
+    function dgw_detect_current_module_taxonomy(?string $page_slug = null): ?string
     {
-        return SeoHelper::getCategoryByParam($cate);
+        return SeoHelper::detectCurrentModuleTaxonomy($page_slug);
+    }
+}
+
+if (!function_exists('dgw_get_category_by_param')) {
+    function dgw_get_category_by_param($cate, ?string $preferred_taxonomy = null)
+    {
+        return SeoHelper::getCategoryByParam($cate, $preferred_taxonomy);
+    }
+}
+
+if (!function_exists('dgw_get_seo_site_info')) {
+    function dgw_get_seo_site_info(string $lang): array
+    {
+        return SeoHelper::getSeoSiteInfo($lang);
+    }
+}
+
+if (!function_exists('dgw_get_seo_context')) {
+    function dgw_get_seo_context(): array
+    {
+        return SeoHelper::getSeoContext();
+    }
+}
+
+if (!function_exists('dgw_get_seo_urls')) {
+    function dgw_get_seo_urls(): array
+    {
+        return SeoHelper::getSeoUrls();
     }
 }
 

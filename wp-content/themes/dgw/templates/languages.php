@@ -109,19 +109,18 @@ if (!is_array($dgw_lang_switcher_ctx)) {
         }
     } else {
         /**
-         * [2026-11-20] - @author: Kelvin - Ánh xạ tự động cặp trang tĩnh song ngữ (/about-vn <-> /about-cn, /contact-vn <-> /contact-cn)
+         * [2026-11-20] - @author: Kelvin - Ánh xạ tự động cặp trang tĩnh song ngữ (/about-vn <-> /about-cn, /contact-vn <-> /contact-cn) qua dgw_get_paired_page_urls()
          */
-        $current_page_slug = get_query_var('pagename');
-        if (empty($current_page_slug) && !empty($_SERVER['REQUEST_URI'])) {
-            $path_parts        = explode('/', trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-            $current_page_slug = end($path_parts) ?: '';
-        }
-        if (in_array($current_page_slug, ['about-vn', 'about-cn'], true)) {
-            $redirect_url_cn = home_url('/about-cn/');
-            $redirect_url_vn = home_url('/about-vn/');
-        } elseif (in_array($current_page_slug, ['contact-vn', 'contact-cn'], true)) {
-            $redirect_url_cn = home_url('/contact-cn/');
-            $redirect_url_vn = home_url('/contact-vn/');
+        $current_page_slug = function_exists('dgw_detect_paired_page_slug')
+            ? (string) (dgw_detect_paired_page_slug() ?: '')
+            : (string) get_query_var('pagename');
+
+        if ($current_page_slug !== '' && function_exists('dgw_get_paired_page_urls')) {
+            $paired_urls = dgw_get_paired_page_urls($current_page_slug);
+            if (!empty($paired_urls)) {
+                $redirect_url_cn = $paired_urls['cn'] ?? '';
+                $redirect_url_vn = $paired_urls['vn'] ?? '';
+            }
         }
     }
 

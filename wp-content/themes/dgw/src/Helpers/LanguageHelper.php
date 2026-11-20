@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DGW\Helpers;
 
+use WP_Post;
 use WP_Term;
 
 if (!defined('ABSPATH')) {
@@ -10,7 +11,8 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * [18/11/2026] - Xử lý nhận diện ngôn ngữ, Translation Group và đồng bộ locale/textdomain
+ * [18/11/2026] - Xử lý nhận diện ngôn ngữ, Translation Group, Paired Pages và đồng bộ locale/textdomain
+ * [2026-11-20] - @author: Kelvin - Hợp nhất các nâng cấp từ nhánh language (paired pages, normalizeLangCode, supportedLocalesMap) theo chuẩn PSR-4
  */
 class LanguageHelper
 {
@@ -23,6 +25,180 @@ class LanguageHelper
         add_filter('admin_locale', static fn (): string => 'zh_TW');
         add_filter('determine_locale', [self::class, 'filterDetermineLocale']);
         add_filter('locale', [self::class, 'filterLocale']);
+    }
+
+    /**
+     * [17/11/2026] - Bảng cấu hình chuẩn hóa 3 ngôn ngữ của hệ thống (Tiếng Việt, Trung Phồn thể, Trung Giản thể)
+     *
+     * @return array<string, array{hreflang: string, og_locale: string, wp_locale: string}>
+     */
+    public static function getSupportedLocalesMap(): array
+    {
+        return [
+            'vn' => ['hreflang' => 'vi-VN', 'og_locale' => 'vi_VN', 'wp_locale' => 'vi_VN'],
+            'cn' => ['hreflang' => 'zh-TW', 'og_locale' => 'zh_TW', 'wp_locale' => 'zh_TW'],
+            'sc' => ['hreflang' => 'zh-CN', 'og_locale' => 'zh_CN', 'wp_locale' => 'zh_CN'],
+        ];
+    }
+
+    /**
+     * [17/11/2026] - Chuẩn hóa mã ngôn ngữ đầu vào (từ URL/Cookie/Meta) về mã nội bộ ('vn', 'cn', 'sc')
+     */
+    public static function normalizeLangCode(string $rawLang): ?string
+    {
+        $normalized = strtolower(str_replace('_', '-', trim($rawLang)));
+
+        if (in_array($normalized, ['vn', 'vi', 'vi-vn'], true)) {
+            return 'vn';
+        }
+        if (in_array($normalized, ['cn', 'tw', 'zh-tw'], true)) {
+            return 'cn';
+        }
+        if (in_array($normalized, ['sc', 'zh', 'zh-cn'], true)) {
+            return 'sc';
+        }
+
+        return null;
+    }
+
+    /**
+     * [17/11/2026] - Kiểm tra hệ thống đã có gói ngôn ngữ Tiếng Trung Giản thể (zh_CN) hoặc hook kích hoạt hay chưa
+     */
+    public static function hasSimplifiedChineseLocale(): bool
+    {
+        $langDir = get_template_directory() . '/languages';
+        $hasFile = file_exists($langDir . '/zh_CN.l10n.php') || file_exists($langDir . '/zh_CN.mo');
+
+        return (bool) apply_filters('dgw_enable_zh_cn_hreflang', $hasFile);
+    }
+
+    /**
+     * [16/11/2026] - Bảng ánh xạ các trang Page tách URL riêng theo ngôn ngữ
+     *
+     * @return array<string, array{lang: string, group: array<string, array<int, string>>}>
+     */
+    public static function getPairedPagesMap(): array
+    {
+        $aboutGroup = [
+            'vn' => ['about-vn'],
+            'cn' => ['about-cn'],
+            'sc' => ['about-sc', 'about-zh'],
+        ];
+        $contactGroup = [
+            'vn' => ['contact-vn'],
+            'cn' => ['contact-cn'],
+            'sc' => ['contact-sc', 'contact-zh'],
+        ];
+
+        return [
+            'about-vn'   => ['lang' => 'vn', 'group' => $aboutGroup],
+            'about-cn'   => ['lang' => 'cn', 'group' => $aboutGroup],
+            'about-sc'   => ['lang' => 'sc', 'group' => $aboutGroup],
+            'about-zh'   => ['lang' => 'sc', 'group' => $aboutGroup],
+            'contact-vn' => ['lang' => 'vn', 'group' => $contactGroup],
+            'contact-cn' => ['lang' => 'cn', 'group' => $contactGroup],
+            'contact-sc' => ['lang' => 'sc', 'group' => $contactGroup],
+            'contact-zh' => ['lang' => 'sc', 'group' => $contactGroup],
+        ];
+    }
+
+    /**
+     * [16/11/2026] - Nhận diện slug trang hiện tại nếu thuộc nhóm trang tách URL theo ngôn ngữ
+     */
+    public static function detectPairedPageSlug(): ?string
+    {
+        $pairedMap = self::getPairedPagesMap();
+
+        if (!empty($GLOBALS['wp_query'])) {
+            $pagename = sanitize_title((string) get_query_var('pagename'));
+            if ($pagename !== '' && isset($pairedMap[$pagename])) {
+                return $pagename;
+            }
+
+            if (is_page()) {
+                $queried = get_queried_object();
+                if ($queried instanceof WP_Post) {
+                    $postSlug = sanitize_title((string) $queried->post_name);
+                    if (isset($pairedMap[$postSlug])) {
+                        return $postSlug;
+                    }
+                }
+            }
+        }
+
+        if (!empty($_SERVER['REQUEST_URI'])) {
+            $requestPath = trim((string) parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+            if ($requestPath !== '') {
+                $segments = explode('/', $requestPath);
+                $lastSlug = sanitize_title((string) end($segments));
+                if (isset($pairedMap[$lastSlug])) {
+                    return $lastSlug;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * [16/11/2026] - Nhận diện ngôn ngữ ('vn', 'cn' hoặc 'sc') từ các trang Page tách URL theo ngôn ngữ
+     */
+    public static function detectPairedPageLanguage(): ?string
+    {
+        $slug      = self::detectPairedPageSlug();
+        $pairedMap = self::getPairedPagesMap();
+
+        if ($slug !== null && isset($pairedMap[$slug]['lang'])) {
+            return $pairedMap[$slug]['lang'];
+        }
+
+        return null;
+    }
+
+    /**
+     * [16/11/2026] - Lấy tập URL đối ứng theo ngôn ngữ cho trang Page tách URL theo slug
+     *
+     * @return array{vn?: string, cn?: string, sc?: string}
+     */
+    public static function getPairedPageUrls(string $pageSlug): array
+    {
+        $pairedMap      = self::getPairedPagesMap();
+        $normalizedSlug = sanitize_title($pageSlug);
+
+        if (!isset($pairedMap[$normalizedSlug]['group'])) {
+            return [];
+        }
+
+        $group = $pairedMap[$normalizedSlug]['group'];
+        $urls  = [];
+
+        foreach ($group as $langKey => $candidateSlugs) {
+            $resolvedUrl = '';
+
+            foreach ($candidateSlugs as $candidateSlug) {
+                $targetPage = get_page_by_path($candidateSlug);
+                if ($targetPage instanceof WP_Post && $targetPage->post_status === 'publish') {
+                    $resolvedUrl = (string) get_permalink($targetPage);
+                    break;
+                }
+            }
+
+            if ($resolvedUrl === '') {
+                if ($langKey === 'sc') {
+                    if (in_array($normalizedSlug, $candidateSlugs, true)) {
+                        $resolvedUrl = home_url(user_trailingslashit($normalizedSlug));
+                    }
+                } else {
+                    $resolvedUrl = home_url(user_trailingslashit($candidateSlugs[0]));
+                }
+            }
+
+            if ($resolvedUrl !== '') {
+                $urls[$langKey] = $resolvedUrl;
+            }
+        }
+
+        return $urls;
     }
 
     /**
@@ -53,7 +229,7 @@ class LanguageHelper
     }
 
     /**
-     * [18/11/2026] - Nhận diện ngôn ngữ ('vn' hoặc 'cn') theo slug hoặc Term Meta term_lang
+     * [18/11/2026] - Nhận diện ngôn ngữ ('vn', 'cn' hoặc 'sc') theo slug hoặc Term Meta term_lang
      */
     public static function detectCategoryLanguage($cateParam = null): ?string
     {
@@ -70,15 +246,18 @@ class LanguageHelper
             if (preg_match('/[_-](vn|vi)$/', $cleanSlug)) {
                 return 'vn';
             }
-            if (preg_match('/[_-](cn|tw|zh)$/', $cleanSlug)) {
+            if (preg_match('/[_-](cn|tw)$/', $cleanSlug)) {
                 return 'cn';
+            }
+            if (preg_match('/[_-](sc|zh)$/', $cleanSlug)) {
+                return 'sc';
             }
         }
 
         $termObj = SeoHelper::getCategoryByParam($cateParam);
         if ($termObj instanceof WP_Term) {
-            $termLang = get_term_meta($termObj->term_id, 'term_lang', true);
-            if ($termLang === 'vn' || $termLang === 'cn') {
+            $termLang = (string) get_term_meta($termObj->term_id, 'term_lang', true);
+            if (in_array($termLang, ['vn', 'cn', 'sc'], true)) {
                 return $termLang;
             }
         }
@@ -100,14 +279,14 @@ class LanguageHelper
                 $termObj = get_term((int) $term, $taxonomy);
             }
             if (!$termObj || is_wp_error($termObj)) {
-                $termObj = SeoHelper::getCategoryByParam((int) $term);
+                $termObj = SeoHelper::getCategoryByParam((int) $term, $taxonomy ?: null);
             }
         } elseif (is_string($term)) {
             if (!empty($taxonomy)) {
                 $termObj = get_term_by('slug', $term, $taxonomy);
             }
             if (!$termObj || is_wp_error($termObj)) {
-                $termObj = SeoHelper::getCategoryByParam($term);
+                $termObj = SeoHelper::getCategoryByParam($term, $taxonomy ?: null);
             }
         }
 
@@ -152,28 +331,25 @@ class LanguageHelper
     }
 
     /**
-     * [18/11/2026] - Lấy ngôn ngữ hiện hành ('vn' hoặc 'cn')
-     * [2026-11-20] - @author: Kelvin - Chỉ đọc _metabox_langguage trên is_single() thay vì is_singular() để tránh Page cố định đè lên cookie site_lang
+     * [18/11/2026] - Lấy ngôn ngữ hiện hành ('vn', 'cn' hoặc 'sc')
+     * [2026-11-20] - @author: Kelvin - Chỉ đọc _metabox_langguage trên is_single() và ưu tiên nhận diện paired page (about-vn/cn, contact-vn/cn)
      */
     public static function getLang(): string
     {
         $default = 'vn';
 
         if (wp_doing_ajax() && isset($_REQUEST['lang'])) {
-            $lang = sanitize_text_field(wp_unslash($_REQUEST['lang']));
-            if ($lang === 'cn' || $lang === 'zh-TW') {
-                return 'cn';
-            }
-            if ($lang === 'vi-VN' || $lang === 'vn') {
-                return 'vn';
+            $normalized = self::normalizeLangCode(sanitize_text_field(wp_unslash((string) $_REQUEST['lang'])));
+            if ($normalized !== null) {
+                return $normalized;
             }
         }
 
         if (!is_admin() && is_single()) {
             $queriedId = get_queried_object_id();
             if ($queriedId) {
-                $postLang = get_post_meta($queriedId, '_metabox_langguage', true);
-                if ($postLang === 'cn' || $postLang === 'vn') {
+                $postLang = (string) get_post_meta($queriedId, '_metabox_langguage', true);
+                if (in_array($postLang, ['cn', 'vn', 'sc'], true)) {
                     return $postLang;
                 }
             }
@@ -181,19 +357,24 @@ class LanguageHelper
 
         if (!is_admin()) {
             $cateLang = self::detectCategoryLanguage();
-            if ($cateLang === 'cn' || $cateLang === 'vn') {
-                return $cateLang;
+            if (in_array($cateLang, ['cn', 'vn', 'sc'], true)) {
+                return (string) $cateLang;
+            }
+
+            $pairedLang = self::detectPairedPageLanguage();
+            if (in_array($pairedLang, ['cn', 'vn', 'sc'], true)) {
+                return (string) $pairedLang;
             }
         }
 
         if (isset($_GET['lang'])) {
-            $lang = sanitize_text_field(wp_unslash($_GET['lang']));
-            return ($lang === 'cn' || $lang === 'zh-TW') ? 'cn' : 'vn';
+            $normalized = self::normalizeLangCode(sanitize_text_field(wp_unslash((string) $_GET['lang'])));
+            return $normalized ?? 'vn';
         }
 
         if (isset($_COOKIE['site_lang'])) {
-            $lang = sanitize_text_field(wp_unslash($_COOKIE['site_lang']));
-            return $lang === 'cn' ? 'cn' : 'vn';
+            $normalized = self::normalizeLangCode(sanitize_text_field(wp_unslash((string) $_COOKIE['site_lang'])));
+            return $normalized ?? 'vn';
         }
 
         return $default;
@@ -219,8 +400,7 @@ class LanguageHelper
     }
 
     /**
-     * [18/11/2026] - Đồng bộ Cookie, Session và Locale theo bài viết Single hoặc Category
-     * [2026-11-20] - @author: Kelvin - Sử dụng is_single() thay vì is_singular() và luôn đồng bộ textdomain theo getLang()
+     * [18/11/2026] - Đồng bộ Cookie, Session và Locale theo bài viết Single, Category hoặc Paired Page
      */
     public static function syncLanguageContext(): void
     {
@@ -233,8 +413,8 @@ class LanguageHelper
         if (is_single()) {
             $queriedId = get_queried_object_id();
             if ($queriedId) {
-                $postLang = get_post_meta($queriedId, '_metabox_langguage', true);
-                if ($postLang === 'cn' || $postLang === 'vn') {
+                $postLang = (string) get_post_meta($queriedId, '_metabox_langguage', true);
+                if (in_array($postLang, ['cn', 'vn', 'sc'], true)) {
                     $targetLang = $postLang;
                 }
             }
@@ -242,8 +422,15 @@ class LanguageHelper
 
         if (!$targetLang) {
             $cateLang = self::detectCategoryLanguage();
-            if ($cateLang === 'cn' || $cateLang === 'vn') {
+            if (in_array($cateLang, ['cn', 'vn', 'sc'], true)) {
                 $targetLang = $cateLang;
+            }
+        }
+
+        if (!$targetLang) {
+            $pairedLang = self::detectPairedPageLanguage();
+            if (in_array($pairedLang, ['cn', 'vn', 'sc'], true)) {
+                $targetLang = $pairedLang;
             }
         }
 
@@ -267,7 +454,11 @@ class LanguageHelper
                 $_SESSION['languages'] = $targetLang;
             }
 
-            $targetLocale = ($targetLang === 'cn') ? 'zh_TW' : 'vi_VN';
+            $localeMap    = self::getSupportedLocalesMap();
+            $targetLocale = $localeMap[$targetLang]['wp_locale'] ?? 'vi_VN';
+            if ($targetLocale === 'zh_CN' && !self::hasSimplifiedChineseLocale()) {
+                $targetLocale = 'zh_TW';
+            }
             if (function_exists('switch_to_locale')) {
                 switch_to_locale($targetLocale);
             }
@@ -276,19 +467,18 @@ class LanguageHelper
     }
 
     /**
-     * [18/11/2026] - Cố định locale Admin là zh_TW
-     * [2026-11-20] - @author: Kelvin - Đồng bộ determine_locale trên Frontend theo getLang()
+     * [18/11/2026] - Cố định locale Admin là zh_TW, đồng bộ Frontend theo getLang()
      */
     public static function filterDetermineLocale($locale)
     {
         if (is_admin() && !wp_doing_ajax()) {
             return 'zh_TW';
         }
-        return (self::getLang() === 'cn') ? 'zh_TW' : 'vi_VN';
+        return self::filterLocale($locale);
     }
 
     /**
-     * [18/11/2026] - Ánh xạ locale Frontend sang zh_TW hoặc vi_VN
+     * [18/11/2026] - Ánh xạ locale Frontend sang zh_TW, zh_CN hoặc vi_VN
      */
     public static function filterLocale($locale)
     {
@@ -296,6 +486,13 @@ class LanguageHelper
             return 'zh_TW';
         }
 
-        return (self::getLang() === 'cn') ? 'zh_TW' : 'vi_VN';
+        $lang      = self::getLang();
+        $localeMap = self::getSupportedLocalesMap();
+        $wpLocale  = $localeMap[$lang]['wp_locale'] ?? 'vi_VN';
+        if ($wpLocale === 'zh_CN' && !self::hasSimplifiedChineseLocale()) {
+            return 'zh_TW';
+        }
+
+        return $wpLocale;
     }
 }

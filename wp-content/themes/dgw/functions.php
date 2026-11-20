@@ -56,8 +56,9 @@ require_once THEME_URL . DS . 'inc' . DS . 'template-tags.php';
 add_action('init', function () {
     // 1. 新增這段：專門處理 AJAX 請求 (POST)
     if (wp_doing_ajax() && isset($_POST['lang'])) {
-        // 確保值只能是 'cn' 或 'vn'
-        $lang = ($_POST['lang'] === 'cn') ? 'cn' : 'vn';
+        $lang = function_exists('dgw_normalize_lang_code')
+            ? (dgw_normalize_lang_code(sanitize_text_field(wp_unslash((string) $_POST['lang']))) ?? 'vn')
+            : (($_POST['lang'] === 'cn') ? 'cn' : 'vn');
         
         // 第一時間強制覆寫 Cookie 變數，讓後續的 dgw_get_lang() 讀取到正確的值
         $_COOKIE['site_lang'] = $lang; 
@@ -66,7 +67,9 @@ add_action('init', function () {
 
     // 2. 原本的程式碼：處理一般頁面請求 (GET)
     if (isset($_GET['lang'])) {
-        $lang = ($_GET['lang'] === 'cn') ? 'cn' : 'vn';
+        $lang = function_exists('dgw_normalize_lang_code')
+            ? (dgw_normalize_lang_code(sanitize_text_field(wp_unslash((string) $_GET['lang']))) ?? 'vn')
+            : (($_GET['lang'] === 'cn') ? 'cn' : 'vn');
 
         setcookie(
             'site_lang',
@@ -82,6 +85,11 @@ add_action('init', function () {
 
 add_filter('language_attributes', function ($output) {
     $lang = dgw_get_lang();
+    // [17/11/2026] - Trả về chuẩn html lang attribute cho cả 3 ngôn ngữ (vi-VN, zh-TW, zh-CN)
+    $locale_map = function_exists('dgw_get_supported_locales_map') ? dgw_get_supported_locales_map() : [];
+    if (isset($locale_map[$lang]['hreflang'])) {
+        return 'lang="' . esc_attr($locale_map[$lang]['hreflang']) . '"';
+    }
     if ($lang === 'cn') {
         return 'lang="zh-TW"';
     }

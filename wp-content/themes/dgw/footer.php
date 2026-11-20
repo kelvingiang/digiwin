@@ -3,6 +3,8 @@ $footer = get_query_var('pagename', 1);
 switch ($footer) {
   case '':
   case 'about-cn':
+  case 'about-sc':
+  case 'about-zh':
   case 'about-vn':
   case 'cases':
   case 'industries':
@@ -11,6 +13,8 @@ switch ($footer) {
   case 'resource':
   case 'activities':
   case 'contact-cn':
+  case 'contact-sc':
+  case 'contact-zh':
   case 'contact-vn':
   case 'join-digiwin':
   case 'partner':
