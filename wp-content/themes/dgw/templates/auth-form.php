@@ -85,10 +85,16 @@ if ($currentCol !== '') {
     </div>
 </div>
 <?php if ($prefix === 'reg-') : ?>
-    <div class="turnstile-container" style="margin-bottom: 15px; display: flex; justify-content: flex-start;">
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAEe5ghYmyH3wpgix" data-theme="light"></div>
-    </div>
+    <?php
+    // [25/11/2026] - Đọc Cloudflare Turnstile sitekey từ EnvConfig (wp-config.php / .env) thay vì hardcode
+    $turnstileSiteKey = defined('TURNSTILE_SITE_KEY') ? (string) TURNSTILE_SITE_KEY : '';
+    if ($turnstileSiteKey !== '') :
+    ?>
+        <div class="turnstile-container" style="margin-bottom: 15px; display: flex; justify-content: flex-start;">
+            <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+            <div class="cf-turnstile" data-sitekey="<?php echo esc_attr($turnstileSiteKey); ?>" data-theme="light"></div>
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 <div class="btn-space">
     <button id="btn-register" class="btn-my-style">

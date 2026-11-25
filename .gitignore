@@ -64,6 +64,10 @@ _database/
 wp-content/themes/dgw/vendor/
 wp-content/themes/dgw/class/*.json
 *.bk
+# [25/11/2026] - Loại trừ file .env ở root và trong theme nhưng giữ lại .env.example
+.env
+.env.*
+!.env.example
 # --- 7. 開發工具與系統快取 ---
 
 et-cache/

@@ -48,19 +48,31 @@ class CommentHandler
 
     /**
      * [18/11/2026] - Kiểm tra kết quả captcha toán học khi gửi bình luận
+     * [25/11/2026] - Chặn bypass khi thiếu session captcha, kiểm tra input số hợp lệ và hủy captcha sau khi dùng
      */
     public static function validateMathCaptcha(array $comment): array
     {
-        if (!isset($_POST['math_answer'])) {
+        if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
+            session_start();
+        }
+
+        $rawAnswer = isset($_POST['math_answer']) ? trim((string) wp_unslash($_POST['math_answer'])) : '';
+        if ($rawAnswer === '' || !is_numeric($rawAnswer)) {
             wp_die('請回答驗證題');
         }
 
-        $userAns = (int) $_POST['math_answer'];
-        $realAns = (int) ($_SESSION['comment_captcha_answer'] ?? 0);
+        if (!isset($_SESSION['comment_captcha_answer'])) {
+            wp_die('驗證碼已過期，請重新整理頁面。');
+        }
+
+        $userAns = (int) $rawAnswer;
+        $realAns = (int) $_SESSION['comment_captcha_answer'];
 
         if ($userAns !== $realAns) {
             wp_die('計算題錯誤！請重新填寫。');
         }
+
+        unset($_SESSION['comment_captcha_answer'], $_SESSION['comment_captcha_question']);
 
         return $comment;
     }

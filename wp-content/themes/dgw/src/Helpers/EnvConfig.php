@@ -51,6 +51,7 @@ class EnvConfig
         self::loadEnv(THEME_URL . DS . '.env');
 
         self::defineSmtpConstants();
+        self::defineServiceConstants();
     }
 
     /**
@@ -119,6 +120,22 @@ class EnvConfig
         }
         if (!defined('SMTP_FROM_NAME')) {
             define('SMTP_FROM_NAME', defined('WP_SMTP_FROM_NAME') ? WP_SMTP_FROM_NAME : (getenv('SMTP_FROM_NAME') ?: 'Digiwin vietnam'));
+        }
+    }
+
+    /**
+     * [25/11/2026] - Định nghĩa hằng số Turnstile & Lark Webhook ưu tiên wp-config.php -> .env -> chuỗi rỗng
+     */
+    private static function defineServiceConstants(): void
+    {
+        if (!defined('TURNSTILE_SITE_KEY')) {
+            define('TURNSTILE_SITE_KEY', defined('WP_TURNSTILE_SITE_KEY') ? WP_TURNSTILE_SITE_KEY : (getenv('TURNSTILE_SITE_KEY') ?: ''));
+        }
+        if (!defined('TURNSTILE_SECRET_KEY')) {
+            define('TURNSTILE_SECRET_KEY', defined('WP_TURNSTILE_SECRET_KEY') ? WP_TURNSTILE_SECRET_KEY : (getenv('TURNSTILE_SECRET_KEY') ?: ''));
+        }
+        if (!defined('LARK_WEBHOOK_URL')) {
+            define('LARK_WEBHOOK_URL', defined('WP_LARK_WEBHOOK_URL') ? WP_LARK_WEBHOOK_URL : (getenv('LARK_WEBHOOK_URL') ?: ''));
         }
     }
 }

@@ -9,16 +9,22 @@ if (!defined('ABSPATH')) {
 
 /**
  * [18/11/2026] - Service gửi thông báo tự động đến Lark (Feishu) qua Webhook Bot
+ * [25/11/2026] - Chuyển Lark Webhook URL sang đọc từ EnvConfig (LARK_WEBHOOK_URL) thay vì hardcode
  */
 class LarkService
 {
-    private static string $webhookUrl = 'https://open.larksuite.com/open-apis/bot/v2/hook/2a2da959-0b1e-4b3c-ab3f-85703d65e3b0';
-
     /**
      * [18/11/2026] - Gửi nội dung tin nhắn đến Lark bot
+     * [25/11/2026] - Kiểm tra cấu hình LARK_WEBHOOK_URL trước khi gửi request
      */
     public static function send(string $message)
     {
+        $webhookUrl = defined('LARK_WEBHOOK_URL') ? (string) LARK_WEBHOOK_URL : '';
+        if ($webhookUrl === '') {
+            error_log('Lark Config Error: Missing LARK_WEBHOOK_URL.');
+            return false;
+        }
+
         $data = [
             'msg_type' => 'text',
             'content'  => [
@@ -26,7 +32,7 @@ class LarkService
             ],
         ];
 
-        $response = wp_remote_post(self::$webhookUrl, [
+        $response = wp_remote_post($webhookUrl, [
             'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
             'body'    => wp_json_encode($data),
             'timeout' => 10,

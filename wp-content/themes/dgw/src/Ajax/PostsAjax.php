@@ -123,6 +123,7 @@ class PostsAjax
 
     /**
      * [18/11/2026] - Kiểm tra captcha toán học qua AJAX
+     * [25/11/2026] - Chặn bypass null === null và yêu cầu dữ liệu số hợp lệ từ client/session
      */
     public static function handleCheckMathCaptcha(): void
     {
@@ -130,10 +131,11 @@ class PostsAjax
             session_start();
         }
 
-        $userAns = isset($_POST['answer']) ? (int) $_POST['answer'] : null;
-        $realAns = isset($_SESSION['comment_captcha_answer']) ? (int) $_SESSION['comment_captcha_answer'] : null;
+        $rawAnswer = isset($_POST['answer']) ? trim((string) wp_unslash($_POST['answer'])) : '';
+        $userAns   = ($rawAnswer !== '' && is_numeric($rawAnswer)) ? (int) $rawAnswer : null;
+        $realAns   = isset($_SESSION['comment_captcha_answer']) ? (int) $_SESSION['comment_captcha_answer'] : null;
 
-        if ($userAns === $realAns) {
+        if ($userAns !== null && $realAns !== null && $userAns === $realAns) {
             wp_send_json(['status' => 'ok']);
         }
 

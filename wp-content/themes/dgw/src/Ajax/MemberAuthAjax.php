@@ -165,9 +165,16 @@ class MemberAuthAjax
             wp_send_json_error(['message' => 'Vui lòng xác nhận bạn không phải là người máy (Captcha).']);
         }
 
+        // [25/11/2026] - Đọc Cloudflare Turnstile secret key từ EnvConfig (wp-config.php / .env) thay vì hardcode
+        $turnstileSecret = defined('TURNSTILE_SECRET_KEY') ? (string) TURNSTILE_SECRET_KEY : '';
+        if ($turnstileSecret === '') {
+            error_log('Turnstile Config Error: Missing TURNSTILE_SECRET_KEY.');
+            wp_send_json_error(['message' => $msg['error_system']]);
+        }
+
         $response = wp_remote_post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
             'body' => [
-                'secret'   => '0x4AAAAAAEe5gomLwgyfkEkqWzPX0q3BMEY',
+                'secret'   => $turnstileSecret,
                 'response' => $turnstileResponse,
                 'remoteip' => sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? ''),
             ],

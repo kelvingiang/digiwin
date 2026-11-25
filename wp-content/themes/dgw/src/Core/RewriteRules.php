@@ -11,31 +11,36 @@ if (!defined('ABSPATH')) {
 
 /**
  * [18/11/2026] - Quản lý Rewrite Rule, Permalink phân cấp chuẩn SEO và 301 Redirect URL cũ
+ * [25/11/2026] - Bổ sung rewrite rule hỗ trợ phân trang bình luận (comment-page-N) cho các CPT phân cấp
  */
 final class RewriteRules
 {
-    private const REWRITE_VERSION = '1.0.6';
+    private const REWRITE_VERSION = '1.0.7';
 
     private const MODULES_CONFIG = [
         'cases' => [
             'post_type'     => 'casestudies',
             'taxonomy'      => 'casestudies_category',
             'legacy_prefix' => 'casestudies',
+            'aliases'       => [],
         ],
         'solutions' => [
             'post_type'     => 'solutions',
             'taxonomy'      => 'solutions_category',
             'legacy_prefix' => 'solutions',
+            'aliases'       => ['solution'],
         ],
         'resource' => [
             'post_type'     => 'resources',
             'taxonomy'      => 'resources_category',
             'legacy_prefix' => 'resources',
+            'aliases'       => ['resources'],
         ],
         'activities' => [
             'post_type'     => 'active',
             'taxonomy'      => 'active_category',
             'legacy_prefix' => 'active',
+            'aliases'       => ['active'],
         ],
     ];
 
@@ -59,33 +64,25 @@ final class RewriteRules
 
     /**
      * [18/11/2026] - Đăng ký các Rewrite Rules phân cấp động theo từng module
+     * [25/11/2026] - Hỗ trợ /comment-page-{n}/ cho CPT phân cấp để tránh 404 khi redirect sau bình luận
      */
     public function register_rewrite_rules(): void
     {
         foreach (self::MODULES_CONFIG as $urlBase => $config) {
             $postType = $config['post_type'];
+            $prefixes = array_merge([$urlBase], $config['aliases'] ?? []);
 
-            add_rewrite_rule(
-                '^' . preg_quote($urlBase, '/') . '/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/?$',
-                'index.php?' . $postType . '=$matches[2]',
-                'top'
-            );
+            foreach ($prefixes as $prefix) {
+                $quotedPrefix = preg_quote($prefix, '/');
 
-            if ($urlBase === 'solutions') {
                 add_rewrite_rule(
-                    '^solution/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/?$',
-                    'index.php?' . $postType . '=$matches[2]',
+                    '^' . $quotedPrefix . '/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/comment-page-([0-9]{1,})/?$',
+                    'index.php?' . $postType . '=$matches[2]&cpage=$matches[3]',
                     'top'
                 );
-            } elseif ($urlBase === 'resource') {
+
                 add_rewrite_rule(
-                    '^resources/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/?$',
-                    'index.php?' . $postType . '=$matches[2]',
-                    'top'
-                );
-            } elseif ($urlBase === 'activities') {
-                add_rewrite_rule(
-                    '^active/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/?$',
+                    '^' . $quotedPrefix . '/cate/([^/]+)/(?!tag(?:/|$))([^/]+)/?$',
                     'index.php?' . $postType . '=$matches[2]',
                     'top'
                 );
