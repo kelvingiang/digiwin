@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DGW\Ajax;
 
 use DGW\Core\MemberDownload;
+use DGW\Helpers\RequestHelper;
 use DGW\Models\MemberDownloadModel;
 
 if (!defined('ABSPATH')) {
@@ -138,7 +139,8 @@ class MemberAuthAjax
         self::getModel()->update_login($user->ID, $sessionKey, $ipAddress);
 
         $cookieExpire = time() + (7 * 24 * 60 * 60);
-        setcookie('custom_session', $sessionKey, $cookieExpire, '/');
+        // [25/11/2026] - Gắn cờ httponly, secure và samesite=Lax cho cookie phiên thành viên
+        RequestHelper::setSecureCookie('custom_session', $sessionKey, $cookieExpire, true, 'Lax');
         $_COOKIE['custom_session'] = $sessionKey;
 
         wp_send_json_success([
@@ -343,7 +345,8 @@ class MemberAuthAjax
             unset($_COOKIE['custom_session']);
         }
 
-        setcookie('custom_session', '', time() - 3600, '/');
+        // [25/11/2026] - Xóa cookie phiên với đầy đủ cờ bảo mật tương ứng
+        RequestHelper::setSecureCookie('custom_session', '', time() - 3600, true, 'Lax');
 
         wp_send_json_success([
             'logged_out' => true,

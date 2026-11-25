@@ -91,4 +91,30 @@ class RequestHelper
         wp_redirect($url);
         exit;
     }
+
+    /**
+     * [25/11/2026] - Thiết lập cookie kèm đầy đủ cờ bảo mật (secure, httponly, samesite)
+     */
+    public static function setSecureCookie(
+        string $name,
+        string $value,
+        int $expires,
+        bool $httpOnly = true,
+        string $sameSite = 'Lax',
+        string $path = '/',
+        string $domain = ''
+    ): void {
+        if (headers_sent()) {
+            return;
+        }
+
+        setcookie($name, $value, [
+            'expires'  => $expires,
+            'path'     => $path !== '' ? $path : '/',
+            'domain'   => $domain,
+            'secure'   => is_ssl(),
+            'httponly' => $httpOnly,
+            'samesite' => $sameSite,
+        ]);
+    }
 }

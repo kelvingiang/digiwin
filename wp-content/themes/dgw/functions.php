@@ -71,11 +71,13 @@ add_action('init', function () {
             ? (dgw_normalize_lang_code(sanitize_text_field(wp_unslash((string) $_GET['lang']))) ?? 'vn')
             : (($_GET['lang'] === 'cn') ? 'cn' : 'vn');
 
-        setcookie(
+        // [25/11/2026] - Bổ sung cờ secure và samesite=Lax cho cookie site_lang khi chuyển qua ?lang=
+        \DGW\Helpers\RequestHelper::setSecureCookie(
             'site_lang',
             $lang,
             time() + YEAR_IN_SECONDS,
-            '/'
+            false,
+            'Lax'
         );
 
         $_COOKIE['site_lang'] = $lang;

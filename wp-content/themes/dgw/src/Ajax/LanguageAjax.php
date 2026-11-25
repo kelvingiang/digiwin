@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DGW\Ajax;
 
 use DGW\Helpers\LanguageHelper;
+use DGW\Helpers\RequestHelper;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -35,12 +36,8 @@ class LanguageAjax
             $type = sanitize_text_field(wp_unslash((string) $_POST['type']));
             $lang = LanguageHelper::normalizeLangCode($type) ?? 'vn';
 
-            setcookie(
-                'site_lang',
-                $lang,
-                time() + YEAR_IN_SECONDS,
-                '/'
-            );
+            // [25/11/2026] - Bổ sung cờ secure và samesite=Lax cho cookie ngôn ngữ (giữ httponly=false để JS đọc/đồng bộ)
+            RequestHelper::setSecureCookie('site_lang', $lang, time() + YEAR_IN_SECONDS, false, 'Lax');
 
             $_COOKIE['site_lang'] = $lang;
 

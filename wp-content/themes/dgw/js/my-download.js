@@ -66,11 +66,15 @@ jQuery(document).on("click", "#btn-logout", function () {
 });
 
 jQuery(document).ready(function ($) {
-  // [18/11/2026] - Chỉ kiểm tra phiên đăng nhập với server khi MyAjax.is_logged_in = true hoặc có cookie custom_session
+  // [18/11/2026] - Chỉ kiểm tra phiên đăng nhập với server khi MyAjax.is_logged_in = true hoặc có phiên cached trên client
+  // [25/11/2026] - Chuyển từ đọc document.cookie (không khả dụng khi custom_session bật HttpOnly) sang kiểm tra localStorage dgw_member
   const isServerLoggedIn =
     typeof MyAjax !== "undefined" && Boolean(MyAjax.is_logged_in);
-  const hasSessionCookie = document.cookie.includes("custom_session=");
-  const shouldCheckSession = isServerLoggedIn || hasSessionCookie;
+  let hasCachedMember = false;
+  try {
+    hasCachedMember = Boolean(localStorage.getItem("dgw_member"));
+  } catch (e) {}
+  const shouldCheckSession = isServerLoggedIn || hasCachedMember;
 
   // [04/11/2026] - Tự động đồng bộ tên người dùng từ localStorage khi có dấu hiệu phiên đăng nhập
   if (shouldCheckSession) {

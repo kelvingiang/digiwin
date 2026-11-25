@@ -217,7 +217,9 @@ if (!is_array($dgw_lang_switcher_ctx)) {
             $el.addClass('is-loading');
 
             // Ghi trực tiếp cookie site_lang tại trình duyệt để đảm bảo ngôn ngữ đổi ngay cả khi khác host
-            document.cookie = 'site_lang=' + encodeURIComponent(type) + '; path=/; max-age=31536000; SameSite=Lax';
+            // [25/11/2026] - Bổ sung cờ Secure khi chạy HTTPS đồng bộ với cookie server-side
+            var secureFlag = window.location.protocol === 'https:' ? '; Secure' : '';
+            document.cookie = 'site_lang=' + encodeURIComponent(type) + '; path=/; max-age=31536000; SameSite=Lax' + secureFlag;
 
             var performNavigation = function() {
                 // 1. Nếu có URL chuyển hướng hợp lệ (term đối ứng hoặc cate): chuyển hướng ngay

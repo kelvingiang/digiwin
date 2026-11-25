@@ -439,14 +439,15 @@ class LanguageHelper
             $_COOKIE['site_lang'] = $targetLang;
 
             if (!headers_sent() && $currentCookieLang !== $targetLang) {
-                setcookie(
+                // [25/11/2026] - Đồng bộ cờ secure và samesite=Lax cho cookie site_lang
+                RequestHelper::setSecureCookie(
                     'site_lang',
                     $targetLang,
                     time() + YEAR_IN_SECONDS,
-                    COOKIEPATH ? COOKIEPATH : '/',
-                    COOKIE_DOMAIN,
-                    is_ssl(),
-                    false
+                    false,
+                    'Lax',
+                    COOKIEPATH ? (string) COOKIEPATH : '/',
+                    defined('COOKIE_DOMAIN') ? (string) COOKIE_DOMAIN : ''
                 );
             }
 
