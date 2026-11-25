@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use DGW\Models\BaseListTableModel;
+namespace DGW\Models;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,8 +9,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Bảng quản trị Thành viên & Thống kê Download/View (kế thừa BaseListTableModel, tối ưu COUNT và vá Stored XSS)
+ * [2026-11-20] - @author: Kelvin - Quy hoạch về chuẩn PSR-4 src/Models/MemberDownloadListModel
  */
-class Model_Download extends BaseListTableModel
+class MemberDownloadListModel extends BaseListTableModel
 {
     private string $download_table = '';
 

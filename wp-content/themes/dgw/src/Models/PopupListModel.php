@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use DGW\Models\BaseListTableModel;
+namespace DGW\Models;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,8 +9,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Bảng quản trị Pop-up (kế thừa BaseListTableModel, tối ưu COUNT và escape XSS)
+ * [2026-11-20] - @author: Kelvin - Quy hoạch về chuẩn PSR-4 src/Models/PopupListModel
  */
-class Model_Pop_up extends BaseListTableModel
+class PopupListModel extends BaseListTableModel
 {
     /**
      * [2026-11-19] - @author: Kelvin - Khởi tạo cấu hình bảng wp_pop_up

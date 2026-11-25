@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace DGW\Core;
 
 use DateTimeImmutable;
-use Model_Download_Function;
+use DGW\Models\MemberDownloadModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -64,14 +64,11 @@ class MemberDownload
     }
 
     /**
-     * [18/11/2026] - Lấy thông tin tài khoản thành viên dựa trên session key
+     * [2026-11-20] - @author: Kelvin - Lấy thông tin tài khoản thành viên dựa trên session key qua PSR-4 MemberDownloadModel
      */
     public static function getMemberInformation(string $sessionKey)
     {
-        if (!class_exists('Model_Download_Function')) {
-            require_once DIR_MODEL . 'model-download-function.php';
-        }
-        $model = new Model_Download_Function();
+        $model = new MemberDownloadModel();
         return $model->get_user_by_session($sessionKey);
     }
 

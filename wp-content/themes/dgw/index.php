@@ -5,13 +5,16 @@
     <?php echo get_bloginfo('name') . ' - ' . get_bloginfo('description'); ?>
 </h1>
 
-<?php get_template_part('templates/home-popup'); ?>
+<?php
+// [20/11/2026] - Chuẩn MVC: Gọi render popup, slider và logo đối tác qua PostViewHelper
+\DGW\Helpers\PostViewHelper::renderHomePopup();
+?>
 <div class="index-space">
     <!-- [2026-06-30]: Tối ưu Semantic HTML (Dùng thẻ section và aria-label thay cho div vô danh) -->
     <section aria-label="Hero Slider" style="position: relative;">
         <?php
         if (!is_single()) {
-             get_template_part('templates/slider-owl');
+            \DGW\Helpers\PostViewHelper::renderSlider();
         }
         ?>
     </section>
@@ -36,7 +39,7 @@
     </section>
         <!-- [2026-06-30]: Chuyển phần Logo Khách hàng lên đầu để tăng độ uy tín (Social Proof) -->
     <section aria-label="Partners and Clients">
-        <?php get_template_part('templates/home-cases-logo'); ?>
+        <?php \DGW\Helpers\PostViewHelper::renderHomeLogos(); ?>
     </section>
 
     <section aria-label="Latest News">

@@ -16,9 +16,8 @@ $error_message = '';
 $user_data     = null;
 
 if ($email && $token) {
-    // Chỉ nạp model khi cần thiết để tối ưu bộ nhớ
-    require_once get_template_directory() . '/model/model-download-function.php';
-    $model_download = new Model_Download_Function();
+    // [2026-11-20] - @author: Kelvin - Sử dụng MemberDownloadModel theo chuẩn PSR-4 autoload
+    $model_download = new \DGW\Models\MemberDownloadModel();
     $user_data      = $model_download->get_user_by_email($email);
     // Debug: Hiển thị token gốc và hashed_token để kiểm tra
     if ($user_data) {

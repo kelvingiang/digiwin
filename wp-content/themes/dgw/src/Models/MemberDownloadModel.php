@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use DGW\Models\BaseCustomTableModel;
+namespace DGW\Models;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,9 +9,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Model thao tác bảng thành viên & lịch sử tải tài liệu (kế thừa BaseCustomTableModel, whitelist update_info và xóa global $wpdb)
- * [2026-11-20] - @author: Kelvin - Loại bỏ thuộc tính $_db dư thừa, sanitize insert_registration_data, fix NULL expiry trong reset_password và dọn orphan download_detail khi xóa user
+ * [2026-11-20] - @author: Kelvin - Loại bỏ thuộc tính $_db dư thừa, sanitize insert_registration_data, fix NULL expiry trong reset_password, dọn orphan download_detail và chuyển về chuẩn PSR-4 src/Models/
  */
-class Model_Download_Function extends BaseCustomTableModel
+class MemberDownloadModel extends BaseCustomTableModel
 {
     private string $_table_registry;
     private string $_table_details;

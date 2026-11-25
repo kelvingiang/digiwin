@@ -8,7 +8,10 @@ declare(strict_types=1);
 get_header(); ?>
 
 <div class="banner">
-    <?php get_template_part('templates/slider-owl'); ?>
+    <?php
+    // [20/11/2026] - Chuẩn MVC: Render Hero Slider qua PostViewHelper
+    \DGW\Helpers\PostViewHelper::renderSlider();
+    ?>
 </div>
 
 <div class="menu-sub">

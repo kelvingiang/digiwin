@@ -12,6 +12,36 @@ if (!defined('ABSPATH')) {
  */
 class TaxonomyRegistry
 {
+    private const OPTION_NAME = 'main_taxonomy_options';
+
+    /**
+     * @var array<string, bool>
+     */
+    private const DEFAULT_OPTIONS = [
+        'tags_advertising'     => false,
+        'taxonomy_industries'  => false,
+        'tags_solution'        => false,
+        'tags_casestudies'     => true,
+        'taxonomy_casestudies' => true,
+        'taxonomy_advertising' => true,
+        'taxonomy_solution'    => true,
+        'taxonomy_resource'    => true,
+        'taxonomy_active'      => true,
+        'taxonomy_services'    => true,
+        'taxonomy_joinus'      => true,
+    ];
+
+    /**
+     * [20/11/2026] - Đọc cấu hình main_taxonomy_options và đăng ký các Taxonomy/Tags đang bật
+     */
+    public static function register(): void
+    {
+        $savedOptions = get_option(self::OPTION_NAME, self::DEFAULT_OPTIONS);
+        $options      = wp_parse_args(is_array($savedOptions) ? $savedOptions : [], self::DEFAULT_OPTIONS);
+
+        self::registerEnabled($options);
+    }
+
     /**
      * [2026-11-20] - @author: Kelvin - Bản đồ cấu hình 8 Category Taxonomies đa ngôn ngữ
      *

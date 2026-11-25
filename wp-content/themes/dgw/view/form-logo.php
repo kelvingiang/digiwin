@@ -1,14 +1,10 @@
 <?php
-require_once(DIR_MODEL . 'model-logo-function.php');
-$data = array();
-if (!empty(getParams('id'))) {
-    $model = new Model_Logo_Function();
-    $data = $model->getItem(getParams('id'));
-}
-$ID      =  $data['ID'] ?? null;
-$img      =  $data['img'] ?? null;
-$company =  $data['company'] ?? null;
-$link    =  $data['link'] ?? null;
+// [20/11/2026] - Chuẩn MVC: View chỉ nhận biến $data từ LogoController, không khởi tạo Model trực tiếp
+$data    = isset($data) && is_array($data) ? $data : [];
+$ID      = $data['ID'] ?? null;
+$img     = $data['img'] ?? null;
+$company = $data['company'] ?? null;
+$link    = $data['link'] ?? null;
 ?>
 <form name="f1" id="f1" method="post" enctype="multipart/form-data">
     <?php // [2026-11-20] - @author: Kelvin - Bổ sung Nonce bảo vệ form logo và Late Escaping ?>

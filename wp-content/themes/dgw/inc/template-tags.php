@@ -25,6 +25,13 @@ use DGW\Helpers\RequestHelper;
 use DGW\Helpers\SeoHelper;
 use DGW\Helpers\ThemeTweaks;
 use DGW\Models\CategoryModel;
+use DGW\Models\CustomPostModel;
+use DGW\Models\LogoListModel;
+use DGW\Models\LogoModel;
+use DGW\Models\MemberDownloadListModel;
+use DGW\Models\MemberDownloadModel;
+use DGW\Models\PopupListModel;
+use DGW\Models\PopupModel;
 use DGW\Models\ProductModel;
 use DGW\Services\GoogleSheetsService;
 use DGW\Services\LarkService;
@@ -43,6 +50,27 @@ if (!class_exists('Service_Lark', false)) {
 }
 if (!class_exists('Rewrite_Url', false)) {
     class_alias(RewriteRules::class, 'Rewrite_Url');
+}
+if (!class_exists('Model_Custom_Post', false)) {
+    class_alias(CustomPostModel::class, 'Model_Custom_Post');
+}
+if (!class_exists('Model_Download', false)) {
+    class_alias(MemberDownloadListModel::class, 'Model_Download');
+}
+if (!class_exists('Model_Download_Function', false)) {
+    class_alias(MemberDownloadModel::class, 'Model_Download_Function');
+}
+if (!class_exists('Model_Logo', false)) {
+    class_alias(LogoListModel::class, 'Model_Logo');
+}
+if (!class_exists('Model_Logo_Function', false)) {
+    class_alias(LogoModel::class, 'Model_Logo_Function');
+}
+if (!class_exists('Model_Pop_up', false)) {
+    class_alias(PopupListModel::class, 'Model_Pop_up');
+}
+if (!class_exists('Model_Popup_Function', false)) {
+    class_alias(PopupModel::class, 'Model_Popup_Function');
 }
 
 // ===== SERVICES =====

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use DGW\Models\BaseCustomTableModel;
+namespace DGW\Models;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,9 +9,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Model thao tác bảng logo đối tác (kế thừa BaseCustomTableModel, loại bỏ global $wpdb và debug die())
- * [2026-11-20] - @author: Kelvin - Bổ sung xóa file ảnh logo cũ trên ổ đĩa khi cập nhật hoặc xóa vĩnh viễn bản ghi
+ * [2026-11-20] - @author: Kelvin - Bổ sung xóa file ảnh logo cũ trên ổ đĩa và chuyển về chuẩn PSR-4 src/Models/LogoModel
  */
-class Model_Logo_Function extends BaseCustomTableModel
+class LogoModel extends BaseCustomTableModel
 {
     private string $table;
 
@@ -146,5 +146,58 @@ class Model_Logo_Function extends BaseCustomTableModel
         if (is_file($filePath)) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * [20/11/2026] - Lấy danh sách logo trang chủ có Transient Cache 12 giờ (tách từ templates/home-cases-logo.php)
+     *
+     * @return array<int, array{company: string, img_url: string, link: string, width: int, height: int}>
+     */
+    public static function getCachedHomeLogos(): array
+    {
+        $transientKey = 'dgw_home_cases_logos';
+        $logoList     = get_transient($transientKey);
+
+        if (false !== $logoList && is_array($logoList)) {
+            return $logoList;
+        }
+
+        $rawLogos = (new self())->getAll(0);
+        $logoList = [];
+
+        if (!empty($rawLogos) && is_array($rawLogos)) {
+            foreach ($rawLogos as $item) {
+                if (empty($item['img'])) {
+                    continue;
+                }
+
+                $imgFilename = basename((string) $item['img']);
+                $imagePath   = DIR_IMAGES . 'logo' . DS . $imgFilename;
+                $imgUrl      = PART_IMAGES . 'logo/' . $imgFilename;
+
+                $width  = 225;
+                $height = 225;
+
+                if (file_exists($imagePath)) {
+                    $imageInfo = @getimagesize($imagePath);
+                    if (!empty($imageInfo)) {
+                        $width  = (int) $imageInfo[0];
+                        $height = (int) $imageInfo[1];
+                    }
+                }
+
+                $logoList[] = [
+                    'company' => !empty($item['company']) ? trim((string) $item['company']) : 'Partner Client',
+                    'img_url' => $imgUrl,
+                    'link'    => !empty($item['link']) ? trim((string) $item['link']) : '',
+                    'width'   => $width,
+                    'height'  => $height,
+                ];
+            }
+        }
+
+        set_transient($transientKey, $logoList, 12 * HOUR_IN_SECONDS);
+
+        return $logoList;
     }
 }

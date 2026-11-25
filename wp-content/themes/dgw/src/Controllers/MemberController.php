@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace DGW\Controllers;
 
 use DGW\Helpers\RequestHelper;
+use DGW\Models\MemberDownloadListModel;
+use DGW\Models\MemberDownloadModel;
 use DGW\Services\ExcelExportService;
 
 if (!defined('ABSPATH')) {
@@ -15,7 +17,7 @@ if (!defined('ABSPATH')) {
  */
 class MemberController extends BaseAdminController
 {
-    private ?\Model_Download_Function $model = null;
+    private ?MemberDownloadModel $model = null;
 
     /**
      * [2026-11-20] - @author: Kelvin - Đăng ký menu Download Data trong WP-Admin
@@ -69,16 +71,74 @@ class MemberController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Render giao diện danh sách hoặc chi tiết thành viên
+     * [2026-11-20] - @author: Kelvin - Render giao diện danh sách hoặc chi tiết thành viên (chuẩn MVC: lấy dữ liệu tại Controller)
      */
     public function renderPage(): void
     {
         if (getParams('action') === 'edit') {
-            require_once DIR_VIEW . 'form-member.php';
+            $id         = 0;
+            $email      = '';
+            $company    = '';
+            $username   = '';
+            $phone      = '';
+            $tax        = '';
+            $position   = '';
+            $industry   = '';
+            $department = '';
+            $details    = [];
+
+            $paramId = absint(getParams('id'));
+            if ($paramId > 0) {
+                $model = $this->getModel();
+                $data  = $model->get_user_by_id($paramId);
+
+                if ($data) {
+                    $id       = (int) ($data->ID ?? 0);
+                    $email    = (string) ($data->email ?? '');
+                    $company  = (string) ($data->company ?? '');
+                    $username = (string) ($data->username ?? '');
+                    $phone    = (string) ($data->phone ?? '');
+                    $tax      = (string) ($data->tax ?? '');
+
+                    $positionKey   = (string) ($data->position ?? '');
+                    $industryKey   = (string) ($data->industry ?? '');
+                    $departmentKey = (string) ($data->department ?? '');
+                    $lang          = !empty($data->language) ? (string) $data->language : 'vn';
+
+                    $positionDictionary   = get_position_dictionary();
+                    $position             = (string) ($positionDictionary[$positionKey][$lang] ?? $positionKey);
+                    $industryDictionary   = get_industry_dictionary();
+                    $industry             = (string) ($industryDictionary[$industryKey][$lang] ?? $industryKey);
+                    $departmentDictionary = get_department_dictionary();
+                    $department           = (string) ($departmentDictionary[$departmentKey][$lang] ?? $departmentKey);
+
+                    $details = $model->get_downloaded_by_user($id) ?: [];
+                }
+            }
+
+            $this->renderView('form-member.php', compact(
+                'id',
+                'email',
+                'company',
+                'username',
+                'phone',
+                'tax',
+                'position',
+                'industry',
+                'department',
+                'details'
+            ));
             return;
         }
 
-        require_once DIR_VIEW . 'view-member.php';
+        $dataList = new MemberDownloadListModel();
+        $dataList->prepare_items();
+
+        $this->renderView('view-member.php', [
+            'dataList' => $dataList,
+            'page'     => (string) getParams('page'),
+            'msgCode'  => (int) getParams('msg'),
+        ]);
     }
 
     /**
@@ -86,9 +146,7 @@ class MemberController extends BaseAdminController
      */
     private function exportMembersExcel(): void
     {
-        require_once DIR_MODEL . 'model-download.php';
-
-        $exporter = new \Model_Download();
+        $exporter = new MemberDownloadListModel();
         $data     = $exporter->get_export_data();
 
         if (empty($data)) {
@@ -134,13 +192,12 @@ class MemberController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Lazy-load Model_Download_Function khi thực sự cần thao tác DB
+     * [2026-11-20] - @author: Kelvin - Lazy-load MemberDownloadModel (PSR-4) khi thực sự cần thao tác DB
      */
-    private function getModel(): \Model_Download_Function
+    private function getModel(): MemberDownloadModel
     {
         if ($this->model === null) {
-            require_once DIR_MODEL . 'model-download-function.php';
-            $this->model = new \Model_Download_Function();
+            $this->model = new MemberDownloadModel();
         }
 
         return $this->model;

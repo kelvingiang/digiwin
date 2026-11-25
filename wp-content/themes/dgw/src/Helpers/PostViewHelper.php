@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace DGW\Helpers;
 
 use DGW\Models\CategoryModel;
-use Model_Custom_Post;
+use DGW\Models\CustomPostModel;
+use DGW\Models\LogoModel;
+use DGW\Models\PopupModel;
 use WP_Query;
 
 if (!defined('ABSPATH')) {
@@ -13,19 +15,10 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Controller/Presenter điều phối dữ liệu Custom Post và nạp View Templates (thay thế inc/front/front-custom-post.php, front-menu-sub.php, front-menu-side.php)
+ * [2026-11-20] - @author: Kelvin - Chuyển sang sử dụng CustomPostModel PSR-4 trực tiếp, bỏ require_once DIR_MODEL
  */
 class PostViewHelper
 {
-    /**
-     * [2026-11-19] - @author: Kelvin - Nạp Model_Custom_Post một lần khi cần
-     */
-    private static function ensureModelLoaded(): void
-    {
-        if (!class_exists('Model_Custom_Post', false)) {
-            require_once DIR_MODEL . 'model-custom-post.php';
-        }
-    }
-
     /**
      * [2026-11-19] - @author: Kelvin - Lặp WP_Query và render thẻ bài viết qua View templates/post-item.php
      */
@@ -50,8 +43,7 @@ class PostViewHelper
      */
     public static function renderPosts(string $postType, int $postCount): void
     {
-        self::ensureModelLoaded();
-        self::renderList(Model_Custom_Post::get_posts($postType, $postCount));
+        self::renderList(CustomPostModel::get_posts($postType, $postCount));
     }
 
     /**
@@ -59,8 +51,7 @@ class PostViewHelper
      */
     public static function renderPostsByCate(string $postType, $cate, int $postCount, string $taxonomy): void
     {
-        self::ensureModelLoaded();
-        self::renderList(Model_Custom_Post::get_posts_by_cate($postType, $cate, $postCount, $taxonomy));
+        self::renderList(CustomPostModel::get_posts_by_cate($postType, $cate, $postCount, $taxonomy));
     }
 
     /**
@@ -173,43 +164,125 @@ class PostViewHelper
 
     public static function getAtHome(string $postType, int $postCount): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_posts_at_home($postType, $postCount);
+        return CustomPostModel::get_posts_at_home($postType, $postCount);
     }
 
     public static function getCateAtHome(string $postType, string $cateSlug, int $postCount): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_posts_cate_at_home($postType, $cateSlug, $postCount);
+        return CustomPostModel::get_posts_cate_at_home($postType, $cateSlug, $postCount);
     }
 
     public static function getAtSideCate(string $postType, int $postCount, string $taxonomy, $cate): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_posts_at_side_cate($postType, $postCount, $taxonomy, $cate);
+        return CustomPostModel::get_posts_at_side_cate($postType, $postCount, $taxonomy, $cate);
     }
 
     public static function getAtSide(string $postType, int $postCount): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_posts_at_side($postType, $postCount);
+        return CustomPostModel::get_posts_at_side($postType, $postCount);
     }
 
     public static function getShowSidebar(string $postType): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_posts_show_sidebar($postType);
+        return CustomPostModel::get_posts_show_sidebar($postType);
     }
 
     public static function getPostCategory(string $cate, int $postCount): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_post_category($cate, $postCount);
+        return CustomPostModel::get_post_category($cate, $postCount);
     }
 
     public static function getPostCategoryAtHome(string $cate, int $postCount): WP_Query
     {
-        self::ensureModelLoaded();
-        return Model_Custom_Post::get_post_category_at_home($cate, $postCount);
+        return CustomPostModel::get_post_category_at_home($cate, $postCount);
+    }
+
+    /**
+     * [20/11/2026] - Lấy danh sách logo trang chủ qua LogoModel và nạp View templates/home-cases-logo.php
+     */
+    public static function renderHomeLogos(): void
+    {
+        $logoList = LogoModel::getCachedHomeLogos();
+        get_template_part('templates/home-cases-logo', null, ['logo_list' => $logoList]);
+    }
+
+    /**
+     * [20/11/2026] - Lấy Pop-up đang kích hoạt qua PopupModel và nạp View templates/home-popup.php
+     */
+    public static function renderHomePopup(): void
+    {
+        $lang  = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
+        $popup = PopupModel::getActiveForDisplay($lang);
+
+        if ($popup !== null) {
+            get_template_part('templates/home-popup', null, ['popup' => $popup]);
+        }
+    }
+
+    /**
+     * [20/11/2026] - Chuẩn bị dữ liệu Hero Slider (ảnh preload LCP và danh sách slides) từ CustomPostModel
+     *
+     * @return array{preload_desktop: string, preload_mobile: string, slides: array<int, array<string, mixed>>}
+     */
+    public static function prepareSliderData(int $limit = 10): array
+    {
+        $sliderQuery    = CustomPostModel::get_sliders($limit);
+        $preloadDesktop = '';
+        $preloadMobile  = '';
+        $slides         = [];
+
+        if ($sliderQuery->have_posts()) {
+            $firstPostId  = (int) $sliderQuery->posts[0]->ID;
+            $firstThumbId = (int) get_post_thumbnail_id($firstPostId);
+            $firstDesktop = $firstThumbId > 0 ? wp_get_attachment_image_src($firstThumbId, 'large') : false;
+            $firstMobile  = $firstThumbId > 0 ? wp_get_attachment_image_src($firstThumbId, 'medium_large') : false;
+
+            if (is_array($firstDesktop) && !empty($firstDesktop[0])) {
+                $preloadDesktop = (string) $firstDesktop[0];
+            }
+            if (is_array($firstMobile) && !empty($firstMobile[0])) {
+                $preloadMobile = (string) $firstMobile[0];
+            }
+
+            while ($sliderQuery->have_posts()) {
+                $sliderQuery->the_post();
+                $postId     = (int) get_the_ID();
+                $link       = (string) get_post_meta($postId, '_metabox_link', true);
+                $thumbId    = (int) get_post_thumbnail_id($postId);
+                $urlDesktop = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'large') : false;
+                $urlMobile  = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'medium_large') : false;
+
+                if (!is_array($urlDesktop) || empty($urlDesktop[0])) {
+                    continue;
+                }
+
+                $slides[] = [
+                    'post_id'     => $postId,
+                    'title'       => (string) the_title_attribute(['echo' => false]),
+                    'link'        => $link,
+                    'has_link'    => ($link !== '' && $link !== '#'),
+                    'url_desktop' => (string) $urlDesktop[0],
+                    'width'       => (int) ($urlDesktop[1] ?? 0),
+                    'height'      => (int) ($urlDesktop[2] ?? 0),
+                    'url_mobile'  => (is_array($urlMobile) && !empty($urlMobile[0])) ? (string) $urlMobile[0] : (string) $urlDesktop[0],
+                ];
+            }
+
+            wp_reset_postdata();
+        }
+
+        return [
+            'preload_desktop' => $preloadDesktop,
+            'preload_mobile'  => $preloadMobile,
+            'slides'          => $slides,
+        ];
+    }
+
+    /**
+     * [20/11/2026] - Chuẩn bị dữ liệu Slider và render qua View templates/slider-owl.php
+     */
+    public static function renderSlider(int $limit = 10): void
+    {
+        get_template_part('templates/slider-owl', null, self::prepareSliderData($limit));
     }
 }

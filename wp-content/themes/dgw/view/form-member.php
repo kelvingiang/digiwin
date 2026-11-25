@@ -2,50 +2,18 @@
 declare(strict_types=1);
 
 /**
- * [2026-11-20] - @author: Kelvin - Khởi tạo biến mặc định chống lỗi PHP 8.3, sửa mã ngôn ngữ 'vn', vá Stored XSS và bổ sung Nonce cho AJAX đổi mật khẩu
+ * [20/11/2026] - Chuẩn MVC: View chỉ nhận dữ liệu thành viên từ MemberController, không gọi Model trực tiếp
  */
-
-require_once DIR_MODEL . 'model-download-function.php';
-
-$id         = 0;
-$email      = '';
-$company    = '';
-$username   = '';
-$phone      = '';
-$tax        = '';
-$position   = '';
-$industry   = '';
-$department = '';
-$details    = [];
-
-$paramId = absint(getParams('id'));
-if ($paramId > 0) {
-    $model = new Model_Download_Function();
-    $data  = $model->get_user_by_id($paramId);
-
-    if ($data) {
-        $id       = (int) ($data->ID ?? 0);
-        $email    = (string) ($data->email ?? '');
-        $company  = (string) ($data->company ?? '');
-        $username = (string) ($data->username ?? '');
-        $phone    = (string) ($data->phone ?? '');
-        $tax      = (string) ($data->tax ?? '');
-
-        $positionKey   = (string) ($data->position ?? '');
-        $industryKey   = (string) ($data->industry ?? '');
-        $departmentKey = (string) ($data->department ?? '');
-        $lang          = !empty($data->language) ? (string) $data->language : 'vn';
-
-        $positionDictionary   = get_position_dictionary();
-        $position             = (string) ($positionDictionary[$positionKey][$lang] ?? $positionKey);
-        $industryDictionary   = get_industry_dictionary();
-        $industry             = (string) ($industryDictionary[$industryKey][$lang] ?? $industryKey);
-        $departmentDictionary = get_department_dictionary();
-        $department           = (string) ($departmentDictionary[$departmentKey][$lang] ?? $departmentKey);
-
-        $details = $model->get_downloaded_by_user($id) ?: [];
-    }
-}
+$id         = isset($id) ? (int) $id : 0;
+$email      = (string) ($email ?? '');
+$company    = (string) ($company ?? '');
+$username   = (string) ($username ?? '');
+$phone      = (string) ($phone ?? '');
+$tax        = (string) ($tax ?? '');
+$position   = (string) ($position ?? '');
+$industry   = (string) ($industry ?? '');
+$department = (string) ($department ?? '');
+$details    = isset($details) && is_array($details) ? $details : [];
 ?>
 
 <div style="margin-top: 3rem;">

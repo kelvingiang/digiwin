@@ -12,6 +12,44 @@ if (!defined('ABSPATH')) {
  */
 class MetaboxRegistry
 {
+    private const OPTION_NAME = 'main_controller_options';
+
+    /**
+     * @var array<string, bool>
+     */
+    private const DEFAULT_OPTIONS = [
+        'metabox_source'     => true,
+        'metabox_view'       => true,
+        'metabox_web'        => true,
+        'metabox_download'   => true,
+        'metabox_language'   => true,
+        'metabox_industries' => false,
+        'metabox_service'    => false,
+        'metabox_solution'   => false,
+        'metabox_active'     => false,
+        'metabox_seo'        => false,
+        'metabox_order'      => true,
+        'metabox_home'       => true,
+        'metabox_link'       => true,
+        'metabox_sidebar'    => true,
+        'metabox_youtube'    => true,
+    ];
+
+    /**
+     * [20/11/2026] - Đọc cấu hình và đăng ký các Metabox đang bật (chỉ chạy trong WP-Admin)
+     */
+    public static function register(): void
+    {
+        if (!is_admin()) {
+            return;
+        }
+
+        $savedOptions = get_option(self::OPTION_NAME, self::DEFAULT_OPTIONS);
+        $options      = wp_parse_args(is_array($savedOptions) ? $savedOptions : [], self::DEFAULT_OPTIONS);
+
+        self::registerEnabled($options);
+    }
+
     /**
      * [2026-11-20] - @author: Kelvin - Bản đồ cấu hình Metabox theo key trong main_controller_options
      *

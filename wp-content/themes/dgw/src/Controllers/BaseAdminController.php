@@ -56,6 +56,25 @@ abstract class BaseAdminController
     abstract public function renderPage(): void;
 
     /**
+     * [20/11/2026] - Nạp Admin View và truyền dữ liệu từ Controller xuống View chuẩn MVC
+     *
+     * @param array<string, mixed> $_dgwViewData
+     */
+    protected function renderView(string $_dgwViewFile, array $_dgwViewData = []): void
+    {
+        $_dgwViewPath = DIR_VIEW . ltrim($_dgwViewFile, '/\\');
+        if (!file_exists($_dgwViewPath)) {
+            return;
+        }
+
+        if (!empty($_dgwViewData)) {
+            extract($_dgwViewData, EXTR_SKIP);
+        }
+
+        require $_dgwViewPath;
+    }
+
+    /**
      * [2026-11-20] - @author: Kelvin - Dựng URL lọc danh sách an toàn bằng add_query_arg()
      */
     protected function buildFilterUrl(): string

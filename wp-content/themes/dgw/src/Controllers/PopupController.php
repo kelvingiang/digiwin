@@ -5,6 +5,8 @@ namespace DGW\Controllers;
 
 use DGW\Core\UploadHandler;
 use DGW\Helpers\RequestHelper;
+use DGW\Models\PopupListModel;
+use DGW\Models\PopupModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +17,7 @@ if (!defined('ABSPATH')) {
  */
 class PopupController extends BaseAdminController
 {
-    private ?\Model_Popup_Function $model = null;
+    private ?PopupModel $model = null;
 
     /**
      * [2026-11-20] - @author: Kelvin - Đăng ký menu Pop-up trong WP-Admin
@@ -83,17 +85,29 @@ class PopupController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Render form thêm/sửa hoặc bảng danh sách Pop-up
+     * [2026-11-20] - @author: Kelvin - Render form thêm/sửa hoặc bảng danh sách Pop-up (chuẩn MVC: lấy dữ liệu tại Controller)
      */
     public function renderPage(): void
     {
         $action = (string) getParams('action');
         if ($action === 'add' || $action === 'edit') {
-            require_once DIR_VIEW . 'form-pop-up.php';
+            $paramId = absint(getParams('id'));
+            $data    = $paramId > 0 ? ($this->getModel()->getItem($paramId) ?: []) : [];
+
+            $this->renderView('form-pop-up.php', [
+                'data' => is_array($data) ? $data : [],
+            ]);
             return;
         }
 
-        require_once DIR_VIEW . 'view-pop-up.php';
+        $dataList = new PopupListModel();
+        $dataList->prepare_items();
+
+        $this->renderView('view-pop-up.php', [
+            'dataList' => $dataList,
+            'page'     => (string) getParams('page'),
+            'msgCode'  => (int) getParams('msg'),
+        ]);
     }
 
     /**
@@ -141,13 +155,12 @@ class PopupController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Lazy-load Model_Popup_Function
+     * [2026-11-20] - @author: Kelvin - Lazy-load PopupModel (PSR-4)
      */
-    private function getModel(): \Model_Popup_Function
+    private function getModel(): PopupModel
     {
         if ($this->model === null) {
-            require_once DIR_MODEL . 'model-popup-function.php';
-            $this->model = new \Model_Popup_Function();
+            $this->model = new PopupModel();
         }
 
         return $this->model;

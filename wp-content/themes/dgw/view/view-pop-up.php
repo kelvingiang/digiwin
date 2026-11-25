@@ -2,12 +2,14 @@
 declare(strict_types=1);
 
 /**
- * [2026-11-20] - @author: Kelvin - Sửa lỗi esc_html__(null) trên PHP 8.3, loại bỏ @$msg và JS clickChangeStatus thừa
+ * [20/11/2026] - Chuẩn MVC: View chỉ nhận $dataList, $page, $msgCode từ PopupController
  */
-require_once DIR_MODEL . 'model-popup.php';
-$dataList = new Model_Pop_up();
-$dataList->prepare_items();
-$page    = (string) getParams('page');
+if (!isset($dataList)) {
+    return;
+}
+
+$page    = isset($page) ? (string) $page : (string) getParams('page');
+$msgCode = isset($msgCode) ? (int) $msgCode : (int) getParams('msg');
 $linkAdd = admin_url('admin.php?page=' . $page . '&action=add');
 ?>
 
@@ -16,7 +18,7 @@ $linkAdd = admin_url('admin.php?page=' . $page . '&action=add');
     <a href="<?php echo esc_url($linkAdd); ?>" class="page-title-action"><?php echo esc_html__('Add Item', 'dgw'); ?></a>
     <hr class="wp-header-end">
 
-    <?php if ((int) getParams('msg') === 1) : ?>
+    <?php if ($msgCode === 1) : ?>
         <div class="updated notice notice-success is-dismissible">
             <p><?php echo esc_html__('Data Adjustment succeeded', 'dgw'); ?></p>
         </div>

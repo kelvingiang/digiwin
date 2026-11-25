@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DGW\Ajax;
 
-use WP_Query;
+use DGW\Models\CustomPostModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -46,6 +46,7 @@ class PostsAjax
 
     /**
      * [18/11/2026] - Load thêm bài viết hỗ trợ Translation Group
+     * [20/11/2026] - Chuyển truy vấn sang CustomPostModel và render qua View templates/post-item.php chuẩn MVC & LCP
      */
     public static function handleLoadMorePosts(): void
     {
@@ -56,63 +57,7 @@ class PostsAjax
         $count   = isset($_POST['count']) ? (int) $_POST['count'] : 5;
         $cate    = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
 
-        $args = [
-            'post_type'      => $post,
-            'posts_per_page' => $count,
-            'orderby'        => 'meta_value_num',
-            'order'          => 'DESC',
-            'meta_key'       => '_metabox_order',
-            'post_status'    => 'publish',
-            'meta_query'     => [
-                [
-                    'key'     => '_metabox_langguage',
-                    'value'   => dgw_get_lang(),
-                    'compare' => '=',
-                ],
-            ],
-        ];
-
-        if (!empty($cateId)) {
-            $targetTerms = [$cateId];
-            $field       = is_numeric($cateId) ? 'term_id' : 'slug';
-
-            $termObj = is_numeric($cateId)
-                ? get_term((int) $cateId, $cate)
-                : get_term_by('slug', (string) $cateId, $cate);
-
-            if ($termObj && !is_wp_error($termObj)) {
-                $groupId = get_term_meta($termObj->term_id, 'translation_group', true);
-                if (!empty($groupId)) {
-                    $groupTerms = get_terms([
-                        'taxonomy'   => $cate,
-                        'fields'     => 'ids',
-                        'hide_empty' => false,
-                        'meta_query' => [
-                            [
-                                'key'     => 'translation_group',
-                                'value'   => $groupId,
-                                'compare' => '=',
-                            ],
-                        ],
-                    ]);
-                    if (!empty($groupTerms) && !is_wp_error($groupTerms)) {
-                        $targetTerms = $groupTerms;
-                        $field       = 'term_id';
-                    }
-                }
-            }
-
-            $args['tax_query'] = [
-                [
-                    'taxonomy' => $cate,
-                    'field'    => $field,
-                    'terms'    => $targetTerms,
-                ],
-            ];
-        }
-
-        $args['offset'] = $lastId;
-        $wpQuery        = new WP_Query($args);
+        $wpQuery = CustomPostModel::get_load_more_posts($post, $cateId, $cate, $count, $lastId);
 
         if ($wpQuery->have_posts()) {
             $html = '';
@@ -120,28 +65,9 @@ class PostsAjax
 
             while ($wpQuery->have_posts()) {
                 $wpQuery->the_post();
-                $postId    = get_the_ID();
-                $thumbId   = get_post_thumbnail_id($postId);
-                $urlData   = wp_get_attachment_image_src($thumbId, 'medium');
-                $srcset    = wp_get_attachment_image_srcset($thumbId, 'medium');
-                $permalink = get_the_permalink($postId);
-
-                $html .= "<div class='item' data-id='" . esc_attr((string) $stt) . "' data-link='" . esc_url($permalink) . "' data-post='" . esc_attr((string) $postId) . "'>";
-                $html .= '<div>';
-                if (has_post_thumbnail() && is_array($urlData)) {
-                    $html .= "<img class='item-img' src='" . esc_url($urlData[0]) . "' srcset='" . esc_attr((string) $srcset) . "' fetchpriority='high' width='" . esc_attr((string) $urlData[1]) . "' height='" . esc_attr((string) $urlData[2]) . "' alt='" . esc_attr(get_the_title()) . "' />";
-                } else {
-                    $html .= "<img class='item-img' src='" . esc_url(PART_IMAGES . 'no-image.jpg') . "' srcset='" . esc_url(PART_IMAGES . 'no-image.jpg') . "' fetchpriority='high' width='410' height='270' alt='" . esc_attr(get_the_title()) . "' />";
-                }
-
                 ob_start();
-                get_template_part('templates/view-comment');
-                $html .= ob_get_clean();
-                $html .= '</div>';
-
-                $html .= "<div class='item-title'><a class='item-link' href='" . esc_url($permalink) . "' title='" . esc_attr(get_the_title()) . "'><h3>" . esc_html(get_the_title()) . '</h3></a></div>';
-                $html .= '</div>';
-
+                get_template_part('templates/post-item', null, ['stt' => $stt]);
+                $html .= (string) ob_get_clean();
                 $stt++;
             }
 

@@ -1,21 +1,18 @@
 <?php
-require_once(DIR_MODEL . 'model-download-function.php');
-$model = new Model_Download_Function();
-// [03/11/2026] - Chỉ liệt kê và thống kê dữ liệu download file (kid = 1)
-// [2026-11-20] - @author: Kelvin - Giới hạn 500 bản ghi gần nhất trên giao diện HTML để đảm bảo tốc độ render
-$downloads = $model->get_all_downloads(1, 500);
-$data = $model->get_download_stats_by_title(1);
-$count = 1;
-$page = getParams('page');
+// [20/11/2026] - Chuẩn MVC: View chỉ nhận $downloads, $data, $page từ MemberDownloadReportController và escape tiêu đề cột
+$downloads = isset($downloads) && is_array($downloads) ? $downloads : [];
+$data      = isset($data) && is_array($data) ? $data : [];
+$count     = 1;
+$page      = isset($page) ? (string) $page : (string) getParams('page');
 ?>
 <div>
-    <h2><?php echo __('Download Statistics', 'dgw') ?></h2>
+    <h2><?php echo esc_html__('Download Statistics', 'dgw'); ?></h2>
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
-                    <th style="width: 300px;"><?php echo __('Resource Name', 'dgw') ?></th>
-                    <th style="width: 100px; text-align:center"><?php echo __('Download Count', 'dgw') ?></th>
+                    <th style="width: 300px;"><?php echo esc_html__('Resource Name', 'dgw'); ?></th>
+                    <th style="width: 100px; text-align:center"><?php echo esc_html__('Download Count', 'dgw'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -47,11 +44,11 @@ $page = getParams('page');
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
                     <th style="width:20px"></th>
-                    <th style="width: 100px;"><?php echo __('Full Name', 'dgw') ?></th>
-                    <th style="width: 200px;"><?php echo __('Company Name', 'dgw') ?></th>
-                    <th style="width: 200px;"><?php echo __('E-mail', 'dgw') ?></th>
-                    <th style="width: 250px;"><?php echo __('Resource Name', 'dgw') ?></th>
-                    <th style="width: 100px;"><?php echo __('Download Date', 'dgw') ?></th>
+                    <th style="width: 100px;"><?php echo esc_html__('Full Name', 'dgw'); ?></th>
+                    <th style="width: 200px;"><?php echo esc_html__('Company Name', 'dgw'); ?></th>
+                    <th style="width: 200px;"><?php echo esc_html__('E-mail', 'dgw'); ?></th>
+                    <th style="width: 250px;"><?php echo esc_html__('Resource Name', 'dgw'); ?></th>
+                    <th style="width: 100px;"><?php echo esc_html__('Download Date', 'dgw'); ?></th>
                 </tr>
             </thead>
 

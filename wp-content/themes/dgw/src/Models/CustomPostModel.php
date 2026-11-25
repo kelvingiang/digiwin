@@ -1,18 +1,21 @@
 <?php
 declare(strict_types=1);
 
-/**
- * [2026-10-05] - @author: Kelvin - Model: Xử lý truy vấn dữ liệu Custom Post Types theo chuẩn MVC
- * [2026-11-05] - Hỗ trợ Translation Group: Tự động gom các term trong cùng nhóm dịch để lấy bài viết chuẩn theo ngôn ngữ hiện hành
- * [2026-11-19] - @author: Kelvin - Tối ưu hiệu năng WP_Query (no_found_rows, update_post_term_cache, giới hạn unbounded query), gom helper dùng chung và memoization category group
- * [2026-11-20] - @author: Kelvin - Chuẩn hóa hằng số meta key, loại bỏ trùng lặp get_posts_at_side / get_posts_at_side_cate / get_posts_show_sidebar
- */
+namespace DGW\Models;
+
+use WP_Query;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-class Model_Custom_Post
+/**
+ * [2026-10-05] - @author: Kelvin - Model: Xử lý truy vấn dữ liệu Custom Post Types theo chuẩn MVC
+ * [2026-11-05] - Hỗ trợ Translation Group: Tự động gom các term trong cùng nhóm dịch để lấy bài viết chuẩn theo ngôn ngữ hiện hành
+ * [2026-11-19] - @author: Kelvin - Tối ưu hiệu năng WP_Query (no_found_rows, update_post_term_cache, giới hạn unbounded query), gom helper dùng chung và memoization category group
+ * [2026-11-20] - @author: Kelvin - Chuẩn hóa hằng số meta key, loại bỏ trùng lặp và chuyển từ model/ sang chuẩn PSR-4 src/Models/
+ */
+class CustomPostModel
 {
     private const MAX_SAFE_LIMIT = 50;
     private const META_LANG      = '_metabox_langguage';
@@ -37,14 +40,17 @@ class Model_Custom_Post
 
     /**
      * [2026-11-19] - @author: Kelvin - Dựng cấu hình WP_Query dùng chung đã bật các cờ tối ưu TTFB
+     * [20/11/2026] - Hỗ trợ truyền ngôn ngữ $lang tùy chọn cho các tác vụ AJAX
      */
-    private static function build_base_args(string $postType, int $postCount, array $extraMetaQuery = [], array $extraArgs = []): array
+    private static function build_base_args(string $postType, int $postCount, array $extraMetaQuery = [], array $extraArgs = [], ?string $lang = null): array
     {
-        $lang      = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
-        $metaQuery = array_merge([
+        $resolvedLang = ($lang !== null && $lang !== '')
+            ? $lang
+            : (function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn');
+        $metaQuery    = array_merge([
             [
                 'key'     => self::META_LANG,
-                'value'   => $lang,
+                'value'   => $resolvedLang,
                 'compare' => '=',
             ],
         ], $extraMetaQuery);
@@ -245,5 +251,67 @@ class Model_Custom_Post
         ]);
 
         return new WP_Query($args);
+    }
+
+    /**
+     * [20/11/2026] - Truy vấn danh sách Hero Slider trang chủ chuẩn tối ưu TTFB
+     */
+    public static function get_sliders(int $limit = 10): WP_Query
+    {
+        return new WP_Query(self::build_base_args('slider', $limit));
+    }
+
+    /**
+     * [20/11/2026] - Truy vấn AJAX Load More theo post type, category (Translation Group) và ngôn ngữ
+     *
+     * @param mixed $cateId
+     */
+    public static function get_load_more_posts(string $postType, $cateId, string $taxonomy, int $count, int $offset, ?string $lang = null): WP_Query
+    {
+        $extraArgs = [
+            'post_status' => 'publish',
+            'offset'      => max(0, $offset),
+        ];
+
+        if (!empty($cateId) && $taxonomy !== '') {
+            [$field, $terms]        = self::resolve_category_terms($cateId, $taxonomy);
+            $extraArgs['tax_query'] = [
+                [
+                    'taxonomy' => $taxonomy,
+                    'field'    => $field,
+                    'terms'    => $terms,
+                ],
+            ];
+        }
+
+        return new WP_Query(self::build_base_args($postType, $count, [], $extraArgs, $lang));
+    }
+
+    /**
+     * [20/11/2026] - Truy vấn AJAX Load More theo category_name
+     */
+    public static function get_load_more_by_category_name(string $postType, string $categoryName, int $count, int $offset): WP_Query
+    {
+        $extraArgs = [
+            'post_status' => 'publish',
+            'offset'      => max(0, $offset),
+        ];
+
+        if ($categoryName !== '') {
+            $extraArgs['category_name'] = $categoryName;
+        }
+
+        return new WP_Query(self::build_base_args($postType, $count, [], $extraArgs));
+    }
+
+    /**
+     * [20/11/2026] - Truy vấn AJAX Load More bài viết trong cùng nhóm
+     */
+    public static function get_load_more_in_group(string $postType, int $count, int $offset): WP_Query
+    {
+        return new WP_Query(self::build_base_args($postType, $count, [], [
+            'post_status' => 'publish',
+            'offset'      => max(0, $offset),
+        ]));
     }
 }

@@ -10,6 +10,7 @@ use DGW\Ajax\LanguageAjax;
 use DGW\Ajax\LoadMoreAjax;
 use DGW\Ajax\MemberAuthAjax;
 use DGW\Ajax\PostsAjax;
+use DGW\Controllers\PostTypeRegistry;
 use DGW\Core\CommentHandler;
 use DGW\Core\Mailer;
 use DGW\Core\MemberDownload;
@@ -20,7 +21,9 @@ use DGW\Helpers\LanguageHelper;
 use DGW\Helpers\MediaUploadHelper;
 use DGW\Helpers\SeoHelper;
 use DGW\Helpers\ThemeTweaks;
+use DGW\Metaboxes\MetaboxRegistry;
 use DGW\Shortcodes\MemberShortcode;
+use DGW\Taxonomies\TaxonomyRegistry;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -43,7 +46,8 @@ class Bootstrap
         MediaUploadHelper::register();
         ThemeTweaks::register();
 
-        new RewriteRules();
+        // [20/11/2026] - Đồng bộ gọi qua static ::register()
+        RewriteRules::register();
         Mailer::register();
         MemberDownload::register();
         CommentHandler::register();
@@ -63,18 +67,13 @@ class Bootstrap
             LoadMoreAjax::register();
         }
 
-        // [18/11/2026] - Nạp model-download-function.php trước khi khởi tạo Controller_Main (trước đây được nạp qua code-member-download.php)
-        require_once DIR_MODEL . 'model-download-function.php';
-
-        require_once DIR_CONTROLLER . 'controller.php';
-        new \Controller_Main();
+        // [20/11/2026] - Chuyển toàn bộ bộ điều phối CPT, Admin Controller, Metabox và Taxonomy vào src/ chuẩn PSR-4
+        PostTypeRegistry::register();
 
         if (is_admin()) {
-            require_once DIR_METABOX . 'metabox.php';
-            new \Metabox_Main();
+            MetaboxRegistry::register();
         }
 
-        require_once DIR_TAXONOMY . 'taxonomy.php';
-        new \Taxonomy_Main();
+        TaxonomyRegistry::register();
     }
 }

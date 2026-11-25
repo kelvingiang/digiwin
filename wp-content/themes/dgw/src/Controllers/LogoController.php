@@ -5,6 +5,8 @@ namespace DGW\Controllers;
 
 use DGW\Core\UploadHandler;
 use DGW\Helpers\RequestHelper;
+use DGW\Models\LogoListModel;
+use DGW\Models\LogoModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +17,7 @@ if (!defined('ABSPATH')) {
  */
 class LogoController extends BaseAdminController
 {
-    private ?\Model_Logo_Function $model = null;
+    private ?LogoModel $model = null;
 
     /**
      * [2026-11-20] - @author: Kelvin - Đăng ký menu Customer Trademark trong WP-Admin
@@ -71,17 +73,29 @@ class LogoController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Render form thêm/sửa hoặc bảng danh sách logo
+     * [2026-11-20] - @author: Kelvin - Render form thêm/sửa hoặc bảng danh sách logo (chuẩn MVC: lấy dữ liệu tại Controller)
      */
     public function renderPage(): void
     {
         $action = (string) getParams('action');
         if ($action === 'add' || $action === 'edit') {
-            require_once DIR_VIEW . 'form-logo.php';
+            $paramId = absint(getParams('id'));
+            $data    = $paramId > 0 ? ($this->getModel()->getItem($paramId) ?: []) : [];
+
+            $this->renderView('form-logo.php', [
+                'data' => is_array($data) ? $data : [],
+            ]);
             return;
         }
 
-        require_once DIR_VIEW . 'view-logo.php';
+        $dataList = new LogoListModel();
+        $dataList->prepare_items();
+
+        $this->renderView('view-logo.php', [
+            'dataList' => $dataList,
+            'page'     => (string) getParams('page'),
+            'msgCode'  => (int) getParams('msg'),
+        ]);
     }
 
     /**
@@ -120,13 +134,12 @@ class LogoController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Lazy-load Model_Logo_Function
+     * [2026-11-20] - @author: Kelvin - Lazy-load LogoModel (PSR-4)
      */
-    private function getModel(): \Model_Logo_Function
+    private function getModel(): LogoModel
     {
         if ($this->model === null) {
-            require_once DIR_MODEL . 'model-logo-function.php';
-            $this->model = new \Model_Logo_Function();
+            $this->model = new LogoModel();
         }
 
         return $this->model;

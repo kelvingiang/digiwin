@@ -90,6 +90,6 @@ class CompanyInformationController extends BaseAdminController
      */
     public function renderPage(): void
     {
-        require_once DIR_VIEW . 'view-information.php';
+        $this->renderView('view-information.php');
     }
 }

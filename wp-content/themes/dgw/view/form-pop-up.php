@@ -8,41 +8,20 @@
  *              khởi tạo biến an toàn và tối ưu JS Preview ảnh.
  */
 
-require_once(DIR_MODEL . 'model-popup-function.php');
+// [20/11/2026] - Chuẩn MVC: View chỉ nhận biến $data từ PopupController, không khởi tạo Model trực tiếp
+$data = isset($data) && is_array($data) ? $data : [];
 
-// [2026-10-07] Khởi tạo các biến mặc định tránh lỗi PHP Warning/Notice Undefined Variable
-$id             = '';
-$title          = '';
-$link_vn        = '';
-$link_cn        = '';
-$id_cn          = '';
-$id_vn          = '';
-$img_vn         = '';
-$img_cn         = '';
-$img_mobile_cn  = '';
-$img_mobile_vn  = '';
-$target         = 0;
-
-// [2026-10-07] Lấy dữ liệu item khi ở chế độ edit
-$param_id = getParams('id');
-if (!empty($param_id)) {
-    $model = new Model_Popup_Function();
-    $data  = $model->getItem(absint($param_id));
-
-    if (!empty($data)) {
-        $id             = $data['ID'] ?? '';
-        $title          = $data['title'] ?? '';
-        $link_vn        = $data['link_vn'] ?? '';
-        $link_cn        = $data['link_cn'] ?? '';
-        $id_cn          = $data['id_cn'] ?? '';
-        $id_vn          = $data['id_vn'] ?? '';
-        $img_vn         = $data['img_vn'] ?? '';
-        $img_cn         = $data['img_cn'] ?? '';
-        $img_mobile_cn  = $data['img_mobile_cn'] ?? '';
-        $img_mobile_vn  = $data['img_mobile_vn'] ?? '';
-        $target         = isset($data['target']) ? (int) $data['target'] : 0;
-    }
-}
+$id            = $data['ID'] ?? '';
+$title         = $data['title'] ?? '';
+$link_vn       = $data['link_vn'] ?? '';
+$link_cn       = $data['link_cn'] ?? '';
+$id_cn         = $data['id_cn'] ?? '';
+$id_vn         = $data['id_vn'] ?? '';
+$img_vn        = $data['img_vn'] ?? '';
+$img_cn        = $data['img_cn'] ?? '';
+$img_mobile_cn = $data['img_mobile_cn'] ?? '';
+$img_mobile_vn = $data['img_mobile_vn'] ?? '';
+$target        = isset($data['target']) ? (int) $data['target'] : 0;
 
 // [2026-10-07] Xử lý hiển thị thông báo lỗi từ URL an toàn, chống XSS
 $param_error = getParams('e');

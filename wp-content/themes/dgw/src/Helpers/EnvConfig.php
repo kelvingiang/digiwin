@@ -14,29 +14,15 @@ class EnvConfig
 {
     /**
      * [18/11/2026] - Định nghĩa hằng số đường dẫn/URL theme và cấu hình SMTP mặc định
+     * [20/11/2026] - Loại bỏ các hằng DIR_* trỏ tới thư mục legacy đã xóa và sửa lỗi double slash ở PART_ICON
      */
     public static function init(): void
     {
         if (!defined('TIME_OUT_CLEAR')) {
             define('TIME_OUT_CLEAR', 1 * 60 * 30);
         }
-        if (!defined('DIR_CONTROLLER')) {
-            define('DIR_CONTROLLER', THEME_URL . DS . 'controller' . DS);
-        }
-        if (!defined('DIR_MODEL')) {
-            define('DIR_MODEL', THEME_URL . DS . 'model' . DS);
-        }
         if (!defined('DIR_VIEW')) {
             define('DIR_VIEW', THEME_URL . DS . 'view' . DS);
-        }
-        if (!defined('DIR_CLASS')) {
-            define('DIR_CLASS', THEME_URL . DS . 'class' . DS);
-        }
-        if (!defined('DIR_TAXONOMY')) {
-            define('DIR_TAXONOMY', THEME_URL . DS . 'taxonomy' . DS);
-        }
-        if (!defined('DIR_METABOX')) {
-            define('DIR_METABOX', THEME_URL . DS . 'metabox' . DS);
         }
         if (!defined('DIR_IMAGES')) {
             define('DIR_IMAGES', THEME_URL . DS . 'images' . DS);
@@ -44,14 +30,8 @@ class EnvConfig
         if (!defined('DIR_ICON')) {
             define('DIR_ICON', DIR_IMAGES . 'icon' . DS);
         }
-        if (!defined('DIR_COMPONENT')) {
-            define('DIR_COMPONENT', THEME_URL . DS . 'component' . DS);
-        }
         if (!defined('DIR_FILE')) {
             define('DIR_FILE', THEME_URL . DS . 'file' . DS);
-        }
-        if (!defined('DIR_SHORTCODE')) {
-            define('DIR_SHORTCODE', THEME_URL . DS . 'shortcode' . DS);
         }
         if (!defined('DIR_LANGUAGES')) {
             define('DIR_LANGUAGES', THEME_URL . DS . 'languages' . DS);
@@ -61,7 +41,7 @@ class EnvConfig
             define('PART_IMAGES', THEME_PART . '/images/');
         }
         if (!defined('PART_ICON')) {
-            define('PART_ICON', PART_IMAGES . '/icons/');
+            define('PART_ICON', PART_IMAGES . 'icons/');
         }
         if (!defined('PART_FILE')) {
             define('PART_FILE', THEME_PART . '/file/');

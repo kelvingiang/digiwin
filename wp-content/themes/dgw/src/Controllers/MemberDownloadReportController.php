@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DGW\Controllers;
 
+use DGW\Models\MemberDownloadModel;
 use DGW\Services\ExcelExportService;
 
 if (!defined('ABSPATH')) {
@@ -42,8 +43,7 @@ class MemberDownloadReportController extends BaseAdminController
 
         $this->verifyNonceAction('dgw_export_download_excel');
 
-        require_once DIR_MODEL . 'model-download-function.php';
-        $model     = new \Model_Download_Function();
+        $model     = new MemberDownloadModel();
         $downloads = $model->get_all_downloads(1);
 
         if (empty($downloads)) {
@@ -74,10 +74,18 @@ class MemberDownloadReportController extends BaseAdminController
     }
 
     /**
-     * [2026-11-20] - @author: Kelvin - Render giao diện thống kê lượt tải tài liệu
+     * [2026-11-20] - @author: Kelvin - Render giao diện thống kê lượt tải tài liệu (chuẩn MVC: lấy dữ liệu tại Controller)
      */
     public function renderPage(): void
     {
-        require_once DIR_VIEW . 'view-member-download.php';
+        $model     = new MemberDownloadModel();
+        $downloads = $model->get_all_downloads(1, 500);
+        $data      = $model->get_download_stats_by_title(1);
+
+        $this->renderView('view-member-download.php', [
+            'downloads' => is_array($downloads) ? $downloads : [],
+            'data'      => is_array($data) ? $data : [],
+            'page'      => (string) getParams('page'),
+        ]);
     }
 }

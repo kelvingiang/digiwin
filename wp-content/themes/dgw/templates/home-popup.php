@@ -11,60 +11,21 @@
  * 6. Bảo mật: Escape toàn bộ dữ liệu đầu ra với esc_url(), esc_attr() tránh XSS.
  */
 
-require_once DIR_MODEL . 'model-popup-function.php';
-$model = new Model_Popup_Function();
-$data  = $model->getActive();
+// [20/11/2026] - Chuẩn MVC: View chỉ nhận $popup đã xử lý từ PostViewHelper/PopupModel, không truy vấn DB hay đọc file ảnh trực tiếp
+$popup = isset($args['popup']) && is_array($args['popup'])
+    ? $args['popup']
+    : \DGW\Models\PopupModel::getActiveForDisplay(dgw_get_lang());
 
-if (!empty($data)) :
-    $lang = dgw_get_lang();
-
-    // [2026-10-08] - Sanitize & gán dữ liệu hiển thị theo ngôn ngữ hiện tại
-    $popup_id     = !empty($data['id_' . $lang]) ? absint($data['id_' . $lang]) : 0;
-    $popup_link   = !empty($data['link_' . $lang]) ? esc_url($data['link_' . $lang]) : '#';
-    $popup_target = (!empty($data['target']) && (int)$data['target'] === 1) ? '_blank' : '_self';
-    $popup_title  = !empty($data['title']) ? esc_attr($data['title']) : 'Digiwin Software Announcement';
-
-    // Đường dẫn hình ảnh cho Desktop và Mobile
-    $img_name_pc = !empty($data['img_' . $lang]) ? $data['img_' . $lang] : '';
-    $img_name_mb = !empty($data['img_mobile_' . $lang]) ? $data['img_mobile_' . $lang] : '';
-
-    $img_url_pc  = $img_name_pc ? esc_url(PART_IMAGES . 'pop-up/' . $img_name_pc) : '';
-    $img_url_mb  = $img_name_mb ? esc_url(PART_IMAGES . 'pop-up/' . $img_name_mb) : '';
-
-    // [2026-10-08] - Tối ưu TTFB: Cache kích thước ảnh bằng Transient API (24 giờ) để tránh đọc ổ đĩa lặp lại
-    $cache_key = 'dgw_popup_dim_' . md5($img_name_pc . $img_name_mb);
-    $img_sizes = get_transient($cache_key);
-
-    if (false === $img_sizes) {
-        $img_sizes = ['pc' => null, 'mb' => null];
-
-        // [2026-11-20] - @author: Kelvin - Dùng trực tiếp DIR_IMAGES + basename() thay cho $_SERVER['DOCUMENT_ROOT'] tránh lệch path
-        if ($img_name_pc) {
-            $img_path_pc = DIR_IMAGES . 'pop-up' . DS . basename((string) $img_name_pc);
-            if (is_file($img_path_pc)) {
-                $size_pc = @getimagesize($img_path_pc);
-                if ($size_pc) {
-                    $img_sizes['pc'] = ['w' => $size_pc[0], 'h' => $size_pc[1]];
-                }
-            }
-        }
-
-        // Lấy kích thước ảnh Mobile
-        if ($img_name_mb) {
-            $img_path_mb = DIR_IMAGES . 'pop-up' . DS . basename((string) $img_name_mb);
-            if (is_file($img_path_mb)) {
-                $size_mb = @getimagesize($img_path_mb);
-                if ($size_mb) {
-                    $img_sizes['mb'] = ['w' => $size_mb[0], 'h' => $size_mb[1]];
-                }
-            }
-        }
-
-        set_transient($cache_key, $img_sizes, DAY_IN_SECONDS);
-    }
-
-    $size_pc = $img_sizes['pc'];
-    $size_mb = $img_sizes['mb'];
+if (!empty($popup)) :
+    $popup_id     = (int) ($popup['popup_id'] ?? 0);
+    $popup_link   = esc_url((string) ($popup['popup_link'] ?? '#'));
+    $popup_target = (string) ($popup['popup_target'] ?? '_self');
+    $popup_title  = esc_attr((string) ($popup['popup_title'] ?? 'Digiwin Software Announcement'));
+    $raw_target   = (string) ($popup['raw_target'] ?? '');
+    $img_url_pc   = !empty($popup['img_url_pc']) ? esc_url((string) $popup['img_url_pc']) : '';
+    $img_url_mb   = !empty($popup['img_url_mb']) ? esc_url((string) $popup['img_url_mb']) : '';
+    $size_pc      = $popup['size_pc'] ?? null;
+    $size_mb      = $popup['size_mb'] ?? null;
 ?>
     <!-- [2026-10-08] - Khối Popup với Semantic Dialog và thuộc tính Accessibility (A11y) -->
     <div class="dgw-popup" 
@@ -86,18 +47,18 @@ if (!empty($data)) :
                href="<?php echo $popup_link; ?>"
                target="<?php echo esc_attr($popup_target); ?>"
                <?php if ($popup_target === '_blank') : ?>rel="noopener noreferrer"<?php endif; ?>
-               data-id="<?php echo esc_attr($popup_id); ?>"
+               data-id="<?php echo esc_attr((string) $popup_id); ?>"
                data-link="<?php echo $popup_link; ?>"
-               data-post="<?php echo esc_attr($popup_id); ?>"
-               data-target="<?php echo esc_attr($data['target']); ?>">
+               data-post="<?php echo esc_attr((string) $popup_id); ?>"
+               data-target="<?php echo esc_attr($raw_target); ?>">
 
                 <picture>
                     <?php if (!empty($size_pc) && !empty($img_url_pc)): ?>
                         <!-- [2026-10-08] - Media query cho màn hình máy tính kèm kích thước chống CLS -->
                         <source media="(min-width: 768px)"
                                 srcset="<?php echo $img_url_pc; ?>"
-                                width="<?php echo esc_attr($size_pc['w']); ?>"
-                                height="<?php echo esc_attr($size_pc['h']); ?>">
+                                width="<?php echo esc_attr((string) $size_pc['w']); ?>"
+                                height="<?php echo esc_attr((string) $size_pc['h']); ?>">
                     <?php endif; ?>
 
                     <!-- [2026-10-08] - Tối ưu LCP/CLS: Thẻ <picture> tự đổi source theo breakpoint, img dùng chung layout -->
@@ -105,8 +66,8 @@ if (!empty($data)) :
                          alt="<?php echo $popup_title; ?>"
                          src="<?php echo $img_url_mb ?: $img_url_pc; ?>"
                          <?php if (!empty($size_mb)): ?>
-                             width="<?php echo esc_attr($size_mb['w']); ?>"
-                             height="<?php echo esc_attr($size_mb['h']); ?>"
+                             width="<?php echo esc_attr((string) $size_mb['w']); ?>"
+                             height="<?php echo esc_attr((string) $size_mb['h']); ?>"
                          <?php endif; ?>>
                 </picture>
             </a>

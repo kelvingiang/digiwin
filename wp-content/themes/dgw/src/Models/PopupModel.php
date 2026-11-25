@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use DGW\Models\BaseCustomTableModel;
+namespace DGW\Models;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -9,8 +9,9 @@ if (!defined('ABSPATH')) {
 
 /**
  * [2026-11-19] - @author: Kelvin - Model thao tác bảng pop-up (kế thừa BaseCustomTableModel, vá Path Traversal, đồng bộ xóa ảnh mobile và format SQL)
+ * [2026-11-20] - @author: Kelvin - Quy hoạch về chuẩn PSR-4 src/Models/PopupModel
  */
-class Model_Popup_Function extends BaseCustomTableModel
+class PopupModel extends BaseCustomTableModel
 {
     private string $table;
 
@@ -202,5 +203,71 @@ class Model_Popup_Function extends BaseCustomTableModel
         if (is_file($filePath)) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * [20/11/2026] - Lấy dữ liệu Pop-up đang kích hoạt kèm cache kích thước ảnh Transient 24 giờ (tách từ templates/home-popup.php)
+     *
+     * @return array<string, mixed>|null
+     */
+    public static function getActiveForDisplay(string $lang): ?array
+    {
+        $data = (new self())->getActive();
+        if (empty($data) || !is_array($data)) {
+            return null;
+        }
+
+        $popupId     = !empty($data['id_' . $lang]) ? absint($data['id_' . $lang]) : 0;
+        $popupLink   = !empty($data['link_' . $lang]) ? (string) $data['link_' . $lang] : '#';
+        $popupTarget = (!empty($data['target']) && (int) $data['target'] === 1) ? '_blank' : '_self';
+        $popupTitle  = !empty($data['title']) ? (string) $data['title'] : 'Digiwin Software Announcement';
+        $rawTarget   = (string) ($data['target'] ?? '');
+
+        $imgNamePc = !empty($data['img_' . $lang]) ? (string) $data['img_' . $lang] : '';
+        $imgNameMb = !empty($data['img_mobile_' . $lang]) ? (string) $data['img_mobile_' . $lang] : '';
+
+        $imgUrlPc = $imgNamePc !== '' ? PART_IMAGES . 'pop-up/' . $imgNamePc : '';
+        $imgUrlMb = $imgNameMb !== '' ? PART_IMAGES . 'pop-up/' . $imgNameMb : '';
+
+        $cacheKey = 'dgw_popup_dim_' . md5($imgNamePc . $imgNameMb);
+        $imgSizes = get_transient($cacheKey);
+
+        if (false === $imgSizes || !is_array($imgSizes)) {
+            $imgSizes = ['pc' => null, 'mb' => null];
+
+            if ($imgNamePc !== '') {
+                $imgPathPc = DIR_IMAGES . 'pop-up' . DS . basename($imgNamePc);
+                if (is_file($imgPathPc)) {
+                    $sizePc = @getimagesize($imgPathPc);
+                    if ($sizePc) {
+                        $imgSizes['pc'] = ['w' => (int) $sizePc[0], 'h' => (int) $sizePc[1]];
+                    }
+                }
+            }
+
+            if ($imgNameMb !== '') {
+                $imgPathMb = DIR_IMAGES . 'pop-up' . DS . basename($imgNameMb);
+                if (is_file($imgPathMb)) {
+                    $sizeMb = @getimagesize($imgPathMb);
+                    if ($sizeMb) {
+                        $imgSizes['mb'] = ['w' => (int) $sizeMb[0], 'h' => (int) $sizeMb[1]];
+                    }
+                }
+            }
+
+            set_transient($cacheKey, $imgSizes, DAY_IN_SECONDS);
+        }
+
+        return [
+            'popup_id'     => $popupId,
+            'popup_link'   => $popupLink,
+            'popup_target' => $popupTarget,
+            'popup_title'  => $popupTitle,
+            'raw_target'   => $rawTarget,
+            'img_url_pc'   => $imgUrlPc,
+            'img_url_mb'   => $imgUrlMb,
+            'size_pc'      => $imgSizes['pc'] ?? null,
+            'size_mb'      => $imgSizes['mb'] ?? null,
+        ];
     }
 }

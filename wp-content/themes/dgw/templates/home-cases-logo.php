@@ -10,52 +10,10 @@
  * 5. Layout Stability (CLS): Cung cấp đầy đủ width và height giúp trình duyệt dự trù không gian khung hình, ngăn hiện tượng nhảy bố cục.
  */
 
-// [2026-10-08] - Lấy dữ liệu logo qua Transient Cache để tối ưu thời gian phản hồi máy chủ (TTFB)
-$transient_key = 'dgw_home_cases_logos';
-$logo_list     = get_transient($transient_key);
-
-if (false === $logo_list) {
-    require_once DIR_MODEL . 'model-logo-function.php';
-    $model     = new Model_Logo_Function();
-    $raw_logos = $model->getAll(0);
-    $logo_list = [];
-
-    if (!empty($raw_logos) && is_array($raw_logos)) {
-        foreach ($raw_logos as $item) {
-            if (empty($item['img'])) {
-                continue;
-            }
-
-            $img_filename = $item['img'];
-            $image_path   = DIR_IMAGES . 'logo/' . $img_filename;
-            $img_url      = PART_IMAGES . 'logo/' . $img_filename;
-
-            // Kích thước mặc định
-            $width  = 225;
-            $height = 225;
-
-            // Đọc kích thước file một lần duy nhất lúc tạo cache
-            if (file_exists($image_path)) {
-                $image_info = @getimagesize($image_path);
-                if (!empty($image_info)) {
-                    $width  = (int) $image_info[0];
-                    $height = (int) $image_info[1];
-                }
-            }
-
-            $logo_list[] = [
-                'company' => !empty($item['company']) ? trim($item['company']) : 'Partner Client',
-                'img_url' => $img_url,
-                'link'    => !empty($item['link']) ? trim($item['link']) : '',
-                'width'   => $width,
-                'height'  => $height,
-            ];
-        }
-    }
-
-    // Cache kết quả trong 12 giờ
-    set_transient($transient_key, $logo_list, 12 * HOUR_IN_SECONDS);
-}
+// [20/11/2026] - Chuẩn MVC: View chỉ nhận $logo_list từ PostViewHelper/LogoModel, không khởi tạo Model trực tiếp
+$logo_list = isset($args['logo_list']) && is_array($args['logo_list'])
+    ? $args['logo_list']
+    : \DGW\Models\LogoModel::getCachedHomeLogos();
 
 if (!empty($logo_list)) :
 ?>

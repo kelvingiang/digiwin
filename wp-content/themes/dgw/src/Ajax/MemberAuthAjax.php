@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace DGW\Ajax;
 
 use DGW\Core\MemberDownload;
-use Model_Download_Function;
+use DGW\Models\MemberDownloadModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -40,16 +40,13 @@ class MemberAuthAjax
     }
 
     /**
-     * [18/11/2026] - Lấy instance duy nhất của Model_Download_Function
+     * [2026-11-20] - @author: Kelvin - Lấy instance duy nhất của MemberDownloadModel (PSR-4)
      */
-    public static function getModel(): Model_Download_Function
+    public static function getModel(): MemberDownloadModel
     {
         static $instance = null;
         if ($instance === null) {
-            if (!class_exists('Model_Download_Function')) {
-                require_once get_stylesheet_directory() . '/model/model-download-function.php';
-            }
-            $instance = new Model_Download_Function();
+            $instance = new MemberDownloadModel();
         }
         return $instance;
     }

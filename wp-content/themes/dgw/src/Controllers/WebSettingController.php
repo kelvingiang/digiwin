@@ -60,6 +60,6 @@ class WebSettingController extends BaseAdminController
      */
     public function renderPage(): void
     {
-        require_once DIR_VIEW . 'view-setting.php';
+        $this->renderView('view-setting.php');
     }
 }

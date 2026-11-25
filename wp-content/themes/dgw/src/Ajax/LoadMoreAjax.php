@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DGW\Ajax;
 
-use WP_Query;
+use DGW\Models\CustomPostModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -33,6 +33,7 @@ class LoadMoreAjax
 
     /**
      * [18/11/2026] - Load thêm bài viết theo category hỗ trợ Translation Group
+     * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
      */
     public static function handleBkLoadMore(): void
     {
@@ -45,55 +46,9 @@ class LoadMoreAjax
         if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             session_start();
         }
-        $lang = function_exists('dgw_get_lang') ? dgw_get_lang() : ($_SESSION['languages'] ?? 'vn');
+        $lang = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : (string) ($_SESSION['languages'] ?? 'vn');
 
-        $args = [
-            'post_type'      => $postType,
-            'posts_per_page' => $count,
-            'offset'         => $lastId,
-            'orderby'        => 'meta_value_num',
-            'order'          => 'DESC',
-            'meta_key'       => '_metabox_order',
-            'meta_query'     => [
-                [
-                    'key'     => '_metabox_langguage',
-                    'value'   => $lang,
-                    'compare' => '=',
-                ],
-            ],
-        ];
-
-        if (!empty($cateId) && !empty($cate)) {
-            $targetTerms = [$cateId];
-            $groupId     = get_term_meta($cateId, 'translation_group', true);
-            if (!empty($groupId)) {
-                $groupTerms = get_terms([
-                    'taxonomy'   => $cate,
-                    'fields'     => 'ids',
-                    'hide_empty' => false,
-                    'meta_query' => [
-                        [
-                            'key'     => 'translation_group',
-                            'value'   => $groupId,
-                            'compare' => '=',
-                        ],
-                    ],
-                ]);
-                if (!empty($groupTerms) && !is_wp_error($groupTerms)) {
-                    $targetTerms = $groupTerms;
-                }
-            }
-
-            $args['tax_query'] = [
-                [
-                    'taxonomy' => $cate,
-                    'field'    => 'term_id',
-                    'terms'    => $targetTerms,
-                ],
-            ];
-        }
-
-        $wpQuery = new WP_Query($args);
+        $wpQuery = CustomPostModel::get_load_more_posts($postType, $cateId, $cate, $count, $lastId, $lang);
         $html    = '';
 
         if ($wpQuery->have_posts()) {
@@ -125,6 +80,7 @@ class LoadMoreAjax
 
     /**
      * [18/11/2026] - Load thêm bài viết theo category_name
+     * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
      */
     public static function handleLoadMorePost(): void
     {
@@ -133,27 +89,7 @@ class LoadMoreAjax
         $count    = isset($_POST['count']) ? (int) $_POST['count'] : 10;
         $cate     = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
 
-        $args = [
-            'post_type'      => $postType,
-            'posts_per_page' => $count,
-            'offset'         => $lastId,
-            'orderby'        => 'meta_value_num',
-            'order'          => 'DESC',
-            'meta_key'       => '_metabox_order',
-            'meta_query'     => [
-                [
-                    'key'     => '_metabox_langguage',
-                    'value'   => dgw_get_lang(),
-                    'compare' => '=',
-                ],
-            ],
-        ];
-
-        if (!empty($cate)) {
-            $args['category_name'] = $cate;
-        }
-
-        $wpQuery = new WP_Query($args);
+        $wpQuery = CustomPostModel::get_load_more_by_category_name($postType, $cate, $count, $lastId);
         $html    = '';
 
         if ($wpQuery->have_posts()) {
@@ -185,6 +121,7 @@ class LoadMoreAjax
 
     /**
      * [18/11/2026] - Load thêm bài viết trong cùng nhóm loại trừ bài hiện tại
+     * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
      */
     public static function handleLoadMoreInGroup(): void
     {
@@ -192,23 +129,7 @@ class LoadMoreAjax
         $cate   = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : 'post';
         $slug   = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
 
-        $args = [
-            'post_type'      => $cate,
-            'posts_per_page' => 5,
-            'offset'         => $lastId + 1,
-            'orderby'        => 'meta_value_num',
-            'order'          => 'DESC',
-            'meta_key'       => '_metabox_order',
-            'meta_query'     => [
-                [
-                    'key'     => '_metabox_langguage',
-                    'value'   => dgw_get_lang(),
-                    'compare' => '=',
-                ],
-            ],
-        ];
-
-        $wpQuery = new WP_Query($args);
+        $wpQuery = CustomPostModel::get_load_more_in_group($cate, 5, $lastId + 1);
         $html    = '';
 
         if ($wpQuery->have_posts()) {

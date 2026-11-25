@@ -21,8 +21,8 @@ $error_message = '';
 $user_id       = 0;
 
 if ($email && $token) {
-    require_once get_template_directory() . '/model/model-download-function.php';
-    $model_download = new Model_Download_Function();
+    // [2026-11-20] - @author: Kelvin - Sử dụng MemberDownloadModel theo chuẩn PSR-4 autoload
+    $model_download = new \DGW\Models\MemberDownloadModel();
     $user           = $model_download->get_user_by_email($email);
 
     if ($user) {

@@ -39,6 +39,14 @@ final class RewriteRules
         ],
     ];
 
+    /**
+     * [20/11/2026] - Khởi tạo RewriteRules qua static method để đồng bộ chuẩn Bootstrap PSR-4 (giữ __construct cho legacy alias)
+     */
+    public static function register(): void
+    {
+        new self();
+    }
+
     public function __construct()
     {
         add_action('init', [$this, 'register_rewrite_rules'], 10);

@@ -1,24 +1,21 @@
 <?php
 /**
  * [03/11/2026] - View hiển thị thống kê số lần xem theo từng video và danh sách chi tiết thành viên đã xem video (kid = 2)
+ * [20/11/2026] - Chuẩn MVC: View chỉ nhận $views, $data, $page từ MemberViewReportController và escape tiêu đề cột
  */
-require_once(DIR_MODEL . 'model-download-function.php');
-$model = new Model_Download_Function();
-// Chỉ liệt kê và thống kê dữ liệu xem video YouTube (kid = 2)
-// [2026-11-20] - @author: Kelvin - Giới hạn 500 bản ghi gần nhất trên giao diện HTML để đảm bảo tốc độ render
-$views = $model->get_all_downloads(2, 500);
-$data  = $model->get_download_stats_by_title(2);
+$views = isset($views) && is_array($views) ? $views : [];
+$data  = isset($data) && is_array($data) ? $data : [];
 $count = 1;
-$page  = getParams('page');
+$page  = isset($page) ? (string) $page : (string) getParams('page');
 ?>
 <div>
-    <h2><?php echo __('Video View Statistics', 'dgw'); ?></h2>
+    <h2><?php echo esc_html__('Video View Statistics', 'dgw'); ?></h2>
     <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccd0d4; border-radius: 4px;">
         <table class="wp-list-table widefat fixed striped" style="margin: 0; border: none;">
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
-                    <th style="width: 300px;"><?php echo __('Post Title', 'dgw'); ?></th>
-                    <th style="width: 100px; text-align:center;"><?php echo __('View Count', 'dgw'); ?></th>
+                    <th style="width: 300px;"><?php echo esc_html__('Post Title', 'dgw'); ?></th>
+                    <th style="width: 100px; text-align:center;"><?php echo esc_html__('View Count', 'dgw'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -49,11 +46,11 @@ $page  = getParams('page');
             <thead style="position: sticky; top: 0; z-index: 10; background: #f1f1f1; box-shadow: 0 1px 0 rgba(0,0,0,.1);">
                 <tr>
                     <th style="width:20px"></th>
-                    <th style="width: 100px;"><?php echo __('Full Name', 'dgw'); ?></th>
-                    <th style="width: 200px;"><?php echo __('Company Name', 'dgw'); ?></th>
-                    <th style="width: 200px;"><?php echo __('E-mail', 'dgw'); ?></th>
-                    <th style="width: 250px;"><?php echo __('Post Title', 'dgw'); ?></th>
-                    <th style="width: 100px;"><?php echo __('Watch Date', 'dgw'); ?></th>
+                    <th style="width: 100px;"><?php echo esc_html__('Full Name', 'dgw'); ?></th>
+                    <th style="width: 200px;"><?php echo esc_html__('Company Name', 'dgw'); ?></th>
+                    <th style="width: 200px;"><?php echo esc_html__('E-mail', 'dgw'); ?></th>
+                    <th style="width: 250px;"><?php echo esc_html__('Post Title', 'dgw'); ?></th>
+                    <th style="width: 100px;"><?php echo esc_html__('Watch Date', 'dgw'); ?></th>
                 </tr>
             </thead>
             <tbody>

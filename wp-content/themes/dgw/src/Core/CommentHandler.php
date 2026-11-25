@@ -23,34 +23,15 @@ class CommentHandler
 
     /**
      * [18/11/2026] - Render một bình luận trong danh sách bình luận
+     * [20/11/2026] - Tách HTML sang View templates/comment-item.php chuẩn MVC
      */
     public static function renderComment($comment, $args, $depth): void
     {
         $GLOBALS['comment'] = $comment;
-        ?>
-        <li <?php comment_class(); ?> id="li-comment-<?php comment_ID(); ?>">
-            <div id="comment-<?php comment_ID(); ?>" class="comment-body">
-                <div class="comment-author"><i class="fa-solid fa-user"></i> <?php comment_author(); ?></div>
-                <div class="comment-date">
-                    <?php echo esc_html(get_comment_date('d/m/Y')); ?>
-                </div>
-                <div class="comment-text">
-                    <?php comment_text(); ?>
-                </div>
-
-                <div class="comment-reply">
-                    <?php
-                    comment_reply_link(array_merge((array) $args, [
-                        'reply_text' => __('Reply', 'dgw'),
-                        'depth'      => $depth,
-                        'max_depth'  => $args['max_depth'] ?? 5,
-                        'class'      => 'comment-reply-link reply',
-                    ]));
-                    ?>
-                </div>
-            </div>
-        </li>
-        <?php
+        get_template_part('templates/comment-item', null, [
+            'comment_args' => (array) $args,
+            'depth'        => (int) $depth,
+        ]);
     }
 
     /**
