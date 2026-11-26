@@ -3,90 +3,19 @@ declare(strict_types=1);
 
 /**
  * [2026-11-20] - @author: Kelvin - Tối ưu Home News: Gom 5 truy vấn tab vào Transient Cache theo ngôn ngữ (giảm TTFB), bổ sung thẻ <a> chuẩn SEO và Late Escaping
+ * [2026-11-26] - @author: Kelvin - Tách truy vấn & cấu hình tab đa ngôn ngữ sang PostViewHelper/CustomPostModel chuẩn MVC; View chỉ nhận dữ liệu và render
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-$currentLang  = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
-$transientKey = 'dgw_home_news_tabs_' . $currentLang;
-$newsTabsData = get_transient($transientKey);
+$homeNewsData = (isset($args['tab_configs'], $args['tabs_data']) && is_array($args['tab_configs']) && is_array($args['tabs_data']))
+    ? $args
+    : \DGW\Helpers\PostViewHelper::prepareHomeNewsData();
 
-$tabConfigs = [
-    'event' => [
-        'title_class'   => 'title-event',
-        'content_class' => 'content-event',
-        'label'         => 'Latest Event',
-        'more_url'      => home_url('activities'),
-        'query_type'    => 'side',
-        'post_type'     => 'active',
-        'cate_slug'     => '',
-    ],
-    'news' => [
-        'title_class'   => 'title-news',
-        'content_class' => 'content-news',
-        'label'         => 'News Center',
-        'more_url'      => home_url('resource/cate/69/tag/'),
-        'query_type'    => 'cate',
-        'post_type'     => 'resources',
-        'cate_slug'     => 'news',
-    ],
-    'article' => [
-        'title_class'   => 'title-article',
-        'content_class' => 'content-article',
-        'label'         => 'Column Article',
-        'more_url'      => home_url('resource/cate/105/tag/'),
-        'query_type'    => 'cate',
-        'post_type'     => 'resources',
-        'cate_slug'     => 'digi_know',
-    ],
-    'cases' => [
-        'title_class'   => 'title-cases',
-        'content_class' => 'content-cases',
-        'label'         => 'Classic Case',
-        'more_url'      => home_url('cases'),
-        'query_type'    => 'side',
-        'post_type'     => 'casestudies',
-        'cate_slug'     => '',
-    ],
-    'download' => [
-        'title_class'   => 'title-download',
-        'content_class' => 'content-download',
-        'label'         => 'Information Request',
-        'more_url'      => home_url('resource/cate/104/tag/'),
-        'query_type'    => 'cate',
-        'post_type'     => 'resources',
-        'cate_slug'     => 'download',
-    ],
-];
-
-if (!is_array($newsTabsData)) {
-    $newsTabsData = [];
-    foreach ($tabConfigs as $tabKey => $cfg) {
-        $tabQuery = ($cfg['query_type'] === 'cate')
-            ? getCustomPostCateAtHome($cfg['post_type'], $cfg['cate_slug'], 5)
-            : getCustomPostAtSide($cfg['post_type'], 5);
-
-        $items = [];
-        if ($tabQuery && $tabQuery->have_posts()) {
-            while ($tabQuery->have_posts()) {
-                $tabQuery->the_post();
-                $pid     = (int) get_the_ID();
-                $items[] = [
-                    'id'        => $pid,
-                    'title'     => (string) get_the_title($pid),
-                    'permalink' => (string) get_the_permalink($pid),
-                    'date'      => (string) get_the_date('Y-m-d', $pid),
-                ];
-            }
-            wp_reset_postdata();
-        }
-        $newsTabsData[$tabKey] = $items;
-    }
-
-    set_transient($transientKey, $newsTabsData, 30 * MINUTE_IN_SECONDS);
-}
+$tabConfigs   = $homeNewsData['tab_configs'];
+$newsTabsData = $homeNewsData['tabs_data'];
 ?>
 <h2 class="h2-home-title"><?php echo esc_html__('Latest News', 'dgw'); ?></h2>
 <div id="news-home">

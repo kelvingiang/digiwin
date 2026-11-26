@@ -9,9 +9,30 @@ if (!defined('ABSPATH')) {
 
 /**
  * [18/11/2026] - Quản lý nạp CSS/JS cho Frontend và WP-Admin (chuyển từ helper/style.php)
+ * [25/11/2026] - Tối ưu hiệu suất: đưa owl.carousel.min.js xuống footer và chỉ nạp trên trang có slider; chuẩn hóa capability manage_options và filemtime cache busting cho admin assets
  */
 class AssetsManager
 {
+    /**
+     * [25/11/2026] - Lấy phiên bản asset dựa theo filemtime() để cache-busting tự động
+     */
+    private static function getAssetVersion(string $relativePath, string $fallback = '1.0.0'): string
+    {
+        $fullPath = get_template_directory() . $relativePath;
+        return file_exists($fullPath) ? (string) filemtime($fullPath) : $fallback;
+    }
+
+    /**
+     * [25/11/2026] - Kiểm tra trang hiện tại có sử dụng Owl Carousel slider hay không
+     */
+    private static function shouldLoadSliderAssets(): bool
+    {
+        return is_front_page()
+            || is_home()
+            || is_page('solution')
+            || is_page_template('page/solution.php');
+    }
+
     /**
      * [18/11/2026] - Đăng ký hook nạp tài nguyên Frontend và Admin
      */
@@ -23,6 +44,7 @@ class AssetsManager
 
     /**
      * [18/11/2026] - Nạp CSS/JS cho Frontend với filemtime cache busting
+     * [25/11/2026] - Đăng ký sẵn Owl Carousel ở footer ($in_footer = true) và chỉ enqueue trên trang có slider
      */
     public static function enqueueFrontend(): void
     {
@@ -30,46 +52,40 @@ class AssetsManager
             return;
         }
 
-        if (!is_page('member')) {
-            $owlJsPath = get_template_directory() . '/js/slider-owl/owl.carousel.min.js';
-            $owlJsVer  = file_exists($owlJsPath) ? (string) filemtime($owlJsPath) : '2.3.4';
-            wp_enqueue_style('owl-css', get_template_directory_uri() . '/js/slider-owl/css/owl.carousel.min.css', [], '2.3.4', 'all');
-            wp_enqueue_style('owl.theme.default-css', get_template_directory_uri() . '/js/slider-owl/css/owl.theme.default.min.css', [], '2.3.4', 'all');
-            wp_enqueue_script('owl.carousel-js', get_template_directory_uri() . '/js/slider-owl/owl.carousel.min.js', ['jquery'], $owlJsVer, false);
+        $themeUri = get_template_directory_uri();
+
+        wp_register_style('owl-css', $themeUri . '/js/slider-owl/css/owl.carousel.min.css', [], self::getAssetVersion('/js/slider-owl/css/owl.carousel.min.css', '2.3.4'), 'all');
+        wp_register_style('owl.theme.default-css', $themeUri . '/js/slider-owl/css/owl.theme.default.min.css', ['owl-css'], self::getAssetVersion('/js/slider-owl/css/owl.theme.default.min.css', '2.3.4'), 'all');
+        wp_register_script('owl.carousel-js', $themeUri . '/js/slider-owl/owl.carousel.min.js', ['jquery'], self::getAssetVersion('/js/slider-owl/owl.carousel.min.js', '2.3.4'), true);
+
+        if (self::shouldLoadSliderAssets()) {
+            wp_enqueue_style('owl-css');
+            wp_enqueue_style('owl.theme.default-css');
+            wp_enqueue_script('owl.carousel-js');
         }
 
-        $cssFilePath = get_template_directory() . '/css/style/main.min.css';
-        $cssVersion  = file_exists($cssFilePath) ? (string) filemtime($cssFilePath) : '1.0';
-        wp_enqueue_style('my-main-css', get_template_directory_uri() . '/css/style/main.min.css', [], $cssVersion, 'all');
-
-        $customJsPath  = get_template_directory() . '/js/custom.min.js';
-        $customVersion = file_exists($customJsPath) ? (string) filemtime($customJsPath) : '1.0.0';
-        wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.min.js', ['jquery'], $customVersion, true);
-
-        $footerJsPath  = get_template_directory() . '/js/footer.min.js';
-        $footerVersion = file_exists($footerJsPath) ? (string) filemtime($footerJsPath) : '1.0';
-        wp_enqueue_script('my-footer-js', get_template_directory_uri() . '/js/footer.min.js', ['jquery'], $footerVersion, true);
+        wp_enqueue_style('my-main-css', $themeUri . '/css/style/main.min.css', [], self::getAssetVersion('/css/style/main.min.css', '1.0'), 'all');
+        wp_enqueue_script('jquery-custom-js', $themeUri . '/js/custom.min.js', ['jquery'], self::getAssetVersion('/js/custom.min.js'), true);
+        wp_enqueue_script('my-footer-js', $themeUri . '/js/footer.min.js', ['jquery'], self::getAssetVersion('/js/footer.min.js', '1.0'), true);
     }
 
     /**
      * [18/11/2026] - Nạp CSS/JS cho WP-Admin
+     * [25/11/2026] - Kiểm tra quyền bằng capability manage_options thay cho user ID === 1 và dùng filemtime() cho custom-admin.js
      */
     public static function enqueueAdmin(): void
     {
-        $adminCssPath = get_template_directory() . '/css/admin/admin-style.css';
-        $adminCssVer  = file_exists($adminCssPath) ? (string) filemtime($adminCssPath) : '1.0';
-        wp_enqueue_style('admin-style', get_template_directory_uri() . '/css/admin/admin-style.css', [], $adminCssVer, 'all');
+        $themeUri = get_template_directory_uri();
 
-        if (get_current_user_id() !== 1) {
-            wp_enqueue_style('admin-denied', get_template_directory_uri() . '/css/admin/admin-denied.css', [], '1.0', 'all');
+        wp_enqueue_style('admin-style', $themeUri . '/css/admin/admin-style.css', [], self::getAssetVersion('/css/admin/admin-style.css', '1.0'), 'all');
+
+        if (!current_user_can('manage_options')) {
+            wp_enqueue_style('admin-denied', $themeUri . '/css/admin/admin-denied.css', [], self::getAssetVersion('/css/admin/admin-denied.css', '1.0'), 'all');
         }
 
-        wp_enqueue_script('jquery-ui-js', get_template_directory_uri() . '/js/jquery-ui.min.js', ['jquery'], '1.0.0', true);
-        wp_enqueue_style('jquery-ui-css', get_template_directory_uri() . '/css/jquery-ui.min.css', [], '1.0', 'all');
-        wp_enqueue_script('custom-admin-js', get_template_directory_uri() . '/js/custom-admin.js', ['jquery'], '1.0.0', true);
-
-        $customAdminPath = get_template_directory() . '/js/custom.min.js';
-        $customAdminVer  = file_exists($customAdminPath) ? (string) filemtime($customAdminPath) : '1.0.0';
-        wp_enqueue_script('jquery-custom-js', get_template_directory_uri() . '/js/custom.min.js', ['jquery'], $customAdminVer, true);
+        wp_enqueue_script('jquery-ui-js', $themeUri . '/js/jquery-ui.min.js', ['jquery'], self::getAssetVersion('/js/jquery-ui.min.js'), true);
+        wp_enqueue_style('jquery-ui-css', $themeUri . '/css/jquery-ui.min.css', [], self::getAssetVersion('/css/jquery-ui.min.css', '1.0'), 'all');
+        wp_enqueue_script('custom-admin-js', $themeUri . '/js/custom-admin.js', ['jquery'], self::getAssetVersion('/js/custom-admin.js'), true);
+        wp_enqueue_script('jquery-custom-js', $themeUri . '/js/custom.min.js', ['jquery'], self::getAssetVersion('/js/custom.min.js'), true);
     }
 }

@@ -1,8 +1,10 @@
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 @use "define" as *;
 @use "responsive" as *;
 
 #article-side-list {
     width: 100%;
+
     .item {
         margin-top: 1rem;
         margin-bottom: 1rem;
@@ -11,11 +13,7 @@
         border-radius: 3px;
         cursor: pointer;
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-        &:hover {
-            img {
-                transform: scale(1.1);
-            }
-        }
+
         img {
             transition: all 2s;
             border-radius: 3px;
@@ -24,6 +22,10 @@
             height: auto;
             display: block; // 防止多餘空白
             object-fit: cover; // 如需裁切才加（可選）
+        }
+
+        &:hover img {
+            transform: scale(1.1);
         }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DGW\Controllers;
 
 use DGW\Helpers\RequestHelper;
+use DGW\Models\CompanyInfoModel;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -56,14 +57,17 @@ class CompanyInformationController extends BaseAdminController
             'txt-address-vn'       => '_info_address_vn',
         ];
 
+        // [25/11/2026] - Gom cập nhật thông tin công ty qua CompanyInfoModel để tự động xóa Transient cache
+        $updates = [];
+
         foreach ($textFields as $inputKey => $metaKey) {
             if (isset($postData[$inputKey])) {
-                update_post_meta(1, $metaKey, sanitize_text_field((string) $postData[$inputKey]));
+                $updates[$metaKey] = sanitize_text_field((string) $postData[$inputKey]);
             }
         }
 
         if (isset($postData['txt-email'])) {
-            update_post_meta(1, '_info_email', sanitize_email((string) $postData['txt-email']));
+            $updates['_info_email'] = sanitize_email((string) $postData['txt-email']);
         }
 
         $richFields = [
@@ -77,8 +81,12 @@ class CompanyInformationController extends BaseAdminController
 
         foreach ($richFields as $inputKey => $metaKey) {
             if (isset($postData[$inputKey])) {
-                update_post_meta(1, $metaKey, wp_kses_post((string) $postData[$inputKey]));
+                $updates[$metaKey] = wp_kses_post((string) $postData[$inputKey]);
             }
+        }
+
+        if (!empty($updates)) {
+            CompanyInfoModel::updateMany($updates);
         }
 
         wp_safe_redirect(admin_url('admin.php?page=information_page&msg=1'));

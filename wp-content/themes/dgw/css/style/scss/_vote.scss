@@ -100,10 +100,11 @@
         justify-items: center;
         align-items: center;
         div {
-            label {
-                width: 200px;
-            }
             margin-bottom: 0.5rem;
+        }
+        // [2026-11-25]: Làm phẳng selector label trong .vote-content-box về tối đa 3 cấp
+        div label {
+            width: 200px;
         }
         button {
             margin-top: 2rem;
@@ -126,10 +127,11 @@
         padding-right: 2rem;
         div {
             margin-top: 0.3rem;
-            h4{
-                color: rgb(3, 51, 139);
-                font-weight: bold;
-            }
+        }
+        // [2026-11-25]: Làm phẳng selector h4 trong .vote-person về tối đa 3 cấp
+        div h4 {
+            color: rgb(3, 51, 139);
+            font-weight: bold;
         }
     }
 }

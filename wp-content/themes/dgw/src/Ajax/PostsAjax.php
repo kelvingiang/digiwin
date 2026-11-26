@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DGW\Ajax;
 
+use DGW\Helpers\RequestHelper;
 use DGW\Models\CustomPostModel;
 
 if (!defined('ABSPATH')) {
@@ -47,15 +48,24 @@ class PostsAjax
     /**
      * [18/11/2026] - Load thêm bài viết hỗ trợ Translation Group
      * [20/11/2026] - Chuyển truy vấn sang CustomPostModel và render qua View templates/post-item.php chuẩn MVC & LCP
+     * [25/11/2026] - Whitelist post_type đầu vào, kiểm tra taxonomy và giới hạn count/offset
      */
     public static function handleLoadMorePosts(): void
     {
-        $lastId  = isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0;
-        $post    = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
-        $rawCate = isset($_POST['cateID']) ? sanitize_text_field(wp_unslash($_POST['cateID'])) : '';
+        $lastId  = max(0, isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0);
+        $rawPost = isset($_POST['post']) ? sanitize_text_field(wp_unslash((string) $_POST['post'])) : 'post';
+        $post    = CustomPostModel::resolveAllowedPostType($rawPost);
+        if ($post === null) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid post type'], 400);
+        }
+
+        $rawCate = isset($_POST['cateID']) ? sanitize_text_field(wp_unslash((string) $_POST['cateID'])) : '';
         $cateId  = is_numeric($rawCate) ? (int) $rawCate : $rawCate;
-        $count   = isset($_POST['count']) ? (int) $_POST['count'] : 5;
-        $cate    = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
+        $count   = CustomPostModel::clampCount(isset($_POST['count']) ? (int) $_POST['count'] : 5, 5);
+        $cate    = isset($_POST['cate']) ? sanitize_key(wp_unslash((string) $_POST['cate'])) : '';
+        if ($cate !== '' && !taxonomy_exists($cate)) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid taxonomy'], 400);
+        }
 
         $wpQuery = CustomPostModel::get_load_more_posts($post, $cateId, $cate, $count, $lastId);
 
@@ -85,40 +95,89 @@ class PostsAjax
     }
 
     /**
+     * [25/11/2026] - Kiểm tra Nonce, tính hợp lệ bài viết (publish) và áp dụng rate-limit theo IP/Session cho lượt xem & lượt thích
+     */
+    private static function validateEngagementAndCheckLimit(string $actionType, int $postId, int $ttlSeconds): bool
+    {
+        check_ajax_referer('my_nonce', 'nonce');
+
+        if ($postId <= 0 || get_post_status($postId) !== 'publish') {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid Post ID'], 400);
+        }
+
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $sessionBucket = 'dgw_rl_' . $actionType;
+            $lastHit       = isset($_SESSION[$sessionBucket][$postId]) ? (int) $_SESSION[$sessionBucket][$postId] : 0;
+            if ($lastHit > 0 && (time() - $lastHit) < $ttlSeconds) {
+                return true;
+            }
+        }
+
+        $ipAddress    = sanitize_text_field(wp_unslash((string) ($_SERVER['REMOTE_ADDR'] ?? '')));
+        $transientKey = 'dgw_rl_' . $actionType . '_' . md5($ipAddress . '|' . $postId);
+        if (get_transient($transientKey) !== false) {
+            return true;
+        }
+
+        set_transient($transientKey, 1, $ttlSeconds);
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['dgw_rl_' . $actionType][$postId] = time();
+        }
+
+        return false;
+    }
+
+    /**
      * [18/11/2026] - Tăng lượt xem bài viết
+     * [25/11/2026] - Bổ sung kiểm tra Nonce, trạng thái publish, rate-limit 60s và gắn cookie dgw_viewed_ tránh đếm trùng khi chuyển trang
      */
     public static function handlePlusOneView(): void
     {
-        $postId = isset($_POST['postID']) ? (int) $_POST['postID'] : 0;
-        $view   = (int) get_post_meta($postId, '_metabox_view', true);
-        update_post_meta($postId, '_metabox_view', $view + 1);
+        $postId        = isset($_POST['postID']) ? absint($_POST['postID']) : 0;
+        $isRateLimited = self::validateEngagementAndCheckLimit('view', $postId, 60);
+
+        $view = (int) get_post_meta($postId, '_metabox_view', true);
+        if (!$isRateLimited) {
+            $view++;
+            update_post_meta($postId, '_metabox_view', $view);
+            RequestHelper::setSecureCookie(
+                'dgw_viewed_' . $postId,
+                '1',
+                time() + (3 * HOUR_IN_SECONDS),
+                true,
+                'Lax',
+                (defined('COOKIEPATH') && COOKIEPATH) ? (string) COOKIEPATH : '/',
+                defined('COOKIE_DOMAIN') ? (string) COOKIE_DOMAIN : ''
+            );
+        }
+
         wp_send_json([
             'status' => 'done',
-            'html'   => $view + 1,
+            'html'   => $view,
         ]);
     }
 
     /**
      * [18/11/2026] - Tăng lượt thích bài viết
+     * [25/11/2026] - Bổ sung kiểm tra Nonce, trạng thái publish và rate-limit 1h chống spam
      */
     public static function handlePlusOneLike(): void
     {
-        $postId = isset($_POST['postID']) ? absint($_POST['postID']) : 0;
-        if ($postId <= 0 || !get_post_status($postId)) {
-            wp_send_json_error(['status' => 'error', 'message' => 'Invalid Post ID']);
-            wp_die();
-        }
+        $postId        = isset($_POST['postID']) ? absint($_POST['postID']) : 0;
+        $isRateLimited = self::validateEngagementAndCheckLimit('like', $postId, HOUR_IN_SECONDS);
 
         $currentLikes = (int) get_post_meta($postId, '_metabox_like', true);
-        $newLikes     = $currentLikes + 1;
-        update_post_meta($postId, '_metabox_like', $newLikes);
+        $newLikes     = $currentLikes;
+        if (!$isRateLimited) {
+            $newLikes = $currentLikes + 1;
+            update_post_meta($postId, '_metabox_like', $newLikes);
+        }
 
         wp_send_json_success([
             'status' => 'done',
             'count'  => $newLikes,
             'html'   => $newLikes,
         ]);
-        wp_die();
     }
 
     /**

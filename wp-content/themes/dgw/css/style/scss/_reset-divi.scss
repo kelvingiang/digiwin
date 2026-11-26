@@ -1,38 +1,37 @@
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 @use "define" as *;
 @use "responsive" as *;
 
 .et_pb_row {
     max-width: 90% !important;
     text-align: center;
-  
 }
 
 .divi-table {
-    thead {
-        tr {
-            height: 50px;
-            th {
-                border: 1px solid #ccc;
-                align-items: center;
-                color: #0372b3;
-                font-weight: bold;
-                text-align: center;
-                line-height: 2;
-                font-size: 1.5rem;
-                background-color: #d1e2ec;
-            }
-        }
+    thead tr {
+        height: 50px;
     }
-    tbody {
-        tr {
-            td {
-                border: 1px solid #ccc;
-                padding: 1rem;
-                &:nth-child(1){font-weight:bold};
-            }
-            &:nth-child(even){
-                background-color: #fafafa;
-            }
+
+    thead tr th {
+        border: 1px solid #ccc;
+        align-items: center;
+        color: #0372b3;
+        font-weight: bold;
+        text-align: center;
+        line-height: 2;
+        font-size: 1.5rem;
+        background-color: #d1e2ec;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    tbody tr td {
+        border: 1px solid #ccc;
+        padding: 1rem;
+        &:nth-child(1) {
+            font-weight: bold;
         }
     }
 }

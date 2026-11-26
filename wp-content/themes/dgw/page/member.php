@@ -15,24 +15,25 @@ get_header();
 get_template_part('templates/header');
 
 // [27/10/2026] Lấy và bảo vệ dữ liệu thành viên từ session cookie
+// [25/11/2026] - Chuyển sang Late Escaping tại điểm xuất và dùng esc_html_e() chuẩn WordPress
 $data = null;
 if (!empty($_COOKIE['custom_session'])) {
-    $data = get_member_information($_COOKIE['custom_session']);
+    $data = get_member_information(sanitize_text_field(wp_unslash($_COOKIE['custom_session'])));
 }
 
-$user_email      = $data ? esc_html($data->email ?? '') : '';
-$user_name       = $data ? esc_attr($data->username ?? '') : '';
-$user_phone      = $data ? esc_attr($data->phone ?? '') : '';
-$user_company    = $data ? esc_attr($data->company ?? '') : '';
-$user_tax        = $data ? esc_attr($data->tax ?? '') : '';
-$user_position   = $data ? ($data->position ?? '') : '';
-$user_industry   = $data ? ($data->industry ?? '') : '';
-$user_department = $data ? ($data->department ?? '') : '';
+$user_email      = $data ? (string) ($data->email ?? '') : '';
+$user_name       = $data ? (string) ($data->username ?? '') : '';
+$user_phone      = $data ? (string) ($data->phone ?? '') : '';
+$user_company    = $data ? (string) ($data->company ?? '') : '';
+$user_tax        = $data ? (string) ($data->tax ?? '') : '';
+$user_position   = $data ? (string) ($data->position ?? '') : '';
+$user_industry   = $data ? (string) ($data->industry ?? '') : '';
+$user_department = $data ? (string) ($data->department ?? '') : '';
 ?>
 
 <!-- Tiêu đề ẩn tối ưu SEO & Screen Readers -->
 <div class="page-title-h1">
-    <h1><?php echo __('member login and register', 'dgw'); ?></h1> 
+    <h1><?php esc_html_e('member login and register', 'dgw'); ?></h1> 
 </div>
 
 <div class="member-space">
@@ -43,8 +44,8 @@ $user_department = $data ? ($data->department ?? '') : '';
         
         <!-- [27/10/2026] Segmented Control Tabs chuyển đổi Đăng nhập / Đăng ký -->
         <div id="tab-buttons" class="member-tabs">
-            <div class="tab-btn active" data-tab="login"><?php echo __('Login', 'dgw'); ?></div>
-            <div class="tab-btn" data-tab="register"><?php echo __('Register', 'dgw'); ?></div>
+            <div class="tab-btn active" data-tab="login"><?php esc_html_e('Login', 'dgw'); ?></div>
+            <div class="tab-btn" data-tab="register"><?php esc_html_e('Register', 'dgw'); ?></div>
         </div>
 
         <!-- TAB 1: FORM ĐĂNG NHẬP -->
@@ -56,9 +57,9 @@ $user_department = $data ? ($data->department ?? '') : '';
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </div>
-                <h2 class="member-card-header__title"><?php echo __('Login', 'dgw'); ?></h2>
+                <h2 class="member-card-header__title"><?php esc_html_e('Login', 'dgw'); ?></h2>
                 <p class="member-card-header__subtitle">
-                    <?php echo __('Welcome back! Please enter your credentials to login', 'dgw'); ?>
+                    <?php esc_html_e('Welcome back! Please enter your credentials to login', 'dgw'); ?>
                 </p>
             </div>
 
@@ -66,7 +67,7 @@ $user_department = $data ? ($data->department ?? '') : '';
             <div class="one-columns">
                 <div class="row-cell">
                     <label for="login-email">
-                        <?php echo __('E-mail', 'dgw'); ?> <span class="required">*</span>
+                        <?php esc_html_e('E-mail', 'dgw'); ?> <span class="required">*</span>
                     </label>
                     <input type="email"
                         id="login-email"
@@ -80,7 +81,7 @@ $user_department = $data ? ($data->department ?? '') : '';
             <div class="one-columns">
                 <div class="row-cell">
                     <label for="login-password">
-                        <?php echo __('Password', 'dgw'); ?> <span class="required">*</span>
+                        <?php esc_html_e('Password', 'dgw'); ?> <span class="required">*</span>
                     </label>
                     <div class="member-input-wrap">
                         <input type="password"
@@ -110,11 +111,11 @@ $user_department = $data ? ($data->department ?? '') : '';
             <div class="member-auth-actions">
                 <div class="member-forgot-link">
                     <button type="button" id="btn-forget-password" class="btn-password">
-                        <?php echo __('Forget Password', 'dgw'); ?>?
+                        <?php esc_html_e('Forget Password', 'dgw'); ?>?
                     </button>
                 </div>
                 <button type="button" id="btn-login" class="btn-my-style">
-                    <?php echo __('Login', 'dgw'); ?>
+                    <?php esc_html_e('Login', 'dgw'); ?>
                 </button>
             </div>
 
@@ -132,9 +133,9 @@ $user_department = $data ? ($data->department ?? '') : '';
                         <line x1="23" y1="11" x2="17" y2="11"></line>
                     </svg>
                 </div>
-                <h2 class="member-card-header__title"><?php echo __('Register', 'dgw'); ?></h2>
+                <h2 class="member-card-header__title"><?php esc_html_e('Register', 'dgw'); ?></h2>
                 <p class="member-card-header__subtitle">
-                    <?php echo __('Create your Digiwin member account to access resources', 'dgw'); ?>
+                    <?php esc_html_e('Create your Digiwin member account to access resources', 'dgw'); ?>
                 </p>
             </div>
 
@@ -159,8 +160,8 @@ $user_department = $data ? ($data->department ?? '') : '';
                     </svg>
                 </div>
                 <div class="member-profile-header__info">
-                    <h3 class="email"><?php echo $user_email; ?></h3>
-                    <span class="badge"><?php echo __('Active Member', 'dgw'); ?></span>
+                    <h3 class="email"><?php echo esc_html($user_email); ?></h3>
+                    <span class="badge"><?php esc_html_e('Active Member', 'dgw'); ?></span>
                 </div>
             </div>
 
@@ -170,7 +171,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span><?php echo __('Logout', 'dgw'); ?></span>
+                <span><?php esc_html_e('Logout', 'dgw'); ?></span>
             </button>
         </div>
 
@@ -181,17 +182,17 @@ $user_department = $data ? ($data->department ?? '') : '';
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
-                <span><?php echo __('Change Password', 'dgw'); ?></span>
+                <span><?php esc_html_e('Change Password', 'dgw'); ?></span>
             </h4>
             <p class="member-section__desc">
-                <?php echo __('For security reasons, your new password must be at least 6 characters', 'dgw'); ?>
+                <?php esc_html_e('For security reasons, your new password must be at least 6 characters', 'dgw'); ?>
             </p>
 
             <div class="three-columns">
                 <!-- Mật khẩu hiện tại -->
                 <div class="row-cell">
                     <label for="current-password">
-                        <?php echo __('Current Password', 'dgw'); ?> <span class="required">*</span>
+                        <?php esc_html_e('Current Password', 'dgw'); ?> <span class="required">*</span>
                     </label>
                     <div class="member-input-wrap">
                         <input type="password" id="current-password" placeholder="••••••••" autocomplete="current-password" />
@@ -211,7 +212,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 <!-- Mật khẩu mới -->
                 <div class="row-cell">
                     <label for="chang-password">
-                        <?php echo __('New Password', 'dgw'); ?> <span class="required">*</span>
+                        <?php esc_html_e('New Password', 'dgw'); ?> <span class="required">*</span>
                     </label>
                     <div class="member-input-wrap">
                         <input type="password" id="chang-password" placeholder="••••••••" autocomplete="new-password" />
@@ -231,7 +232,7 @@ $user_department = $data ? ($data->department ?? '') : '';
                 <!-- Xác nhận mật khẩu mới -->
                 <div class="row-cell">
                     <label for="chang-confirm-password">
-                        <?php echo __('Confirm Password', 'dgw'); ?> <span class="required">*</span>
+                        <?php esc_html_e('Confirm Password', 'dgw'); ?> <span class="required">*</span>
                     </label>
                     <div class="member-input-wrap">
                         <input type="password" id="chang-confirm-password" placeholder="••••••••" autocomplete="new-password" />
@@ -252,7 +253,7 @@ $user_department = $data ? ($data->department ?? '') : '';
             <div class="btn-space" style="text-align: center; margin-top: 6px;">
                 <button id="btn-change-password" class="btn-my-style member-btn-primary" type="button">
                     <span class="member-spinner"></span>
-                    <span class="btn-text"><?php echo __('Change Password', 'dgw'); ?></span>
+                    <span class="btn-text"><?php esc_html_e('Change Password', 'dgw'); ?></span>
                 </button>
                 <p id="change-password-msg" class="msg" role="alert"></p>
             </div>
@@ -267,70 +268,70 @@ $user_department = $data ? ($data->department ?? '') : '';
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-                <span><?php echo __('Change Information', 'dgw'); ?></span>
+                <span><?php esc_html_e('Change Information', 'dgw'); ?></span>
             </h4>
             <p class="member-section__desc">
-                <?php echo __('Update your company profile and contact details', 'dgw'); ?>
+                <?php esc_html_e('Update your company profile and contact details', 'dgw'); ?>
             </p>
 
             <div class="three-columns">
                 <div class="row-cell">
-                    <label for="chang-username"><?php echo __('Full Name', 'dgw'); ?></label>
-                    <input type="text" id="chang-username" value="<?php echo $user_name; ?>" />
+                    <label for="chang-username"><?php esc_html_e('Full Name', 'dgw'); ?></label>
+                    <input type="text" id="chang-username" value="<?php echo esc_attr($user_name); ?>" />
                 </div>
                 <div class="row-cell">
-                    <label for="chang-position"><?php echo __('Position', 'dgw'); ?></label>
+                    <label for="chang-position"><?php esc_html_e('Position', 'dgw'); ?></label>
                     <select id="chang-position">
-                        <option value=""><?php echo __('Select Position', 'dgw'); ?></option>
+                        <option value=""><?php esc_html_e('Select Position', 'dgw'); ?></option>
                         <?php
                         $positions = member_position_list();
                         foreach ($positions as $key => $value) {
-                            $selected = ($user_position === $key) ? 'selected' : '';
-                            echo "<option value='" . esc_attr($key) . "' $selected>" . esc_html($value) . "</option>";
+                            $selected = selected($user_position, (string) $key, false);
+                            echo "<option value='" . esc_attr((string) $key) . "' {$selected}>" . esc_html((string) $value) . "</option>";
                         }
                         ?>
                     </select>
                 </div>
                 <div class="row-cell">
-                    <label for="chang-phone"><?php echo __('Phone', 'dgw'); ?></label>
-                    <input type="text" id="chang-phone" class="type-phone-more" maxlength="15" value="<?php echo $user_phone; ?>" />
+                    <label for="chang-phone"><?php esc_html_e('Phone', 'dgw'); ?></label>
+                    <input type="text" id="chang-phone" class="type-phone-more" maxlength="15" value="<?php echo esc_attr($user_phone); ?>" />
                 </div>
             </div>
 
             <div class="two-columns">
                 <div class="row-cell">
-                    <label for="chang-company"><?php echo __('Company Name', 'dgw'); ?></label>
-                    <input type="text" id="chang-company" value="<?php echo $user_company; ?>" />
+                    <label for="chang-company"><?php esc_html_e('Company Name', 'dgw'); ?></label>
+                    <input type="text" id="chang-company" value="<?php echo esc_attr($user_company); ?>" />
                 </div>
                 <div class="row-cell">
-                    <label for="chang-tax"><?php echo __('Tax Number', 'dgw'); ?></label>
-                    <input type="text" id="chang-tax" class="type-number" maxlength="13" value="<?php echo $user_tax; ?>" />
+                    <label for="chang-tax"><?php esc_html_e('Tax Number', 'dgw'); ?></label>
+                    <input type="text" id="chang-tax" class="type-number" maxlength="13" value="<?php echo esc_attr($user_tax); ?>" />
                 </div>
             </div>
 
             <div class="two-columns">
                 <div class="row-cell">
-                    <label for="chang-industry"><?php echo __('Industry', 'dgw'); ?></label>
+                    <label for="chang-industry"><?php esc_html_e('Industry', 'dgw'); ?></label>
                     <select id="chang-industry">
-                        <option value=""><?php echo __('Select Industry', 'dgw'); ?></option>
+                        <option value=""><?php esc_html_e('Select Industry', 'dgw'); ?></option>
                         <?php
                         $industries = industry_sector_list();
                         foreach ($industries as $key => $value) {
-                            $selected = ($user_industry === $key) ? 'selected' : '';
-                            echo "<option value='" . esc_attr($key) . "' $selected>" . esc_html($value) . "</option>";
+                            $selected = selected($user_industry, (string) $key, false);
+                            echo "<option value='" . esc_attr((string) $key) . "' {$selected}>" . esc_html((string) $value) . "</option>";
                         }
                         ?>
                     </select>
                 </div>
                 <div class="row-cell">
-                    <label for="chang-department"><?php echo __('Department', 'dgw'); ?></label>
+                    <label for="chang-department"><?php esc_html_e('Department', 'dgw'); ?></label>
                     <select id="chang-department">
-                        <option value=""><?php echo __('Select Department', 'dgw'); ?></option>
+                        <option value=""><?php esc_html_e('Select Department', 'dgw'); ?></option>
                         <?php
                         $departments = department_list();
                         foreach ($departments as $key => $value) {
-                            $selected = ($user_department === $key) ? 'selected' : '';
-                            echo "<option value='" . esc_attr($key) . "' $selected>" . esc_html($value) . "</option>";
+                            $selected = selected($user_department, (string) $key, false);
+                            echo "<option value='" . esc_attr((string) $key) . "' {$selected}>" . esc_html((string) $value) . "</option>";
                         }
                         ?>
                     </select>
@@ -340,7 +341,7 @@ $user_department = $data ? ($data->department ?? '') : '';
             <div class="btn-space" style="text-align: center; margin-top: 6px;">
                 <button id="btn-change-info" class="btn-my-style member-btn-primary" type="button">
                     <span class="member-spinner"></span>
-                    <span class="btn-text"><?php echo __('Change Information', 'dgw'); ?></span>
+                    <span class="btn-text"><?php esc_html_e('Change Information', 'dgw'); ?></span>
                 </button>
                 <p id="change-info-msg" class="msg" role="alert"></p>
             </div>
@@ -401,7 +402,7 @@ jQuery(document).ready(function($) {
                     : ((typeof MemberAuth !== 'undefined' && MemberAuth.ajaxurl) ? MemberAuth.ajaxurl : '<?php echo esc_url(admin_url('admin-ajax.php')); ?>');
     const authNonce = (typeof MemberAuth !== 'undefined' && MemberAuth.nonce) 
                       ? MemberAuth.nonce 
-                      : '<?php echo wp_create_nonce('member_auth_nonce'); ?>';
+                      : '<?php echo esc_js(wp_create_nonce('member_auth_nonce')); ?>';
 
     // 2. Xử lý đổi mật khẩu
     $(document).on('click', '#btn-change-password', function(e) {

@@ -1,3 +1,4 @@
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 .btn-delete {
     background-color: #9c6565 !important;
     color: white !important;
@@ -23,12 +24,6 @@
     margin-top: 2rem;
 }
 
-.inside{
-    .meta-options{
-        .selectit{
-         &:last-child{
-            display: none;
-         }
-        }
-    }
+.inside .meta-options .selectit:last-child {
+    display: none;
 }

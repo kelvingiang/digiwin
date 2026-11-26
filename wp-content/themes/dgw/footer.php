@@ -114,6 +114,8 @@ wp_footer(); ?>
       type: 'post', //                data: $(this).serialize(),
       data: {
         action: 'plus_one_view', // ✅ 對應後端的 hook 名稱
+        // [25/11/2026] - Gửi kèm Nonce CSRF để xác thực yêu cầu tăng lượt xem
+        nonce: (typeof MyAjax !== 'undefined' && MyAjax.nonce) ? MyAjax.nonce : '<?php echo esc_js(wp_create_nonce('my_nonce')); ?>',
         postID: jQuery(this).attr("data-post"),
       },
       dataType: 'json',

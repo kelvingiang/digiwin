@@ -17,11 +17,49 @@ if (!defined('ABSPATH')) {
  */
 class CustomPostModel
 {
-    private const MAX_SAFE_LIMIT = 50;
-    private const META_LANG      = '_metabox_langguage';
-    private const META_ORDER     = '_metabox_order';
-    private const META_HOME      = '_metabox_home';
-    private const META_SIDEBAR   = '_metabox_sidebar';
+    private const MAX_SAFE_LIMIT            = 50;
+    private const META_LANG                 = '_metabox_langguage';
+    private const META_ORDER                = '_metabox_order';
+    private const META_HOME                 = '_metabox_home';
+    private const META_SIDEBAR              = '_metabox_sidebar';
+    private const TERMS_CACHE_VER_OPTION    = 'dgw_cat_terms_cache_ver';
+    private const TERMS_CACHE_TTL           = 12 * HOUR_IN_SECONDS;
+
+    /**
+     * [25/11/2026] - Whitelist các post_type công khai được phép truy vấn qua AJAX Load More
+     *
+     * @var string[]
+     */
+    private const ALLOWED_PUBLIC_POST_TYPES = [
+        'post',
+        'active',
+        'casestudies',
+        'industries',
+        'joinus',
+        'resources',
+        'services',
+        'solutions',
+    ];
+
+    /**
+     * [25/11/2026] - Kiểm tra post_type đầu vào có nằm trong whitelist công khai hay không
+     */
+    public static function resolveAllowedPostType(string $postType): ?string
+    {
+        $clean = sanitize_key($postType);
+        return in_array($clean, self::ALLOWED_PUBLIC_POST_TYPES, true) ? $clean : null;
+    }
+
+    /**
+     * [25/11/2026] - Giới hạn số lượng item hợp lệ cho các endpoint phân trang/load more
+     */
+    public static function clampCount(int $count, int $default = self::MAX_SAFE_LIMIT): int
+    {
+        if ($count <= 0) {
+            return min($default, self::MAX_SAFE_LIMIT);
+        }
+        return min($count, self::MAX_SAFE_LIMIT);
+    }
 
     /**
      * Cache tĩnh trong một request cho resolve_category_terms tránh lặp query get_term/get_terms
@@ -32,10 +70,11 @@ class CustomPostModel
 
     /**
      * [2026-11-19] - @author: Kelvin - Chuẩn hóa giới hạn số bài viết, ngăn chặn unbounded query (-1) gây chậm DB
+     * [25/11/2026] - Kẹp trần tối đa theo MAX_SAFE_LIMIT chống DoS/OOM khi client truyền count quá lớn
      */
     private static function normalize_limit(int $postCount): int
     {
-        return $postCount <= 0 ? self::MAX_SAFE_LIMIT : $postCount;
+        return self::clampCount($postCount, self::MAX_SAFE_LIMIT);
     }
 
     /**
@@ -80,8 +119,39 @@ class CustomPostModel
     }
 
     /**
+     * [25/11/2026] - Đăng ký hook tự động xóa cache resolve_category_terms() khi term hoặc translation_group thay đổi
+     */
+    public static function registerCacheInvalidation(): void
+    {
+        add_action('created_term', [self::class, 'invalidateCategoryTermsCache']);
+        add_action('edited_term', [self::class, 'invalidateCategoryTermsCache']);
+        add_action('delete_term', [self::class, 'invalidateCategoryTermsCache']);
+        add_action('updated_term_meta', [self::class, 'handleTermMetaUpdated'], 10, 4);
+    }
+
+    /**
+     * [25/11/2026] - Chỉ bump cache version khi meta translation_group được cập nhật
+     */
+    public static function handleTermMetaUpdated($metaId, $objectId, string $metaKey, $metaValue): void
+    {
+        if ($metaKey === 'translation_group') {
+            self::invalidateCategoryTermsCache();
+        }
+    }
+
+    /**
+     * [25/11/2026] - Xóa memory cache và bump version Transient cho resolve_category_terms()
+     */
+    public static function invalidateCategoryTermsCache(): void
+    {
+        self::$resolvedTermsCache = [];
+        update_option(self::TERMS_CACHE_VER_OPTION, (string) microtime(true), true);
+    }
+
+    /**
      * [2026-11-05] - Helper gom nhóm Translation Group cho Category
      * [2026-11-19] - @author: Kelvin - Bổ sung memoization tĩnh trong request
+     * [25/11/2026] - Bổ sung Transient Cache giữa các request (tự động vô hiệu qua cache version khi sửa term)
      *
      * @param mixed  $cate     Term ID hoặc Slug
      * @param string $taxonomy Tên Taxonomy
@@ -89,9 +159,17 @@ class CustomPostModel
      */
     private static function resolve_category_terms($cate, string $taxonomy): array
     {
-        $cacheKey = $taxonomy . '|' . (is_scalar($cate) ? (string) $cate : serialize($cate));
+        $cacheVer     = (string) get_option(self::TERMS_CACHE_VER_OPTION, '1');
+        $rawKey       = $taxonomy . '|' . (is_scalar($cate) ? (string) $cate : (string) wp_json_encode($cate)) . '|' . $cacheVer;
+        $cacheKey     = $rawKey;
         if (isset(self::$resolvedTermsCache[$cacheKey])) {
             return self::$resolvedTermsCache[$cacheKey];
+        }
+
+        $transientKey = 'dgw_cat_terms_' . md5($rawKey);
+        $cachedResult = get_transient($transientKey);
+        if (is_array($cachedResult) && count($cachedResult) === 2) {
+            return self::$resolvedTermsCache[$cacheKey] = $cachedResult;
         }
 
         $targetTerms = [$cate];
@@ -118,12 +196,16 @@ class CustomPostModel
                 ]);
 
                 if (!empty($groupTerms) && !is_wp_error($groupTerms)) {
-                    return self::$resolvedTermsCache[$cacheKey] = ['term_id', $groupTerms];
+                    $resolved = ['term_id', $groupTerms];
+                    set_transient($transientKey, $resolved, self::TERMS_CACHE_TTL);
+                    return self::$resolvedTermsCache[$cacheKey] = $resolved;
                 }
             }
         }
 
-        return self::$resolvedTermsCache[$cacheKey] = [$field, $targetTerms];
+        $resolved = [$field, $targetTerms];
+        set_transient($transientKey, $resolved, self::TERMS_CACHE_TTL);
+        return self::$resolvedTermsCache[$cacheKey] = $resolved;
     }
 
     /**
@@ -173,14 +255,11 @@ class CustomPostModel
 
     /**
      * [2026-10-05] - @author: Kelvin - Lấy bài viết thuộc category hiển thị ở trang chủ
+     * [2026-11-26] - @author: Kelvin - Chuyển sang dùng get_posts_by_cate() để tự động resolve Translation Group đa ngôn ngữ và loại bỏ logic query trùng lặp
      */
-    public static function get_posts_cate_at_home(string $postType, string $cateSlug, int $postCount): WP_Query
+    public static function get_posts_cate_at_home(string $postType, string $cateSlug, int $postCount, string $taxonomy = 'resources_category'): WP_Query
     {
-        $args = self::build_base_args($postType, $postCount, [], [
-            'resources_category' => $cateSlug,
-        ]);
-
-        return new WP_Query($args);
+        return self::get_posts_by_cate($postType, $cateSlug, $postCount, $taxonomy);
     }
 
     /**

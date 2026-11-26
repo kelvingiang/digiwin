@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 /**
  * [2026-11-20] - @author: Kelvin - Tối ưu Home Business: Không ghi đè global $wp_query, bổ sung wp_reset_postdata(), chống lỗi mảng bool trên PHP 8.3 và thêm thẻ <a> chuẩn SEO
+ * [26/11/2026] - Chuyển từ while/the_post() sang foreach($businessQuery->posts) để không kích hoạt hook loop_start/loop_end của Divi Builder (tránh chèn #et-boc làm vỡ CSS Grid)
  */
 
 if (!defined('ABSPATH')) {
@@ -15,11 +16,10 @@ if (!defined('ABSPATH')) {
     $businessQuery = getCustomPostAtHome('resources', 4);
     $stt           = 1;
 
-    if ($businessQuery->have_posts()) :
-        while ($businessQuery->have_posts()) :
-            $businessQuery->the_post();
-            $postId     = (int) get_the_ID();
-            $permalink  = (string) get_the_permalink($postId);
+    if (!empty($businessQuery->posts)) :
+        foreach ($businessQuery->posts as $postItem) :
+            $postId     = (int) $postItem->ID;
+            $permalink  = (string) get_permalink($postId);
             $title      = (string) get_the_title($postId);
             $thumbId    = (int) get_post_thumbnail_id($postId);
             $urlDesktop = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'medium') : false;
@@ -63,8 +63,7 @@ if (!defined('ABSPATH')) {
             </div>
     <?php
             $stt++;
-        endwhile;
-        wp_reset_postdata();
+        endforeach;
     endif;
     ?>
 </div>

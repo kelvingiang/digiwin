@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 /**
  * [2026-11-20] - @author: Kelvin - Tối ưu Home Industry: Không ghi đè global $wp_query, chống lỗi offset bool trên PHP 8.3, bổ sung alt/decoding="async" và Late Escaping
+ * [26/11/2026] - Chuyển từ while/the_post() sang foreach($industryQuery->posts) để không kích hoạt hook loop_start/loop_end của Divi Builder (tránh chèn #et-boc làm vỡ Flexbox)
  */
 
 if (!defined('ABSPATH')) {
@@ -15,11 +16,10 @@ if (!defined('ABSPATH')) {
     $stt           = 1;
     $industryQuery = getCustomPostAtHome('industries', 8);
 
-    if ($industryQuery->have_posts()) :
-        while ($industryQuery->have_posts()) :
-            $industryQuery->the_post();
-            $postId     = (int) get_the_ID();
-            $permalink  = (string) get_the_permalink($postId);
+    if (!empty($industryQuery->posts)) :
+        foreach ($industryQuery->posts as $postItem) :
+            $postId     = (int) $postItem->ID;
+            $permalink  = (string) get_permalink($postId);
             $title      = (string) get_the_title($postId);
             $thumbId    = (int) get_post_thumbnail_id($postId);
             $urlDesktop = $thumbId > 0 ? wp_get_attachment_image_src($thumbId, 'medium') : false;
@@ -59,8 +59,7 @@ if (!defined('ABSPATH')) {
             </div>
     <?php
             $stt++;
-        endwhile;
-        wp_reset_postdata();
+        endforeach;
     endif;
     ?>
 </div>

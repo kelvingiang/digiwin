@@ -93,6 +93,7 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
 }
 
 // [2026-10-09] - @author: Kelvin - Tái thiết kế .menu-main theo phong cách Corporate Hiện đại (Glassmorphism & Micro-animations)
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 .menu-main {
     position: relative;
     z-index: 1000;
@@ -116,306 +117,302 @@ $bgHoverColor: rgba(231, 231, 231, 0.9);
             margin: 0;
         }
 
-        &-link {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.6rem 0.95rem;
-            font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
-            font-weight: 600;
-            color: $Color_main_menu_link;
-            text-decoration: none;
-            border-radius: 8px;
-            white-space: nowrap;
-            position: relative;
-            transition: color 0.25s ease, background-color 0.25s ease;
-
-            @include Respond(lg) {
-                padding: 0.5rem 0.65rem;
-                font-size: 1rem;
-            }
-
-            /* Hiệu ứng thanh chỉ báo bên dưới (Modern Running Bar) */
-            &::before {
-                content: '';
-                position: absolute;
-                bottom: 3px;
-                left: 14px;
-                right: 14px;
-                height: 2px;
-                background: linear-gradient(90deg, #00aff0, #0088cc);
-                border-radius: 2px;
-                transform: scaleX(0);
-                transform-origin: center;
-                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-        }
-
         // [2026-10-09] - @author: Kelvin - Thiết lập mũi tên .has-sub cách chữ 10px
-        .has-sub {
-            &::after {
-                @include HasSub(90deg, 10px);
-                font-size: 0.75rem;
-                transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-        }
-
-        &:hover {
-            .menu-main-item-link {
-                color: $Color_main_menu_link_hover;
-                background-color: rgba(0, 175, 240, 0.08);
-
-                &::before {
-                    transform: scaleX(1);
-                }
-            }
-
-            .has-sub::after {
-                transform: rotate(-90deg);
-            }
-
-            .menu-main-sub-1 {
-                pointer-events: auto;
-                opacity: 1;
-                visibility: visible;
-                transform: translateY(0);
-            }
+        .has-sub::after {
+            @include HasSub(90deg, 10px);
+            font-size: 0.75rem;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
     }
 
-    .active {
-        > a,
-        > label {
-            color: $Color_main_menu_link_hover !important;
-            background-color: rgba(0, 175, 240, 0.08);
+    .active > a,
+    .active > label {
+        color: $Color_main_menu_link_hover !important;
+        background-color: rgba(0, 175, 240, 0.08);
 
-            &::before {
-                transform: scaleX(1);
-            }
-        }
-    }
-
-    // ===== SUB LEVEL 1 (Modern Floating Glass Card) =================
-    .menu-main-sub-1 {
-        pointer-events: none;
-        opacity: 0;
-        visibility: hidden;
-        position: absolute;
-        top: calc(100% + 4px);
-        left: 0;
-        transform: translateY(8px);
-        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        white-space: nowrap;
-        z-index: 1002;
-        min-width: 230px;
-        padding: 6px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        border-radius: 12px;
-        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-
-        /* Cầu nối vô hình chống mất hover */
         &::before {
-            content: '';
-            position: absolute;
-            top: -12px;
-            left: 0;
-            width: 100%;
-            height: 12px;
-            background: transparent;
+            transform: scaleX(1);
         }
+    }
+}
 
-        // [2026-10-09] - @author: Kelvin - Thêm border-top và hiệu ứng màu nền chạy từ phải qua khi hover
-        &-item {
-            position: relative;
-            cursor: pointer;
-            border-radius: 8px;
-            margin: 2px 0;
-            border-top: 1px solid rgba(0, 0, 0, 0.06);
-            transition: border-color 0.2s ease;
+.menu-main-item-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.6rem 0.95rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $Color_main_menu_link;
+    text-decoration: none;
+    border-radius: 8px;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.25s ease, background-color 0.25s ease;
 
-            &:first-child {
-                border-top: none;
-            }
+    @include Respond(lg) {
+        padding: 0.5rem 0.65rem;
+        font-size: 1rem;
+    }
 
-            &-link {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 14px;
-                color: #334155;
-                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
-                font-weight: 500;
-                text-decoration: none;
-                border-radius: 8px;
-                position: relative;
-                overflow: hidden;
-                z-index: 1;
-                transition: color 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Hiệu ứng thanh chỉ báo bên dưới (Modern Running Bar) */
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: 3px;
+        left: 14px;
+        right: 14px;
+        height: 2px;
+        background: linear-gradient(90deg, #00aff0, #0088cc);
+        border-radius: 2px;
+        transform: scaleX(0);
+        transform-origin: center;
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
 
-                /* [2026-10-09]: Màu nền ẩn ban đầu và chạy từ phải qua trái khi hover */
-                &::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(270deg, rgba(0, 175, 240, 0.12) 0%, rgba(240, 247, 255, 0.95) 100%);
-                    border-radius: 8px;
-                    transform: scaleX(0);
-                    transform-origin: right;
-                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    z-index: -1;
-                }
-            }
+.menu-main-item:hover {
+    .menu-main-item-link {
+        color: $Color_main_menu_link_hover;
+        background-color: rgba(0, 175, 240, 0.08);
 
-            .has-sub {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                color: #1e293b;
-
-                svg {
-                    width: 14px;
-                    height: auto;
-                    fill: #64748b;
-                    transition: fill 0.2s ease, transform 0.2s ease;
-                }
-            }
-
-            &:hover {
-                .menu-main-sub-1-item-link {
-                    color: $Color_main_menu_link_hover;
-                    transform: translateX(4px);
-                    font-weight: 600;
-
-                    &::before {
-                        transform: scaleX(1);
-                    }
-                }
-
-                .has-sub svg {
-                    fill: $Color_main_menu_link_hover;
-                    transform: translateX(2px);
-                }
-
-                .menu-main-sub-2 {
-                    opacity: 1;
-                    pointer-events: auto;
-                    visibility: visible;
-                    left: calc(100% + 4px);
-                    transform: translateY(0);
-                }
-            }
+        &::before {
+            transform: scaleX(1);
         }
     }
 
-    // ===== SUB LEVEL 2 ============================================
+    .has-sub::after {
+        transform: rotate(-90deg);
+    }
+
+    .menu-main-sub-1 {
+        pointer-events: auto;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+// ===== SUB LEVEL 1 (Modern Floating Glass Card) =================
+.menu-main .menu-main-sub-1 {
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    transform: translateY(8px);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+    z-index: 1002;
+    min-width: 230px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+
+    /* Cầu nối vô hình chống mất hover */
+    &::before {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 0;
+        width: 100%;
+        height: 12px;
+        background: transparent;
+    }
+
+    // [2026-10-09] - @author: Kelvin - Thêm border-top và hiệu ứng màu nền chạy từ phải qua khi hover
+    &-item {
+        position: relative;
+        cursor: pointer;
+        border-radius: 8px;
+        margin: 2px 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        transition: border-color 0.2s ease;
+
+        &:first-child {
+            border-top: none;
+        }
+    }
+}
+
+.menu-main .menu-main-sub-1-item-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    color: #334155;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.25s ease, transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* [2026-10-09]: Màu nền ẩn ban đầu và chạy từ phải qua trái khi hover */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(270deg, rgba(0, 175, 240, 0.12) 0%, rgba(240, 247, 255, 0.95) 100%);
+        border-radius: 8px;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: -1;
+    }
+}
+
+.menu-main .menu-main-sub-1-item .has-sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1e293b;
+
+    svg {
+        width: 14px;
+        height: auto;
+        fill: #64748b;
+        transition: fill 0.2s ease, transform 0.2s ease;
+    }
+}
+
+.menu-main .menu-main-sub-1-item:hover {
+    .menu-main-sub-1-item-link {
+        color: $Color_main_menu_link_hover;
+        transform: translateX(4px);
+        font-weight: 600;
+
+        &::before {
+            transform: scaleX(1);
+        }
+    }
+
+    .has-sub svg {
+        fill: $Color_main_menu_link_hover;
+        transform: translateX(2px);
+    }
+
     .menu-main-sub-2 {
-        pointer-events: none;
-        opacity: 0;
-        visibility: hidden;
-        position: absolute;
-        top: 0;
-        left: calc(100% + 10px);
-        transform: translateY(6px);
-        transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-        z-index: 1003;
-        min-width: 210px;
-        padding: 6px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        border-radius: 12px;
-        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+        left: calc(100% + 4px);
+        transform: translateY(0);
+    }
+}
 
-        &-item {
-            position: relative;
-            cursor: pointer;
-            border-radius: 8px;
-            margin: 2px 0;
-            transition: background-color 0.2s ease;
+// ===== SUB LEVEL 2 ============================================
+.menu-main .menu-main-sub-2 {
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: calc(100% + 10px);
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 1003;
+    min-width: 210px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
 
-            &-link {
-                display: block;
-                padding: 10px 14px;
-                color: #334155;
-                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
-                font-weight: 500;
-                text-decoration: none;
-                border-radius: 8px;
-                transition: all 0.2s ease;
-            }
-
-            &:hover {
-                background-color: #f0f7ff;
-
-                .menu-main-sub-2-item-link {
-                    color: $Color_main_menu_link_hover;
-                    transform: translateX(4px);
-                    font-weight: 600;
-                }
-
-                .menu-main-sub-3 {
-                    opacity: 1;
-                    pointer-events: auto;
-                    visibility: visible;
-                    left: calc(100% + 4px);
-                }
-            }
-        }
+    &-item {
+        position: relative;
+        cursor: pointer;
+        border-radius: 8px;
+        margin: 2px 0;
+        transition: background-color 0.2s ease;
     }
 
-    // ===== SUB LEVEL 3 ============================================
+    &-item-link {
+        display: block;
+        padding: 10px 14px;
+        color: #334155;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+}
+
+.menu-main .menu-main-sub-2-item:hover {
+    background-color: #f0f7ff;
+
+    .menu-main-sub-2-item-link {
+        color: $Color_main_menu_link_hover;
+        transform: translateX(4px);
+        font-weight: 600;
+    }
+
     .menu-main-sub-3 {
-        pointer-events: none;
-        opacity: 0;
-        visibility: hidden;
-        position: absolute;
-        top: 0;
-        left: calc(100% + 10px);
-        transition: opacity 0.2s ease, visibility 0.2s ease;
-        z-index: 1004;
-        min-width: 210px;
-        padding: 6px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(226, 232, 240, 0.9);
-        border-radius: 12px;
-        box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12);
+        opacity: 1;
+        pointer-events: auto;
+        visibility: visible;
+        left: calc(100% + 4px);
+    }
+}
 
-        &-item {
-            position: relative;
-            cursor: pointer;
-            border-radius: 8px;
-            margin: 2px 0;
-            transition: background-color 0.2s ease;
+// ===== SUB LEVEL 3 ============================================
+.menu-main .menu-main-sub-3 {
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: calc(100% + 10px);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 1004;
+    min-width: 210px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.12);
 
-            &-link {
-                display: block;
-                padding: 10px 14px;
-                color: #334155;
-                font-size: 1.1rem; /* [2026-10-09]: Đồng bộ font-size 1.1rem */
-                font-weight: 500;
-                text-decoration: none;
-                border-radius: 8px;
-                transition: all 0.2s ease;
-            }
+    &-item {
+        position: relative;
+        cursor: pointer;
+        border-radius: 8px;
+        margin: 2px 0;
+        transition: background-color 0.2s ease;
+    }
 
-            &:hover {
-                background-color: #f0f7ff;
+    &-item-link {
+        display: block;
+        padding: 10px 14px;
+        color: #334155;
+        font-size: 1.1rem;
+        font-weight: 500;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+    }
+}
 
-                .menu-main-sub-3-item-link {
-                    color: $Color_main_menu_link_hover;
-                    transform: translateX(4px);
-                    font-weight: 600;
-                }
-            }
-        }
+.menu-main .menu-main-sub-3-item:hover {
+    background-color: #f0f7ff;
+
+    .menu-main-sub-3-item-link {
+        color: $Color_main_menu_link_hover;
+        transform: translateX(4px);
+        font-weight: 600;
     }
 }
 

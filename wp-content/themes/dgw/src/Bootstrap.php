@@ -19,9 +19,11 @@ use DGW\Helpers\AssetsManager;
 use DGW\Helpers\EnvConfig;
 use DGW\Helpers\LanguageHelper;
 use DGW\Helpers\MediaUploadHelper;
+use DGW\Helpers\PostViewHelper;
 use DGW\Helpers\SeoHelper;
 use DGW\Helpers\ThemeTweaks;
 use DGW\Metaboxes\MetaboxRegistry;
+use DGW\Models\CustomPostModel;
 use DGW\Shortcodes\MemberShortcode;
 use DGW\Taxonomies\TaxonomyRegistry;
 
@@ -45,6 +47,11 @@ class Bootstrap
         SeoHelper::register();
         MediaUploadHelper::register();
         ThemeTweaks::register();
+        // [25/11/2026] - Đăng ký đếm lượt xem bài viết qua template_redirect chuẩn MVC
+        PostViewHelper::register();
+        // [25/11/2026] - Đăng ký hook WP-Cron đồng bộ Google Sheets/Lark và hook xóa cache category translation_group
+        DownloadAjax::registerCronHooks();
+        CustomPostModel::registerCacheInvalidation();
 
         // [20/11/2026] - Đồng bộ gọi qua static ::register()
         RewriteRules::register();

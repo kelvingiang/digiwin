@@ -13,34 +13,36 @@
  * 5. Accessibility & i18n: Đa ngôn ngữ hóa nhãn điều hướng navText/aria-label theo ngôn ngữ hiện tại thay vì hardcode tiếng Trung.
  */
 
+// [25/11/2026] - Đảm bảo owl.carousel-js được enqueue ở footer khi template home-cases được render
+wp_enqueue_script('owl.carousel-js');
+
 $current_lang  = dgw_get_lang();
 $transient_key = 'dgw_home_casestudies_' . $current_lang;
 $case_items    = get_transient($transient_key);
 
 if (false === $case_items) {
     // [2026-10-08] - Giới hạn 9 bài (bội số của 3 cột desktop) thay vì -1 unbounded
+    // [26/11/2026] - Dùng foreach($query->posts) thay vì while/the_post() để tránh Divi Builder chèn #et-boc qua hook loop_start/loop_end
     $query = getCustomPostAtHome('casestudies', 9);
     $case_items = array();
 
-    if ($query->have_posts()) {
-        while ($query->have_posts()) {
-            $query->the_post();
-            $post_id     = get_the_ID();
-            $thumb_id    = get_post_thumbnail_id($post_id);
-            $url_desktop = wp_get_attachment_image_src($thumb_id, 'medium');
-            $url_mobile  = wp_get_attachment_image_src($thumb_id, 'thumbnail');
+    if (!empty($query->posts)) {
+        foreach ($query->posts as $post_item) {
+            $post_id     = (int) $post_item->ID;
+            $thumb_id    = (int) get_post_thumbnail_id($post_id);
+            $url_desktop = $thumb_id > 0 ? wp_get_attachment_image_src($thumb_id, 'medium') : false;
+            $url_mobile  = $thumb_id > 0 ? wp_get_attachment_image_src($thumb_id, 'thumbnail') : false;
 
             $case_items[] = array(
                 'id'          => $post_id,
-                'title'       => get_the_title(),
-                'permalink'   => get_the_permalink(),
-                'has_thumb'   => has_post_thumbnail(),
+                'title'       => (string) get_the_title($post_id),
+                'permalink'   => (string) get_permalink($post_id),
+                'has_thumb'   => $thumb_id > 0 && is_array($url_desktop),
                 'url_desktop' => $url_desktop ?: array(PART_IMAGES . 'no-image.jpg', 410, 270),
                 'url_mobile'  => $url_mobile ?: $url_desktop,
             );
         }
     }
-    wp_reset_postdata();
 
     set_transient($transient_key, $case_items, 12 * HOUR_IN_SECONDS);
 }

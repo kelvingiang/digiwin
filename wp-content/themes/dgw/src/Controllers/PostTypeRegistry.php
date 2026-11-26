@@ -184,6 +184,7 @@ class PostTypeRegistry
             ],
 
             // Cấu hình CPT Slider (Banner trượt trang chủ - dùng name_suffix ghi chú kích thước chuẩn 1300 x 430)
+            // [2026-11-25] - @author: Kelvin - Bổ sung cột 'img' hiển thị ảnh banner trong danh sách Slider WP-Admin
             'controller_slider' => [
                 'post_type'      => 'slider',
                 'name'           => 'Slider',
@@ -195,6 +196,7 @@ class PostTypeRegistry
                 'supports'       => ['title', 'thumbnail'],
                 'unset_columns'  => ['home', 'categories', 'comments'],
                 'custom_columns' => [
+                    'img'         => 'Image',
                     'order'       => 'Show Order',
                     'create-date' => 'Create Date',
                 ],

@@ -27,7 +27,7 @@ get_header(); ?>
          */
         $lang      = function_exists('dgw_get_lang') ? dgw_get_lang() : 'vn';
         $term      = get_term_by('slug', 'recruitstaff_' . $lang, $tax)
-            ?: get_term_by('slug', 'recruit_staff', $tax)
+            ?: get_term_by('slug', 'recruitstaff', $tax)
             ?: get_term_by('slug', 'recruitstaff_vn', $tax);
         $cate      = '';
 

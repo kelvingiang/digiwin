@@ -43,7 +43,7 @@
     </section>
 
     <section aria-label="Latest News">
-        <?php get_template_part('templates/home-news'); ?>
+        <?php \DGW\Helpers\PostViewHelper::renderHomeNews(); ?>
     </section>
 </div>
 

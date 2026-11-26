@@ -18,26 +18,28 @@ class MemberAuthAjax
 {
     /**
      * [18/11/2026] - Đăng ký toàn bộ AJAX action xác thực thành viên
+     * [25/11/2026] - Tách action admin_update_client_password chỉ dùng wp_ajax_ (bỏ wp_ajax_nopriv_)
      */
     public static function register(): void
     {
-        $actions = [
-            'download_member_login'      => 'handleLogin',
-            'download_member_register'   => 'handleRegister',
-            'check_member_login'         => 'handleCheckLogin',
-            'member_logout'              => 'handleLogout',
-            'member_change_password'     => 'handleChangePassword',
-            'member_reset_password'      => 'handleResetPassword',
-            'member_active_account'      => 'handleActiveAccount',
-            'member_change_info'         => 'handleChangeInfo',
-            'member_forgot_password'     => 'handleForgotPassword',
-            'admin_update_client_password' => 'handleAdminClientPassword',
+        $publicActions = [
+            'download_member_login'    => 'handleLogin',
+            'download_member_register' => 'handleRegister',
+            'check_member_login'       => 'handleCheckLogin',
+            'member_logout'            => 'handleLogout',
+            'member_change_password'   => 'handleChangePassword',
+            'member_reset_password'    => 'handleResetPassword',
+            'member_active_account'    => 'handleActiveAccount',
+            'member_change_info'       => 'handleChangeInfo',
+            'member_forgot_password'   => 'handleForgotPassword',
         ];
 
-        foreach ($actions as $action => $method) {
+        foreach ($publicActions as $action => $method) {
             add_action('wp_ajax_' . $action, [self::class, $method]);
             add_action('wp_ajax_nopriv_' . $action, [self::class, $method]);
         }
+
+        add_action('wp_ajax_admin_update_client_password', [self::class, 'handleAdminClientPassword']);
     }
 
     /**
@@ -114,7 +116,8 @@ class MemberAuthAjax
     {
         $msg      = self::getMessages($_POST['lang'] ?? 'vi');
         $email    = sanitize_email($_POST['email'] ?? '');
-        $password = sanitize_text_field(wp_unslash($_POST['password'] ?? ''));
+        // [25/11/2026] - Chỉ wp_unslash() cho mật khẩu để giữ nguyên ký tự đặc biệt hợp lệ
+        $password = (string) wp_unslash($_POST['password'] ?? '');
 
         if (empty($email) || empty($password)) {
             wp_send_json_error(['message' => $msg['empty']]);
@@ -194,7 +197,8 @@ class MemberAuthAjax
         $registrationData = [
             'username'   => sanitize_text_field(wp_unslash($_POST['username'] ?? '')),
             'email'      => sanitize_email(wp_unslash($_POST['email'] ?? '')),
-            'password'   => sanitize_text_field(wp_unslash($_POST['password'] ?? '')),
+            // [25/11/2026] - Chỉ wp_unslash() cho mật khẩu để không làm sai lệch ký tự đặc biệt hợp lệ; bỏ regex chặn nhầm chữ "and"/"or"
+            'password'   => (string) wp_unslash($_POST['password'] ?? ''),
             'company'    => sanitize_text_field(wp_unslash($_POST['company'] ?? '')),
             'phone'      => sanitize_text_field(wp_unslash($_POST['phone'] ?? '')),
             'tax'        => sanitize_text_field(wp_unslash($_POST['tax'] ?? '')),
@@ -203,11 +207,6 @@ class MemberAuthAjax
             'position'   => sanitize_text_field(wp_unslash($_POST['position'] ?? '')),
             'language'   => sanitize_text_field(wp_unslash($_POST['lang'] ?? '')),
         ];
-
-        $suspiciousPattern = '/(\bOR\b|\bAND\b|=|<|>|--|;)/i';
-        if (preg_match($suspiciousPattern, $registrationData['username']) || preg_match($suspiciousPattern, $registrationData['company'])) {
-            wp_send_json_error(['message' => $msg['failure']]);
-        }
 
         if (!is_email($registrationData['email'])) {
             wp_send_json_error(['message' => $msg['email_invalid']]);
@@ -370,9 +369,10 @@ class MemberAuthAjax
             wp_send_json_error(['message' => $msg['login_req']]);
         }
 
-        $current  = sanitize_text_field(wp_unslash($_POST['current'] ?? ''));
-        $password = sanitize_text_field(wp_unslash($_POST['password'] ?? ''));
-        $confirm  = sanitize_text_field(wp_unslash($_POST['confirm'] ?? ''));
+        // [25/11/2026] - Chỉ wp_unslash() cho mật khẩu để giữ nguyên ký tự đặc biệt hợp lệ
+        $current  = (string) wp_unslash($_POST['current'] ?? '');
+        $password = (string) wp_unslash($_POST['password'] ?? '');
+        $confirm  = (string) wp_unslash($_POST['confirm'] ?? '');
 
         if (empty($password) || empty($confirm) || empty($current)) {
             wp_send_json_error(['message' => $msg['password_wrong']]);
@@ -410,8 +410,9 @@ class MemberAuthAjax
             wp_send_json_error(['message' => $msg['failure']], 403);
         }
 
-        $password = sanitize_text_field(wp_unslash($_POST['password'] ?? ''));
-        $confirm  = sanitize_text_field(wp_unslash($_POST['confirm'] ?? ''));
+        // [25/11/2026] - Chỉ wp_unslash() cho mật khẩu để giữ nguyên ký tự đặc biệt hợp lệ
+        $password = (string) wp_unslash($_POST['password'] ?? '');
+        $confirm  = (string) wp_unslash($_POST['confirm'] ?? '');
         $key      = sanitize_text_field(wp_unslash($_POST['key'] ?? ''));
         $email    = sanitize_email(wp_unslash($_POST['email'] ?? ''));
 
@@ -614,7 +615,8 @@ class MemberAuthAjax
 
         $email    = sanitize_email(wp_unslash($_POST['email'] ?? ''));
         $name     = sanitize_text_field(wp_unslash($_POST['name'] ?? ''));
-        $password = sanitize_text_field(wp_unslash($_POST['password'] ?? ''));
+        // [25/11/2026] - Chỉ wp_unslash() cho mật khẩu để giữ nguyên ký tự đặc biệt hợp lệ
+        $password = (string) wp_unslash($_POST['password'] ?? '');
 
         if (!empty($email) && !empty($password)) {
             $passwordHash = password_hash($password, PASSWORD_BCRYPT);

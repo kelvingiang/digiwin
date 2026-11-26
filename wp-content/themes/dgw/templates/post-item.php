@@ -45,6 +45,7 @@ if ($has_thumb && $thumb_id) {
              src="<?php echo esc_url($image_src); ?>"
              <?php if ($srcset !== ''): ?>srcset="<?php echo esc_attr($srcset); ?>" sizes="(max-width: 400px) 100vw, 300px"<?php endif; ?>
              loading="lazy"
+             decoding="async"
              width="<?php echo esc_attr((string) $width); ?>"
              height="<?php echo esc_attr((string) $height); ?>" />
 

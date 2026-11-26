@@ -1,3 +1,4 @@
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 @use "define" as *;
 @use "responsive" as *;
 
@@ -23,25 +24,26 @@
     }
 }
 
-.slider-text {
-    a {
-        color: white;
-        &:hover {
-            color: #ccc;
-        }
-        .slider-title {
-            font-size: 2.5rem;
-            text-align: left;
-            position: relative;
-            animation-name: slider-title;
-            animation-duration: 2s;
-        }
-        .slider-content {
-            animation-name: slider-content;
-            animation-duration: 2s;
-            position: relative;
-            text-align: left;
-        }
+.slider-text a {
+    color: white;
+
+    &:hover {
+        color: #ccc;
+    }
+
+    .slider-title {
+        font-size: 2.5rem;
+        text-align: left;
+        position: relative;
+        animation-name: slider-title;
+        animation-duration: 2s;
+    }
+
+    .slider-content {
+        animation-name: slider-content;
+        animation-duration: 2s;
+        position: relative;
+        text-align: left;
     }
 }
 
@@ -82,12 +84,13 @@
 
         &:not(.owl-loaded) .item {
             display: none;
+        }
 
-            &:first-child {
-                display: block;
-            }
+        &:not(.owl-loaded) .item:first-child {
+            display: block;
         }
     }
+
     .item {
         cursor: pointer;
         display: block;
@@ -113,33 +116,8 @@
             display: block;
         }
     }
+
     .active {
-        a {
-            color: white;
-            font-size: 1rem;
-            @include Respond(lg) {
-                font-size: 1rem;
-            }
-            @include Respond(md) {
-                font-size: 0.8rem;
-            }
-            @include Respond(sm) {
-                font-size: 0.5rem;
-            }
-            h2 {
-                font-size: 1.5rem;
-                font-weight: bold;
-                @include Respond(lg) {
-                    font-size: 1.5rem;
-                }
-                @include Respond(md) {
-                    font-size: 1.2rem;
-                }
-                @include Respond(sm) {
-                    font-size: 1rem;
-                }
-            }
-        }
         .owl-slider-title {
             display: block;
             position: absolute;
@@ -148,6 +126,7 @@
             animation-name: owl-slider-title;
             animation-duration: 1s;
         }
+
         .owl-slider-content {
             display: block;
             position: absolute;
@@ -158,7 +137,12 @@
             animation-name: owl-slider-content;
             animation-duration: 1s;
         }
+
+        span {
+            background-color: #333;
+        }
     }
+
     .owl-dots {
         position: absolute;
         bottom: 200px;
@@ -167,9 +151,33 @@
         border-radius: 50px;
         padding: 0.3rem 1rem 0.1rem;
     }
-    .active {
-        span {
-            background-color: #333;
+}
+
+#slider .active a {
+    color: white;
+    font-size: 1rem;
+
+    @include Respond(lg) {
+        font-size: 1rem;
+    }
+    @include Respond(md) {
+        font-size: 0.8rem;
+    }
+    @include Respond(sm) {
+        font-size: 0.5rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        @include Respond(lg) {
+            font-size: 1.5rem;
+        }
+        @include Respond(md) {
+            font-size: 1.2rem;
+        }
+        @include Respond(sm) {
+            font-size: 1rem;
         }
     }
 }
@@ -189,87 +197,89 @@
         flex: 1 0 auto;
     }
 
-    .owl-theme {
-        //padding-top: 2.5rem;
-        .owl-nav {
-            display: block;
-            .owl-next,
-            .owl-prev {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%); // 垂直置中更好的寫法
-                background-color: transparent !important;
-
-                &:hover {
-                    background: none !important; // 避免套件預設背景色
-                    color: rgba(105, 105, 105);
-                }
-            }
-            .owl-next {
-                right: 0px; // 稍微拉開距離，確保不在溢出邊緣
-            }
-
-            .owl-prev {
-                left: 0px;
-            }
-        }
+    .owl-theme .owl-nav {
+        display: block;
     }
-    .item {
-        transition-duration: 0.8s;
-        border-radius: 0.5rem;
-        border: 1px solid #d8d6d6;
-        cursor: pointer;
-        overflow: hidden;
-        margin: 1rem 0.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 100%;
-        height: auto;
-        text-decoration: none;
-        color: inherit;
+}
 
-        @include Respond(sm) {
-        }
-
-        img {
-            width: 100% !important;
-            height: auto !important;
-        }
-
-        .item-title {
-            text-align: center;
-            padding: 0.5rem;
-            h2,
-            h3 {
-                font-size: 1.1rem;
-                font-weight: bold;
-                color: #333;
-                margin: 0;
-                line-height: 1.4;
-                @include Respond(lg) {
-                    font-size: 1rem;
-                }
-                @include Respond(md) {
-                    font-size: 0.9rem;
-                }
-                @include Respond(sm) {
-                    font-size: 0.7rem;
-                }
-            }
-        }
+#casestudies-slider .owl-theme .owl-nav {
+    .owl-next,
+    .owl-prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: transparent !important;
 
         &:hover {
-            background-color: #f7f7f7;
-            margin-top: 0.6rem;
-            transform: scale(1.001, 1.001);
-            box-shadow: rgba(0, 0, 0, 0.56) 0px 2px 8px 1px;
-            .item-title {
-                h2,
-                h3 {
-                    color: #571307;
-                }
-            }
+            background: none !important;
+            color: rgba(105, 105, 105);
+        }
+    }
+
+    .owl-next {
+        right: 0px;
+    }
+
+    .owl-prev {
+        left: 0px;
+    }
+}
+
+#casestudies-slider .item {
+    transition-duration: 0.8s;
+    border-radius: 0.5rem;
+    border: 1px solid #d8d6d6;
+    cursor: pointer;
+    overflow: hidden;
+    margin: 1rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: auto;
+    text-decoration: none;
+    color: inherit;
+
+    img {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .item-title {
+        text-align: center;
+        padding: 0.5rem;
+    }
+
+    &:hover {
+        background-color: #f7f7f7;
+        margin-top: 0.6rem;
+        transform: scale(1.001, 1.001);
+        box-shadow: rgba(0, 0, 0, 0.56) 0px 2px 8px 1px;
+    }
+
+    &:hover .item-title h2,
+    &:hover .item-title h3 {
+        color: #571307;
+    }
+}
+
+#casestudies-slider .item .item-title {
+    h2,
+    h3 {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+        margin: 0;
+        line-height: 1.4;
+
+        @include Respond(lg) {
+            font-size: 1rem;
+        }
+        @include Respond(md) {
+            font-size: 0.9rem;
+        }
+        @include Respond(sm) {
+            font-size: 0.7rem;
         }
     }
 }

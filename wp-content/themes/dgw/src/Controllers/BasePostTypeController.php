@@ -102,6 +102,7 @@ class BasePostTypeController
 
     /**
      * [2026-11-20] - @author: Kelvin - Tùy biến các cột hiển thị trong danh sách CPT (Category dùng show_admin_column native)
+     * [2026-11-25] - @author: Kelvin - Hỗ trợ chèn cột 'img' ngay sau cột tiêu đề khi CPT cấu hình trong custom_columns
      */
     public function manageColumns(array $columns): array
     {
@@ -109,8 +110,31 @@ class BasePostTypeController
             unset($columns[$colKey]);
         }
 
+        if (isset($this->customColumns['img'])) {
+            $imgLabel   = __((string) $this->customColumns['img'], 'dgw');
+            $newColumns = [];
+            $inserted   = false;
+
+            foreach ($columns as $key => $value) {
+                $newColumns[$key] = $value;
+                if ($key === 'title') {
+                    $newColumns['img'] = $imgLabel;
+                    $inserted          = true;
+                }
+            }
+
+            if (!$inserted) {
+                $newColumns['img'] = $imgLabel;
+            }
+
+            $columns = $newColumns;
+        }
+
         foreach ($this->customColumns as $colKey => $label) {
-            $columns[$colKey] = __($label, 'dgw');
+            if ($colKey === 'img') {
+                continue;
+            }
+            $columns[$colKey] = __((string) $label, 'dgw');
         }
 
         return $columns;

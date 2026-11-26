@@ -220,7 +220,8 @@ class SeoHelper
     {
         $langSuffix = in_array($lang, ['cn', 'sc'], true) ? $lang : 'vn';
 
-        $siteName = trim((string) get_post_meta(1, '_info_name_' . $langSuffix, true));
+        // [25/11/2026] - Đọc thông tin công ty qua CompanyInfoModel có Transient Cache
+        $siteName = trim(\DGW\Models\CompanyInfoModel::getLocalized('_info_name', $langSuffix));
         if ($siteName === '' && $langSuffix === 'sc') {
             $siteName = '鼎捷软件(越南)股份公司';
         }
@@ -231,9 +232,9 @@ class SeoHelper
             $siteName = get_bloginfo('name');
         }
 
-        $siteAddress = trim((string) get_post_meta(1, '_info_address_' . $langSuffix, true));
+        $siteAddress = trim(\DGW\Models\CompanyInfoModel::getLocalized('_info_address', $langSuffix));
         if ($siteAddress === '' && $langSuffix === 'sc') {
-            $siteAddress = trim((string) get_post_meta(1, '_info_address_cn', true));
+            $siteAddress = trim(\DGW\Models\CompanyInfoModel::getLocalized('_info_address', 'cn'));
         }
         if ($siteAddress === '') {
             $siteAddress = trim((string) get_option('company_address_' . $langSuffix));

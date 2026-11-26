@@ -272,14 +272,16 @@ $menu_bg: rgba(255, 255, 255, 0.85); // Glassmorphism base
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
             padding-left: 28px !important;
             transform: translateX(4px);
+        }
 
-            &::before {
-                width: 4px;
-                height: 16px; // Morphing into a vertical pill shape
-                border-radius: 4px;
-                background-color: $menu_mobile_color;
-                left: 10px;
-            }
+        // [2026-11-25]: Làm phẳng pseudo-element khi hover/active xuống 3 cấp chuẩn BEM/CSSOM
+        &:hover::before,
+        &:active::before {
+            width: 4px;
+            height: 16px; // Morphing into a vertical pill shape
+            border-radius: 4px;
+            background-color: $menu_mobile_color;
+            left: 10px;
         }
     }
 

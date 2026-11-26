@@ -17,7 +17,6 @@ if (cateId) {
 // const mainPath = window.location.pathname.split("/").filter((s) => s);
 
 // let segment = mainPath[1];
-// console.log(segment);
 // // const mainPath = window.location.pathname.split("/").filter(s => s);
 // // let segment = mainPath[1];   // 例如 URL: /digiwin/cases/91  → segment = "cases"
 

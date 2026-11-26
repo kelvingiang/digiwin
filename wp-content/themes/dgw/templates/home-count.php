@@ -1,8 +1,9 @@
 <!-- [2026-06-30]: Thêm khối Thống kê con số (Animated Counter) -->
 <?php
-$count_year = get_post_meta('1', '_info_years_experience', true);
-$count_project = get_post_meta('1', '_info_project_clients', true);
-$count_solution = get_post_meta('1', '_info_product_solution', true);
+// [25/11/2026] - Đọc số liệu thống kê qua CompanyInfoModel có Transient Cache
+$count_year     = \DGW\Models\CompanyInfoModel::get('_info_years_experience');
+$count_project  = \DGW\Models\CompanyInfoModel::get('_info_project_clients');
+$count_solution = \DGW\Models\CompanyInfoModel::get('_info_product_solution');
 ?>
 <div class="home-count-section">
     <div class="container mx-auto">

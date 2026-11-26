@@ -26,7 +26,6 @@ function formatNumber(val) {
   while (/(\d+)(\d{3})/.test(val.toString())) {
     val = val.toString().replace(/(\d+)(\d{3})/, "$1" + "," + "$2");
   }
-  //  console.log(val);
   return val;
 }
 
@@ -92,7 +91,6 @@ jQuery(document).ready(function () {
 
   function isMoney(evt, element) {
     var charCode = evt.which ? evt.which : event.keyCode;
-    console.log(charCode);
     if (
       charCode !== 44 && // “.” CHECK DOT, AND ONLY ONE.
       (charCode !== 46 || jQuery(element).val().indexOf(".") !== -1) && // “.” CHECK DOT, AND ONLY ONE.

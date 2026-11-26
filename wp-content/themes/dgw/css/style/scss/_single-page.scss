@@ -1,3 +1,4 @@
+// [2026-11-25]: Làm phẳng selector SCSS về tối đa 3 cấp chuẩn BEM/CSSOM
 @use "define" as *;
 @use "responsive" as *;
 
@@ -27,105 +28,15 @@
     &-title {
         display: none;
         font-size: 1.6rem;
-        //letter-spacing: 0.5rem;
         font-weight: bold;
         margin: 0rem;
         padding: 1rem 3rem;
         color: $color_text_title;
-        // text-shadow: 2px 2px 10px rgb(126, 126, 126);
     }
+
     &-img {
         width: 90%;
         margin-left: 5%;
-    }
-
-    &-content {
-        font-size: 1.2rem;
-        > div {
-            p {
-                padding: 1rem;
-            }
-        }
-        img {
-            border-radius: 0.5rem;
-            border: 1px solid #666;
-            max-width: 98%;
-        }
-        h4 {
-            font-size: 1.1rem;
-            margin-left: 2rem;
-        }
-
-        h3 {
-            font-size: 1.3rem;
-            margin-left: 2rem;
-        }
-
-        h2 {
-            font-size: 1.4rem;
-            margin-left: 2rem;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            margin-left: 2rem;
-        }
-        p {
-            clear: both;
-        }
-        iframe {
-            width: 100%;
-            height: 500px;
-        }
-    }
-
-    &-download-btn {
-        margin-top: 1rem;
-        text-align: center;
-        /* Thiết kế cấu trúc nút */
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 28px;
-            font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff;
-            text-decoration: none;
-            background: linear-gradient(135deg, #449ef3, #0270d6); /* Màu gradient hiện đại */
-            border-radius: 10px; /* Bo tròn hoàn toàn */
-            box-shadow: 0 4px 15px rgba(74, 74, 75, 0.3); /* Hiệu ứng đổ bóng */
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        /* Tùy chỉnh Icon SVG */
-        .btn-download .icon {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        /* Hiệu ứng khi di chuột vào (Hover) */
-        .btn-download:hover {
-            transform: translateY(-3px); /* Nảy lên nhẹ */
-            box-shadow: 0 8px 25px rgba(121, 121, 122, 0.4); /* Bóng đậm và to hơn */
-            background: linear-gradient(135deg, #379af7, #015cb1);
-            color: #ffffff;
-        }
-
-        /* Hiệu ứng icon mũi tên di chuyển xuống khi hover */
-        .btn-download:hover .icon {
-            transform: translateY(5px);
-        }
-
-        /* Hiệu ứng khi click (Active) */
-        .btn-download:active {
-            transform: translateY(1px); /* Nhấn lún xuống */
-            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
-        }
     }
 
     .article-title {
@@ -133,89 +44,175 @@
         color: $color_text_title;
         font-weight: bold;
     }
+}
 
-    // [2026-10-12] - @author: Kelvin - Tối ưu hóa UI/UX view_like_area: flex căn chỉnh icon thẳng hàng, hiệu ứng nút like mượt mà và highlight khi đã like (.is-liked)
-    .view_like_area {
-        background-color: transparent;
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
-        padding-right: 1.5rem;
-        z-index: 10;
+.single-space-content {
+    font-size: 1.2rem;
 
-        .view_like_content {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 1.25rem;
-            color: #94a3b8;
-            font-size: 0.95rem;
-            font-weight: 500;
+    > div p {
+        padding: 1rem;
+    }
 
-            .view-item {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.35rem;
+    img {
+        border-radius: 0.5rem;
+        border: 1px solid #666;
+        max-width: 98%;
+    }
 
-                .icon-comment {
-                    width: 17px;
-                    height: 17px;
-                    fill: #94a3b8;
-                    display: block;
-                    transition: all 0.25s ease;
-                }
-            }
+    h4 {
+        font-size: 1.1rem;
+        margin-left: 2rem;
+    }
 
-            .like-click {
-                display: inline-flex;
-                align-items: center;
+    h3 {
+        font-size: 1.3rem;
+        margin-left: 2rem;
+    }
 
-                .like-btn-action {
-                    background: transparent;
-                    border: none;
-                    padding: 0;
-                    margin: 0;
-                    outline: none;
-                    cursor: pointer;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    h2 {
+        font-size: 1.4rem;
+        margin-left: 2rem;
+    }
 
-                    &.like-post {
-                        .icon-comment {
-                            fill: #64748b;
-                        }
+    h1 {
+        font-size: 1.5rem;
+        margin-left: 2rem;
+    }
 
-                        &:hover {
-                            transform: scale(1.2);
+    p {
+        clear: both;
+    }
 
-                            .icon-comment {
-                                fill: #00aff0;
-                            }
-                        }
+    iframe {
+        width: 100%;
+        height: 500px;
+    }
+}
 
-                        &:active {
-                            transform: scale(0.95);
-                        }
-                    }
+.single-space-download-btn {
+    margin-top: 1rem;
+    text-align: center;
 
-                    &.is-liked {
-                        cursor: default;
+    /* Thiết kế cấu trúc nút */
+    .btn-download {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 28px;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        text-decoration: none;
+        background: linear-gradient(135deg, #449ef3, #0270d6); /* Màu gradient hiện đại */
+        border-radius: 10px; /* Bo tròn hoàn toàn */
+        box-shadow: 0 4px 15px rgba(74, 74, 75, 0.3); /* Hiệu ứng đổ bóng */
+        transition: all 0.3s ease;
+        cursor: pointer;
 
-                        .icon-comment {
-                            fill: #00aff0;
-                        }
-                    }
+        &:hover {
+            transform: translateY(-3px); /* Nảy lên nhẹ */
+            box-shadow: 0 8px 25px rgba(121, 121, 122, 0.4); /* Bóng đậm và to hơn */
+            background: linear-gradient(135deg, #379af7, #015cb1);
+            color: #ffffff;
+        }
 
-                    &.is-loading {
-                        opacity: 0.6;
-                        cursor: wait;
-                    }
-                }
-            }
+        &:active {
+            transform: translateY(1px); /* Nhấn lún xuống */
+            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.3);
         }
     }
+
+    /* Tùy chỉnh Icon SVG */
+    .btn-download .icon {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    /* Hiệu ứng icon mũi tên di chuyển xuống khi hover */
+    .btn-download:hover .icon {
+        transform: translateY(5px);
+    }
+}
+
+// [2026-10-12] - @author: Kelvin - Tối ưu hóa UI/UX view_like_area: flex căn chỉnh icon thẳng hàng, hiệu ứng nút like mượt mà và highlight khi đã like (.is-liked)
+.single-space .view_like_area {
+    background-color: transparent;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    padding-right: 1.5rem;
+    z-index: 10;
+
+    .view_like_content {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 1.25rem;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+}
+
+.single-space .view_like_area .view_like_content .view-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    .icon-comment {
+        width: 17px;
+        height: 17px;
+        fill: #94a3b8;
+        display: block;
+        transition: all 0.25s ease;
+    }
+}
+
+.single-space .view_like_area .view_like_content .like-click {
+    display: inline-flex;
+    align-items: center;
+}
+
+.single-space .view_like_area .view_like_content .like-click .like-btn-action {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    &.like-post:hover {
+        transform: scale(1.2);
+    }
+
+    &.like-post:active {
+        transform: scale(0.95);
+    }
+
+    &.is-liked {
+        cursor: default;
+    }
+
+    &.is-loading {
+        opacity: 0.6;
+        cursor: wait;
+    }
+}
+
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post .icon-comment {
+    fill: #64748b;
+}
+
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.like-post:hover .icon-comment,
+.single-space .view_like_area .view_like_content .like-click .like-btn-action.is-liked .icon-comment {
+    fill: #00aff0;
 }
 
 #youtube-space {
@@ -229,11 +226,9 @@
         max-width: 100%; // Đảm bảo responsive, tránh vỡ layout trên mobile
         height: auto;
         display: block;
-        // Border & Shadow cho ảnh
         border: 2px solid #ffffff;
-        border-radius: 8px; // Bo góc nhẹ để tăng thẩm mỹ UI
+        border-radius: 8px;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-        // Shadow mặc định đa tầng tạo chiều sâu thực tế
         box-shadow:
             0 10px 25px -5px rgba(0, 0, 0, 0.3),
             0 8px 10px -6px rgba(0, 0, 0, 0.2);
@@ -250,8 +245,6 @@
             transform: translateY(-1px) scale(1.01);
             filter: brightness(1.05) contrast(1.01);
             border-color: #ffffff;
-
-            // Ambient backlight: bóng tối đổ xa + quầng sáng xanh/trắng phản chiếu
             box-shadow:
                 0 25px 50px -12px rgba(0, 0, 0, 0.5),
                 0 0 25px rgba(255, 255, 255, 0.25),

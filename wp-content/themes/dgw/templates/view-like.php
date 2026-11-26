@@ -5,22 +5,12 @@
  * 2. Tự động đếm lượt view an toàn (chống F5 spam bằng cookie 3h).
  * 3. Chuẩn hóa trạng thái Like (localStorage, optimistic UI, rollback khi lỗi, hỗ trợ class .is-liked).
  * 4. Nâng cao UI/UX, hỗ trợ đầy đủ accessibility (aria-label).
+ * [25/11/2026] - Loại bỏ logic update_post_meta() và setcookie() khỏi View (đã chuyển sang PostViewHelper::trackSinglePostView tại hook template_redirect chuẩn MVC)
  */
 
 $post_id = get_the_ID();
 if (!$post_id) {
     return;
-}
-
-// 1. Tự động tăng lượt xem khi xem bài viết (bảo vệ bằng cookie 3 giờ tránh F5 spam)
-if (!is_admin() && is_singular()) {
-    $view_cookie_name = 'dgw_viewed_' . $post_id;
-    if (!isset($_COOKIE[$view_cookie_name])) {
-        $current_view = (int) get_post_meta($post_id, '_metabox_view', true);
-        $current_view++;
-        update_post_meta($post_id, '_metabox_view', $current_view);
-        setcookie($view_cookie_name, '1', time() + (3 * 3600), COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN);
-    }
 }
 
 $view_count = (int) get_post_meta($post_id, '_metabox_view', true);
@@ -65,6 +55,8 @@ $like_count = (int) get_post_meta($post_id, '_metabox_like', true);
             var $btn = $area.find('.like-btn-action');
             var $count = $area.find('.like-count');
             var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+            // [25/11/2026] - Bổ sung Nonce CSRF cho yêu cầu tăng lượt thích
+            var ajaxNonce = (typeof MyAjax !== 'undefined' && MyAjax.nonce) ? MyAjax.nonce : '<?php echo esc_js(wp_create_nonce('my_nonce')); ?>';
 
             // 1. Khởi tạo trạng thái đã like hay chưa từ localStorage
             if (localStorage.getItem('liked_' + postID)) {
@@ -94,6 +86,7 @@ $like_count = (int) get_post_meta($post_id, '_metabox_like', true);
                     type: 'POST',
                     data: {
                         action: 'plus_one_like',
+                        nonce: ajaxNonce,
                         postID: postID
                     },
                     dataType: 'json',

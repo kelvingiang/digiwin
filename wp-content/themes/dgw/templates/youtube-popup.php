@@ -160,10 +160,11 @@ $post_title = get_the_title($post_id);
     .youtube-popup.is-visible {
         display: flex;
     }
+    /* [26/11/2026] - Mở rộng popup video chiếm 80% màn hình (tỷ lệ 16:9), giới hạn tối đa theo 80vh tránh tràn dọc trên màn hình siêu rộng */
     .youtube-popup__content {
         position: relative;
-        width: 100%;
-        max-width: 900px;
+        width: min(90vw, calc(90vh * 16 / 9));
+        max-width: none;
         background-color: #000;
         border-radius: 10px;
         overflow: hidden;

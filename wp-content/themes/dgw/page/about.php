@@ -26,35 +26,35 @@ $lang = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
                 <h1><?php echo esc_html((string) (get_the_title() ?: __('About Digiwin', 'dgw'))); ?></h1>
             </div>
             <div>
-                <?php echo wp_kses_post((string) get_post_meta(1, '_info_summary_' . $lang, true)); ?>
+                <?php echo wp_kses_post(\DGW\Models\CompanyInfoModel::getLocalized('_info_summary', $lang)); ?>
             </div>
             <hr>
             <div id="operating">
                 <h3 class="article-title"><?php echo esc_html__('Operating', 'dgw'); ?></h3>
-                <?php echo wp_kses_post((string) get_post_meta(1, '_info_operating_' . $lang, true)); ?>
+                <?php echo wp_kses_post(\DGW\Models\CompanyInfoModel::getLocalized('_info_operating', $lang)); ?>
             </div>
             <hr>
             <div id="location">
                 <h3 class="article-title"><?php echo esc_html__('Location', 'dgw'); ?></h3>
-                <?php echo wp_kses_post((string) get_post_meta(1, '_info_location_' . $lang, true)); ?>
+                <?php echo wp_kses_post(\DGW\Models\CompanyInfoModel::getLocalized('_info_location', $lang)); ?>
             </div>
 
             <div id="contact" style="color: #fff; background-color: #253B50;">
                 <div style="padding-left: 1rem;">
                     <div style="font-size: 1rem;">
-                        <?php echo esc_html((string) get_post_meta(1, '_info_name_' . $lang, true)); ?>
+                        <?php echo esc_html(\DGW\Models\CompanyInfoModel::getLocalized('_info_name', $lang)); ?>
                     </div>
                     <div>
                         <label><?php echo esc_html__('Phone', 'dgw'); ?> :</label>
-                        <?php echo esc_html((string) get_post_meta(1, '_info_phone', true)); ?>
+                        <?php echo esc_html(\DGW\Models\CompanyInfoModel::get('_info_phone')); ?>
                     </div>
                     <div>
                         <label>E-mail :</label>
-                        <?php echo esc_html((string) get_post_meta(1, '_info_email', true)); ?>
+                        <?php echo esc_html(\DGW\Models\CompanyInfoModel::get('_info_email')); ?>
                     </div>
                     <div>
                         <label><?php echo esc_html__('Address', 'dgw'); ?> :</label>
-                        <?php echo wp_kses_post((string) get_post_meta(1, '_info_address_' . $lang, true)); ?>
+                        <?php echo wp_kses_post(\DGW\Models\CompanyInfoModel::getLocalized('_info_address', $lang)); ?>
                     </div>
                 </div>
                 <div style="padding: 0.1rem;">

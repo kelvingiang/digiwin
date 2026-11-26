@@ -8,6 +8,7 @@ use DGW\Models\CustomPostModel;
 use DGW\Models\LogoModel;
 use DGW\Models\PopupModel;
 use WP_Query;
+use WP_Term;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,9 +17,60 @@ if (!defined('ABSPATH')) {
 /**
  * [2026-11-19] - @author: Kelvin - Controller/Presenter điều phối dữ liệu Custom Post và nạp View Templates (thay thế inc/front/front-custom-post.php, front-menu-sub.php, front-menu-side.php)
  * [2026-11-20] - @author: Kelvin - Chuyển sang sử dụng CustomPostModel PSR-4 trực tiếp, bỏ require_once DIR_MODEL
+ * [25/11/2026] - Chuyển logic đếm lượt xem và setcookie chống F5 spam từ template view-like.php sang hook template_redirect chuẩn MVC
  */
 class PostViewHelper
 {
+    /**
+     * [25/11/2026] - Đăng ký hook template_redirect đếm lượt xem bài viết trước khi xuất HTML
+     * [26/11/2026] - Bổ sung hook tự động xóa Transient Cache khối Home News khi cập nhật bài viết hoặc danh mục liên quan
+     */
+    public static function register(): void
+    {
+        add_action('template_redirect', [self::class, 'trackSinglePostView']);
+        add_action('save_post_active', [self::class, 'clearHomeNewsCache']);
+        add_action('save_post_resources', [self::class, 'clearHomeNewsCache']);
+        add_action('save_post_casestudies', [self::class, 'clearHomeNewsCache']);
+        add_action('deleted_post', [self::class, 'clearHomeNewsCache']);
+        add_action('created_resources_category', [self::class, 'clearHomeNewsCache']);
+        add_action('edited_resources_category', [self::class, 'clearHomeNewsCache']);
+        add_action('delete_resources_category', [self::class, 'clearHomeNewsCache']);
+    }
+
+    /**
+     * [25/11/2026] - Tăng lượt xem bài viết và gắn cookie chống F5 spam (3 giờ) trước khi headers được gửi
+     */
+    public static function trackSinglePostView(): void
+    {
+        $allowedPostTypes = ['post', 'active', 'casestudies', 'industries', 'joinus', 'resources', 'services', 'solutions'];
+        if (is_admin() || wp_doing_ajax() || is_preview() || !is_singular($allowedPostTypes)) {
+            return;
+        }
+
+        $postId = get_queried_object_id();
+        if ($postId <= 0 || get_post_status($postId) !== 'publish') {
+            return;
+        }
+
+        $cookieName = 'dgw_viewed_' . $postId;
+        if (isset($_COOKIE[$cookieName])) {
+            return;
+        }
+
+        $currentView = (int) get_post_meta($postId, '_metabox_view', true);
+        update_post_meta($postId, '_metabox_view', $currentView + 1);
+
+        RequestHelper::setSecureCookie(
+            $cookieName,
+            '1',
+            time() + (3 * HOUR_IN_SECONDS),
+            true,
+            'Lax',
+            (defined('COOKIEPATH') && COOKIEPATH) ? (string) COOKIEPATH : '/',
+            defined('COOKIE_DOMAIN') ? (string) COOKIE_DOMAIN : ''
+        );
+        $_COOKIE[$cookieName] = '1';
+    }
     /**
      * [2026-11-19] - @author: Kelvin - Lặp WP_Query và render thẻ bài viết qua View templates/post-item.php
      */
@@ -167,9 +219,10 @@ class PostViewHelper
         return CustomPostModel::get_posts_at_home($postType, $postCount);
     }
 
-    public static function getCateAtHome(string $postType, string $cateSlug, int $postCount): WP_Query
+    // [26/11/2026] - Truyền thêm $taxonomy tùy chọn xuống CustomPostModel::get_posts_cate_at_home()
+    public static function getCateAtHome(string $postType, string $cateSlug, int $postCount, string $taxonomy = 'resources_category'): WP_Query
     {
-        return CustomPostModel::get_posts_cate_at_home($postType, $cateSlug, $postCount);
+        return CustomPostModel::get_posts_cate_at_home($postType, $cateSlug, $postCount, $taxonomy);
     }
 
     public static function getAtSideCate(string $postType, int $postCount, string $taxonomy, $cate): WP_Query
@@ -280,9 +333,158 @@ class PostViewHelper
 
     /**
      * [20/11/2026] - Chuẩn bị dữ liệu Slider và render qua View templates/slider-owl.php
+     * [25/11/2026] - Đảm bảo owl.carousel-js được enqueue ở footer nếu template slider được gọi trên trang khác
      */
     public static function renderSlider(int $limit = 10): void
     {
+        wp_enqueue_script('owl.carousel-js');
         get_template_part('templates/slider-owl', null, self::prepareSliderData($limit));
+    }
+
+    /**
+     * [26/11/2026] - @author: Kelvin - Xóa Transient Cache của khối Home News cho tất cả ngôn ngữ khi bài viết hoặc danh mục thay đổi
+     */
+    public static function clearHomeNewsCache(): void
+    {
+        foreach (['vn', 'cn', 'sc'] as $langCode) {
+            delete_transient('dgw_home_news_tabs_' . $langCode);
+        }
+    }
+
+    /**
+     * [26/11/2026] - @author: Kelvin - Xây dựng cấu hình các tab Home News kèm category slug và URL Xem thêm theo từng ngôn ngữ
+     *
+     * @return array<string, array{title_class: string, content_class: string, label: string, more_url: string, query_type: string, post_type: string, taxonomy: string, cate_slug: string}>
+     */
+    public static function getHomeNewsTabConfigs(string $lang): array
+    {
+        $resolvedLang = in_array($lang, ['vn', 'cn', 'sc'], true) ? $lang : 'vn';
+
+        $resolveResourceCateSlug = static function (array $slugMap) use ($resolvedLang): string {
+            $fallbackSlug = $slugMap[$resolvedLang] ?? $slugMap['cn'];
+            $translated   = LanguageHelper::getTranslatedTerm($slugMap['cn'], $resolvedLang, 'resources_category');
+
+            if ($translated instanceof WP_Term && $translated->slug !== '') {
+                return (string) $translated->slug;
+            }
+
+            return $fallbackSlug;
+        };
+
+        $newsSlug     = $resolveResourceCateSlug(['vn' => 'news_vn', 'cn' => 'news_cn', 'sc' => 'news_cn']);
+        $articleSlug  = $resolveResourceCateSlug(['vn' => 'digiknow_vn', 'cn' => 'digiknow_cn', 'sc' => 'digiknow_cn']);
+        $downloadSlug = $resolveResourceCateSlug(['vn' => 'download_vn', 'cn' => 'download_cn', 'sc' => 'download_cn']);
+
+        return [
+            'event' => [
+                'title_class'   => 'title-event',
+                'content_class' => 'content-event',
+                'label'         => 'Latest Event',
+                'more_url'      => home_url('activities'),
+                'query_type'    => 'side',
+                'post_type'     => 'active',
+                'taxonomy'      => 'active_category',
+                'cate_slug'     => '',
+            ],
+            'news' => [
+                'title_class'   => 'title-news',
+                'content_class' => 'content-news',
+                'label'         => 'News Center',
+                'more_url'      => SeoHelper::buildCatePageUrl('resource', $newsSlug),
+                'query_type'    => 'cate',
+                'post_type'     => 'resources',
+                'taxonomy'      => 'resources_category',
+                'cate_slug'     => $newsSlug,
+            ],
+            'article' => [
+                'title_class'   => 'title-article',
+                'content_class' => 'content-article',
+                'label'         => 'Column Article',
+                'more_url'      => SeoHelper::buildCatePageUrl('resource', $articleSlug),
+                'query_type'    => 'cate',
+                'post_type'     => 'resources',
+                'taxonomy'      => 'resources_category',
+                'cate_slug'     => $articleSlug,
+            ],
+            'cases' => [
+                'title_class'   => 'title-cases',
+                'content_class' => 'content-cases',
+                'label'         => 'Classic Case',
+                'more_url'      => home_url('cases'),
+                'query_type'    => 'side',
+                'post_type'     => 'casestudies',
+                'taxonomy'      => 'casestudies_category',
+                'cate_slug'     => '',
+            ],
+            'download' => [
+                'title_class'   => 'title-download',
+                'content_class' => 'content-download',
+                'label'         => 'Information Request',
+                'more_url'      => SeoHelper::buildCatePageUrl('resource', $downloadSlug),
+                'query_type'    => 'cate',
+                'post_type'     => 'resources',
+                'taxonomy'      => 'resources_category',
+                'cate_slug'     => $downloadSlug,
+            ],
+        ];
+    }
+
+    /**
+     * [26/11/2026] - @author: Kelvin - Chuẩn bị dữ liệu 5 tab Home News từ Transient Cache hoặc CustomPostModel theo ngôn ngữ (giảm TTFB)
+     *
+     * @return array{tab_configs: array<string, array<string, string>>, tabs_data: array<string, array<int, array{id: int, title: string, permalink: string, date: string}>>}
+     */
+    public static function prepareHomeNewsData(?string $lang = null): array
+    {
+        $currentLang  = ($lang !== null && $lang !== '')
+            ? $lang
+            : (function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn');
+        $transientKey = 'dgw_home_news_tabs_' . $currentLang;
+        $cached       = get_transient($transientKey);
+
+        if (is_array($cached) && isset($cached['tab_configs'], $cached['tabs_data'])) {
+            return $cached;
+        }
+
+        $tabConfigs = self::getHomeNewsTabConfigs($currentLang);
+        $tabsData   = [];
+
+        foreach ($tabConfigs as $tabKey => $cfg) {
+            $tabQuery = ($cfg['query_type'] === 'cate')
+                ? CustomPostModel::get_posts_cate_at_home($cfg['post_type'], $cfg['cate_slug'], 5, $cfg['taxonomy'])
+                : CustomPostModel::get_posts_at_side($cfg['post_type'], 5);
+
+            // Dùng foreach($tabQuery->posts) thay vì while/the_post() để tránh Divi Builder chèn #et-boc qua hook loop_start/loop_end
+            $items = [];
+            if ($tabQuery && !empty($tabQuery->posts)) {
+                foreach ($tabQuery->posts as $postItem) {
+                    $pid     = (int) $postItem->ID;
+                    $items[] = [
+                        'id'        => $pid,
+                        'title'     => (string) get_the_title($pid),
+                        'permalink' => (string) get_permalink($pid),
+                        'date'      => (string) get_the_date('Y-m-d', $pid),
+                    ];
+                }
+            }
+            $tabsData[$tabKey] = $items;
+        }
+
+        $payload = [
+            'tab_configs' => $tabConfigs,
+            'tabs_data'   => $tabsData,
+        ];
+
+        set_transient($transientKey, $payload, 30 * MINUTE_IN_SECONDS);
+
+        return $payload;
+    }
+
+    /**
+     * [26/11/2026] - @author: Kelvin - Chuẩn bị dữ liệu Home News và render qua View templates/home-news.php chuẩn MVC
+     */
+    public static function renderHomeNews(): void
+    {
+        get_template_part('templates/home-news', null, self::prepareHomeNewsData());
     }
 }

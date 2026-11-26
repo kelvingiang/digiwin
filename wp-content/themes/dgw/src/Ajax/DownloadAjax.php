@@ -11,9 +11,52 @@ if (!defined('ABSPATH')) {
 
 /**
  * [18/11/2026] - AJAX Handler xử lý tải tài liệu (Download Resource) và xem video YouTube
+ * [25/11/2026] - Đẩy tác vụ đồng bộ Google Sheets & Lark Webhook sang WP-Cron bất đồng bộ tránh block luồng AJAX
  */
 class DownloadAjax
 {
+    private const ASYNC_SYNC_HOOK = 'dgw_async_sync_external_notifications';
+
+    /**
+     * [25/11/2026] - Đăng ký hook WP-Cron xử lý đồng bộ Google Sheets & Lark ở nền (chạy cả khi không phải wp_doing_ajax)
+     */
+    public static function registerCronHooks(): void
+    {
+        add_action(self::ASYNC_SYNC_HOOK, [self::class, 'handleAsyncSync'], 10, 3);
+    }
+
+    /**
+     * [25/11/2026] - Thực thi đồng bộ Google Sheets và gửi thông báo Lark trong tiến trình nền
+     *
+     * @param array<string, mixed> $sheetData
+     */
+    public static function handleAsyncSync(array $sheetData, string $larkMessage, string $logContext = ''): void
+    {
+        $syncResult = sync_to_google_sheets($sheetData);
+
+        if ($syncResult) {
+            if ($larkMessage !== '') {
+                sendNotificationToLark($larkMessage);
+            }
+        } else {
+            error_log('Async External Sync Error' . ($logContext !== '' ? " ({$logContext})" : '') . ': Đồng bộ Google Sheets thất bại.');
+        }
+    }
+
+    /**
+     * [25/11/2026] - Lên lịch tác vụ đồng bộ bất đồng bộ qua WP-Cron và kích hoạt spawn_cron() không chặn
+     *
+     * @param array<string, mixed> $sheetData
+     */
+    private static function dispatchAsyncSync(array $sheetData, string $larkMessage, string $logContext = ''): void
+    {
+        wp_schedule_single_event(time(), self::ASYNC_SYNC_HOOK, [$sheetData, $larkMessage, $logContext]);
+
+        if (function_exists('spawn_cron')) {
+            spawn_cron();
+        }
+    }
+
     /**
      * [18/11/2026] - Đăng ký AJAX actions tải file và xem video
      */
@@ -42,20 +85,21 @@ class DownloadAjax
 
     /**
      * [18/11/2026] - Trích xuất tên file và thông tin file từ HTTP Headers hoặc URL
+     * [25/11/2026] - Bật xác thực chứng chỉ SSL (sslverify => true) chống tấn công MITM
      */
     public static function detectFileInfo(string $url, string $fallbackTitle = ''): array
     {
         $response = wp_remote_head($url, [
             'timeout'     => 5,
             'redirection' => 5,
-            'sslverify'   => false,
+            'sslverify'   => true,
         ]);
 
         if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 405) {
             $response = wp_remote_get($url, [
                 'timeout'     => 5,
                 'redirection' => 5,
-                'sslverify'   => false,
+                'sslverify'   => true,
                 'headers'     => ['Range' => 'bytes=0-0'],
             ]);
         }
@@ -139,6 +183,7 @@ class DownloadAjax
 
     /**
      * [18/11/2026] - Stream dữ liệu file từ xa trực tiếp về trình duyệt với buffer 64KB
+     * [25/11/2026] - Bật xác thực SSL/TLS đầy đủ (CURLOPT_SSL_VERIFYPEER = true, VERIFYHOST = 2) chống MITM
      */
     private static function streamRemoteFile(string $url, string $filename): void
     {
@@ -149,8 +194,14 @@ class DownloadAjax
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+
+        $caBundle = defined('ABSPATH') && defined('WPINC') ? ABSPATH . WPINC . '/certificates/ca-bundle.crt' : '';
+        if ($caBundle !== '' && file_exists($caBundle)) {
+            curl_setopt($ch, CURLOPT_CAINFO, $caBundle);
+        }
+
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 65536);
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, static function ($ch, $chunk) {
             echo $chunk;
@@ -167,10 +218,12 @@ class DownloadAjax
 
     /**
      * [18/11/2026] - Xử lý yêu cầu tải tài liệu dành cho thành viên đã đăng nhập
+     * [25/11/2026] - Bổ sung check_ajax_referer('my_nonce', 'nonce') và lấy post_title trực tiếp từ server
      */
     public static function handleDownloadFile(): void
     {
         nocache_headers();
+        check_ajax_referer('my_nonce', 'nonce');
         $lang = function_exists('dgw_get_lang') ? dgw_get_lang() : 'vn';
 
         $user = MemberDownload::isMemberLoggedIn();
@@ -179,8 +232,13 @@ class DownloadAjax
             wp_send_json_error(['code' => 'not_logged_in', 'message' => $msg]);
         }
 
-        $postId     = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
-        $postTitle  = isset($_POST['post_title']) ? sanitize_text_field(wp_unslash($_POST['post_title'])) : '';
+        $postId = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        if ($postId <= 0 || get_post_status($postId) !== 'publish') {
+            $msg = ($lang === 'cn') ? '文章不存在或無效' : 'Tài liệu không tồn tại hoặc không hợp lệ';
+            wp_send_json_error(['code' => 'invalid_post', 'message' => $msg], 404);
+        }
+
+        $postTitle  = trim(wp_strip_all_tags(html_entity_decode((string) get_the_title($postId), ENT_QUOTES, 'UTF-8')));
         $postSource = trim((string) get_post_meta($postId, '_metabox_source', true));
 
         if (empty($postSource)) {
@@ -212,27 +270,23 @@ class DownloadAjax
             'kid'      => 1,
         ]);
 
-        $syncResult = sync_to_google_sheets([
+        // [25/11/2026] - Đẩy đồng bộ Google Sheets & Lark sang tác vụ nền WP-Cron tránh block phản hồi AJAX
+        $sheetData = [
             'sheet' => 'acList',
             'title' => $postTitle,
             'file'  => $postSource,
             'name'  => $user->username ?? '',
             'email' => $user->email ?? '',
             'date'  => date('d-M-y H:i:s'),
-        ]);
-
-        if ($syncResult) {
-            $larkMsg = sprintf(
-                '%s was downloaded by %s on %s at %s',
-                $postTitle,
-                $user->username ?? 'Guest',
-                date('d-M-y'),
-                date('H:i:s')
-            );
-            sendNotificationToLark($larkMsg);
-        } else {
-            error_log('AJAX Download: Đồng bộ Google Sheets thất bại cho bài viết ID: ' . $postId);
-        }
+        ];
+        $larkMsg = sprintf(
+            '%s was downloaded by %s on %s at %s',
+            $postTitle,
+            $user->username ?? 'Guest',
+            date('d-M-y'),
+            date('H:i:s')
+        );
+        self::dispatchAsyncSync($sheetData, $larkMsg, 'Download Post ID: ' . $postId);
 
         $token            = wp_create_nonce('dgw_dl_' . $postId);
         $forceDownloadUrl = add_query_arg([
@@ -264,10 +318,10 @@ class DownloadAjax
             wp_die('Vui lòng đăng nhập trước khi tải tài liệu', 'Chưa đăng nhập', ['response' => 401]);
         }
 
-        $postId = isset($_GET['post_id']) ? (int) $_GET['post_id'] : 0;
+        $postId = isset($_GET['post_id']) ? absint($_GET['post_id']) : 0;
         $token  = isset($_GET['token']) ? sanitize_text_field(wp_unslash($_GET['token'])) : '';
 
-        if ($postId <= 0 || !wp_verify_nonce($token, 'dgw_dl_' . $postId)) {
+        if ($postId <= 0 || !wp_verify_nonce($token, 'dgw_dl_' . $postId) || get_post_status($postId) !== 'publish') {
             wp_die('Liên kết tải tài liệu không hợp lệ hoặc đã hết hạn. Vui lòng thử lại!', 'Yêu cầu không hợp lệ', ['response' => 403]);
         }
 
@@ -277,7 +331,7 @@ class DownloadAjax
         }
 
         $customFn    = isset($_GET['fn']) ? rawurldecode(sanitize_text_field(wp_unslash($_GET['fn']))) : '';
-        $postTitle   = get_the_title($postId);
+        $postTitle   = trim(wp_strip_all_tags(html_entity_decode((string) get_the_title($postId), ENT_QUOTES, 'UTF-8')));
         $downloadUrl = self::convertGdriveUrl($postSource);
 
         if (!empty($customFn) && strpos($customFn, '.') !== false) {
@@ -287,12 +341,24 @@ class DownloadAjax
             $filename = $fileInfo['filename'] ?: (sanitize_file_name($postTitle) . '.pdf');
         }
 
+        // [25/11/2026] - Xác thực realpath($localPath) nằm trong realpath($uploadDir['basedir']) chống Path Traversal
         $uploadDir = wp_upload_dir();
-        if (strpos($postSource, $uploadDir['baseurl']) !== false) {
-            $localPath = str_replace($uploadDir['baseurl'], $uploadDir['basedir'], $postSource);
-            if (file_exists($localPath) && is_readable($localPath)) {
-                self::sendForceDownloadHeaders($filename, filesize($localPath));
-                readfile($localPath);
+        $baseUrl   = rtrim((string) $uploadDir['baseurl'], '/') . '/';
+        if (strpos($postSource, $baseUrl) === 0) {
+            $relativePath  = substr($postSource, strlen($baseUrl));
+            $candidatePath = (string) $uploadDir['basedir'] . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relativePath);
+            $realBaseDir   = realpath((string) $uploadDir['basedir']);
+            $realLocalPath = realpath($candidatePath);
+
+            if (
+                $realBaseDir !== false
+                && $realLocalPath !== false
+                && str_starts_with($realLocalPath, rtrim($realBaseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR)
+                && is_file($realLocalPath)
+                && is_readable($realLocalPath)
+            ) {
+                self::sendForceDownloadHeaders($filename, filesize($realLocalPath));
+                readfile($realLocalPath);
                 exit;
             }
         }
@@ -303,18 +369,24 @@ class DownloadAjax
 
     /**
      * [18/11/2026] - Ghi nhận thành viên xem video YouTube, lưu DB, đồng bộ Google Sheets và gửi Lark
+     * [25/11/2026] - Bổ sung check_ajax_referer('my_nonce', 'nonce') và lấy post_title trực tiếp từ server
      */
     public static function handleWatchYoutube(): void
     {
         nocache_headers();
+        check_ajax_referer('my_nonce', 'nonce');
 
         $user = MemberDownload::isMemberLoggedIn();
         if (!$user) {
             wp_send_json_error(['code' => 'not_logged_in', 'message' => 'Vui lòng đăng nhập trước khi xem video']);
         }
 
-        $postId      = isset($_POST['post_id']) ? (int) $_POST['post_id'] : 0;
-        $postTitle   = isset($_POST['post_title']) ? sanitize_text_field(wp_unslash($_POST['post_title'])) : '';
+        $postId = isset($_POST['post_id']) ? absint($_POST['post_id']) : 0;
+        if ($postId <= 0 || get_post_status($postId) !== 'publish') {
+            wp_send_json_error(['message' => 'Bài viết không tồn tại hoặc không hợp lệ'], 404);
+        }
+
+        $postTitle   = trim(wp_strip_all_tags(html_entity_decode((string) get_the_title($postId), ENT_QUOTES, 'UTF-8')));
         $youtubeLink = (string) get_post_meta($postId, '_metabox_youtube', true);
 
         if (empty($youtubeLink)) {
@@ -328,27 +400,23 @@ class DownloadAjax
             'kid'      => 2,
         ]);
 
-        $syncResult = sync_to_google_sheets([
+        // [25/11/2026] - Đẩy đồng bộ Google Sheets & Lark sang tác vụ nền WP-Cron tránh block phản hồi AJAX
+        $sheetData = [
             'sheet' => 'wytList',
             'title' => $postTitle,
             'file'  => $youtubeLink,
             'name'  => $user->username ?? '',
             'email' => $user->email ?? '',
             'date'  => date('d-M-y H:i:s'),
-        ]);
-
-        if ($syncResult) {
-            $larkMsg = sprintf(
-                '%s was watched by %s on %s at %s',
-                $postTitle,
-                $user->username ?? 'Guest',
-                date('d-M-y'),
-                date('H:i:s')
-            );
-            sendNotificationToLark($larkMsg);
-        } else {
-            error_log('AJAX YouTube Watch: Đồng bộ Google Sheets (wytList) thất bại cho bài viết ID: ' . $postId);
-        }
+        ];
+        $larkMsg = sprintf(
+            '%s was watched by %s on %s at %s',
+            $postTitle,
+            $user->username ?? 'Guest',
+            date('d-M-y'),
+            date('H:i:s')
+        );
+        self::dispatchAsyncSync($sheetData, $larkMsg, 'YouTube Post ID: ' . $postId);
 
         wp_send_json_success([
             'post_id'      => $postId,

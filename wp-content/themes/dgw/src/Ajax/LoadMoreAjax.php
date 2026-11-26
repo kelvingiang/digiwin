@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DGW\Ajax;
 
 use DGW\Models\CustomPostModel;
+use WP_Query;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -34,46 +35,32 @@ class LoadMoreAjax
     /**
      * [18/11/2026] - Load thêm bài viết theo category hỗ trợ Translation Group
      * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
+     * [25/11/2026] - Whitelist post_type đầu vào, kiểm tra taxonomy và giới hạn count/offset
      */
     public static function handleBkLoadMore(): void
     {
-        $lastId   = isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0;
-        $postType = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
-        $cateId   = isset($_POST['cateID']) ? (int) $_POST['cateID'] : 0;
-        $count    = isset($_POST['count']) ? (int) $_POST['count'] : 10;
-        $cate     = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
+        $lastId      = max(0, isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0);
+        $rawPostType = isset($_POST['post']) ? sanitize_text_field(wp_unslash((string) $_POST['post'])) : 'post';
+        $postType    = CustomPostModel::resolveAllowedPostType($rawPostType);
+        if ($postType === null) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid post type'], 400);
+        }
+
+        $cateId = isset($_POST['cateID']) ? (int) $_POST['cateID'] : 0;
+        $count  = CustomPostModel::clampCount(isset($_POST['count']) ? (int) $_POST['count'] : 10, 10);
+        $cate   = isset($_POST['cate']) ? sanitize_key(wp_unslash((string) $_POST['cate'])) : '';
+        if ($cate !== '' && !taxonomy_exists($cate)) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid taxonomy'], 400);
+        }
 
         if (session_status() === PHP_SESSION_NONE && !headers_sent()) {
             session_start();
         }
         $lang = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : (string) ($_SESSION['languages'] ?? 'vn');
 
-        $wpQuery = CustomPostModel::get_load_more_posts($postType, $cateId, $cate, $count, $lastId, $lang);
-        $html    = '';
-
-        if ($wpQuery->have_posts()) {
-            $stt = $lastId + 1;
-            while ($wpQuery->have_posts()) {
-                $wpQuery->the_post();
-                $html .= "<div class='item' data-id='" . esc_attr((string) $stt) . "'>";
-                $html .= "<a href='" . esc_url(get_the_permalink()) . "'>";
-                if (has_post_thumbnail()) {
-                    $thumbUrl = (string) get_the_post_thumbnail_url();
-                    $html    .= "<img class='item-img' src='" . esc_url($thumbUrl) . "' srcset='" . esc_url($thumbUrl) . "'/>";
-                } else {
-                    $html .= "<img class='item-img' src='" . esc_url(PART_IMAGES . 'no-image.jpg') . "'/>";
-                }
-                $html .= "<div class='item-title'>" . esc_html(get_the_title()) . '</div>';
-                $html .= '</a>';
-                $html .= '</div>';
-                $stt++;
-            }
-            wp_reset_postdata();
-
-            $response = ['status' => 'done', 'html' => $html];
-        } else {
-            $response = ['status' => 'empty'];
-        }
+        $wpQuery  = CustomPostModel::get_load_more_posts($postType, $cateId, $cate, $count, $lastId, $lang);
+        $html     = self::renderQueryTemplates($wpQuery, $lastId, 'templates/post-item');
+        $response = $html !== '' ? ['status' => 'done', 'html' => $html] : ['status' => 'empty'];
 
         wp_send_json($response);
     }
@@ -81,40 +68,23 @@ class LoadMoreAjax
     /**
      * [18/11/2026] - Load thêm bài viết theo category_name
      * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
+     * [25/11/2026] - Whitelist post_type đầu vào, giới hạn count/offset và tái sử dụng View templates/post-item.php
      */
     public static function handleLoadMorePost(): void
     {
-        $lastId   = isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0;
-        $postType = isset($_POST['post']) ? sanitize_text_field($_POST['post']) : 'post';
-        $count    = isset($_POST['count']) ? (int) $_POST['count'] : 10;
-        $cate     = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : '';
-
-        $wpQuery = CustomPostModel::get_load_more_by_category_name($postType, $cate, $count, $lastId);
-        $html    = '';
-
-        if ($wpQuery->have_posts()) {
-            $stt = $lastId + 1;
-            while ($wpQuery->have_posts()) {
-                $wpQuery->the_post();
-                $html .= "<div class='item' data-id='" . esc_attr((string) $stt) . "'>";
-                $html .= "<a href='" . esc_url(get_the_permalink()) . "'>";
-                if (has_post_thumbnail()) {
-                    $thumbUrl = (string) get_the_post_thumbnail_url();
-                    $html    .= "<img class='item-img' src='" . esc_url($thumbUrl) . "' srcset='" . esc_url($thumbUrl) . "'/>";
-                } else {
-                    $html .= "<img class='item-img' src='" . esc_url(PART_IMAGES . 'no-image.jpg') . "'/>";
-                }
-                $html .= "<div class='item-title'>" . esc_html(get_the_title()) . '</div>';
-                $html .= '</a>';
-                $html .= '</div>';
-                $stt++;
-            }
-            wp_reset_postdata();
-
-            $response = ['status' => 'done', 'html' => $html];
-        } else {
-            $response = ['status' => 'empty'];
+        $lastId      = max(0, isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0);
+        $rawPostType = isset($_POST['post']) ? sanitize_text_field(wp_unslash((string) $_POST['post'])) : 'post';
+        $postType    = CustomPostModel::resolveAllowedPostType($rawPostType);
+        if ($postType === null) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid post type'], 400);
         }
+
+        $count = CustomPostModel::clampCount(isset($_POST['count']) ? (int) $_POST['count'] : 10, 10);
+        $cate  = isset($_POST['cate']) ? sanitize_text_field(wp_unslash((string) $_POST['cate'])) : '';
+
+        $wpQuery  = CustomPostModel::get_load_more_by_category_name($postType, $cate, $count, $lastId);
+        $html     = self::renderQueryTemplates($wpQuery, $lastId, 'templates/post-item');
+        $response = $html !== '' ? ['status' => 'done', 'html' => $html] : ['status' => 'empty'];
 
         wp_send_json($response);
     }
@@ -122,49 +92,52 @@ class LoadMoreAjax
     /**
      * [18/11/2026] - Load thêm bài viết trong cùng nhóm loại trừ bài hiện tại
      * [20/11/2026] - Ủy quyền truy vấn WP_Query sang CustomPostModel chuẩn MVC
+     * [25/11/2026] - Whitelist post_type (tham số cate), giới hạn offset và render qua View templates/post-group-item.php
      */
     public static function handleLoadMoreInGroup(): void
     {
-        $lastId = isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0;
-        $cate   = isset($_POST['cate']) ? sanitize_text_field($_POST['cate']) : 'post';
-        $slug   = isset($_POST['slug']) ? sanitize_text_field($_POST['slug']) : '';
-
-        $wpQuery = CustomPostModel::get_load_more_in_group($cate, 5, $lastId + 1);
-        $html    = '';
-
-        if ($wpQuery->have_posts()) {
-            $stt = $lastId + 1;
-            while ($wpQuery->have_posts()) {
-                $wpQuery->the_post();
-                global $post;
-                if ($post && $post->post_name === $slug) {
-                    continue;
-                }
-                $html .= "<div class='item row' data-id='" . esc_attr((string) $stt) . "'>";
-                $html .= "<div class='col-lg-2'>";
-                if (has_post_thumbnail()) {
-                    $thumbUrl = (string) get_the_post_thumbnail_url();
-                    $html    .= "<img class='item-img' src='" . esc_url($thumbUrl) . "' srcset='" . esc_url($thumbUrl) . "'/>";
-                } else {
-                    $html .= "<img class='item-img' src='" . esc_url(PART_IMAGES . 'no-image.jpg') . "'/>";
-                }
-                $html .= '</div>';
-                $html .= "<div class='col-lg-10'>";
-                $html .= "<div class='group-list-item-title'>";
-                $html .= "<a class='my-link' href='" . esc_url(get_the_permalink()) . "'><h3>" . esc_html(get_the_title()) . '</h3></a>';
-                $html .= '</div>';
-                $html .= '<div>' . get_the_content() . '</div>';
-                $html .= '</div>';
-                $html .= '</div>';
-                $stt++;
-            }
-            wp_reset_postdata();
-
-            $response = ['status' => 'done', 'html' => $html];
-        } else {
-            $response = ['status' => 'empty'];
+        $lastId   = max(0, isset($_POST['lastID']) ? (int) $_POST['lastID'] : 0);
+        $rawCate  = isset($_POST['cate']) ? sanitize_text_field(wp_unslash((string) $_POST['cate'])) : 'post';
+        $postType = CustomPostModel::resolveAllowedPostType($rawCate);
+        if ($postType === null) {
+            wp_send_json_error(['status' => 'error', 'message' => 'Invalid post type'], 400);
         }
 
+        $slug = isset($_POST['slug']) ? sanitize_title(wp_unslash((string) $_POST['slug'])) : '';
+
+        $wpQuery  = CustomPostModel::get_load_more_in_group($postType, 5, $lastId + 1);
+        $html     = self::renderQueryTemplates($wpQuery, $lastId, 'templates/post-group-item', $slug);
+        $response = $html !== '' ? ['status' => 'done', 'html' => $html] : ['status' => 'empty'];
+
         wp_send_json($response);
+    }
+
+    /**
+     * [25/11/2026] - Helper render danh sách bài viết qua template part chuẩn MVC (loại bỏ nối chuỗi HTML thủ công)
+     */
+    private static function renderQueryTemplates(WP_Query $wpQuery, int $lastId, string $templateSlug, string $excludeSlug = ''): string
+    {
+        if (!$wpQuery->have_posts()) {
+            return '';
+        }
+
+        $html = '';
+        $stt  = $lastId + 1;
+
+        while ($wpQuery->have_posts()) {
+            $wpQuery->the_post();
+            if ($excludeSlug !== '' && get_post_field('post_name', get_the_ID()) === $excludeSlug) {
+                continue;
+            }
+
+            ob_start();
+            get_template_part($templateSlug, null, ['stt' => $stt]);
+            $html .= (string) ob_get_clean();
+            $stt++;
+        }
+
+        wp_reset_postdata();
+
+        return $html;
     }
 }

@@ -29,7 +29,7 @@ $dgw_footer_part_rendered = true;
                        <img class="company-logo" loading="lazy"
                            title="digiwin company"
                            alt="digiwin company"
-                           src="<?php echo PART_IMAGES . 'Logo-white-Digiwin-small.webp' ?>"
+                           src="<?php echo esc_url(PART_IMAGES . 'Logo-white-Digiwin-small.webp'); ?>"
                            width="150"
                            height="46" />
                    </div>
@@ -38,12 +38,12 @@ $dgw_footer_part_rendered = true;
                        DIGITAL TRANSFORMATION PARTNER
                    </div>
 
-                   <label class="footer-title"><?php echo __('Office In VietNam', 'dgw') ?> </label>
+                   <label class="footer-title"><?php esc_html_e('Office In VietNam', 'dgw'); ?> </label>
                    
                    <ul class='footer-list'>
                        <li>
                            <label>
-                               <?php echo wp_kses_post((string) get_post_meta(1, '_info_address_' . $lang, true)); ?>
+                               <?php echo wp_kses_post(\DGW\Models\CompanyInfoModel::getLocalized('_info_address', $lang)); ?>
                            </label>
                        </li>
                    </ul>
@@ -89,65 +89,70 @@ $dgw_footer_part_rendered = true;
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width:20px; height:20px">
                                    <path d="M128 64C92.7 64 64 92.7 64 128L64 512C64 547.3 92.7 576 128 576L208 576L208 464C208 428.7 236.7 400 272 400L448 400L448 234.5C448 217.5 441.3 201.2 429.3 189.2L322.7 82.7C310.7 70.7 294.5 64 277.5 64L128 64zM389.5 240L296 240C282.7 240 272 229.3 272 216L272 122.5L389.5 240zM272 444C261 444 252 453 252 464L252 592C252 603 261 612 272 612C283 612 292 603 292 592L292 564L304 564C337.1 564 364 537.1 364 504C364 470.9 337.1 444 304 444L272 444zM304 524L292 524L292 484L304 484C315 484 324 493 324 504C324 515 315 524 304 524zM400 444C389 444 380 453 380 464L380 592C380 603 389 612 400 612L432 612C460.7 612 484 588.7 484 560L484 496C484 467.3 460.7 444 432 444L400 444zM420 572L420 484L432 484C438.6 484 444 489.4 444 496L444 560C444 566.6 438.6 572 432 572L420 572zM508 464L508 592C508 603 517 612 528 612C539 612 548 603 548 592L548 548L576 548C587 548 596 539 596 528C596 517 587 508 576 508L548 508L548 484L576 484C587 484 596 475 596 464C596 453 587 444 576 444L528 444C517 444 508 453 508 464z" />
                                </svg>
-                               <?php echo __('Download 2026 Digital Transformation Whitepaper', 'dgw') ?>
+                               <?php esc_html_e('Download 2026 Digital Transformation Whitepaper', 'dgw'); ?>
                            </div>
                        </a>
                    </div>
                </div>
 
                <div>
-                   <label class="footer-title dot-title"><?php echo __('Solutions & Industries', 'dgw') ?> </label>
+                   <label class="footer-title dot-title"><?php esc_html_e('Solutions & Industries', 'dgw'); ?> </label>
                    <ul class='footer-list article-link'>
-                       <li>
-                           <a href="<?php echo home_url('/solution/cate/53/tag/') ?>">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                   <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
-                               </svg>
-                               <?php echo __('System Administration (ERP)', 'dgw') ?>
-                           </a>
-                       </li>
+                       <?php
+                       // [2026-11-25] - @author: Kelvin - Danh sách link dán chủ động trong footer (khớp RewriteRules & slug hiện tại)
+                       // Dạng link chuẩn khi cần dán trực tiếp:
+                       // - Danh mục Solutions : /solution/cate/{term_slug}/
+                       // - Bài viết Solutions : /solutions/cate/{term_slug}/{post_slug}/
+                       // - Bài viết Industries: /industries/{post_slug}/
+                       $current_lang_key = ($lang === 'cn') ? 'cn' : 'vn';
+                       $article_links    = [
+                           [
+                               'label' => __('System Administration (ERP)', 'dgw'),
+                               'vn'    => home_url('/solution/cate/erp_vn/'),
+                               'cn'    => home_url('/solution/cate/erp_cn/'),
+                           ],
+                           [
+                               'label' => __('Production Management (MES)', 'dgw'),
+                               'vn'    => home_url('/solution/cate/manufacture_vn/'),
+                               'cn'    => home_url('/solution/cate/manufacture_cn/'),
+                           ],
+                           [
+                               'label' => __('Smart Warehouse (WMS)', 'dgw'),
+                               'vn'    => home_url('/solutions/cate/manufacture_cn/he-thong-logistics-thong-minh/'),
+                               'cn'    => home_url('/solution/cate/issue_cn/'),
+                           ],
+                           [
+                               'label' => __('Digital Transformation in the Plastics Industry', 'dgw'),
+                               'vn'    => home_url('/industries/plasticrubber_vn/'),
+                               'cn'    => home_url('/industries/塑膠製品業/'),
+                           ],
+                           [
+                               'label' => __('Case Studies', 'dgw'),
+                               'vn'    => home_url('/cases/'),
+                               'cn'    => home_url('/cases/'),
+                           ],
+                       ];
 
-                       <li>
-                           <a href="<?php echo home_url('/solution/cate/54/tag/') ?>">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                   <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
-                               </svg>
-                               <?php echo __('Production Management (MES)', 'dgw') ?>
-                           </a>
-                       </li>
-
-                       <li>
-                           <a href="<?php echo home_url('/solutions/he-thong-logistics-thong-minh/') ?>">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                   <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
-                               </svg>
-                               <?php echo __('Smart Warehouse (WMS)', 'dgw') ?>
-                           </a>
-                       </li>
-
-                       <li>
-                           <a href="<?php echo home_url('/solutions/nganh-cao-su-nhua/') ?>">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                   <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
-                               </svg>
-                               <?php echo __('Digital Transformation in the Plastics Industry', 'dgw') ?>
-                           </a>
-                       </li>
-
-                       <li>
-                           <a href="<?php echo home_url('/cases/') ?>">
-                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                   <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
-                               </svg>
-                               <?php echo __('Case Studies', 'dgw') ?>
-                           </a>
-                       </li>
-
+                       foreach ($article_links as $article_item) :
+                           $item_url = (string) ($article_item[$current_lang_key] ?? ($article_item['vn'] ?? ''));
+                           if ($item_url === '') {
+                               continue;
+                           }
+                       ?>
+                           <li>
+                               <a href="<?php echo esc_url($item_url); ?>">
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
+                                       <path d="M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z" />
+                                   </svg>
+                                   <?php echo esc_html((string) ($article_item['label'] ?? '')); ?>
+                               </a>
+                           </li>
+                       <?php endforeach; ?>
                    </ul>
                </div>
 
                <div>
-                   <label class="footer-title dot-title"><?php echo __('Contact Us', 'dgw') ?> </label>
+                   <label class="footer-title dot-title"><?php esc_html_e('Contact Us', 'dgw'); ?> </label>
                    <ul class='footer-list contact-list'>
                        <li>
                            <div>
@@ -158,7 +163,7 @@ $dgw_footer_part_rendered = true;
                            <div>
                                <label>
                                    Hotline<br>
-                                   <strong><?php echo esc_html((string) get_post_meta(1, '_info_phone', true)); ?></strong>
+                                   <strong><?php echo esc_html(\DGW\Models\CompanyInfoModel::get('_info_phone')); ?></strong>
                                </label>
                            </div>
                        </li>
@@ -172,7 +177,7 @@ $dgw_footer_part_rendered = true;
                            <div>
                                <label>
                                    E-mail<br>
-                                   <strong><?php echo esc_html((string) get_post_meta(1, '_info_email', true)); ?></strong>
+                                   <strong><?php echo esc_html(\DGW\Models\CompanyInfoModel::get('_info_email')); ?></strong>
                                </label>
                            </div>
                        </li>
@@ -191,7 +196,7 @@ $dgw_footer_part_rendered = true;
                </div>
 
                <div class="social-link">
-                   <label class="footer-title"><?php echo __('Zalo OA Community', 'dgw') ?> </label>
+                   <label class="footer-title"><?php esc_html_e('Zalo OA Community', 'dgw'); ?> </label>
                    <ul class='footer-list'>
                        <li>
                            <a href="https://zalo.me/2873315813915643766" target="_blank" rel="noopener noreferrer">
@@ -199,12 +204,12 @@ $dgw_footer_part_rendered = true;
                            </a>
                        </li>
                        <li class="zalo-text">
-                           <?php echo __('Scan to join Zalo OA & get the latest industry reports', 'dgw') ?>
+                           <?php esc_html_e('Scan to join Zalo OA & get the latest industry reports', 'dgw'); ?>
                        </li>
                        <li class="icon-link">
-                           <a href="<?php echo $lang === 'vn'
+                           <a href="<?php echo esc_url($lang === 'vn'
                                         ? 'https://www.facebook.com/Digiwinsoftvn'
-                                        : 'https://www.facebook.com/Digiwinsoftware'; ?>" target="_blank"
+                                        : 'https://www.facebook.com/Digiwinsoftware'); ?>" target="_blank"
                                aria-label="Trang Facebook Digiwin"
                                rel="noopener noreferrer">
                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" aria-hidden="true">
@@ -241,25 +246,26 @@ $dgw_footer_part_rendered = true;
            </div>
 
 
+           <!-- [25/11/2026] - Chuẩn hóa Late Escaping (esc_url / esc_html__) cho 5 icon chứng nhận và link chính sách -->
            <div class="footer-icon">
                <div>
-                   <img title="reddot winner" alt="reddot winner" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-1.webp' ?>" />
+                   <img title="reddot winner" alt="reddot winner" width="30" height="30" loading="lazy" src="<?php echo esc_url(PART_IMAGES . 'foot-icon-1.webp'); ?>" />
                    <label> REDDOT WINNER </label>
                </div>
                <div>
-                   <img title="cmmi" alt="cmmi" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-2.webp' ?>" />
+                   <img title="cmmi" alt="cmmi" width="30" height="30" loading="lazy" src="<?php echo esc_url(PART_IMAGES . 'foot-icon-2.webp'); ?>" />
                    <label> CMMI <br><i> Level 4 </i></label>
                </div>
                <div>
-                   <img title="muse design" alt="muse design" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-3.webp' ?>" />
+                   <img title="muse design" alt="muse design" width="30" height="30" loading="lazy" src="<?php echo esc_url(PART_IMAGES . 'foot-icon-3.webp'); ?>" />
                    <label> MUSE DESIGN <br><i> Awards </i></label>
                </div>
                <div>
-                   <img title="Control Engineering" alt="Control Engineering" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-4.webp' ?>" />
+                   <img title="Control Engineering" alt="Control Engineering" width="30" height="30" loading="lazy" src="<?php echo esc_url(PART_IMAGES . 'foot-icon-4.webp'); ?>" />
                    <label> CONTROL ENGINEERING <br> <i>Product of the Year</i> </label>
                </div>
                <div>
-                   <img title="isrs" alt="isrs" width="30" height="30" loading="lazy" src="<?php echo  PART_IMAGES . 'foot-icon-5.webp' ?>" />
+                   <img title="isrs" alt="isrs" width="30" height="30" loading="lazy" src="<?php echo esc_url(PART_IMAGES . 'foot-icon-5.webp'); ?>" />
                    <label> ISRS <br> <i>Reporting Standards</i> </label>
                </div>
            </div>
@@ -269,8 +275,8 @@ $dgw_footer_part_rendered = true;
 
                <div>
                    <a class="foot-link"
-                       href="<?php echo home_url('/digiwinasean_privacy-policy/') ?>">
-                       <?php echo __('Privacy Policy', 'dgw') . ' | ' .  __('Terms of Use', 'dgw'); ?>
+                       href="<?php echo esc_url(home_url('/digiwinasean_privacy-policy/')); ?>">
+                       <?php echo esc_html__('Privacy Policy', 'dgw') . ' | ' . esc_html__('Terms of Use', 'dgw'); ?>
                    </a>
                </div>
            </div>

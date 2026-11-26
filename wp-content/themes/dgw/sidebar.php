@@ -5,6 +5,5 @@
 <?php dynamic_sidebar( 'primary-widget-area' ); ?>
 </ul>
 </div>
-<H1>SSSSSdd</H1>
 <?php endif; ?>
 </aside>

@@ -77,10 +77,7 @@ async function handleLogout() {
                 localStorage.removeItem('dgw_member');
             } catch (e) {}
 
-            // Tùy chọn: Thêm hiệu ứng loading hoặc thông báo trước khi refresh
-            console.log('✅ Logout thành công, đang làm mới trang...');
-            
-            // Refresh trang để cập nhật lại trạng thái Server-side (Menu, Header...)
+            // [25/11/2026] - Xóa console.log debug và làm mới trang để cập nhật trạng thái Server-side (Menu, Header...)
             window.location.reload(); 
             showLoginForm();
         }

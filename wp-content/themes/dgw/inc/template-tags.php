@@ -630,9 +630,10 @@ if (!function_exists('getCustomPostAtHome')) {
 }
 
 if (!function_exists('getCustomPostCateAtHome')) {
-    function getCustomPostCateAtHome(string $postType, string $cateSlug, $postCount): WP_Query
+    // [26/11/2026] - Hỗ trợ truyền thêm $taxonomy tùy chọn để đồng bộ với CustomPostModel::get_posts_cate_at_home()
+    function getCustomPostCateAtHome(string $postType, string $cateSlug, $postCount, string $taxonomy = 'resources_category'): WP_Query
     {
-        return PostViewHelper::getCateAtHome($postType, $cateSlug, (int) $postCount);
+        return PostViewHelper::getCateAtHome($postType, $cateSlug, (int) $postCount, $taxonomy);
     }
 }
 

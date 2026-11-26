@@ -10,7 +10,8 @@ if (!defined('ABSPATH')) {
 }
 
 $lang        = function_exists('dgw_get_lang') ? (string) dgw_get_lang() : 'vn';
-$companyName = (string) get_post_meta(1, '_info_name_' . $lang, true);
+// [25/11/2026] - Đọc tên công ty qua CompanyInfoModel có Transient Cache
+$companyName = \DGW\Models\CompanyInfoModel::getLocalized('_info_name', $lang);
 ?>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAV4v2qSBuCA1Rn7NPd09exwP4smcjW_g&callback=initMap" type="text/javascript"></script>
 <script type="text/javascript">

@@ -21,11 +21,10 @@ function FunctionDelete($mess, $page, $action, $id) {
 }
 
 function formatNumber(val) {
-    //  val = val.toString().replace(',', '');
+    // [25/11/2026] - Định dạng số có dấu phẩy hàng nghìn và loại bỏ comment console.log thừa
     while (/(\d+)(\d{3})/.test(val.toString())) {
         val = val.toString().replace(/(\d+)(\d{3})/, "$1" + "," + "$2");
     }
-    //  console.log(val);
     return val;
 }
 
@@ -102,9 +101,9 @@ jQuery(document).ready(function() {
         return isMoney(event, this);
     });
 
+    // [25/11/2026] - Kiểm tra ký tự hợp lệ cho input tiền tệ, đã xóa console.log debug
     function isMoney(evt, element) {
         var charCode = evt.which ? evt.which : event.keyCode;
-        console.log(charCode);
         if (
             charCode !== 44 && // “.” CHECK DOT, AND ONLY ONE.
             (charCode !== 46 || jQuery(element).val().indexOf(".") !== -1) && // “.” CHECK DOT, AND ONLY ONE.
